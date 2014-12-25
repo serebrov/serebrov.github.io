@@ -1,1 +1,1 @@
-[Notes for sebgoo.blogspot.com](http://sebgoo.blogspot.com)
+[Development notes serebrov.github.io](http://serebrov.github.io)
