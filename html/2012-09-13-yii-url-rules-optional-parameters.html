@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="yii-url-rules-optional-parameters">Yii url rules - optional parameters</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="yii-url-rules-optional-parameters">Yii url rules - optional parameters</h1>
 <p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
 <pre><code><div class="highlight"><pre><span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span>
 <span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
@@ -78,7 +93,9 @@ We have a list of articles and each article has several revisions. Also each rev
 <pre><code><div class="highlight"><pre><span class="nx">If</span> <span class="nx">a</span> <span class="nx">pattern</span> <span class="nx">ends</span> <span class="kd">with</span> <span class="s1">&#39;/*&#39;</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">means</span> <span class="nx">additional</span> <span class="nx">GET</span> <span class="nx">parameters</span> <span class="nx">may</span> <span class="nx">be</span> <span class="nx">appended</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">path</span> <span class="nx">info</span> <span class="nx">part</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">URL</span><span class="p">;</span> <span class="nx">otherwise</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">GET</span> <span class="nx">parameters</span> <span class="nx">can</span> <span class="nx">only</span> <span class="nx">appear</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">query</span> <span class="nx">string</span> <span class="nx">part</span><span class="p">.</span>
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
 <p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
 <p>Fortunately it is easy to do with javascript.</p>
 <p><!-- more -->
@@ -31,7 +46,9 @@ Here is example of a JS code to set the cookie:</p>
 <pre><code><div class="highlight"><pre><span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="s2">&quot;document.cookie = &#39;PHPSESSID=&quot;</span><span class="o">+</span><span class="nx">cookie</span><span class="o">+</span><span class="s2">&quot;; domain=&quot;</span><span class="o">+</span><span class="nx">domain</span><span class="o">+</span><span class="s2">&quot;; path=/&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

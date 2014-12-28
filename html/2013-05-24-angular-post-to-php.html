@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
 <p>By default angular.js sends all data in json.
 So if you do a POST request to a PHP code then the <code>$_POST</code> superglobal will not be populated.</p>
 <p>This can be solved in two ways - on the client side or on the server side.</p>
@@ -44,7 +59,9 @@ So if you do a POST request to a PHP code then the <code>$_POST</code> superglob
 </code></pre>
 <p>Here we set the &#39;Content-Type&#39; header and encode data using jQuery&#39;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
 This also can be done for all requests as described <a href="http://stackoverflow.com/questions/12190166/angularjs-any-way-for-http-post-to-send-request-parameters-instead-of-json">on stackoverflow</a>.</p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

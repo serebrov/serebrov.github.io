@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="phpmyadmin-and-eaccelerator-problem">phpmyadmin and eaccelerator problem</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="phpmyadmin-and-eaccelerator-problem">phpmyadmin and eaccelerator problem</h1>
 <p>Error when trying to access phpmyadmin (in Chrome):</p>
 <pre><code><div class="highlight"><pre><span class="nb">Error</span> <span class="mi">324</span> <span class="p">(</span><span class="nx">net</span><span class="o">::</span><span class="nx">ERR_EMPTY_RESPONSE</span><span class="p">)</span><span class="o">:</span> <span class="nx">The</span> <span class="nx">server</span> <span class="nx">closed</span> <span class="nx">the</span> <span class="nx">connection</span> <span class="nx">without</span> <span class="nx">sending</span> <span class="nx">any</span> <span class="nx">data</span><span class="p">.</span>
 </pre></div>
@@ -29,7 +44,9 @@ The easiest way to fix I found is to disable eaccelerator in .htaccess (create i
 <pre><code><div class="highlight"><pre><span class="nx">php_flag</span> <span class="nx">eaccelerator</span><span class="p">.</span><span class="nx">enable</span> <span class="mi">0</span>
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

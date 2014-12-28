@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="git-how-to-revert-multiple-recent-commits">Git - how to revert multiple recent commits</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="git-how-to-revert-multiple-recent-commits">Git - how to revert multiple recent commits</h1>
 <p>Let&#39;s assume we have a history like this:</p>
 <pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span>
 </pre></div>
@@ -66,7 +81,9 @@ Run git diff to check this (output should be empty):</p>
 <a href="http://stackoverflow.com/questions/4991594/revert-a-range-of-commits-in-git">Stackoverflow: Revert a range of commits in git</a>
 <a href="http://stackoverflow.com/questions/7251477/git-diff-whats-the-difference-between-having-and-no-dots">Stackoverflow: Git diff .. ? What&#39;s the difference between having .. and no dots</a>
 <a href="http://stackoverflow.com/questions/2221658/whats-the-difference-between-head-and-head-in-git">What&#39;s the difference between HEAD^ and HEAD~ in Git?</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

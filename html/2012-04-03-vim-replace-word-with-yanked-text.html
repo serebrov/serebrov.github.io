@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
 <p>Copy a word and paste it over other words:</p>
 <pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
     ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
@@ -37,7 +52,9 @@ Typing viw selects the current word, then pressing p pastes the unnamed register
 The visual selection is deleted to the unnamed register.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://vim.wikia.com/wiki/Replace_a_word_with_yanked_text">vim.wikia.com</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

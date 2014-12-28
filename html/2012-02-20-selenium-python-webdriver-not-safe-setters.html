@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="selenium-python-firefox-webdriver-unsafe-setters-in-firefox_profile-py">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="selenium-python-firefox-webdriver-unsafe-setters-in-firefox_profile-py">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</h1>
 <h2 id="problem">Problem</h2>
 <p>I tried to disable native events for Firefox webdriver in a following way:</p>
 <pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -81,7 +96,9 @@ The solution is to use in my code lowercase string instead of boolean:</p>
 The same problem exist for other boolean-like setter <code>accept_untrusted_certs</code>.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://code.google.com/p/selenium/issues/detail?id=3400">bug report</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

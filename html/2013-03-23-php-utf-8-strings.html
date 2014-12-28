@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="php-utf-8-strings-handling">PHP - utf-8 strings handling</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="php-utf-8-strings-handling">PHP - utf-8 strings handling</h1>
 <p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
 encoding for string functions to utf-8 in php.ini:</p>
 <pre><code><div class="highlight"><pre><span class="nx">mbstring</span><span class="p">.</span><span class="nx">internal_encoding</span> <span class="o">=</span> <span class="nx">UTF</span><span class="o">-</span><span class="mi">8</span>
@@ -40,7 +55,9 @@ It is not recommended to set function overloading in per-directory context (via 
 </code></pre><h2 id="links">Links</h2>
 <p><a href="http://www.php.net/manual/en/book.mbstring.php">PHP Docs - Multibyte String</a></p>
 <p><a href="http://www.yiiframework.com/wiki/16/how-to-set-up-unicode/">Yii Wiki - How to set up Unicode</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

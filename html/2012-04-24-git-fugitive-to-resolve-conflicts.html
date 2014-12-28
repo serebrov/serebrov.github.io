@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
 <p>To use fugitive as you mergetool you can use the following.</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
     git config --global merge.tool fugitive
@@ -30,7 +45,9 @@
 <h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/7309707/my-git-mergetool-open-4not-3-windows-in-vimdiff">stackoverflow</a>
 <a href="http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/">fugitive screencast</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

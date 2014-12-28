@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="andriod-moblie-network-problem-after-busybox-update">Andriod - moblie network problem after BusyBox update</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="andriod-moblie-network-problem-after-busybox-update">Andriod - moblie network problem after BusyBox update</h1>
 <p>I have LG p500 (Optimus One), rooted with original ROM.</p>
 <p>After update to <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox</a> 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.</p>
 <p>I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&#39;t help. I did a factory reset - also didn&#39;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</p>
@@ -51,7 +66,9 @@ And this command makes network work! But only for curren session. When I reconne
 <li>Copy original &quot;ip&quot; (from sdcard root) to /system/bin/</li>
 </ul>
 <p>Finally I want to thank <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox installer</a> developer, Stephen. I contacted him by email when I realized that problem was with busybox installer and he answered and put effort to help me find the solution. Also he posted about this issue in the mentioned above XDA thread (I could not do this because have no permission to post into developer topics on XDA).</p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

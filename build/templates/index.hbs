@@ -3,9 +3,11 @@
 
     {{#each paginate.files}}
     <div class="row">
-      <small class="pull-left">{{formatDate this.date "%Y-%m-%d"}}</small>
-      <div>{{ this.intro }}</div>
-      <a href="{{relative ../path this.path}}">Read more »</a>
+      <div class="col-md-12">
+        <small class="pull-right">{{formatDate this.date "%Y-%m-%d"}}</small>
+        <div>{{ this.intro }}</div>
+        <a class="more" href="{{relative ../path this.path}}">Read more »</a>
+      </div>
     </div>
     {{/each}}
 

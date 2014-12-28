@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="speedup-unit-tests-by-moving-mysql-data-to-memory-ubuntu-">Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="speedup-unit-tests-by-moving-mysql-data-to-memory-ubuntu-">Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
 <p>There are several ways to speedup slow unit tests which interact with database:</p>
 <ul>
 <li>Refactor code and tests and do not interact with db in unit tests</li>
@@ -138,7 +153,9 @@ To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.
 <p><a href="https://gist.github.com/1152547">Script to put mysqld on a ram disk in ubuntu 10.04. Runs on every hudson slave boot</a></p>
 <p><a href="http://www.indimon.co.uk/2012/mysql-tmpdir-on-devshm/">MySQL tmpdir on /dev/shm</a></p>
 <p><a href="http://stackoverflow.com/questions/2783313/how-can-i-get-around-mysql-errcode-13-with-select-into-outfile">How can I get around MySQL Errcode 13 with SELECT INTO OUTFILE?</a></p>
-</div>
+
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

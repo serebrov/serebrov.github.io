@@ -7,8 +7,9 @@
     <title></title>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/pygments.css" rel="stylesheet">
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,21 @@
   </head>
   <body>
     <div class="container">
-      <div class="row"><h1 id="git-find-not-merged-branches">git - find not merged branches</h1>
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="git-find-not-merged-branches">git - find not merged branches</h1>
 <p><!-- more -->
 <a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html">git-branch(1)</a></p>
 <p>With --contains, shows only the branches that contain the named commit
@@ -40,7 +55,9 @@ If the <commit> argument is missing it defaults to HEAD (i.e. the tip of the cur
 <pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">branch</span> <span class="o">-</span><span class="nx">a</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">merged</span> <span class="nx">feature</span>
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+          </div>
+      </div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
