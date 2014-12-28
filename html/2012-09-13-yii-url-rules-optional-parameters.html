@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="yii-url-rules-optional-parameters">Yii url rules - optional parameters</h1>
+<p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
+<pre><code><div class="highlight"><pre><span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">99</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">98</span><span class="o">/</span><span class="nx">draft</span>
+<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span>
+<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
+</pre></div>
+
+</code></pre><p>We have a list of articles and each article has several revisions. Also each revision can have draft and published version.</p>
+<p>In the code we have a single &#39;article/get&#39; action which allows us to get specific article (last revision) by name (&#39;GET articles/my-article&#39;) or id (&#39;GET articles/33&#39;).</p>
+<p>Using additional parameters we can get last revision draft (&#39;GET articles/33/draft&#39;), get specific revision (&#39;GET articles/33/revisions/99&#39;) or get article using revision ID only (&#39;GET articles/revisions/99&#39;).</p>
+<p>Now we can setup URL rules for these routes like this:</p>
+<pre><code><div class="highlight"><pre><span class="c1">//- articles/revisions/98/draft</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;article/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;articles/revisions/&lt;revision:\d+&gt;/&lt;version:published|draft&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+<span class="c1">//- articles/revisions/99</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;article/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;articles/revisions/&lt;revision:\d+&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+<span class="c1">//- articles/77/revisions/99/draft</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;article/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;articles/&lt;article:[\w\d\.]+&gt;/revisions/&lt;revision:\d+&gt;/&lt;version:published|draft&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+<span class="c1">//- articles/77/revisions/99</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;article/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;articles/&lt;article:[\w\d\.]+&gt;/revisions/&lt;revision:\d+&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+<span class="c1">//- articles/77/draft</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;article/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;articles/&lt;revision:[\w\d\.]+&gt;/&lt;version:published|draft&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+<span class="c1">// articles/77 (or articles/[name])</span>
+<span class="nx">array</span><span class="p">(</span><span class="s1">&#39;articles/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;article/&lt;article:[\w\d\.]+&gt;&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+</pre></div>
+
+</code></pre><p>But there is much better option. We can describe this a single URL route with optional parameters (regexp groups with trailing question mark do the trick):</p>
+<pre><code><div class="highlight"><pre><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;app/get&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;apps(/&lt;app:[\w\d\.]+&gt;)?(/updates/&lt;update:\d+&gt;)?(/&lt;revision:published|draft&gt;)?&#39;</span><span class="p">,</span>
+<span class="s1">&#39;verb&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;GET&#39;</span>
+<span class="p">),</span>
+</pre></div>
+
+</code></pre><h2 id="optional-parameters-at-the-end">Optional parameters at the end</h2>
+<p>The special case is when we need to allow any number of additional parameters at the end of the URL. This case is supported by URL manager:</p>
+<pre><code><div class="highlight"><pre><span class="nx">If</span> <span class="nx">a</span> <span class="nx">pattern</span> <span class="nx">ends</span> <span class="kd">with</span> <span class="s1">&#39;/*&#39;</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">means</span> <span class="nx">additional</span> <span class="nx">GET</span> <span class="nx">parameters</span> <span class="nx">may</span> <span class="nx">be</span> <span class="nx">appended</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">path</span> <span class="nx">info</span> <span class="nx">part</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">URL</span><span class="p">;</span> <span class="nx">otherwise</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">GET</span> <span class="nx">parameters</span> <span class="nx">can</span> <span class="nx">only</span> <span class="nx">appear</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">query</span> <span class="nx">string</span> <span class="nx">part</span><span class="p">.</span>
+</pre></div>
+
+</code></pre></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

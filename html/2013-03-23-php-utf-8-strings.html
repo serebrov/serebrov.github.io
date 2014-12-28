@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="php-utf-8-strings-handling">PHP - utf-8 strings handling</h1>
+<p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
+encoding for string functions to utf-8 in php.ini:</p>
+<pre><code><div class="highlight"><pre><span class="nx">mbstring</span><span class="p">.</span><span class="nx">internal_encoding</span> <span class="o">=</span> <span class="nx">UTF</span><span class="o">-</span><span class="mi">8</span>
+<span class="nx">mbstring</span><span class="p">.</span><span class="nx">func_overload</span> <span class="o">=</span> <span class="mi">7</span>
+</pre></div>
+
+</code></pre><p>These settings allow us to use &quot;usual&quot; php string functions like substr() for utf-8 strings.
+It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).</p>
+<p>Default encoding can also be set using <a href="http://php.net/manual/en/function.mb-internal-encoding.php">mb_internal_encoding function</a>:</p>
+<pre><code><div class="highlight"><pre><span class="nx">mb_internal_encoding</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre><p>Or encoding can be set explicitly as argument in mbstring function:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$sub</span> <span class="o">=</span> <span class="nx">mb_substr</span><span class="p">(</span><span class="nx">$mbstr</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre><h2 id="links">Links</h2>
+<p><a href="http://www.php.net/manual/en/book.mbstring.php">PHP Docs - Multibyte String</a></p>
+<p><a href="http://www.yiiframework.com/wiki/16/how-to-set-up-unicode/">Yii Wiki - How to set up Unicode</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

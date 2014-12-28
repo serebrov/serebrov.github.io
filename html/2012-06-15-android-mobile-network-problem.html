@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="andriod-moblie-network-problem-after-busybox-update">Andriod - moblie network problem after BusyBox update</h1>
+<p>I have LG p500 (Optimus One), rooted with original ROM.</p>
+<p>After update to <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox</a> 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.</p>
+<p>I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&#39;t help. I did a factory reset - also didn&#39;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</p>
+<p>So I started examining system logs and found this error:</p>
+<pre><code><div class="highlight"><pre><span class="nx">Failed</span> <span class="nx">to</span> <span class="nx">replace</span> <span class="k">default</span> <span class="nx">route</span> <span class="nx">com</span><span class="p">.</span><span class="nx">android</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">NativeDaemonConnectorException</span>
+<span class="mi">06</span><span class="o">-</span><span class="mi">12</span> <span class="mi">17</span><span class="o">:</span><span class="mi">04</span><span class="o">:</span><span class="mf">40.999</span> <span class="nx">E</span><span class="o">/</span><span class="nx">NetworkManagmentService</span><span class="p">(</span><span class="mi">1560</span><span class="p">)</span><span class="nx">com</span><span class="p">.</span><span class="nx">android</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">NetworkManagementService</span> <span class="mi">994</span>
+<span class="nx">Failed</span> <span class="nx">to</span> <span class="nx">replace</span> <span class="k">default</span> <span class="nx">route</span> <span class="nx">com</span><span class="p">.</span><span class="nx">android</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">NativeDaemonConnectorException</span><span class="o">:</span>
+<span class="nx">Cmd</span> <span class="p">{</span><span class="nx">route</span> <span class="nx">replace</span> <span class="nx">def</span> <span class="nx">v4</span> <span class="nx">rmnet0</span> <span class="mf">31.144</span><span class="p">.</span><span class="mf">159.49</span><span class="p">}</span> <span class="nx">failed</span> <span class="kd">with</span> <span class="nx">code</span> <span class="mi">400</span> <span class="o">:</span> <span class="p">{</span><span class="nx">failed</span> <span class="nx">to</span> <span class="nx">replace</span> <span class="k">default</span> <span class="nx">route</span> <span class="k">for</span> <span class="p">[</span><span class="nx">rmnet0</span> <span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="p">(</span><span class="nx">I</span><span class="o">/</span><span class="nx">O</span> <span class="nx">error</span><span class="p">)}</span><span class="o">:</span> <span class="k">for</span> <span class="nx">iface</span> <span class="p">[</span><span class="nx">rmnet0</span><span class="p">]</span>
+<span class="mi">06</span><span class="o">-</span><span class="mi">12</span> <span class="mi">17</span><span class="o">:</span><span class="mi">04</span><span class="o">:</span><span class="mf">40.999</span> <span class="nx">E</span><span class="o">/</span><span class="nx">NetworkStateTracker</span><span class="p">(</span><span class="mi">1560</span><span class="p">)</span><span class="nx">android</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="nx">NetworkStateTracker</span> <span class="mi">249</span>
+<span class="nx">Unable</span> <span class="nx">to</span> <span class="nx">add</span> <span class="k">default</span> <span class="nx">route</span><span class="p">.</span>
+</pre></div>
+
+</code></pre><p>I googled this error and found XDA thread which mention this error, page where it mentioned first - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=418">XDA forum thread, see post 4174</a>.</p>
+<p>Note that I use original LG ROM (not the rom discussed in that thread). Few pages later there is a more detailed examination - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=428">see post 4272 and 4275</a>.</p>
+<p>During discussion they suggested to try this command (I modified it a bit because original forum version gave error about wrong arguments. I issued this command in the <a href="https://play.google.com/store/apps/details?id=os.tools.scriptmanager">Script Manager</a> via su):</p>
+<pre><code><div class="highlight"><pre><span class="nx">su</span> <span class="o">-</span><span class="nx">c</span> <span class="s2">&quot;ip -4 route replace default via 109.46.130.66 dev rmnet0&quot;</span>
+</pre></div>
+
+</code></pre><p>Where ip (109.46.130.66) is ip address from the com.android.server.NativeDaemonConnectorException error above - I think this is dynamic dns server I got from my mobile network provider (different on each connection).
+And this command makes network work! But only for curren session. When I reconnect GPRS the network doesn&#39;t work again (because new dns server ip is issued every time).</p>
+<p>The final solution is to take an &quot;ip&quot; binary from the original rom and replace a busybox&#39;s version:</p>
+<ul>
+<li>Get the <a href="http://forum.xda-developers.com/showthread.php?t=1260920">stock rom</a></li>
+<li>Extract system files from kdz format, <a href="http://forum.xda-developers.com/showthread.php?t=901417">how to</a></li>
+<li>After extracting &quot;system.mbn&quot;: copy system/bin/ip to the device (somewhere, for example, sd card root).</li>
+<li>Rename /system/bin/ip to /system/bin/ip_busybox (just a backup). To access system folder on the device I used <a href="https://play.google.com/store/apps/details?id=com.estrongs.android.pop">ES File Explorer</a> with root mode enabled.</li>
+<li>Copy original &quot;ip&quot; (from sdcard root) to /system/bin/</li>
+</ul>
+<p>Finally I want to thank <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox installer</a> developer, Stephen. I contacted him by email when I realized that problem was with busybox installer and he answered and put effort to help me find the solution. Also he posted about this issue in the mentioned above XDA thread (I could not do this because have no permission to post into developer topics on XDA).</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

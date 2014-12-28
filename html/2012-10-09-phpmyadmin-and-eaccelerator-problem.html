@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="phpmyadmin-and-eaccelerator-problem">phpmyadmin and eaccelerator problem</h1>
+<p>Error when trying to access phpmyadmin (in Chrome):</p>
+<pre><code><div class="highlight"><pre><span class="nb">Error</span> <span class="mi">324</span> <span class="p">(</span><span class="nx">net</span><span class="o">::</span><span class="nx">ERR_EMPTY_RESPONSE</span><span class="p">)</span><span class="o">:</span> <span class="nx">The</span> <span class="nx">server</span> <span class="nx">closed</span> <span class="nx">the</span> <span class="nx">connection</span> <span class="nx">without</span> <span class="nx">sending</span> <span class="nx">any</span> <span class="nx">data</span><span class="p">.</span>
+</pre></div>
+
+</code></pre><p>The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:</p>
+<pre><code><div class="highlight"><pre><span class="nx">php_flag</span> <span class="nx">eaccelerator</span><span class="p">.</span><span class="nx">enable</span> <span class="mi">0</span>
+</pre></div>
+
+</code></pre></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

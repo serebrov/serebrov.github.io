@@ -1,0 +1,29 @@
+{{#extend "bootstrap"}}
+  {{#content "body"}}
+
+   <ul>
+      {{#each paginate.files}}
+          <li><a href="{{relative ../path this.path}}">
+            {{ this.path }} - {{ this.data.headline }} - {{ this.data.pub_date }}
+          </a></li>
+      {{/each}}
+    </ul>
+
+    <ul class="pagination">
+      {{#if paginate.previous}}
+        <li><a href="{{relative ../path paginate.previous.path}}">Prev</a></li>
+      {{else}}
+        <li class="disabled"><a href="#">Prev</a></li>
+      {{/if}}
+      {{#each paginate.pages}}
+        <li><a href="{{relative ../path this.path}}">{{ this.paginate.num }}</a></li>
+      {{/each}}
+      {{#if paginate.next}}
+        <li><a href="{{relative ../path paginate.next.path}}">Next</a></li>
+      {{else}}
+        <li class="disabled"><a href="#">Next</a></li>
+      {{/if}}
+    </ul>
+
+  {{/content}}
+{{/extend}}

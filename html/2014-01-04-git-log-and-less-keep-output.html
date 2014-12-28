@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="how-to-keep-git-log-and-less-output-on-the-screen">How to keep git log and less output on the screen</h1>
+<p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
+screen when you exit from less.
+This is not convenient in many cases so here is how to fix this.</p>
+<p>Just for git commands:</p>
+<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">config</span> <span class="o">--</span><span class="nx">global</span> <span class="o">--</span><span class="nx">replace</span><span class="o">-</span><span class="nx">all</span> <span class="nx">core</span><span class="p">.</span><span class="nx">pager</span> <span class="s2">&quot;less -iXFR&quot;</span>
+</pre></div>
+
+</code></pre><p>For less globally (including git) - add to .bashrc / .zshrc / etc:</p>
+<pre><code><div class="highlight"><pre><span class="kr">export</span> <span class="nx">LESS</span><span class="o">=-</span><span class="nx">iXFR</span>
+</pre></div>
+
+</code></pre><p>The options we set for less are:</p>
+<pre><code><div class="highlight"><pre><span class="o">*</span> <span class="o">-</span><span class="nx">i</span> <span class="o">-</span> <span class="nx">ignore</span> <span class="k">case</span> <span class="nx">when</span> <span class="nx">searching</span> <span class="p">(</span><span class="nx">but</span> <span class="nx">respect</span> <span class="k">case</span> <span class="k">if</span> <span class="nx">search</span> <span class="nx">term</span> <span class="nx">contains</span> <span class="nx">uppercase</span> <span class="nx">letters</span><span class="p">)</span>
+<span class="o">*</span> <span class="o">-</span><span class="nx">X</span> <span class="o">-</span> <span class="k">do</span> <span class="nx">not</span> <span class="nx">clear</span> <span class="nx">screen</span> <span class="nx">on</span> <span class="nx">exit</span>
+<span class="o">*</span> <span class="o">-</span><span class="nx">F</span> <span class="o">-</span> <span class="nx">exit</span> <span class="k">if</span> <span class="nx">text</span> <span class="nx">is</span> <span class="nx">less</span> <span class="nx">then</span> <span class="nx">one</span> <span class="nx">screen</span> <span class="kr">long</span>
+<span class="o">*</span> <span class="o">-</span><span class="nx">R</span> <span class="o">-</span> <span class="nx">was</span> <span class="nx">on</span> <span class="nx">by</span> <span class="k">default</span> <span class="nx">on</span> <span class="nx">my</span> <span class="nx">system</span><span class="p">,</span> <span class="nx">something</span> <span class="nx">related</span> <span class="nx">to</span> <span class="nx">colors</span>
+</pre></div>
+
+</code></pre><h1 id="links">Links</h1>
+<p><a href="http://www.linuxquestions.org/questions/linux-software-2/more-or-less-but-less-does-not-keep-its-output-on-the-screen-938187/">Linux Questions: more or less - but less does not keep its output on the screen</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

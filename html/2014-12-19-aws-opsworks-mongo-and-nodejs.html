@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="amazon-opsworks-node-js-app-with-mongodb-setup">Amazon OpsWorks - node.js app with MongoDB setup</h1>
+<p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html">Amazon OpsWorks</a> provides a way to manage AWS resources
+using <a href="http://docs.chef.io/recipes.html">Chef recipes</a>.</p>
+<p>Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server.
+It is similar to the php application + mysql setup described
+in the OpsWorks <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html">Getting Started guide</a>.</p>
+<p>The OpsWorks setup includes:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingstacks.html">Stack</a> - a container for the deployment process we will setup</li>
+<li>Two <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinglayers.html">Layers</a> - node.js app and MongoDB</li>
+<li>Two <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances.html">Instances</a> - one EC2 instance for node app and another for mongo</li>
+<li>One <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingapps.html">Application</a> - this is the code we will deploy</li>
+</ul>
+<p>MongoDb setup is based on <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">this blog post</a>.
+We will use <a href="https://github.com/edelight/chef-mongodb">MongoDB Chef cookbook</a> which allows us to deploy different MongoDB setups - single instance,
+replica set, sharding, replica sets with sharding.
+It is also possible to manage mongo users and setup <a href="https://mms.mongodb.com/">MongoDB Monitoring System (MMS)</a> agent.</p>
+<p>See the detailed step-by-step guide on working with OpsWorks UI is <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html">here</a>.
+I will describe only important steps and problems I had.
+Also the difference from the standard setup is that I actually launched two node apps on the node.js server instance - the main application and
+the test application (both are from the same source code repository).</p>
+<ul>
+<li>Create a new stack, set a name and check other default parameters<ul>
+<li>It is good to create and set the &#39;Default SSH key&#39;, so you will be able to ssh to instances later to debug problems with the setup</li>
+</ul>
+</li>
+<li>Add Node.js App Server layer - select &#39;Node.js App Server&#39; as a type</li>
+<li>Add MongoDB layer - select &#39;Custom&#39; as a type</li>
+</ul>
+<h2 id="node-js-layer-setup-">Node.js layer setup.</h2>
+<p>As mentioned above, I have two node apps which I wanted to launch on the same server - main app and test app.
+The main app works on the port 80 and the test app on the 3300.
+Repository structure is this:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>├── app
+├── public
+├── package.json
+├── server.js - this is the main app entry point
+├── ...
+└── <span class="nb">test</span>-app
+    ├── bin/www - this is the <span class="nb">test </span>app entry point
+    ├── app.js
+    ├── ...
+</pre></div>
+
+</code></pre>
+<p>The <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinglayers-node.html">standard node.js layer</a> uses chef recipes from <a href="https://github.com/aws/opsworks-cookbooks/tree/release-chef-11.10/opsworks_nodejs">the opsworks cookbooks repository</a> and has some limitations:</p>
+<ul>
+<li>The main file must be named server.js and reside in the deployed application&#39;s root directory.</li>
+<li>Express apps must include a package.json file in the application&#39;s root directory.</li>
+<li>The application must listen on port 80 (for HTTP requests) or port 443 (for HTTPS requests).</li>
+</ul>
+<p>In my case the main app already had the required layout (it is based on <a href="http://meanjs.org/">mean.js</a>).
+I only had to setup port 80 for the production environment.</p>
+<p>The test app requires a simple custom chef recipe and some additional layer settings.
+To use custom recipes it is necessary to create a separate <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-installingcustom-repo.html">cookbook repository</a>.
+It can be, for example, public or private git repository on github or bitbucket.
+In my case I used private bitbucket repository with following structure:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>├── Berksfile
+├── mongodb-singlenode
+│   ├── metadata.rb
+│   └── recipes
+│       └── default.rb
+├── nodeapp
+│   ├── metadata.rb
+│   ├── recipes
+│   │   └── default.rb
+│   └── templates
+│       └── default
+│           └── app_test.monitrc.erb
+└── README.md
+</pre></div>
+
+</code></pre>
+<p>Here I have custom recipe for mongodb setup (it is described below) and a custom recipe with template for the node app.
+The nodeapp/metadata.rb just contains a cookbook metadata, see <a href="https://github.com/aws/opsworks-cookbooks/blob/release-chef-11.10/opsworks_nodejs/metadata.rb">example</a>.
+The recipes/default.rb is this:</p>
+<pre><code class="lang-ruby"><div class="highlight"><pre><span class="n">deploy</span> <span class="o">=</span> <span class="n">node</span><span class="o">[</span><span class="ss">:deploy</span><span class="o">][</span><span class="s1">&#39;my_app&#39;</span><span class="o">]</span>
+
+<span class="n">script</span> <span class="s2">&quot;setup_test_app&quot;</span> <span class="k">do</span>
+  <span class="n">interpreter</span> <span class="s2">&quot;bash&quot;</span>
+  <span class="n">user</span> <span class="s2">&quot;root&quot;</span>
+  <span class="n">cwd</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy</span><span class="o">[</span><span class="ss">:deploy_to</span><span class="o">]</span><span class="si">}</span><span class="s2">/current/app-test&quot;</span>
+  <span class="n">code</span> <span class="o">&lt;&lt;-</span><span class="no">EOH</span>
+<span class="sh">    npm install -d</span>
+<span class="no">  EOH</span>
+<span class="k">end</span>
+
+<span class="n">template</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">node</span><span class="o">.</span><span class="n">default</span><span class="o">[</span><span class="ss">:monit</span><span class="o">][</span><span class="ss">:conf_dir</span><span class="o">]</span><span class="si">}</span><span class="s2">/node_web_app-app-test.monitrc&quot;</span> <span class="k">do</span>
+  <span class="n">source</span> <span class="s1">&#39;app_test.monitrc.erb&#39;</span>
+  <span class="n">owner</span> <span class="s1">&#39;root&#39;</span>
+  <span class="n">group</span> <span class="s1">&#39;root&#39;</span>
+  <span class="n">mode</span> <span class="s1">&#39;0644&#39;</span>
+  <span class="n">variables</span><span class="p">(</span>
+    <span class="ss">:deploy</span> <span class="o">=&gt;</span> <span class="n">deploy</span><span class="p">,</span>
+    <span class="ss">:deploy_to</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy</span><span class="o">[</span><span class="ss">:deploy_to</span><span class="o">]</span><span class="si">}</span><span class="s2">/current/app-test&quot;</span><span class="p">,</span>
+    <span class="ss">:test_port</span> <span class="o">=&gt;</span> <span class="mi">3300</span><span class="p">,</span>
+    <span class="ss">:test_env</span> <span class="o">=&gt;</span> <span class="s1">&#39;production&#39;</span><span class="p">,</span>
+    <span class="ss">:application_name</span> <span class="o">=&gt;</span> <span class="s1">&#39;app-test&#39;</span><span class="p">,</span>
+    <span class="ss">:monitored_script</span> <span class="o">=&gt;</span> <span class="s2">&quot;</span><span class="si">#{</span><span class="n">deploy</span><span class="o">[</span><span class="ss">:deploy_to</span><span class="o">]</span><span class="si">}</span><span class="s2">/current/app-test/bin/www&quot;</span>
+  <span class="p">)</span>
+  <span class="n">notifies</span> <span class="ss">:restart</span><span class="p">,</span> <span class="s2">&quot;service[monit]&quot;</span><span class="p">,</span> <span class="ss">:immediately</span>
+<span class="k">end</span>
+</pre></div>
+
+</code></pre>
+<p>This recipe invokes <code>npm install -d</code> inside the test app folder and then creates a monit service config.
+So our test app will be watched by monit and restarted in the case of failure.
+This is the same setup the standard OpsWorks node.js layer uses for the main application.</p>
+<p>The <code>templates/default/app_test.monitrc.erb</code> contains a config file template:</p>
+<pre><code class="lang-erb"><div class="highlight"><pre><span class="x">check host node_web_app_</span><span class="cp">&lt;%=</span> <span class="vi">@application_name</span> <span class="cp">%&gt;</span><span class="x"> with address 127.0.0.1</span>
+<span class="x">  start program = &quot;/bin/sh -c &#39;cd </span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x"> ; source </span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x">/../shared/app.env ; /usr/bin/env PORT=</span><span class="cp">&lt;%=</span> <span class="vi">@test_port</span> <span class="cp">%&gt;</span><span class="x"> NODE_ENV=</span><span class="cp">&lt;%=</span> <span class="vi">@test_env</span> <span class="cp">%&gt;</span><span class="x"> NODE_PATH=</span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x">/node_modules:</span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x"> /usr/local/bin/node </span><span class="cp">&lt;%=</span> <span class="vi">@monitored_script</span> <span class="cp">%&gt;</span><span class="x">&#39;&quot;</span>
+<span class="x">  stop program = &quot;/usr/bin/pkill -f &#39;node </span><span class="cp">&lt;%=</span> <span class="vi">@monitored_script</span> <span class="cp">%&gt;</span><span class="x">&#39;&quot;</span>
+<span class="x">  </span><span class="cp">&lt;%</span> <span class="k">if</span> <span class="vi">@deploy</span><span class="o">[</span><span class="ss">:ssl_support</span><span class="o">]</span> <span class="cp">-%&gt;</span><span class="x"></span>
+<span class="x">  if failed port </span><span class="cp">&lt;%=</span> <span class="vi">@test_port</span> <span class="cp">%&gt;</span><span class="x"> type TCPSSL protocol HTTP</span>
+<span class="x">  </span><span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">-%&gt;</span><span class="x"></span>
+<span class="x">  if failed port </span><span class="cp">&lt;%=</span> <span class="vi">@test_port</span> <span class="cp">%&gt;</span><span class="x"> protocol HTTP</span>
+<span class="x">  </span><span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">-%&gt;</span><span class="x"></span>
+<span class="x">    request /</span>
+<span class="x">    with timeout 10 seconds</span>
+<span class="x">    then restart</span>
+</pre></div>
+
+</code></pre>
+<p>This way we setup monit to run and monitor the test app.
+App is started with command like <code>PORT=3300 NODE_ENV=production path/to/deployment/current/app-test/bin/www</code>.</p>
+<p>Now change the layer settings:</p>
+<ul>
+<li>Custom recipe<ul>
+<li>For the Node.js App Server select &#39;Recipes&#39;, click &#39;Edit&#39;</li>
+<li>Set the custom recipes repository URL and add &#39;nodeapp::default&#39; recipe to the &#39;Deploy&#39; step.</li>
+<li>This way we will launch our custom recipe each time the app is deployed</li>
+</ul>
+</li>
+<li>Network - optional step, here you may want to enable Elastic IP, so the app server will always have the same IP</li>
+<li>Security - here you need to add a custom security group to the layer to open port 3300 for our test app<ul>
+<li>Open the EC2 service, Security Groups, create new security group and allow port 3300, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html">see also docs</a></li>
+<li>Go back to the node app layer settings, Security tab and add a custom security group you created</li>
+</ul>
+</li>
+</ul>
+<h2 id="mongodb-layer-setup">MongoDB layer setup</h2>
+<p>The setup is based on <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">this blog post</a>.
+It uses the custom chef recipe from our cookbook repository:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>├── Berksfile
+├── mongodb-singlenode
+│   ├── metadata.rb
+│   └── recipes
+│       └── default.rb
+├── nodeapp
+│   ├── ...
+</pre></div>
+
+</code></pre>
+<p>Here we have Berksfile which describes dependencies:</p>
+<pre><code class="lang-ruby"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://supermarket.getchef.com&#39;</span>
+
+<span class="n">cookbook</span> <span class="s1">&#39;mongodb&#39;</span>
+</pre></div>
+
+</code></pre>
+<p>The <code>mongodb-singlenode/metadata.rb</code> with recipe dependency info:</p>
+<pre><code class="lang-ruby"><div class="highlight"><pre><span class="nb">name</span>        <span class="s2">&quot;mongodb-singlenode&quot;</span>
+<span class="n">description</span> <span class="s1">&#39;MongoDB single node Berkshelf based install&#39;</span>
+<span class="n">maintainer</span>  <span class="s2">&quot;Company&quot;</span>
+<span class="n">license</span>     <span class="s2">&quot;Apache 2.0&quot;</span>
+<span class="n">version</span>     <span class="s2">&quot;1.0.0&quot;</span>
+
+<span class="n">depends</span> <span class="s1">&#39;mongodb&#39;</span>
+</pre></div>
+
+</code></pre>
+<p>And a custom recipe <code>mongodb-singlenode/recipes/default.rb</code>:</p>
+<pre><code class="lang-ruby"><div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="n">normal</span><span class="o">[</span><span class="ss">:mongodb</span><span class="o">][</span><span class="ss">:config</span><span class="o">][</span><span class="ss">:bind_ip</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1,</span><span class="si">#{</span><span class="n">node</span><span class="o">[</span><span class="ss">:opsworks</span><span class="o">][</span><span class="ss">:instance</span><span class="o">][</span><span class="ss">:private_ip</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">include_recipe</span> <span class="s2">&quot;mongodb::default&quot;</span>
+</pre></div>
+
+</code></pre>
+<p>The important part here is the first string where we add instance&#39;s private ip to the &#39;bind_ip&#39; parameter.
+This way the MongoDB instance will be available to our node.js app server.</p>
+<p>The way I set the <code>bind_ip</code> parameter is different from the <a href="https://github.com/edelight/chef-mongodb#single-mongodb-instance">recommended</a>
+because I had an <a href="https://github.com/edelight/chef-mongodb#single-mongodb-instance">issue with recommended setup</a>.
+Also it is necessary to use Amazon Linux instance for mongo because there is also a problem (solvable, but I didn&#39;t tested the solution) with ubuntu setup.</p>
+<p>Now open the mongo layer in the OpsWorks UI, &#39;Recipes&#39; settings and add our custom <code>mongodb-singlenode::default</code> recipe to the &#39;Setup&#39; step.</p>
+<h2 id="finalize-the-setup">Finalize the setup</h2>
+<p>Now add one instance to each layer. You can do this from both <code>Layers</code> and <code>Instances</code> pages in the OpsWorks UI.
+I use Ubuntu 14.04 for node.js app layer and Amazon Linux 2014.09 for mongo layer.</p>
+<p>Give some meaningful name for the mongo instance (the <code>Hostname</code> parameter). This data goes to <code>/etc/hosts</code> on each instance.</p>
+<p>For example, if the mongo host is &#39;my-app-db&#39; then the node.js app can connect to the database using <code>mongodb://my-app-db/dbname</code> connection string.</p>
+<p>Add an application (from <code>Apps</code> page). Essential parameters are:</p>
+<ul>
+<li>Type - Node.js</li>
+<li>Data source type - None (we use custom mongo setup)</li>
+<li>Set repository parameters</li>
+<li>Add an environment variable: NODE_ENV - production</li>
+</ul>
+<p>Now go to &#39;Deployments&#39; and deploy an app.
+If everything is done right it will setup mongodb and node.js and deploy application code.
+In the case of failure the OpsWorks will display a link to the log file.</p>
+<h2 id="additional-information-and-related-links">Additional information and related links</h2>
+<ul>
+<li>MongoDB documentation <a href="http://docs.mongodb.org/ecosystem/platforms/amazon-ec2/">has a section about setup on Amazon EC2</a>.</li>
+<li>Already mentioned <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">blog post</a> about mongo setup with OpsWorks and another <a href="http://netinlet.com/blog/2014/01/18/setting-up-a-mongodb-replicaset-with-aws-opsworks/">blog post about replicaset setup</a>.</li>
+<li>OpsWorks <a href="https://github.com/aws/opsworks-cookbooks/tree/release-chef-11.4">cookbooks repository</a></li>
+<li><a href="http://stackoverflow.com/questions/18637735/setting-up-mongodb-via-aws-opsworks">Stackoverflow: setting up mongodb via AWS opsworks</a></li>
+<li><a href="https://github.com/ujuettner/opsworks-mongodb-example">opsworks-mongodb-example repository</a></li>
+<li><a href="https://github.com/9apps/mongodb">MongoDB on AWS (RDS-Style)</a></li>
+<li><a href="http://softwarebyjosh.com/2012/03/11/elastic-ips-and-mongodb-replica-sets.html">Fault Tolerant MongoDB on EC2</a></li>
+<li><a href="https://media.amazonwebservices.com/AWS_NoSQL_MongoDB.pdf">NoSQL Database in the Cloud: MongoDB on AWS</a></li>
+<li><a href="http://www.slideshare.net/AmazonWebServices/ebs-mongo-dbwebinarfinal-nn">High Performance MongoDB Clusters with Amazon EBS Provisioned IOPS</a></li>
+<li><a href="https://medium.com/@polkaspots/building-a-mongo-replica-set-with-chef-and-vagrant-24dc2f59dc90">Building a Mongo Replica Set with Chef and Vagrant article</a></li>
+<li><a href="https://www.linode.com/docs/databases/mongodb/creating-a-mongodb-replication-set-on-ubuntu-12-04-precise">Linode: Creating a MongoDB Replication Set on Ubuntu 12.04 (Precise)</a></li>
+<li><a href="http://racingtadpole.com/blog/meteor-mongodb-webfaction/">Hosting meteor with MongoDb on Webfaction</a></li>
+</ul>
+<p>OpsWorks, Chef and Ruby:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/attributes.html">OpsWorks attribute reference</a></li>
+<li><a href="https://docs.chef.io/resource.html">OpsWorks resource reference</a></li>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-installingcustom-repo.html">Cookbook repository structure</a></li>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-extend-scripts.html">How to use shell scripts</a></li>
+<li><a href="http://stackoverflow.com/questions/14848110/how-i-can-change-a-file-with-chef">Stackoverflow: How I can change a file with chef?</a></li>
+<li><a href="https://docs.chef.io/ruby.html">Just Enough Ruby for Chef</a></li>
+<li><a href="https://docs.chef.io/dsl_recipe.html">About the Recipe DSL</a></li>
+<li><a href="http://stackoverflow.com/questions/20569521/what-ruby-features-are-used-in-chef-recipes">Stackoverflow: what ruby features are used in chef recipes?</a></li>
+<li><a href="http://stackoverflow.com/questions/19719968/ruby-code-blocks-and-chef/19726723#19726723">Stackoverflow: Ruby Code Blocks and Chef</a></li>
+</ul>
+<p>Hosted MongoDB:
+<a href="https://www.compose.io/mongodb/">compose.io (as I understand former MongoHQ)</a>, <a href="http://mongodirector.com/">MongoDirector</a>, <a href="https://mongolab.com/">mongolab</a>, <a href="http://objectrocket.com/">ObjectRocket</a> and <a href="http://docs.dotcloud.com/services/mongodb/">dotCloud</a>.</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="selenium-problem-with-big-file-upload">selenium - problem with big file upload</h1>
+<h2 id="problem">Problem</h2>
+<p>Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.</p>
+<h2 id="solution">Solution</h2>
+<p>For now I fixed this by commenting out local file upload (three first lines):</p>
+<pre><code><div class="highlight"><pre><span class="nx">def</span> <span class="nx">send_keys</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="o">*</span><span class="nx">value</span><span class="p">)</span><span class="o">:</span>
+        <span class="s2">&quot;&quot;&quot;Simulates typing into the element.&quot;&quot;&quot;</span>
+        <span class="err">#</span><span class="nx">local_file</span> <span class="o">=</span> <span class="nx">LocalFileDetector</span><span class="p">.</span><span class="nx">is_local_file</span><span class="p">(</span><span class="o">*</span><span class="nx">value</span><span class="p">)</span>
+        <span class="err">#</span><span class="k">if</span> <span class="nx">local_file</span> <span class="nx">is</span> <span class="nx">not</span> <span class="nx">None</span><span class="o">:</span>
+            <span class="err">#</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">_upload</span><span class="p">(</span><span class="nx">local_file</span><span class="p">)</span>
+
+        <span class="nx">typing</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="nx">val</span> <span class="k">in</span> <span class="nx">value</span><span class="o">:</span>
+            <span class="k">if</span> <span class="nx">isinstance</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">Keys</span><span class="p">)</span><span class="o">:</span>
+                <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+            <span class="nx">elif</span> <span class="nx">isinstance</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="kr">int</span><span class="p">)</span><span class="o">:</span>
+                <span class="nx">val</span> <span class="o">=</span> <span class="nx">str</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
+                <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">range</span><span class="p">(</span><span class="nx">len</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="o">:</span>
+                    <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="o">:</span>
+                <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">range</span><span class="p">(</span><span class="nx">len</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="o">:</span>
+                    <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">_execute</span><span class="p">(</span><span class="nx">Command</span><span class="p">.</span><span class="nx">SEND_KEYS_TO_ELEMENT</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="o">:</span> <span class="nx">typing</span><span class="p">})</span>
+</pre></div>
+
+</code></pre><p>Usually I do not change external libraries code, but in this case it is easiest way and it should not be necessary (I hope) after next selenium library update.</p>
+<h2 id="links">Links</h2>
+<p><a href="http://code.google.com/p/selenium/issues/detail?id=3812">Bug report</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

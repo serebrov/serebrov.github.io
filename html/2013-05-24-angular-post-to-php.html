@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
+<p>By default angular.js sends all data in json.
+So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.</p>
+<p>This can be solved in two ways - on the client side or on the server side.</p>
+<h2 id="server-side-solution">Server-side solution</h2>
+<p>On the server you can parse input and then decode data from json:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$data</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s2">&quot;php://input&quot;</span><span class="p">);</span>
+<span class="nx">$postData</span> <span class="o">=</span> <span class="nx">json_decode</span><span class="p">(</span><span class="nx">$data</span><span class="p">);</span>
+</pre></div>
+
+</code></pre><h2 id="client-side-solution">Client-side solution</h2>
+<p>On the client side the data can be sent in a way PHP expects it:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$http</span><span class="p">({</span>
+    <span class="nx">url</span><span class="o">:</span><span class="nx">url</span>
+    <span class="nx">data</span> <span class="o">:</span> <span class="nx">$</span><span class="p">.</span><span class="nx">param</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+    <span class="nx">method</span> <span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+    <span class="nx">headers</span> <span class="o">:</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">}</span>
+<span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
+</pre></div>
+
+</code></pre><p>Here we set the &#39;Content-Type&#39; header and encode data using jQuery&#39;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
+This also can be done for all requests as described <a href="http://stackoverflow.com/questions/12190166/angularjs-any-way-for-http-post-to-send-request-parameters-instead-of-json">on stackoverflow</a>.</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

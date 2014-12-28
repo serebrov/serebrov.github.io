@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="global-ajax-response-handler-and-jquery-localtime-plugin">global ajax response handler and jquery.localtime plugin</h1>
+<p>The <a href="http://code.google.com/p/jquery-localtime">jquery.localtime plugin</a> allows to convert date/time strings to a local user time on a client site.
+By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.</p>
+<p>Possible solution is to add some special handling to $.ajax &#39;success&#39; handlers, but it can require a lot of modifications.
+Better way is to set some global handler for all ajax requests and apply conversion to local time there.
+I evaluated several approaches before I could find a working solution.</p>
+<h2 id="first-try-run-local-time-conversion-in-ajaxcomplete-doesn-t-work-">First try - run local time conversion in $.ajaxComplete (doesn&#39;t work)</h2>
+<pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">ajaxComplete</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//code from jquery.localtime.js, jQuery.ready handler</span>
+    <span class="kd">var</span> <span class="nx">format</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">localise</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">is</span><span class="p">(</span><span class="s2">&quot;:input&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="kd">var</span> <span class="nx">formats</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">getFormat</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">cssClass</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">cssClass</span> <span class="k">in</span> <span class="nx">formats</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">formats</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">cssClass</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">format</span> <span class="o">=</span> <span class="nx">formats</span><span class="p">[</span><span class="nx">cssClass</span><span class="p">];</span>
+            <span class="c1">//this will try to convert alrady converted texts and cause an exception</span>
+            <span class="nx">jQuery</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nx">cssClass</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="nx">localise</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><p>It doesn&#39;t work because <code>jQuery(&quot;.&quot; + cssClass).each(localise)</code> will try to apply localization to all elements, including these which already present in the page and converted. And localtime plugin starts throwing exceptions because it can not convert already converted data.</p>
+<h2 id="second-try-run-local-time-conversion-in-ajaxcomplete-only-for-received-data-doesn-t-work-">Second try - run local time conversion in $.ajaxComplete only for received data (doesn&#39;t work)</h2>
+<pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">ajaxComplete</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">xhr</span><span class="p">,</span> <span class="nx">ajaxOptions</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//code from jquery.localtime.js, jQuery.ready handler</span>
+    <span class="kd">var</span> <span class="nx">format</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">localise</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">is</span><span class="p">(</span><span class="s2">&quot;:input&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="kd">var</span> <span class="nx">formats</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">getFormat</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">cssClass</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">cssClass</span> <span class="k">in</span> <span class="nx">formats</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">formats</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">cssClass</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nx">format</span> <span class="o">=</span> <span class="nx">formats</span><span class="p">[</span><span class="nx">cssClass</span><span class="p">];</span>
+            <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">resultText</span><span class="p">);</span>
+            <span class="nx">result</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nx">cssClass</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="nx">localise</span><span class="p">);</span>
+            <span class="nx">xhr</span><span class="p">.</span><span class="nx">resultText</span> <span class="o">=</span> <span class="c1">//convert result back to text</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><p>It doesn&#39;t work because ajaxComplete is invoked too late - when original $.ajax &#39;success&#39; handler already done its work.</p>
+<h2 id="third-try-use-ajaxsetup-converters-doesn-t-work-">Third try - use $.ajaxSetup converters (doesn&#39;t work)</h2>
+<pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">.</span><span class="nx">ajaxSetup</span><span class="p">({</span>
+    <span class="nx">converters</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;html html&quot;</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">textValue</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">localizeText</span><span class="p">(</span><span class="nx">textValue</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><p>It doesn&#39;t work because converter is invoked only when we have two different formats like &quot;text html&quot; and we got unexpected format in ajax result.</p>
+<h2 id="final-try-use-ajaxsetup-prefilters-works-">Final try - use $.ajaxSetup prefilters (works!)</h2>
+<pre><code><div class="highlight"><pre><span class="nx">jQuery</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajaxPrefilter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">originalOptions</span><span class="p">,</span> <span class="nx">jqXHR</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">success</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">success</span><span class="p">;</span>
+        <span class="c1">//if reqested data type was text or html or *</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">dataTypes</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">)</span> <span class="o">!=-</span><span class="mi">1</span> <span class="o">||</span>
+            <span class="nx">options</span><span class="p">.</span><span class="nx">dataTypes</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span>
+            <span class="nx">options</span><span class="p">.</span><span class="nx">dataTypes</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="p">)</span> <span class="p">{</span>
+            <span class="nx">options</span><span class="p">.</span><span class="nx">success</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">textStatus</span><span class="p">,</span> <span class="nx">jqXHR</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// override success handling</span>
+                <span class="nx">data</span> <span class="o">=</span> <span class="nx">localizeText</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+                <span class="k">if</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">success</span><span class="p">)</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span> <span class="k">return</span> <span class="nx">success</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">textStatus</span><span class="p">,</span> <span class="nx">jqXHR</span><span class="p">);</span>
+            <span class="p">};</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">localizeText</span><span class="p">(</span><span class="nx">textValue</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">format</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">localise</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">is</span><span class="p">(</span><span class="s2">&quot;:input&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">jQuery</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="kd">var</span> <span class="nx">formats</span> <span class="o">=</span> <span class="nx">jQuery</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">getFormat</span><span class="p">();</span>
+        <span class="kd">var</span> <span class="nx">cssClass</span><span class="p">;</span>
+        <span class="c1">//convert text to jQuery var</span>
+        <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">textValue</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">cssClass</span> <span class="k">in</span> <span class="nx">formats</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">formats</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">cssClass</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nx">format</span> <span class="o">=</span> <span class="nx">formats</span><span class="p">[</span><span class="nx">cssClass</span><span class="p">];</span>
+                <span class="nx">result</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nx">cssClass</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="nx">localise</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+        <span class="c1">//convert jQuery var back to text</span>
+        <span class="nx">$</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">){</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;script&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">text</span> <span class="o">+=</span> <span class="s1">&#39;&lt;script type=&quot;text/javascript&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;&lt;/&quot;</span><span class="o">+</span><span class="s2">&quot;script&gt;&quot;</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">!==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">//skip non-elements (HTML comments, text, etc)</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">text</span> <span class="o">+=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;&lt;div&gt;&#39;</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">html</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">text</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><p>This approach finally works.</p>
+<p>The tricky part here is also a text-to-jQuery-and-back conversion.
+While we can create a jQuery object (or array of objects) like this: <code>$(textValue)</code> and then process it, it is not so easy to convert it back to text.</p>
+<p>After the conversion we have <code>result</code> as an array of jQuery object and if we do <code>result.html()</code> than we get only inner HTML of the first item.</p>
+<p>And even if we wrap the result into a parent div like this <code>$(result).appendTo(&#39;&lt;div&gt;&#39;).parent().html()</code> than we get HTML but without javascript elements. So we need to iterate over the result and process HTML and javascript elements separately:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">){</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">nodeName</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;script&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">text</span> <span class="o">+=</span> <span class="s1">&#39;&lt;script type=&quot;text/javascript&quot;&gt;&#39;</span><span class="o">+</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">html</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;&lt;/&quot;</span><span class="o">+</span><span class="s2">&quot;script&gt;&quot;</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">nodeType</span> <span class="o">!==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//skip non-elements (HTML comments, text, etc)</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">text</span> <span class="o">+=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="s1">&#39;&lt;div&gt;&#39;</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">html</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><h2 id="links">Links</h2>
+<p><a href="http://api.jquery.com/extending-ajax/">Extending Ajax: Prefilters, Converters, and Transports</a></p>
+<p><a href="http://api.jquery.com/ajaxComplete/">jQuery docs: $.ajaxComplete()</a></p>
+<p><a href="http://stackoverflow.com/questions/7256207/how-can-i-intercept-ajax-responses-in-jquery-before-the-event-handler">Stackowerflow: How can I intercept ajax responses in jQuery before the event handler?</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

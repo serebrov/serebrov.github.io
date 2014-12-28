@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="innodb-notes">innodb notes</h1>
+<p>Below are some notes regarding the innodb transactions and locks.
+Most of them are just a copy-paste from <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html">innodb docs</a> with my notes.
+Also there are some examples of custom-maid deadlocks.</p>
+<p>In the examples of MySQL operations different sessions are marked as (1) and (2), for example:</p>
+<ul>
+<li><code>create table child (id int(11) NOT NULL) ENGINE=InnoDB;</code><ul>
+<li>common operation, do it from any session</li>
+</ul>
+</li>
+<li>(1) <code>start transaction;</code><ul>
+<li>do it in session #1</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code><ul>
+<li>do it in session #2</li>
+</ul>
+</li>
+</ul>
+<p>To get two (or more) sessions just launch several instances of <code>mysql</code> in different console windows.
+Most of information about deadlocks can be retrieved by <code>SHOW ENGINE INNODB STATUS</code> statement.
+Its output can be improved by creating <a href="http://dev.mysql.com/doc/refman/5.1/en/innodb-monitors.html#innodb-standard-monitor">special tables</a>:</p>
+<ul>
+<li><code>CREATE TABLE innodb_monitor(a int) ENGINE=INNODB;</code></li>
+<li><code>CREATE TABLE innodb_lock_monitor(a int) ENGINE=INNODB;</code></li>
+</ul>
+<h2 id="-transaction-isolation-levels-http-dev-mysql-com-doc-refman-5-5-en-set-transaction-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/set-transaction.html">transaction isolation levels</a></h2>
+<ul>
+<li>REPEATABLE READ (default)<ul>
+<li>in transaction sequential selects will get the same data</li>
+</ul>
+</li>
+<li>READ COMMITTED<ul>
+<li>in transaction sequential selects can get different (new) data</li>
+</ul>
+</li>
+<li>READ UNCOMMITTED<ul>
+<li>dirty read, read even not commited data</li>
+</ul>
+</li>
+<li>SERIALIZABLE<ul>
+<li>all SELECTSs are done as SELECT ... LOCK IN SHARE MODE</li>
+<li>so no one can modify data we selected (all selected data becomes read-only)</li>
+</ul>
+</li>
+</ul>
+<h2 id="-lock-modes-http-dev-mysql-com-doc-refman-5-5-en-innodb-lock-modes-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-lock-modes.html">lock modes</a></h2>
+<ul>
+<li>S (shared)<ul>
+<li>row level, others can get S, IS (select data, but not modify it)</li>
+</ul>
+</li>
+<li>X (exclusive)<ul>
+<li>row level, others can do nothing</li>
+</ul>
+</li>
+<li>IS (Intention shared)<ul>
+<li>table-level, others can S, IS, IX (can not modify record, but can do IX)</li>
+</ul>
+</li>
+<li>IX (Intention exclusive)<ul>
+<li>table-level, others can IS, IX</li>
+</ul>
+</li>
+</ul>
+<p>Note: information about IS/IX locks is (at least for me) a bit confusing.
+Especially following statement was very unclear:</p>
+<pre><code><div class="highlight"><pre><span class="s2">&quot;For example, SELECT ... LOCK IN SHARE MODE sets an IS lock and SELECT ... FOR UPDATE sets an IX lock.&quot;</span>
+</pre></div>
+
+</code></pre><p>While in <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locking-reads.html">other chapter</a>:
+    &quot;SELECT ... LOCK IN SHARE MODE sets a shared mode lock on any rows that are read... (S-lock)&quot; and
+    &quot;SELECT ... FOR UPDATE locks the rows and any associated index entries, the same as if you issued an UPDATE statement for those rows. ... (X-lock)&quot;</p>
+<p>Actually it seems that innodb set both IS and S (or IX and X) where IS is set on the table and S is set on the row, see
+<a href="http://en.wikipedia.org/wiki/Multiple_granularity_locking">wikipedia</a> and <a href="http://www.mysqlperformanceblog.com/2010/06/08/table-locks-in-show-innodb-status/">blog post</a>.</p>
+<h2 id="-select-for-update-and-select-lock-in-share-mode-locking-reads-usage-examples-http-dev-mysql-com-doc-refman-5-5-en-innodb-locking-reads-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locking-reads.html"><code>SELECT ... FOR UPDATE</code> and <code>SELECT ... LOCK IN SHARE MODE</code> Locking Reads - Usage Examples</a></h2>
+<p>Example 1. Insert a new row into a table child, and make sure that the child row has a parent row in table parent:</p>
+<ul>
+<li><code>SELECT * FROM parent WHERE NAME = &#39;Jones&#39; LOCK IN SHARE MODE;</code></li>
+<li>Now you can safely add the child record to the <code>CHILD</code> table and commit the transaction.</li>
+<li>Any transaction that tries to read or write to the applicable row in the <code>PARENT</code> table waits until you are finished, that is, the data in all tables is in a consistent state.</li>
+</ul>
+<p>Example 2. Consider an integer counter field in a table <code>CHILD_CODES</code>, used to assign a unique identifier to each child added to table <code>CHILD</code>:</p>
+<ul>
+<li>We can not use here:<ul>
+<li><code>SELECT</code> - two users could see the same value for the counter, and a duplicate-key error occurs if two transactions attempt to add rows with the same identifier to the CHILD table.</li>
+<li><code>SELECT ... LOCK IN SHARE MODE</code> - if wo users read the counter at the same time, at least one of them ends up in deadlock when it attempts to update the counter.</li>
+</ul>
+</li>
+<li>Solution 1:<ul>
+<li>First update the counter by incrementing it by 1, then read it and use the new value in the CHILD table. Any other transaction that tries to read the counter waits until your transaction commits. If another transaction is in the middle of this same sequence, your transaction waits until the other one commits.<ul>
+<li>(update will set X-lock)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Solution 2:<ul>
+<li>First perform a locking read of the counter using FOR UPDATE, and then increment the counter:</li>
+<li><code>SELECT counter_field FROM child_codes FOR UPDATE;</code><ul>
+<li>(read + set X-lock)</li>
+</ul>
+</li>
+<li><code>UPDATE child_codes SET counter_field = counter_field + 1;</code></li>
+</ul>
+</li>
+<li>Both solutions are only examples for <code>SELECT ... FOR UPDATE</code>. In MySQL, the specific task of generating a unique identifier actually can be accomplished using only a single access to the table:<ul>
+<li><code>UPDATE child_codes SET counter_field = LAST_INSERT_ID(counter_field + 1);</code></li>
+<li>here &quot;<a href="http://dev.mysql.com/doc/refman/5.5/en/information-functions.html#function_last-insert-id"><code>LAST_INSERT_ID</code></a>(counter_field + 1)&quot; makes the following &quot;<code>LAST_INSERT_ID()</code>&quot; to return an inserted value <code>(counter_field + 1)</code>, so we can know it and use in other statements</li>
+</ul>
+</li>
+</ul>
+<h2 id="-record-gap-and-next-key-locks-http-dev-mysql-com-doc-refman-5-5-en-innodb-record-level-locks-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-record-level-locks.html">Record, Gap, and Next-Key Locks</a></h2>
+<ul>
+<li>Record lock<ul>
+<li>This is a lock on an index record.</li>
+<li>It lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-index-types.html">clustered index</a> and uses this index for record locking.</li>
+</ul>
+</li>
+<li>Gap lock<ul>
+<li>This is a lock on a gap between index records, or a lock on the gap before the first or after the last index record.</li>
+</ul>
+</li>
+<li><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-next-key-locking.html">Next-key lock</a><ul>
+<li>This is a combination of a record lock on the index record and a gap lock on the gap before the index record.</li>
+<li>This lock type is used by default in REPEATABLE READ isolation level and prevents selecting <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-next-key-locking.html">phantom rows</a>.</li>
+<li>If one session has a shared or exclusive lock on record R in an index, another session cannot insert a new index record in the gap immediately before R in the index order.</li>
+<li>Suppose that an index contains the values 10, 15 and 20. The possible next-key locks for this index cover the following intervals, where ( or ) denote exclusion of the interval endpoint and [ or ] denote inclusion of the endpoint:<ul>
+<li>(negative infinity, 10]</li>
+<li>(10, 15]</li>
+<li>(15, 20]</li>
+<li>(20, positive infinity)</li>
+</ul>
+</li>
+<li>For the last interval, the next-key lock locks the gap above the largest value in the index and the <code>supremum</code> pseudo-record having a value higher than any value actually in the index.</li>
+<li>The &#39;supremum&#39; is not a real index record, so, in effect, this next-key lock locks only the gap following the largest index value.<ul>
+<li>Note: there is no much information about “supremum”, but it  acts as always existing record at the end of the table</li>
+<li>Example:<ul>
+<li><code>create table child (id int(11) NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;</code></li>
+<li><code>insert into child (id) values (90),(102);</code><ul>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>select * from child where id &gt; 100 for update;</code></li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into child (id) values (101);</code><ul>
+<li>wait</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The <code>select</code> above blocked record with id=102, gap before record 102 and also gap before record <code>supremum</code>, so other sessions can not insert something after the record 102 and will wait.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Gap locking is not needed for statements that lock rows using a unique index to search for a unique row.<ul>
+<li>This does not include the case that the search condition includes only some columns of a multiple-column unique index; in that case, gap locking does occur.</li>
+<li>For example, if the id column has a unique index, the following statement uses only an index-record lock for the row having id value 100 and it does not matter whether other sessions insert rows in the preceding gap:<ul>
+<li><code>SELECT * FROM child WHERE id = 100;</code></li>
+<li>If id is not indexed or has a nonunique index, the statement does lock the preceding gap.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>INSERT operations set a special gap lock called <code>isertion intention gap lock</code> prior to row insertion.<ul>
+<li>This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap.</li>
+<li>Suppose that there are index records with values of 4 and 7. Separate transactions that attempt to insert values of 5 and 6 each lock the gap between 4 and 7 with insert intention locks prior to obtaining the exclusive lock on the inserted row, but do not block each other because the rows are nonconflicting.</li>
+</ul>
+</li>
+<li>Gap locking can be disabled explicitly. This occurs if you change the transaction isolation level to READ COMMITTED or enable the <code>innodb_locks_unsafe_for_binlog</code> system variable. Under these circumstances, gap locking is disabled for searches and index scans and is used only for foreign-key constraint checking and duplicate-key checking.</li>
+</ul>
+</li>
+</ul>
+<h2 id="-locks-and-statements-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Locks and statements</a></h2>
+<ul>
+<li>A locking read (<code>SELECT ... FOR UPDATE</code> and <code>SELECT ... LOCK IN SHARE MODE</code>), an <code>UPDATE</code>, or a <code>DELETE</code><ul>
+<li>next-key locks (index record + gap before, take into account there is &quot;supremum&quot; record)<ul>
+<li>Note: next-key locks are used by default is a default. This can be changed by setting a <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-record-level-locks.html">transaction isolation level or with innodb settings</a></li>
+</ul>
+</li>
+<li>It does not matter whether there are <code>WHERE</code> conditions in the statement that would exclude the row. InnoDB does not remember the exact <code>WHERE</code> condition, but only knows which index ranges were scanned.</li>
+<li>If a secondary index is used in a search and index record locks to be set are exclusive (X), InnoDB also retrieves the corresponding clustered index records and sets locks on them.</li>
+<li>If you have no indexes suitable for your statement and MySQL must scan the entire table to process the statement, every row of the table becomes locked, which in turn blocks all inserts by other users to the table. It is important to create good indexes so that your queries do not unnecessarily scan many rows.<ul>
+<li>while <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-record-level-locks.html">here</a>: Record locks always lock index records, even if a table is defined with no indexes. For such cases, InnoDB creates a hidden clustered index and uses this index for record locking.</li>
+<li>Does it mean that hidden index is used only for record locks, but not in the case of next-key locks?</li>
+<li>Check it:<ul>
+<li><code>create table child (id int(11) NOT NULL) ENGINE=InnoDB;</code></li>
+<li><code>insert into child (id) values (90),(102);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>select * from child where id &gt; 100 for update;</code></li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into child (id) values (80);</code><ul>
+<li>wait</li>
+</ul>
+</li>
+<li>so it seems that whole table was locked</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>SELECT ... FROM</code><ul>
+<li><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-consistent-read.html">consistent read, no locks</a></li>
+</ul>
+</li>
+<li><code>SELECT ... FROM ... LOCK IN SHARE MODE</code><ul>
+<li>sets shared next-key locks on all index records the search encounters.</li>
+</ul>
+</li>
+<li><code>SELECT ... FROM ... FOR UPDATE</code><ul>
+<li>blocks other sessions from doing <code>SELECT ... FROM ... LOCK IN SHARE MODE</code> or from reading in certain transaction isolation levels. Consistent reads will ignore any locks set on the records that exist in the read view.</li>
+<li>Note: it blocks everything except plain <code>SELECT</code></li>
+</ul>
+</li>
+<li><code>UPDATE ... WHERE ...</code><ul>
+<li>sets an exclusive next-key lock on every record the search encounters.</li>
+</ul>
+</li>
+<li><code>DELETE FROM ... WHERE ...</code><ul>
+<li>sets an exclusive next-key lock on every record the search encounters.</li>
+</ul>
+</li>
+<li><code>INSERT</code><ul>
+<li>sets an exclusive lock on the inserted row.</li>
+<li>This lock is an index-record lock, not a next-key lock (that is, there is no gap lock) and does not prevent other sessions from inserting into the gap before the inserted row.</li>
+<li>Prior to inserting the row, an insertion intention gap lock is set.<ul>
+<li>This lock signals the intent to insert in such a way that multiple transactions inserting into the same index gap need not wait for each other if they are not inserting at the same position within the gap.</li>
+</ul>
+</li>
+<li>Check it:<ul>
+<li><code>create table child (id int(11) NOT NULL, PRIMARY KEY(id)) ENGINE=InnoDB;</code></li>
+<li><code>insert into child (id) values (90),(102);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>insert into child (id) values (93);</code><ul>
+<li>insert intention lock on gap 90-102</li>
+<li>X-lock on 93</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into child (id) values (97);</code><ul>
+<li>insert intention lock on gap 90-102</li>
+<li>X-lock on 97</li>
+<li>no wait</li>
+</ul>
+</li>
+<li>both inserted into the same gap whithout waiting</li>
+</ul>
+<hr>
+<ul>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>delete from child where id &gt; 100;</code><ul>
+<li>X `lock on gap 90-100 (gap before 100), 100, gap 100-supremum (&quot;supremum&quot; &gt; 100 and fits to condition in &#39;where&#39;)</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into child (id) values (105);</code><ul>
+<li>insert intention on gap 100-supremum;</li>
+<li>wait</li>
+</ul>
+</li>
+<li>(1) <code>insert into child (id) values (107);</code><ul>
+<li>OK</li>
+</ul>
+</li>
+<li>(1) <code>commit;</code><ul>
+<li>(2) OK</li>
+</ul>
+</li>
+<li>If a duplicate-key error occurs, a shared lock on the duplicate index record is set.<ul>
+<li>no error returned now because because other transaction can be rolled back, so it will be no error for current transaction</li>
+<li>This use of a shared lock can result in deadlock should there be multiple sessions trying to insert the same row if another session already has an exclusive lock.</li>
+<li>see deadlock example1 and example2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>INSERT ... ON DUPLICATE KEY UPDATE</code><ul>
+<li>differs from a simple INSERT in that an exclusive next-key lock rather than a shared lock is placed on the row to be updated when a duplicate-key error occurs.</li>
+</ul>
+</li>
+<li><code>REPLACE</code><ul>
+<li>is done like an INSERT if there is no collision on a unique key. Otherwise, an exclusive next-key lock is placed on the row to be replaced.</li>
+</ul>
+</li>
+<li><code>INSERT INTO T SELECT ... FROM S WHERE ...</code><ul>
+<li>sets an exclusive index record without a gap lock on each row inserted into T, sets shared next-key locks on rows from S</li>
+</ul>
+</li>
+<li><code>CREATE TABLE ... SELECT ...</code><ul>
+<li>performs the <code>SELECT</code> with shared next-key locks or as a consistent read, as for <code>INSERT ... SELECT</code>.</li>
+</ul>
+</li>
+<li>When a <code>SELECT</code> is used in the constructs <code>REPLACE INTO t SELECT ... FROM s WHERE ...</code> or <code>UPDATE t ... WHERE col IN (SELECT ... FROM s ...)</code>, InnoDB sets shared next-key locks on rows from table s.</li>
+<li>While initializing a previously specified <code>AUTO_INCREMENT</code> column on a table, InnoDB sets an exclusive lock on the end of the index associated with the <code>AUTO_INCREMENT</code> column.</li>
+<li>In accessing the auto-increment counter, InnoDB uses a specific <code>AUTO-INC</code> table lock mode where the lock lasts only to the end of the current SQL statement, not to the end of the entire transaction. Other sessions cannot insert into the table while the AUTO-INC table lock is held;</li>
+<li>If a <code>FOREIGN KEY</code> constraint is defined on a table, any insert, update, or delete that requires the constraint condition to be checked sets shared record-level locks on the records that it looks at to check the constraint. InnoDB also sets these locks in the case where the constraint fails.</li>
+<li><code>LOCK TABLES</code> sets table locks, but it is the higher MySQL layer above the InnoDB layer that sets these locks.InnoDB is aware of table locks if <code>innodb_table_locks = 1</code> (the default) and <code>autocommit = 0</code>, and the MySQL layer above InnoDB knows about row-level locks.<ul>
+<li>Otherwise, InnoDB&#39;s automatic deadlock detection cannot detect deadlocks where such table locks are involved. Also, because in this case the higher MySQL layer does not know about row-level locks, it is possible to get a table lock on a table where another session currently has row-level locks. However, this does not endanger transaction integrity, see <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlock-detection.html">here</a> and <a href="http://dev.mysql.com/doc/refman/5.5/en//innodb-restrictions.html">here</a>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="-deadlock-detection-and-rollback-http-dev-mysql-com-doc-refman-5-5-en-innodb-deadlock-detection-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlock-detection.html">Deadlock Detection and Rollback</a></h2>
+<ul>
+<li>InnoDB automatically detects transaction deadlocks and rolls back a transaction or transactions to break the deadlock.<ul>
+<li>InnoDB tries to pick small transactions to roll back, where the size of a transaction is determined by the number of rows inserted, updated, or deleted.</li>
+</ul>
+</li>
+<li>InnoDB is aware of table locks if innodb_table_locks = 1 (the default) and autocommit = 0, and the MySQL layer above it knows about row-level locks. Otherwise, InnoDB cannot detect deadlocks where a table lock set by a MySQL LOCK TABLES statement or a lock set by a storage engine other than InnoDB is involved. Resolve these situations by setting the value of the innodb_lock_wait_timeout system variable.</li>
+<li>When InnoDB performs a complete rollback of a transaction, all locks set by the transaction are released.<ul>
+<li>However, if just a single SQL statement is rolled back as a result of an error, some of the locks set by the statement may be preserved.</li>
+<li>This happens because InnoDB stores row locks in a format such that it cannot know afterward which lock was set by which statement.</li>
+<li>Note: statement above looks a bit strange.</li>
+</ul>
+</li>
+<li>If a <code>SELECT</code> calls a stored function in a transaction, and a statement within the function fails, that statement rolls back. Furthermore, if <code>ROLLBACK</code> is executed after that, the entire transaction rolls back.</li>
+</ul>
+<h2 id="-how-to-cope-with-deadlocks-http-dev-mysql-com-doc-refman-5-5-en-innodb-deadlocks-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlocks.html">How to Cope with Deadlocks</a></h2>
+<ul>
+<li>InnoDB uses automatic row-level locking.<ul>
+<li>You can get deadlocks even in the case of transactions that just insert or delete a single row. That is because these operations are not really “atomic”; they automatically set locks on the (possibly several) index records of the row inserted or deleted.</li>
+</ul>
+</li>
+<li>Techniques:<ul>
+<li>Use SHOW ENGINE INNODB STATUS to determine the cause of the latest deadlock. That can help you to tune your application to avoid deadlocks.<ul>
+<li>This is most important tool to resolve deadlocks. <a href="http://dev.mysql.com/doc/refman/5.5/en//innodb-monitors.html#innodb-standard-monitor">See also how to enable additional lock monitor output</a></li>
+</ul>
+</li>
+<li>Always be prepared to re-issue a transaction if it fails due to deadlock. Deadlocks are not dangerous. Just try again.<ul>
+<li>Note: Usually it is easy to say so, but not so easy to do.</li>
+</ul>
+</li>
+<li>Commit your transactions often. Small transactions are less prone to collision.<ul>
+<li>Note: Yes, take this into account, but often having a long transaction is necessary to keep the system in a consistent state.</li>
+</ul>
+</li>
+<li>If you are using locking reads (<code>SELECT ... FOR UPDATE</code> or <code>SELECT ... LOCK IN SHARE MODE</code>), try using a lower isolation level such as READ COMMITTED.<ul>
+<li>Note: this depends on situation. Take into account that READ COMMITED is less safe and can you can get <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-next-key-locking.html">phantom records</a> because next-key locking is not used in this case.</li>
+</ul>
+</li>
+<li>Access your tables and rows in a fixed order. Then transactions form well-defined queues and do not deadlock.<ul>
+<li>Note: See deadlock example 3 and 4 - these are produced with data access in a different order</li>
+</ul>
+</li>
+<li>Add well-chosen indexes to your tables. Then your queries need to scan fewer index records and consequently set fewer locks. Use EXPLAIN SELECT to determine which indexes the MySQL server regards as the most appropriate for your queries.</li>
+<li>Use less locking.<ul>
+<li>If you can afford to permit a SELECT to return data from an old snapshot, do not add the clause <code>FOR UPDATE or LOCK IN SHARE MODE</code> to it. Using the READ COMMITTED isolation level is good here, because each consistent read within the same transaction reads from its own fresh snapshot.</li>
+</ul>
+</li>
+<li>If nothing else helps, serialize your transactions with table-level locks.<ul>
+<li>The correct way to use <code>LOCK TABLES</code> with transactional tables, such as InnoDB tables, is to begin a transaction with <code>SET autocommit = 0</code> (not START TRANSACTION) followed by <code>LOCK TABLES</code>, and to not call UNLOCK TABLES until you commit the transaction explicitly.</li>
+<li>For example, if you need to write to table t1 and read from table t2, you can do this:<ul>
+<li><code>SET autocommit=0;</code></li>
+<li><code>LOCK TABLES t1 WRITE, t2 READ, ...;</code> ... do something with tables t1 and t2 here ...</li>
+<li><code>COMMIT;</code></li>
+<li><code>UNLOCK TABLES;</code></li>
+</ul>
+</li>
+<li>Table-level locks make your transactions queue nicely and avoid deadlocks.</li>
+</ul>
+</li>
+<li>Create an auxiliary “semaphore” table that contains just a single row. Have each transaction update that row before accessing other tables. In that way, all transactions happen in a serial fashion.</li>
+</ul>
+</li>
+</ul>
+<h2 id="deadlock-examples">Deadlock examples</h2>
+<h3 id="-example-1-deadlock-on-insert-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 1 (deadlock on insert)</a>:</h3>
+<ul>
+<li><code>create table t1 (i int, primary key (i)) engine = InnoDB;</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>insert into t1 values(1);</code><ul>
+<li>X lock</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into t1 values(1);</code><ul>
+<li>duplicate-key error -&gt; S lock</li>
+</ul>
+</li>
+<li>(3) <code>start transaction;</code></li>
+<li>(3) <code>insert into t1 values(1);</code><ul>
+<li>duplicate-key error -&gt; S lock</li>
+</ul>
+</li>
+<li>(1) <code>rollback;</code></li>
+<li>(2) &amp; (3) - deadlock - both hold S-lock and can not get X-lock</li>
+</ul>
+<h3 id="-example-2-deadlock-on-delete-insert-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 2 (deadlock on delete / insert)</a>:</h3>
+<ul>
+<li><code>create table t1 (i int, primary key (i)) engine = InnoDB;</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>delete from t1 where i = 1;</code><ul>
+<li>X lock</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into t1 values(1);</code><ul>
+<li>duplicate-key error -&gt; S lock</li>
+</ul>
+</li>
+<li>(3) <code>start transaction;</code></li>
+<li>(3) <code>insert into t1 values(1);</code><ul>
+<li>duplicate-key error -&gt; S lock</li>
+</ul>
+</li>
+<li>(1) <code>rollback;</code></li>
+<li>(2) &amp; (3) - deadlock - both hold S-lock and can not get X-lock</li>
+</ul>
+<h3 id="example-3-deadlock-on-access-in-different-order-">Example 3 (deadlock on access in different order):</h3>
+<p>Example is from this <a href="http://thushw.blogspot.com/2010/11/mysql-deadlocks-with-concurrent-inserts.html">blog post</a>.
+But I was unable to reproduce a deadlock with example from the post (maybe because mysql improved since then).</p>
+<p>Here is original case:</p>
+<ul>
+<li><code>create table vegetable (id bigint(10) NOT NULL auto_increment, name varchar(255) NOT NULL, PRIMARY KEY (id), UNIQUE KEY uk_name (name)) ENGINE=InnoDB</code>;</li>
+<li><code>insert into vegetable (id, name) values (10, &quot;ggg&quot;), (5, &quot;jjj&quot;);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>insert into vegetable values(null, &quot;ppp&quot;);</code><ul>
+<li>expected: lock the gap between &quot;jjj&quot; and &quot;ppp&quot;</li>
+<li>actually: insert intention lock / X-row lock</li>
+</ul>
+</li>
+<li>(2) `start transaction;</li>
+<li>(2) <code>insert into vegetable values(null, &quot;iii&quot;);</code><ul>
+<li>expected: locking the gap after &quot;ggg&quot;, upto &quot;iii&quot;</li>
+<li>actually: insert intention lock / X-row lock</li>
+</ul>
+</li>
+<li>(2) <code>insert into vegetable values (null, &quot;mmm&quot;);</code><ul>
+<li>expected: lock the gap after &quot;jjj&quot; upto &quot;mmm&quot;. Since connection 1 has a lock between &quot;jjj&quot; and &quot;ppp&quot;, effectively spanning the lock connection 2 is attempting to take, this will block</li>
+<li>actually: no block, OK</li>
+</ul>
+</li>
+<li>(1) <code>insert into vegetable values (null, &quot;hhh&quot;);</code><ul>
+<li>expected: This requires the gap lock between &quot;ggg&quot; and &quot;hhh&quot;. This will block as it spans the the lock [&quot;ggg&quot; to &quot;iii&quot;] held by connection 2.</li>
+<li>actually: OK
+OK because insert do not do next-key blocking, but sets insert intention lock, so such inserts work ok.</li>
+</ul>
+</li>
+</ul>
+<p>Modified example with deadlock - inserts are combined with updates which actually do next-key locking:</p>
+<ul>
+<li><code>create table vegetable (id bigint(10) NOT NULL auto_increment, name varchar(255) NOT NULL, PRIMARY KEY (id), UNIQUE KEY uk_name (name)) ENGINE=InnoDB;</code></li>
+<li><code>insert into vegetable (id, name) values (10, &quot;ggg&quot;), (5, &quot;jjj&quot;);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>update vegetable set name=&quot;jjj1&quot; where name &gt; &#39;jjj&#39;;</code><ul>
+<li>lock the gap between &quot;jjj&quot; and &quot;supremum&quot; (pseudo record beyond the table end)</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>update vegetable set name=&quot;ggg1&quot; where name &lt; &#39;jjj&#39;;</code><ul>
+<li>locking the gap after &quot;ggg&quot;, upto &quot;jjj&quot;</li>
+</ul>
+</li>
+<li>(2) <code>insert into vegetable values (null, &quot;mmm&quot;);</code><ul>
+<li>insert intention lock - gap after &quot;jjj&quot;, wait for lock set by (1)</li>
+<li>wait</li>
+</ul>
+</li>
+<li>(1) <code>insert into vegetable values (null, &quot;hhh&quot;);</code><ul>
+<li>insert intention lock - gap after &quot;ggg&quot;, wait for lock set by (2)</li>
+<li>deadlock</li>
+</ul>
+</li>
+</ul>
+<p>Deadlock info:</p>
+<pre><code><div class="highlight"><pre><span class="nx">show</span> <span class="nx">engine</span> <span class="nx">innodb</span> <span class="nx">status</span><span class="err">\</span><span class="nx">G</span><span class="p">;</span>
+<span class="o">------------------------</span>
+<span class="nx">LATEST</span> <span class="nx">DETECTED</span> <span class="nx">DEADLOCK</span>
+<span class="o">------------------------</span>
+<span class="mi">120924</span> <span class="mi">13</span><span class="o">:</span><span class="mi">14</span><span class="o">:</span><span class="mi">03</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB62</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">13</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="nx">LOCK</span> <span class="nx">WAIT</span> <span class="mi">5</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">6</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">undo</span> <span class="nx">log</span> <span class="nx">entries</span> <span class="mi">2</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">512</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">vegetable</span> <span class="nx">values</span> <span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;mmm&quot;</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1476</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">uk_name</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">vegetable</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB62</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB61</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">22</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">2</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">undo</span> <span class="nx">log</span> <span class="nx">entries</span> <span class="mi">1</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">513</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">vegetable</span> <span class="nx">values</span> <span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="s2">&quot;hhh&quot;</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">HOLDS</span> <span class="nx">THE</span> <span class="nx">LOCK</span><span class="p">(</span><span class="nx">S</span><span class="p">)</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1476</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">uk_name</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">vegetable</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB61</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1476</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">uk_name</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">vegetable</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB61</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">locks</span> <span class="nx">gap</span> <span class="nx">before</span> <span class="nx">rec</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">3</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">2</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">6</span><span class="nx">a6a6a</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">jjj</span><span class="p">;;</span>
+<span class="mi">1</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">8000000000000005</span><span class="p">;</span> <span class="nx">asc</span>         <span class="p">;;</span>
+
+<span class="o">***</span> <span class="nx">WE</span> <span class="nx">ROLL</span> <span class="nx">BACK</span> <span class="nx">TRANSACTION</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><h3 id="-example-4-deadlock-on-access-in-different-order-http-www-xaprb-com-blog-2006-08-03-a-little-known-way-to-cause-a-database-deadlock-"><a href="http://www.xaprb.com/blog/2006/08/03/a-little-known-way-to-cause-a-database-deadlock/">Example 4 (deadlock on access in different order)</a>:</h3>
+<ul>
+<li><code>CREATE TABLE ... SELECT</code> conflicts with <code>INSERT</code> and causes a deadlock because of opposite order of data</li>
+<li>(1) <code>INSERT</code> a record at the end, got X-lock</li>
+<li>(2) <code>CREATE TABLE ... SELECT</code> scans the table from the beginning and sets S-locks on all records. When it reaches the last record it waits.</li>
+<li>(1) <code>INSERT</code> a record in the middle - try to get X-lock, but there is an S-lock set by (2) which waits for (1)<ul>
+<li>deadlock</li>
+</ul>
+</li>
+</ul>
+<h3 id="example-5-deadlock-on-access-in-different-order-with-complex-primary-key-">Example 5 (deadlock on access in different order with complex primary key):</h3>
+<ul>
+<li><code>create table complex (id1 int(11) not null, id2 int(11) not null, primary key (id1,id2)) engine=InnoDB;</code></li>
+<li><code>insert into complex (id1, id2) values (90, 5),(90,7),(90,9),(102, 5),(102,7),(102,9);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>delete from complex where id1 = 102;</code></li>
+</ul>
+<p>Now (1) locks gap before 102/5 and records up to 102/9:</p>
+<pre><code><div class="highlight"><pre><span class="o">+-----+-----+</span>
+<span class="o">|</span> <span class="nx">id1</span> <span class="o">|</span> <span class="nx">id2</span> <span class="o">|</span>
+<span class="o">+-----+-----+</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">5</span> <span class="o">|</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">7</span> <span class="o">|</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">9</span> <span class="o">|</span>   <span class="nx">___</span>
+<span class="o">|</span>     <span class="o">|</span>     <span class="o">|</span>      <span class="o">|</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">5</span> <span class="o">|</span>      <span class="o">|</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">7</span> <span class="o">|</span>      <span class="o">|</span>  <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">9</span> <span class="o">|</span>  <span class="nx">____</span><span class="o">|</span>
+<span class="o">+-----+-----+</span>
+</pre></div>
+
+</code></pre><ul>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>delete from complex where id1 = 90;</code></li>
+</ul>
+<p>Now (2) locks records until 102/5.
+Because key is complex it seems that gap after 90/9 is also locked when table was scanned by delete operation.</p>
+<pre><code><div class="highlight"><pre><span class="o">+-----+-----+</span>
+<span class="o">|</span> <span class="nx">id1</span> <span class="o">|</span> <span class="nx">id2</span> <span class="o">|</span>
+<span class="o">+-----+-----+</span> <span class="nx">___</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">5</span> <span class="o">|</span>    <span class="o">|</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">7</span> <span class="o">|</span>    <span class="o">|</span>  <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">|</span>  <span class="mi">90</span> <span class="o">|</span>   <span class="mi">9</span> <span class="o">|</span>    <span class="o">|</span>
+<span class="o">|</span>     <span class="o">|</span>     <span class="o">|</span> <span class="nx">___</span><span class="o">|</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">5</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">7</span> <span class="o">|</span>
+<span class="o">|</span> <span class="mi">102</span> <span class="o">|</span>   <span class="mi">9</span> <span class="o">|</span>
+<span class="o">+-----+-----+</span>
+</pre></div>
+
+</code></pre><p>So now the gap between 90/9 and 102/5 is not available for both sessions:</p>
+<ul>
+<li>(1) <code>insert into complex (id1, id2) values (102,1);</code><ul>
+<li>insert intension on gap between 90/9 and 102/5;</li>
+<li>wait because it is hold by (2)</li>
+<li>while insertion of (102,5) would be OK now</li>
+</ul>
+</li>
+<li>(2) <code>insert into complex (id1, id2) values (90,10);</code><ul>
+<li>insert intension on gap between 90 and 102;</li>
+<li>conflicts with lock hold by (1) which starts with 90/9</li>
+<li>now (2) continues and (1) aborted with deadlock:</li>
+</ul>
+</li>
+<li>(1) ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction</li>
+</ul>
+<p>Deadlock info:</p>
+<pre><code><div class="highlight"><pre><span class="nx">show</span> <span class="nx">engine</span> <span class="nx">innodb</span> <span class="nx">status</span><span class="o">/</span><span class="nx">G</span><span class="p">;</span>
+<span class="o">------------------------</span>
+<span class="nx">LATEST</span> <span class="nx">DETECTED</span> <span class="nx">DEADLOCK</span>
+<span class="o">------------------------</span>
+<span class="mi">120924</span> <span class="mi">12</span><span class="o">:</span><span class="mi">15</span><span class="o">:</span><span class="mi">44</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB4B</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">25</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="nx">LOCK</span> <span class="nx">WAIT</span> <span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">5</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">undo</span> <span class="nx">log</span> <span class="nx">entries</span> <span class="mi">3</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">440</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">complex</span> <span class="p">(</span><span class="nx">id1</span><span class="p">,</span> <span class="nx">id2</span><span class="p">)</span> <span class="nx">values</span> <span class="p">(</span><span class="mi">102</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1472</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">complex</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB4B</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">locks</span> <span class="nx">gap</span> <span class="nx">before</span> <span class="nx">rec</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">5</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">32</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000066</span><span class="p">;</span> <span class="nx">asc</span>    <span class="nx">f</span><span class="p">;;</span>
+<span class="mi">1</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000005</span><span class="p">;</span> <span class="nx">asc</span>     <span class="p">;;</span>
+<span class="mi">2</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">6</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">0000003</span><span class="nx">edb4b</span><span class="p">;</span> <span class="nx">asc</span>    <span class="o">&gt;</span> <span class="nx">K</span><span class="p">;;</span>
+<span class="mi">3</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">7</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">3</span><span class="nx">c000005e61ccd</span><span class="p">;</span> <span class="nx">asc</span> <span class="o">&lt;</span>      <span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB4C</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">16</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="mi">4</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">5</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">undo</span> <span class="nx">log</span> <span class="nx">entries</span> <span class="mi">3</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">441</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">complex</span> <span class="p">(</span><span class="nx">id1</span><span class="p">,</span> <span class="nx">id2</span><span class="p">)</span> <span class="nx">values</span> <span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">HOLDS</span> <span class="nx">THE</span> <span class="nx">LOCK</span><span class="p">(</span><span class="nx">S</span><span class="p">)</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1472</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">complex</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB4C</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">locks</span> <span class="nx">gap</span> <span class="nx">before</span> <span class="nx">rec</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">5</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">32</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000066</span><span class="p">;</span> <span class="nx">asc</span>    <span class="nx">f</span><span class="p">;;</span>
+<span class="mi">1</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000005</span><span class="p">;</span> <span class="nx">asc</span>     <span class="p">;;</span>
+<span class="mi">2</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">6</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">0000003</span><span class="nx">edb4b</span><span class="p">;</span> <span class="nx">asc</span>    <span class="o">&gt;</span> <span class="nx">K</span><span class="p">;;</span>
+<span class="mi">3</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">7</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">3</span><span class="nx">c000005e61ccd</span><span class="p">;</span> <span class="nx">asc</span> <span class="o">&lt;</span>      <span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1472</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">80</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">complex</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB4C</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">locks</span> <span class="nx">gap</span> <span class="nx">before</span> <span class="nx">rec</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">5</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">32</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000066</span><span class="p">;</span> <span class="nx">asc</span>    <span class="nx">f</span><span class="p">;;</span>
+<span class="mi">1</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">4</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">80000005</span><span class="p">;</span> <span class="nx">asc</span>     <span class="p">;;</span>
+<span class="mi">2</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">6</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">0000003</span><span class="nx">edb4b</span><span class="p">;</span> <span class="nx">asc</span>    <span class="o">&gt;</span> <span class="nx">K</span><span class="p">;;</span>
+<span class="mi">3</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">7</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">3</span><span class="nx">c000005e61ccd</span><span class="p">;</span> <span class="nx">asc</span> <span class="o">&lt;</span>      <span class="p">;;</span>
+
+<span class="o">***</span> <span class="nx">WE</span> <span class="nx">ROLL</span> <span class="nx">BACK</span> <span class="nx">TRANSACTION</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><p>(1) failed to insert (102,1) while it could insert (102,5) without any problem.
+In this case can be not that easy to re-order statements to avoid a deadlock.
+Possible solution can be first insert new records and only then do delete:</p>
+<ul>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>insert into complex (id1, id2) values (102,1);</code></li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>insert into complex (id1, id2) values (90,10);</code></li>
+<li>(1) <code>delete from complex where id1 = 102 and id2 not in (1);</code><ul>
+<li>X-lock on 102 and gap before it</li>
+</ul>
+</li>
+<li>(2) <code>delete from complex where id1 = 90 and id2 not in (10);</code><ul>
+<li>wait</li>
+</ul>
+</li>
+<li>(1) <code>commit;</code></li>
+<li>(2) <code>commit;</code></li>
+</ul>
+<h3 id="-example-6-deadlock-in-empty-table-http-forums-mysql-com-read-php-22-10506-10506-msg-10506-"><a href="http://forums.mysql.com/read.php?22,10506,10506#msg-10506">Example 6 (deadlock in empty table)</a>:</h3>
+<p>See <a href="http://forums.mysql.com/read.php?22,10506,10506#msg-10506">initial post</a> and <a href="http://forums.mysql.com/read.php?22,10506,11347#msg-11347">explanation</a>.</p>
+<ul>
+<li><code>create table T (C int not null primary key) engine=InnoDB;</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>select * from T where C = 42 for update;</code><ul>
+<li>gap lock ... supremum (whole table)</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>select * from T where C = 42 for update;</code><ul>
+<li>gap lock ... supremum (whole table)</li>
+<li>why it does not wait? It seems that it gets a lock for the same gap.</li>
+</ul>
+</li>
+<li>(1) <code>insert into T set C = 42;</code><ul>
+<li>insert intention</li>
+<li>wait for gap lock (2)</li>
+</ul>
+</li>
+<li>(2) <code>insert into T set C = 42;</code><ul>
+<li>insert intention</li>
+<li>wait for gap lock (1)</li>
+<li>deadlock</li>
+</ul>
+</li>
+</ul>
+<p>Deadlock info:</p>
+<pre><code><div class="highlight"><pre><span class="o">------------------------</span>
+<span class="nx">LATEST</span> <span class="nx">DETECTED</span> <span class="nx">DEADLOCK</span>
+<span class="o">------------------------</span>
+<span class="mi">120924</span> <span class="mi">14</span><span class="o">:</span><span class="mi">51</span><span class="o">:</span><span class="mi">18</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB7A</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">22</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="nx">LOCK</span> <span class="nx">WAIT</span> <span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">2</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">567</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">T</span> <span class="nx">set</span> <span class="nx">C</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1489</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB7A</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDB7B</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">13</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">2</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">568</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">T</span> <span class="nx">set</span> <span class="nx">C</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">HOLDS</span> <span class="nx">THE</span> <span class="nx">LOCK</span><span class="p">(</span><span class="nx">S</span><span class="p">)</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1489</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB7B</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1489</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDB7B</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="nx">WE</span> <span class="nx">ROLL</span> <span class="nx">BACK</span> <span class="nx">TRANSACTION</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><p>What seems to be not logical is that both sessions seems to get an X lock on the gap at the end of the table:</p>
+<ul>
+<li><code>create table innodb_monitor (id int);</code></li>
+<li><code>create table innodb_lock_monitor (id int);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>select * from T where C = 42 for update;</code></li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>select * from T where C = 42 for update;</code></li>
+<li>(3) <code>show engine innodb status\G;</code></li>
+</ul>
+<p>Transactions info:</p>
+<pre><code><div class="highlight"><pre><span class="o">------------</span>
+<span class="nx">TRANSACTIONS</span>
+<span class="o">------------</span>
+<span class="nx">Trx</span> <span class="nx">id</span> <span class="nx">counter</span> <span class="mi">3</span><span class="nx">EDBDF</span>
+<span class="nx">Purge</span> <span class="nx">done</span> <span class="k">for</span> <span class="nx">trx</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">n</span><span class="o">:</span><span class="nx">o</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="nx">EDBCD</span> <span class="nx">undo</span> <span class="nx">n</span><span class="o">:</span><span class="nx">o</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<span class="nx">History</span> <span class="nx">list</span> <span class="nx">length</span> <span class="mi">675</span>
+<span class="nx">LIST</span> <span class="nx">OF</span> <span class="nx">TRANSACTIONS</span> <span class="nx">FOR</span> <span class="nx">EACH</span> <span class="nx">SESSION</span><span class="o">:</span>
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">not</span> <span class="nx">started</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">54</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6affb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1067</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">show</span> <span class="nx">engine</span> <span class="nx">innodb</span> <span class="nx">status</span>
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBDE</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">4</span> <span class="nx">sec</span>
+<span class="mi">2</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">1</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1066</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">TABLE</span> <span class="nx">LOCK</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDE</span> <span class="nx">lock</span> <span class="nx">mode</span> <span class="nx">IX</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1513</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDE</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBDD</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">15</span> <span class="nx">sec</span>
+<span class="mi">2</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">1</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1064</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">TABLE</span> <span class="nx">LOCK</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDD</span> <span class="nx">lock</span> <span class="nx">mode</span> <span class="nx">IX</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1513</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">test_dl</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">T</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDD</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+</pre></div>
+
+</code></pre><p>Both transactions hold the same X lock.
+<a href="http://forums.mysql.com/read.php?22,569381,569381#msg-569381">See my post with question</a>.</p>
+<h3 id="example-7-deadlock-after-delete-non-existing-data-similar-to-example-6-">Example 7 (deadlock after delete non-existing data), similar to example 6:</h3>
+<ul>
+<li><code>create table d (id int not null primary key) engine=InnoDB;</code></li>
+<li><code>insert into d values (1),(2),(3);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>delete from d where id = 4;</code><ul>
+<li>lock on gap at the end of table</li>
+</ul>
+</li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>delete from d where id = 5;</code><ul>
+<li>lock on gap at the end of table</li>
+</ul>
+</li>
+<li>(1) <code>insert into d values (4);</code><ul>
+<li>wait</li>
+</ul>
+</li>
+<li>(2) <code>insert into d values (5);</code><ul>
+<li>deadlock</li>
+</ul>
+</li>
+</ul>
+<p>Deadlock info:</p>
+<pre><code><div class="highlight"><pre><span class="o">------------------------</span>
+<span class="nx">LATEST</span> <span class="nx">DETECTED</span> <span class="nx">DEADLOCK</span>
+<span class="o">------------------------</span>
+<span class="mi">120924</span> <span class="mi">17</span><span class="o">:</span><span class="mi">44</span><span class="o">:</span><span class="mi">05</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBD2</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">40</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="nx">LOCK</span> <span class="nx">WAIT</span> <span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">2</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1001</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">d</span> <span class="nx">values</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1507</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">appceo</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBD2</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">TRANSACTION</span><span class="o">:</span>
+<span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBD3</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">18</span> <span class="nx">sec</span> <span class="nx">inserting</span>
+<span class="nx">mysql</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">use</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">locked</span> <span class="mi">1</span>
+<span class="mi">3</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">2</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1002</span> <span class="nx">localhost</span> <span class="nx">root</span> <span class="nx">update</span>
+<span class="nx">insert</span> <span class="nx">into</span> <span class="nx">d</span> <span class="nx">values</span> <span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">HOLDS</span> <span class="nx">THE</span> <span class="nx">LOCK</span><span class="p">(</span><span class="nx">S</span><span class="p">)</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1507</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">appceo</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBD3</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="nx">WAITING</span> <span class="nx">FOR</span> <span class="nx">THIS</span> <span class="nx">LOCK</span> <span class="nx">TO</span> <span class="nx">BE</span> <span class="nx">GRANTED</span><span class="o">:</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1507</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">appceo</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBD3</span> <span class="nx">lock_mode</span> <span class="nx">X</span> <span class="nx">insert</span> <span class="nx">intention</span> <span class="nx">waiting</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">***</span> <span class="nx">WE</span> <span class="nx">ROLL</span> <span class="nx">BACK</span> <span class="nx">TRANSACTION</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><p>With lock monitor enabled we can check transactions state before producing a deadlock:</p>
+<ul>
+<li><code>create table innodb_monitor (id int);</code></li>
+<li><code>create table innodb_lock_monitor (id int);</code></li>
+<li>(1) <code>start transaction;</code></li>
+<li>(1) <code>delete from d where id = 4;</code></li>
+<li>(2) <code>start transaction;</code></li>
+<li>(2) <code>delete from d where id = 5;</code></li>
+<li>(3) <code>show engine innodb status\G;</code></li>
+</ul>
+<p>Transactions info:</p>
+<pre><code><div class="highlight"><pre><span class="o">------------</span>
+<span class="nx">TRANSACTIONS</span>
+<span class="o">------------</span>
+<span class="nx">Trx</span> <span class="nx">id</span> <span class="nx">counter</span> <span class="mi">3</span><span class="nx">EDBDC</span>
+<span class="nx">Purge</span> <span class="nx">done</span> <span class="k">for</span> <span class="nx">trx</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">n</span><span class="o">:</span><span class="nx">o</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="nx">EDBCD</span> <span class="nx">undo</span> <span class="nx">n</span><span class="o">:</span><span class="nx">o</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<span class="nx">History</span> <span class="nx">list</span> <span class="nx">length</span> <span class="mi">675</span>
+<span class="nx">LIST</span> <span class="nx">OF</span> <span class="nx">TRANSACTIONS</span> <span class="nx">FOR</span> <span class="nx">EACH</span> <span class="nx">SESSION</span><span class="o">:</span>
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">not</span> <span class="nx">started</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">54</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6affb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1028</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">show</span> <span class="nx">engine</span> <span class="nx">innodb</span> <span class="nx">status</span>
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBDB</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">11</span> <span class="nx">sec</span>
+<span class="mi">2</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">1</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">50</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6a9db40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1027</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">TABLE</span> <span class="nx">LOCK</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">appceo</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDB</span> <span class="nx">lock</span> <span class="nx">mode</span> <span class="nx">IX</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1507</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">db</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDB</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+
+<span class="o">---</span><span class="nx">TRANSACTION</span> <span class="mi">3</span><span class="nx">EDBDA</span><span class="p">,</span> <span class="nx">ACTIVE</span> <span class="mi">17</span> <span class="nx">sec</span>
+<span class="mi">2</span> <span class="nx">lock</span> <span class="nx">struct</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span> <span class="nx">heap</span> <span class="nx">size</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">1</span> <span class="nx">row</span> <span class="nx">lock</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="nx">MySQL</span> <span class="nx">thread</span> <span class="nx">id</span> <span class="mi">51</span><span class="p">,</span> <span class="nx">OS</span> <span class="nx">thread</span> <span class="nx">handle</span> <span class="mh">0xa6aceb40</span><span class="p">,</span> <span class="nx">query</span> <span class="nx">id</span> <span class="mi">1025</span> <span class="nx">localhost</span> <span class="nx">root</span>
+<span class="nx">TABLE</span> <span class="nx">LOCK</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">appceo</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDA</span> <span class="nx">lock</span> <span class="nx">mode</span> <span class="nx">IX</span>
+<span class="nx">RECORD</span> <span class="nx">LOCKS</span> <span class="nx">space</span> <span class="nx">id</span> <span class="mi">0</span> <span class="nx">page</span> <span class="nx">no</span> <span class="mi">1507</span> <span class="nx">n</span> <span class="nx">bits</span> <span class="mi">72</span> <span class="nx">index</span> <span class="err">`</span><span class="nx">PRIMARY</span><span class="err">`</span> <span class="nx">of</span> <span class="nx">table</span> <span class="err">`</span><span class="nx">db</span><span class="err">`</span><span class="p">.</span><span class="err">`</span><span class="nx">d</span><span class="err">`</span> <span class="nx">trx</span> <span class="nx">id</span> <span class="mi">3</span><span class="nx">EDBDA</span> <span class="nx">lock_mode</span> <span class="nx">X</span>
+<span class="nx">Record</span> <span class="nx">lock</span><span class="p">,</span> <span class="nx">heap</span> <span class="nx">no</span> <span class="mi">1</span> <span class="nx">PHYSICAL</span> <span class="nx">RECORD</span><span class="o">:</span> <span class="nx">n_fields</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">compact</span> <span class="nx">format</span><span class="p">;</span> <span class="nx">info</span> <span class="nx">bits</span> <span class="mi">0</span>
+<span class="mi">0</span><span class="o">:</span> <span class="nx">len</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">hex</span> <span class="mi">73757072656</span><span class="nx">d756d</span><span class="p">;</span> <span class="nx">asc</span> <span class="nx">supremum</span><span class="p">;;</span>
+</pre></div>
+
+</code></pre></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

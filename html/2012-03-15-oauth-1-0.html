@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="oauth-1-0-notes">oauth 1.0 notes</h1>
+<h2 id="oauth-1-0-flow">oAuth 1.0 flow</h2>
+<p>A good explanation image from <a href="http://oauth.net/core/1.0/">oauth.net</a>:</p>
+<p><img src="2012-03-15-oauth-1-0-diagram.png" alt="oAuth flow"></p>
+<p>Flow description:</p>
+<ul>
+<li>Consumer has Consumer Key and Consumer Secret (shared secret)</li>
+<li>A) Consumer requests Request Token<ul>
+<li>call <code>get_request_token</code> from Service Provider, send<ul>
+<li><code>oauth_consumer_key</code></li>
+<li><code>oauth_signature_method</code></li>
+<li><code>oauth_signature</code></li>
+<li>...</li>
+<li>here <code>oauth_signature</code> - is signature of the request created using Consumer Secret, simplified example:</li>
+<li><code>$signature = md5($request_text . $consumer_secret)</code></li>
+<li>both sides (Consumer and Service Provider) knows consumer_secret and able to perform this operation, so Service Provider can check whether signature is valid</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>B) Service provider returns Request Token<ul>
+<li><code>oauth_token</code></li>
+<li><code>oauth_token_secret</code></li>
+</ul>
+</li>
+<li>C) Consumer redirects User to Service Provider<ul>
+<li><code>oauth_token</code> (request token from B)</li>
+</ul>
+</li>
+<li>D) User confirms access and Service Provider redirects User to Consumer<ul>
+<li><code>oauth_token</code> (request token from B)</li>
+<li><code>oauth_verifier</code> (request token verifier)</li>
+</ul>
+</li>
+<li>E) Consumer requests Access Token<ul>
+<li>call <code>get_access_token</code>, send<ul>
+<li><code>oauth_consumer_key</code></li>
+<li><code>oauth_token</code> (request token from B)</li>
+<li><code>oauth_signature_method</code></li>
+<li><code>oauth_signature</code></li>
+<li>...</li>
+<li><code>oauth_verifier</code></li>
+</ul>
+</li>
+<li>here <code>oauth_signature</code> - is signature of the request created using request token secret from B</li>
+<li>note, that on step A Consumer uses his Consumer Secret to sign the request and here he use request token secret</li>
+</ul>
+</li>
+<li>F) Service provider grants Access Token<ul>
+<li><code>oauth_token</code></li>
+<li><code>oauth_token_secret</code></li>
+</ul>
+</li>
+<li>G) Consumer Accesses Protected Resources<ul>
+<li>request includes<ul>
+<li><code>oauth_consumer_key</code></li>
+<li><code>oauth_token</code> (request token from F)</li>
+<li><code>oauth_signature_method</code></li>
+<li><code>oauth_signature</code></li>
+<li>...</li>
+<li>here <code>oauth_signature</code> created using Access Token secret</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="links">Links</h2>
+<p><a href="http://en.wikipedia.org/wiki/OAuth">wikipedia</a></p>
+<p><a href="http://oauth.net/">oauth.net</a></p>
+<p><a href="http://hueniverse.com/oauth/">oauth guide</a></p>
+<p><a href="http://developer.yahoo.com/oauth/guide/oauth-auth-flow.html">yahoo</a></p>
+<p><a href="http://thinkvitamin.com/code/introduction-to-oauth/">introducion to oauth</a></p>
+<p><a href="http://habrahabr.ru/post/77648/">habrahabr, in russian</a></p>
+<h2 id="yii-implementations">yii implementations</h2>
+<p><a href="https://github.com/Nodge/yii-eauth">eauth extension</a></p>
+<p><a href="https://github.com/jorgebg/yii-eoauth">eoauth extension</a></p>
+<p><a href="http://www.yiiframework.com/extension/api-module/">api module extension</a></p>
+<h2 id="php-implementations">php implementations</h2>
+<p><a href="http://oauth.net/code/">list of libraries on oauth.net</a></p>
+<p><a href="https://dev.twitter.com/docs/twitter-libraries#php">list of libraries on twitter.com</a></p>
+<p><a href="http://www.php.net/manual/en/book.oauth.php">php extension</a></p>
+<p><a href="http://code.google.com/p/oauth-php/">oauth php project</a></p>
+<p><a href="http://code.google.com/p/oauth/">oauth project</a></p>
+<p><a href="http://framework.zend.com/manual/en/zend.oauth.introduction.html">zend</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

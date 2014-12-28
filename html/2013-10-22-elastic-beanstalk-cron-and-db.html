@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="elastic-beanstalk-cron-command-and-rds-db-access">Elastic Beanstalk - cron command and RDS DB access</h1>
+<h2 id="problem">Problem</h2>
+<p>I have a console command in php which needs an access to DB.
+The command need to be launched via cron.</p>
+<p>The DB connection string looks like like this</p>
+<pre><code><div class="highlight"><pre><span class="s1">&#39;connectionString&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;mysql:host=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_HOSTNAME&#39;</span><span class="p">].</span><span class="s1">&#39;;port=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_PORT&#39;</span><span class="p">].</span><span class="s1">&#39;;dbname=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_DB_NAME&#39;</span><span class="p">],</span>
+</pre></div>
+
+</code></pre><p>where RDS_xxx parameters come from environment variables.</p>
+<p>The problem is that cron launches the command with a clean environment (there are no RDS_xx variables).
+So the command fails to access the database.</p>
+<h2 id="solution">Solution</h2>
+<p>Solution is to set the required environment variables before launching the command and this can be done with &#39;/opt/elasticbeanstal/support/envvars&#39; script:</p>
+<pre><code><div class="highlight"><pre><span class="mi">0</span> <span class="mi">3</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="p">.</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">support</span><span class="o">/</span><span class="nx">envvars</span><span class="p">;</span> <span class="err">/var/www/html/console/yiic mycommand</span>
+</pre></div>
+
+</code></pre></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

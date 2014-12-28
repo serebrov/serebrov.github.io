@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="git-your-branch-is-ahead-of-origin-master-by-1-commit-after-pull">git - Your branch is ahead of &#39;origin/master&#39; by 1 commit after pull</h1>
+<p>Your branch is ahead of &#39;origin/master&#39; by 1 commit (or X commits) after <code>git pull origin master</code>.</p>
+<p>The sequence:</p>
+<ul>
+<li>Have up-to-date repository</li>
+<li>There is a change in the origin/master</li>
+<li>Do <code>git pull origin master</code></li>
+<li>Change is received and merged</li>
+<li>git status shows “Your branch is ahead of &#39;origin/master&#39; by 1 commit.”</li>
+</ul>
+<p>The reason is because during “pull origin master” reference to the remote 
+origin/master is not changed (still points to older version).</p>
+<p>To check this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">diff</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">master</span>
+</pre></div>
+
+</code></pre><p>It will show the difference - it should be the last master change.</p>
+<p>To fix this exacute:</p>
+<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">fetch</span> <span class="nx">origin</span>
+</pre></div>
+
+</code></pre><p>This will update git links to remotes.</p>
+<p>If you have this situation then you probably wanted to do just <code>git pull</code> instead of <code>git pull origin master</code>.</p>
+<h2 id="links">Links</h2>
+<p><a href="http://stackoverflow.com/questions/1741143/git-git-pull-origin-mybranch-leaves-local-mybranch-n-commits-ahead-of-origin">Stackoverflow: &#39;git pull origin mybranch&#39; leaves local mybranch N commits ahead of origin. Why?</a></p>
+<p><a href="http://git.661346.n2.nabble.com/Git-repo-on-a-machine-with-zero-commits-is-ahead-of-remote-by-103-commits-td5957671.html">Git repo on a machine with zero commits is ahead of remote by 103 commits.. !</a></p>
+<p><a href="http://www.quora.com/What-are-the-differences-between-git-pull-git-pull-origin-master-and-git-pull-origin-master">Quora: Git (revision control): What are the differences between &quot;git pull&quot;, &quot;git pull origin master&quot;, and &quot;git pull origin/master&quot;?</a></p>
+<p><a href="http://stackoverflow.com/questions/2883840/differences-between-git-pull-origin-master-git-pull-origin-master">Stackoverflow: Differences between git pull origin master &amp; git pull origin/master</a></p>
+<p><a href="http://stackoverflow.com/questions/5283829/why-do-i-have-to-push-the-changes-i-just-pulled-from-origin-in-git">Stackoverflow: Why do I have to push the changes I just pulled from origin in Git?</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

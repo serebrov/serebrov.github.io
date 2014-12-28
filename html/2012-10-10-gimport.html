@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="gimport-yii-extension">GImport yii extension</h1>
+<p>GImport yii extension implements recursive import of directories with caching.</p>
+<p>Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.</p>
+<p>Basic usage example:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$importer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GImport</span><span class="p">;</span>
+<span class="nx">$importer</span><span class="o">-&gt;</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;modules.myModule.*&#39;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre><p>This code will import all clasees from modules/myModule/ directory.</p>
+<p>GImport can also be configured as application component. Add following code into the application config:</p>
+<pre><code><div class="highlight"><pre><span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
+<span class="p">...</span>
+<span class="s1">&#39;preload&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;import&#39;</span><span class="p">),</span>
+<span class="p">...</span>
+<span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span>
+    <span class="s1">&#39;import&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span>
+        <span class="s1">&#39;class&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;GImport&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;import&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span>
+            <span class="c1">// add directories to import and</span>
+            <span class="c1">// put &#39;import&#39; component to preload to trigger import</span>
+            <span class="c1">// on application initialization</span>
+            <span class="s1">&#39;application.extensions.*&#39;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">...</span>
+</pre></div>
+
+</code></pre><p>Download at <a href="http://www.yiiframework.com/extension/gimport/">extension page</a>.</p>
+<p><a href="http://www.yiiframework.com/forum/index.php/topic/36445-extension-gimport/">Forum topic</a>.</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

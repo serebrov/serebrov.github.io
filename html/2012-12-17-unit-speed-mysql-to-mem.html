@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="speedup-unit-tests-by-moving-mysql-data-to-memory-ubuntu-">Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
+<p>There are several ways to speedup slow unit tests which interact with database:</p>
+<ul>
+<li>Refactor code and tests and do not interact with db in unit tests</li>
+<li>Use sqlite db in memory instead of MySql</li>
+<li>Use MySql MEMORY engine</li>
+<li>Move MySql data to memory</li>
+</ul>
+<p>It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:</p>
+<ul>
+<li>stop mysql</li>
+<li>move /var/lib/mysql to /dev/shm/mysql</li>
+<li>link /var/lib/mysql to /dev/shm/mysql</li>
+<li>start mysql</li>
+</ul>
+<p>In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.
+To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.sbin.mysqld</code>:</p>
+<pre><code><div class="highlight"><pre><span class="err">/dev/shm/mysql/ r,</span>
+<span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span><span class="o">/**</span> <span class="nx">rwk</span><span class="p">,</span>
+</pre></div>
+
+</code></pre><p>But it doesn&#39;t work for me and I disabled apparmor for mysql (not recommended):</p>
+<pre><code><div class="highlight"><pre><span class="nx">sudo</span> <span class="nx">mv</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">d</span><span class="o">/</span><span class="nx">usr</span><span class="p">.</span><span class="nx">sbin</span><span class="p">.</span><span class="nx">mysqld</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">d</span><span class="o">/</span><span class="nx">disable</span>
+</pre></div>
+
+</code></pre><p>Below are shell scripts to move MySql data to /dev/shm and back, restore backed up data and check db state.</p>
+<h2 id="move-db-to-memory-script">Move db to memory script</h2>
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
+<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
+<span class="nx">then</span>
+    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+    <span class="nx">exit</span> <span class="mi">1</span>
+<span class="nx">fi</span>
+
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
+<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup ]</span>
+<span class="nx">then</span>
+    <span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql /var/lib/mysql.backup</span>
+<span class="nx">fi</span>
+<span class="nx">mv</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql /dev/shm/mysql</span>
+<span class="nx">chown</span> <span class="o">-</span><span class="nx">R</span> <span class="nx">mysql</span><span class="o">:</span><span class="nx">mysql</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span>
+<span class="nx">ln</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
+<span class="nx">chown</span> <span class="o">-</span><span class="nx">h</span> <span class="nx">mysql</span><span class="o">:</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+</pre></div>
+
+</code></pre><h2 id="move-db-to-disk-script">Move db to disk script</h2>
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
+<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
+<span class="nx">then</span>
+    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+    <span class="nx">exit</span> <span class="mi">1</span>
+<span class="nx">fi</span>
+
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
+<span class="nx">rm</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
+<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="p">]</span>
+<span class="nx">then</span>
+    <span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup /var/lib/mysql</span>
+<span class="k">else</span>
+    <span class="nx">mv</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
+<span class="nx">fi</span>
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+</pre></div>
+
+</code></pre><h2 id="restore-db-backup-script">Restore db backup script</h2>
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
+<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
+<span class="nx">then</span>
+    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+    <span class="nx">exit</span> <span class="mi">1</span>
+<span class="nx">fi</span>
+
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
+<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup ]</span>
+<span class="nx">then</span>
+    <span class="nx">exit</span> <span class="o">-</span><span class="mi">1</span>
+<span class="nx">fi</span>
+<span class="nx">rm</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
+<span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup /var/lib/mysql</span>
+<span class="nx">rm</span> <span class="o">-</span><span class="nx">rf</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span>
+<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+</pre></div>
+
+</code></pre><h2 id="check-db-state-script">Check db state script</h2>
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
+<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
+<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
+<span class="nx">then</span>
+    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+    <span class="nx">exit</span> <span class="mi">1</span>
+<span class="nx">fi</span>
+
+<span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="nx">L</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql ]</span>
+<span class="nx">then</span>
+    <span class="nx">echo</span> <span class="s2">&quot;Mem db&quot;</span>
+    <span class="nx">exit</span> <span class="mi">0</span>
+<span class="k">else</span>
+    <span class="nx">echo</span> <span class="s2">&quot;File db&quot;</span>
+    <span class="nx">exit</span> <span class="mi">1</span>
+<span class="nx">fi</span>
+</pre></div>
+
+</code></pre><h2 id="links">Links</h2>
+<p><a href="http://stackoverflow.com/questions/9500032/unit-test-application-including-database-is-too-slow">Unit test application including database is too slow</a></p>
+<p><a href="http://stackoverflow.com/questions/4894850/force-an-entire-mysql-database-to-be-in-memory">Force an entire MySQL database to be in memory</a></p>
+<p><a href="http://stackoverflow.com/questions/3096148/how-to-run-djangos-test-database-only-in-memory">How to run django&#39;s test database only in memory?</a></p>
+<p><a href="https://gist.github.com/1152547">Script to put mysqld on a ram disk in ubuntu 10.04. Runs on every hudson slave boot</a></p>
+<p><a href="http://www.indimon.co.uk/2012/mysql-tmpdir-on-devshm/">MySQL tmpdir on /dev/shm</a></p>
+<p><a href="http://stackoverflow.com/questions/2783313/how-can-i-get-around-mysql-errcode-13-with-select-into-outfile">How can I get around MySQL Errcode 13 with SELECT INTO OUTFILE?</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

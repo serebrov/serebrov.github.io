@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="selenium-webdriver-trigger-event-on-element-via-jquery">selenium webdriver - trigger event on element via jQuery</h1>
+<p>The &#39;executeScript&#39; method of the webdriver receives additional &#39;arguments&#39; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):</p>
+<pre><code><div class="highlight"><pre><span class="nx">event</span> <span class="o">=</span> <span class="s1">&#39;click&#39;</span> <span class="err">#</span><span class="nx">or</span> <span class="s1">&#39;hover&#39;</span> <span class="nx">or</span> <span class="nx">any</span> <span class="nx">other</span>
+<span class="nx">script</span> <span class="o">=</span> <span class="s2">&quot;$(arguments[0]).trigger(&#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;)&quot;</span>
+<span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">web_element</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><h2 id="links">Links</h2>
+<p><a href="http://stackoverflow.com/questions/5490523/selecting-and-identifying-element-with-jquery-to-use-it-in-selenium-2-java-api">Stackoverflow question</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

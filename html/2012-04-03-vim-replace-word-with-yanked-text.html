@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
+<p>Copy a word and paste it over other words:</p>
+<pre><code><div class="highlight"><pre><span class="nx">yiw</span>     <span class="nx">yank</span> <span class="nx">inner</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">copy</span> <span class="nx">word</span> <span class="nx">under</span> <span class="nx">cursor</span><span class="p">,</span> <span class="nx">say</span> <span class="s2">&quot;first&quot;</span><span class="p">).</span>
+<span class="p">...</span>     <span class="nx">Move</span> <span class="nx">the</span> <span class="nx">cursor</span> <span class="nx">to</span> <span class="nx">another</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">say</span> <span class="s2">&quot;second&quot;</span><span class="p">).</span>
+<span class="nx">viwp</span>     <span class="nx">select</span> <span class="s2">&quot;second&quot;</span><span class="p">,</span> <span class="nx">then</span> <span class="nx">replace</span> <span class="nx">it</span> <span class="kd">with</span> <span class="s2">&quot;first&quot;</span><span class="p">.</span>
+<span class="p">...</span>     <span class="nx">Move</span> <span class="nx">the</span> <span class="nx">cursor</span> <span class="nx">to</span> <span class="nx">another</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">say</span> <span class="s2">&quot;third&quot;</span><span class="p">).</span>
+<span class="nx">viw</span><span class="s2">&quot;0p     select &quot;</span><span class="nx">third</span><span class="s2">&quot;, then replace it with &quot;</span><span class="nx">first</span><span class="err">&quot;</span><span class="p">.</span>
+</pre></div>
+
+</code></pre><p>Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;). 
+Yanking text also copies the text to register 0 (&quot;0). 
+So the command yiw copies the current word to &quot;&quot; and to &quot;0.
+Typing viw selects the current word, then pressing p pastes the unnamed register over the visual selection. 
+The visual selection is deleted to the unnamed register.</p>
+<h2 id="links">Links</h2>
+<p><a href="http://vim.wikia.com/wiki/Replace_a_word_with_yanked_text">vim.wikia.com</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

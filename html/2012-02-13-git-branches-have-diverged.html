@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="git-your-branch-and-origin-xxx-have-diverged">Git - Your branch and &#39;origin/xxx&#39; have diverged</h1>
+<h2 id="git-error-not-after-rebase-see-below-">Git error (not after rebase, see below):</h2>
+<pre><code><div class="highlight"><pre><span class="nx">Your</span> <span class="nx">branch</span> <span class="nx">and</span> <span class="s1">&#39;origin/xxx&#39;</span> <span class="nx">have</span> <span class="nx">diverged</span><span class="p">,</span>
+<span class="nx">and</span> <span class="nx">have</span> <span class="mi">1</span> <span class="nx">and</span> <span class="mi">1</span> <span class="nx">different</span> <span class="nx">commit</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="nx">each</span><span class="p">,</span> <span class="nx">respectively</span><span class="p">.</span>
+</pre></div>
+
+</code></pre><p>Error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch)</p>
+<p>History looks like:</p>
+<pre><code><div class="highlight"><pre><span class="p">...</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">A</span> <span class="o">----</span> <span class="nx">B</span>  <span class="nx">origin</span><span class="o">/</span><span class="nx">branch_xxx</span> <span class="p">(</span><span class="nx">upstream</span> <span class="nx">work</span><span class="p">)</span>
+                <span class="o">\</span>
+                    <span class="nx">C</span>  <span class="nx">branch_xxx</span> <span class="p">(</span><span class="nx">your</span> <span class="nx">work</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><p>Most easy way to solve - is to rebase commit C to the remote state:</p>
+<p>$ git rebase origin/branch_xxx
+The history will look like this:</p>
+<pre><code><div class="highlight"><pre><span class="p">...</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">A</span> <span class="o">----</span> <span class="nx">B</span>  <span class="nx">origin</span><span class="o">/</span><span class="nx">branch_xxx</span> <span class="p">(</span><span class="nx">upstream</span> <span class="nx">work</span><span class="p">)</span>
+                        <span class="o">\</span>
+                        <span class="nx">C</span><span class="err">&#39;</span>  <span class="nx">branch_xxx</span> <span class="p">(</span><span class="nx">your</span> <span class="nx">work</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><h2 id="the-same-git-error-after-rebase-">The same git error after rebase:</h2>
+<p>Your branch and &#39;origin/xxx&#39; have diverged,
+and have 1 and 1 different commit(s) each, respectively.
+In this case this is normal and expected, your local branch is different then origin version because of rebase.</p>
+<p>For example, we have a history like this:</p>
+<pre><code><div class="highlight"><pre><span class="p">...</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">A</span> <span class="o">----</span> <span class="nx">B</span>  <span class="nx">master</span><span class="p">,</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">master</span>
+                <span class="o">\</span>
+                    <span class="nx">C</span>  <span class="nx">branch_xxx</span><span class="p">,</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">branch_xxx</span>
+</pre></div>
+
+</code></pre><p>Now we want to rebase branch_xxx against the master branch:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">checkout</span> <span class="nx">branch_xxx</span>
+<span class="nx">$</span> <span class="nx">git</span> <span class="nx">rebase</span> <span class="nx">master</span>
+</pre></div>
+
+</code></pre><p>And we get &quot;Your branch and &#39;origin/branch_xxx&#39; have diverged&quot; because the history now is this:</p>
+<pre><code><div class="highlight"><pre><span class="p">...</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">o</span> <span class="o">----</span> <span class="nx">A</span> <span class="o">----------------------</span> <span class="nx">B</span>  <span class="nx">master</span><span class="p">,</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">master</span>
+                <span class="err">\</span>                        <span class="o">\</span>
+                    <span class="nx">C</span>  <span class="nx">origin</span><span class="o">/</span><span class="nx">branch_xxx</span>     <span class="nx">C</span><span class="err">&#39;</span> <span class="nx">branch_xxx</span>
+</pre></div>
+
+</code></pre><p>If you absolutely sure this is your case then you can force Git to push your changes:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nx">think</span> <span class="nx">twice</span> <span class="nx">before</span> <span class="k">this</span><span class="p">)</span> <span class="nx">git</span> <span class="nx">push</span> <span class="nx">origin</span> <span class="nx">branch_xxx</span> <span class="o">-</span><span class="nx">f</span>
+</pre></div>
+
+</code></pre><h2 id="links">Links</h2>
+<p><a href="http://stackoverflow.com/questions/2452226/master-branch-and-origin-master-have-diverged-how-to-undiverge-branches">Stackoverflow - master branch and &#39;origin/master&#39; have diverged, how to &#39;undiverge&#39; branches&#39;?</a></p>
+<p><a href="http://stackoverflow.com/questions/11563319/git-rebase-basics">Stackoverflow - git rebase basics</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

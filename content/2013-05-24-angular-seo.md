@@ -3,7 +3,7 @@ Angular.js and SEO - pre-render content on the server
 
 With angular.js you have an HTML which looks like this:
 
-    <span>{{variableValue}}</span>
+    <span>\{{variableValue}}</span>
     <ul>
         <li ng-repeat="item in items" ng-bind="item.name"></li>
     </ul>

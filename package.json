@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "0.0.1",
+  "devDependencies": {},
+  "dependencies": {
+    "glob": "~4.3.2",
+    "fs-extra": "~0.13.0",
+    "handlebars": "~2.0.0",
+    "handlebars-layouts": "~1.0.0",
+    "optimist": "~0.6.1",
+    "front-matter": "~0.2.0",
+    "lodash": "~2.4.1",
+    "marked": "~0.3.2",
+    "highlight.js": "~8.4.0",
+    "pygmentize-bundled-cached": "~1.0.0",
+    "handlebars-helpers": "~0.5.8",
+    "grunt": "~0.4.5"
+  }
+}

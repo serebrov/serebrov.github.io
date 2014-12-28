@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="git-how-to-revert-multiple-recent-commits">Git - how to revert multiple recent commits</h1>
+<p>Let&#39;s assume we have a history like this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span>
+</pre></div>
+
+</code></pre><p>Where G1-G3 are &#39;good&#39; commits and B1-B3 are &#39;bad&#39; commits and we
+want to revert them.
+If changes are not pushed to the server yet then the easy way is
+to reset the state to previous commit with <code>git reset --hard HEAD~3</code>.
+Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B3</code> is <code>HEAD~2</code>.
+This way the last good commit <code>G3</code> is <code>HEAD~3</code>.</p>
+<p>But if changes are pushed it is better to use <code>revert</code>.
+And here is how to do this for multiple commits:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">revert</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">commit</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">2</span><span class="o">^</span><span class="p">..</span><span class="nx">HEAD</span>
+</pre></div>
+
+</code></pre><p>Or:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">revert</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">commit</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">3</span><span class="p">..</span><span class="nx">HEAD</span>
+</pre></div>
+
+</code></pre><p>We need to revert a range of revisions from B1 to B3.
+Range specified with two dots like <rev1>..<rev2> includes only
+commits reachable from <rev2>, but not reachable from <rev1> (see <code>man -7 gitrevisions</code>).
+Since we need to include B3 (represented by HEAD~2) we use HEAD~2^ (its parent) or HEAD~3 (also parent of HEAD~2).
+The <code>HEAD~2^</code> syntax is more convenient if commit SHAs are used to name commits.</p>
+<p>The <code>--no-commit</code> option tells git to do the revert, but do not
+commit it automatically. So now we can review the repository state and commit it.
+After that we will get the history like this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span> <span class="o">-</span> <span class="nx">R</span><span class="err">&#39;</span>
+</pre></div>
+
+</code></pre><p>Where <code>R&#39;</code> is revert commit which will return repository state to the commit <code>G3</code>.
+Run git diff to check this (output should be empty):</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">diff</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">4</span> <span class="nx">HEAD</span>
+</pre></div>
+
+</code></pre><p>Another way to run revert is to specify commits one by one from newest to oldest:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">revert</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">commit</span> <span class="nx">HEAD</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">1</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">2</span>
+</pre></div>
+
+</code></pre><p>In this case there is no need to specify HEAD~3 since it is a good commit we do not want to revert.</p>
+<h1 id="links">Links</h1>
+<p><a href="http://stackoverflow.com/questions/1463340/revert-multiple-git-commits">Stackoverflow: Revert multiple git commits</a>
+<a href="http://stackoverflow.com/questions/4991594/revert-a-range-of-commits-in-git">Stackoverflow: Revert a range of commits in git</a>
+<a href="http://stackoverflow.com/questions/7251477/git-diff-whats-the-difference-between-having-and-no-dots">Stackoverflow: Git diff .. ? What&#39;s the difference between having .. and no dots</a>
+<a href="http://stackoverflow.com/questions/2221658/whats-the-difference-between-head-and-head-in-git">What&#39;s the difference between HEAD^ and HEAD~ in Git?</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

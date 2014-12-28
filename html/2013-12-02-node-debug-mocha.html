@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="node-js-how-to-debug-mocha-test-with-node-inspector">Node.js - how to debug mocha test with node inspector</h1>
+<p>To debug mocha test with <a href="https://github.com/node-inspector/node-inspector">node inspector</a> use the delay before test:</p>
+<pre><code><div class="highlight"><pre><span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//start mocha as</span>
+    <span class="c1">//mocha -t 10000 --debug</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">done</span><span class="p">();</span>
+    <span class="p">},</span> <span class="mi">5000</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+</code></pre><p>This way there are 5 seconds to start the node inspector and set a breakpoint.
+Mocha should be lauched as this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">mocha</span> <span class="o">-</span><span class="nx">t</span> <span class="mi">10000</span> <span class="o">--</span><span class="nx">debug</span>
+</pre></div>
+
+</code></pre><p>Same approach can be used not only for tests but for any short-living node app -
+just wrap the startup code into the setTimeout() call.</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

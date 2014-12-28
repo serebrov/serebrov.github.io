@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="-yii-class-table-inheritance"> yii - class table inheritance</h1>
+<p>It seems that we have no perfect solution for <a href="http://martinfowler.com/eaaCatalog/classTableInheritance.html">class table inheritance</a> (or multiple table inheritance) in yii (comparing to the very good one for <a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">single table inheritance</a>).</p>
+<p>Possible solutions are:</p>
+<ol>
+<li>Add support for class table inheritance to the active record class. There are some implementations of this method (see <a href="http://www.yiiframework.com/forum/index.php?/topic/5803-my-multi-table-inheritance-approach/">here</a> and <a href="http://www.yiiframework.com/forum/index.php?/topic/12978-class-table-inheritance/page__view__findpost__p__64041">here</a> for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</li>
+<li>Use MySQL VIEWs. MySQL supports a VIEW which can be updated by INSERT and UPDATE statements. So we can hide two tables (for base and child classes) behind the view and use it as a usual single table.</li>
+<li>Use single table inheritance and keep an extended data in separate tables.</li>
+</ol>
+<p>I wanted to examine options #2 and #3 and made a <a href="https://github.com/sebgoo/yiimti">simple yii application</a>.</p>
+<h2 id="mysql-views">MySQL VIEWs</h2>
+<p>Using MySQL views we can join two or more tables on the database level and work with join result as with single table.
+This approach could be a perfect solution, but unfortunately MySQL has some <a href="http://dev.mysql.com/doc/refman/5.0/en/view-updatability.html">limitations</a> related to views which join several tables.</p>
+<p>I examined these limitations in my test application (<a href="https://github.com/sebgoo/yiimti/tree/master/www/protected/modules/view">see &quot;view&quot; module</a>) and found following issues:</p>
+<ul>
+<li>Some additional code needed to make active record work properly (it does not detects primary key automatically and does not set record id after insert). This issue is not critical and can be handled in active record subclass.</li>
+<li>MySQL does not allow to delete records using view. This issue also can be handled in active record subclass - we can emulate delete method and do actual delete from joined tables.</li>
+<li>MySQL does not allow to update both joined tables at once. This is very disappointing and breaks the idea of hiding two tables behind the view.
+Of cause some workarounds are possible, for example in my sample app I show only fields from the base table when creating a record and only fields from the extended table when updating. But actually this limitation makes the whole idea of using VIEWS for class table inheritance no so good.</li>
+</ul>
+<p>A controller code in this case can remain simple and similar to the single table case, but you anyway should remember that you use the view and not a single table and do special handling in the UI on in the controller when you create / update records.
+So views can not provide a good abstract level when you want to create and update records.</p>
+<p>MySQL VIEWS are good solution for list or grid views. The code in this case will be exactly the same as for the single table.</p>
+<h2 id="single-table-inheritance-and-additional-data-in-external-tables">Single table inheritance and additional data in external tables</h2>
+<p>This approach is implemented in the <a href="https://github.com/sebgoo/yiimti/tree/master/www/protected/modules/aggregation">&quot;aggregation&quot; module</a> of my test application.
+A data structure is following:</p>
+<pre>
+-- single table inheritance table
+CREATE TABLE `car` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NULL ,
+  `type` ENUM('Car','SportCar','FamilyCar') NULL DEFAULT 'Car' ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+-- additional data for a SportCar class
+CREATE TABLE `sport_car_data` (
+  `car_id` INT NOT NULL ,
+  `power` INT NOT NULL ,
+  PRIMARY KEY (`car_id`) ,
+  CONSTRAINT `fk_sport_car_data_car`
+    FOREIGN KEY (`car_id` )
+    REFERENCES `car` (`id` ))
+ENGINE = InnoDB;
+
+-- additional data for a FamilyCar class
+CREATE TABLE `family_car_data` (
+  `car_id` INT NOT NULL ,
+  `seats` INT NOT NULL ,
+  PRIMARY KEY (`car_id`) ,
+  CONSTRAINT `fk_family_car_data_car`
+    FOREIGN KEY (`car_id` )
+    REFERENCES `car` (`id` ))
+ENGINE = InnoDB;
+</pre>
+
+<p>Here the &#39;car&#39; table is a single inheritance table with type field (ENUM with class names).
+Base class is &#39;Car&#39;:</p>
+<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">Car</span> <span class="kr">extends</span> <span class="nx">CActiveRecord</span> <span class="p">{</span>
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">protected</span> <span class="kd">function</span> <span class="nx">instantiate</span><span class="p">(</span><span class="nx">$attributes</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$class</span><span class="o">=</span><span class="nx">$attributes</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">];</span>
+        <span class="nx">$model</span><span class="o">=</span><span class="k">new</span> <span class="nx">$class</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">$model</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">beforeSave</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">isNewRecord</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">get_class</span><span class="p">(</span><span class="nx">$this</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">parent</span><span class="o">::</span><span class="nx">beforeSave</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">class</span> <span class="nx">FamilyCar</span> <span class="kr">extends</span> <span class="nx">Car</span> <span class="p">{</span>
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">relations</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
+            <span class="s1">&#39;data&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nx">HAS_ONE</span><span class="p">,</span> <span class="s1">&#39;FamilyCarData&#39;</span><span class="p">,</span> <span class="s1">&#39;car_id&#39;</span><span class="p">),</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">defaultScope</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
+            <span class="s1">&#39;condition&#39;</span><span class="o">=&gt;</span><span class="s2">&quot;type=&#39;FamilyCar&#39;&quot;</span><span class="p">,</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">class</span> <span class="nx">SportCar</span> <span class="kr">extends</span> <span class="nx">Car</span> <span class="p">{</span>
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">relations</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
+            <span class="s1">&#39;data&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nx">HAS_ONE</span><span class="p">,</span> <span class="s1">&#39;SportCarData&#39;</span><span class="p">,</span> <span class="s1">&#39;car_id&#39;</span><span class="p">),</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">defaultScope</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
+            <span class="s1">&#39;condition&#39;</span><span class="o">=&gt;</span><span class="s2">&quot;type=&#39;SportCar&#39;&quot;</span><span class="p">,</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre><p>Some notes:</p>
+<ol>
+<li>Class name is used as value for &quot;type&quot; field, so there is no need in switch in the <code>Car::instantiante</code> method (like in the <a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">original solution</a>).</li>
+<li>The <code>Car::defaultScope()</code> method is defined in the child classes only. This way we can use base <code>Car</code> class to process all models regardless of type and child classes <code>FamilyCar</code> and <code>SportCar</code> to work with one model type only.</li>
+<li>Child classes have ‘data’ relation which points to the model with extended type data. In this case <code>FamilyCarData</code> and <code>SportCarData</code> are such models with extended data.</li>
+</ol>
+<p>With this approach you should handle two models in controllers and views related to subclasses (<code>FamilyCar</code> and <code>SportCar</code>).</p>
+<p>For example, create action in the <code>FamilyCar</code> controller:</p>
+<pre><code><div class="highlight"><pre><span class="kr">public</span> <span class="kd">function</span> <span class="nx">actionCreate</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//create base model and model with extended data</span>
+    <span class="nx">$model</span><span class="o">=</span><span class="k">new</span> <span class="nx">FamilyCar</span><span class="p">;</span>
+    <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">=</span><span class="k">new</span> <span class="nx">FamilyCarData</span><span class="p">;</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCarData&#39;</span><span class="p">]))</span> <span class="p">{</span>
+        <span class="c1">//get properties for both models and save them</span>
+        <span class="c1">//of cause it is better to use transaction here</span>
+        <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">attributes</span><span class="o">=</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCar&#39;</span><span class="p">];</span>
+        <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">attributes</span><span class="o">=</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCarData&#39;</span><span class="p">];</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">save</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">car_id</span> <span class="o">=</span> <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">id</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">save</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">redirect</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">,</span><span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">id</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span><span class="nx">array</span><span class="p">(</span>
+        <span class="s1">&#39;model&#39;</span><span class="o">=&gt;</span><span class="nx">$model</span><span class="p">,</span>
+    <span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre><p>And the view code will be like this:</p>
+<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;form&quot;</span><span class="o">&gt;</span>
+
+<span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">$form</span><span class="o">=</span><span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">beginWidget</span><span class="p">(</span><span class="s1">&#39;CActiveForm&#39;</span><span class="p">,</span> <span class="nx">array</span><span class="p">(</span>
+    <span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;family-car-form&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;enableAjaxValidation&#39;</span><span class="o">=&gt;</span><span class="kc">false</span><span class="p">,</span>
+<span class="p">));</span> <span class="o">?&gt;</span>
+
+    <span class="o">&lt;</span><span class="nx">p</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="o">&gt;</span><span class="nx">Fields</span> <span class="kd">with</span> <span class="o">&lt;</span><span class="nx">span</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;required&quot;</span><span class="o">&gt;*&lt;</span><span class="err">/span&gt; are required.&lt;/p&gt;</span>
+
+    <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">errorSummary</span><span class="p">(</span><span class="nx">$model</span><span class="p">);</span> <span class="o">?&gt;</span>
+
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">labelEx</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">textField</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">error</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">labelEx</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">textField</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">error</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row buttons&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">CHtml</span><span class="o">::</span><span class="nx">submitButton</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">isNewRecord</span> <span class="o">?</span> <span class="s1">&#39;Create&#39;</span> <span class="o">:</span> <span class="s1">&#39;Save&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+
+<span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">endWidget</span><span class="p">();</span> <span class="o">?&gt;</span>
+
+<span class="o">&lt;</span><span class="err">/div&gt;&lt;!-- form --&gt;</span>
+</pre></div>
+
+</code></pre><p>Here we can access extended data through relation: <code>$model-&gt;data</code>.</p>
+<h2 id="summary">Summary</h2>
+<p>It is possible to use MySQL views to implement class table inheritance, but I would not recommend this, because of complexities with create / update data code.
+Views are convenient when you list records and simplify configuration of CListView and CGRidView widgets.</p>
+<p>In my opinion the solution with single table inheritance and extended data in separate tables is the best choice here.
+Yes, you will have to handle two models in your controllers / views and should re-organize your classes hierarchy, but you have a clean view of what is going on and the fact you actually use two database tables is explicit.</p>
+<p>This approach can be combined with MySQL views which are good for list and grid views (but not for create / update forms).</p>
+<h2 id="links">Links</h2>
+<p><a href="http://www.martinfowler.com/eaaCatalog/classTableInheritance.html">Class table inheritance pattern</a></p>
+<p><a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">Single table inheritance implementation in yii</a></p>
+<p><a href="http://dev.mysql.com/doc/refman/5.0/en/view-updatability.html">MySQL - updatable views</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php?/topic/12978-class-table-inheritance">Yii forum topic - class table inheritance</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php?/topic/5803-my-multi-table-inheritance-approach/">Yii forum topic - multiple table inheritance approach</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php?/topic/23405-cactiverecord-inheritance-and-dynamic-attributes/">Yii forum topic - inheritance and dynamic attributes</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php?/topic/11131-inheritance-extending-a-model/">Yii forum topic - another inheritance approach</a></p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+

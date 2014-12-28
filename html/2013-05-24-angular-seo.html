@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/pygments.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div><h1 id="angular-js-and-seo-pre-render-content-on-the-server">Angular.js and SEO - pre-render content on the server</h1>
+<p>With angular.js you have an HTML which looks like this:</p>
+<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="err">\</span><span class="p">{{</span><span class="nx">variableValue</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+<span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;item in items&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;item.name&quot;</span><span class="o">&gt;&lt;</span><span class="err">/li&gt;</span>
+<span class="o">&lt;</span><span class="err">/ul&gt;</span>
+</pre></div>
+
+</code></pre><p>The simple way to make this content SEO-friendly is to pre-render data on the server and
+then allow angular to do it&#39;s job on the client.
+For simple variables there is <a href="http://docs.angularjs.org/api/ng.directive:ngBind">ng-bind</a>.
+And for lists there is <a href="http://docs.angularjs.org/api/ng.directive:ngInclude">ng-include</a>.
+Here is the example from above with pre-rendered content:</p>
+<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">span</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;variableValue&quot;</span><span class="o">&gt;</span><span class="nx">Static</span> <span class="nx">indexed</span> <span class="nx">value</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+<span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">include</span><span class="o">=</span><span class="s2">&quot;&#39;your/dynamic/list&#39;&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">seo</span><span class="o">-</span><span class="nx">friendly</span> <span class="nx">item1</span><span class="o">&lt;</span><span class="err">/li&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">seo</span><span class="o">-</span><span class="nx">friendly</span> <span class="nx">item2</span><span class="o">&lt;</span><span class="err">/li&gt;</span>
+<span class="o">&lt;</span><span class="err">/ul&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/ng-template&quot;</span> <span class="nx">id</span><span class="o">=</span><span class="s2">&quot;your/dynamic/list&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;item in items&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;item.name&quot;</span><span class="o">&gt;&lt;</span><span class="err">/li&gt;</span>
+<span class="o">&lt;</span><span class="err">/script&gt;</span>
+</pre></div>
+
+</code></pre><p>This way we have initial content for search bots and instructions for angular at the same time.</p>
+<p>Note that the solution above works for simple cases but it can be not good for
+complex pages or if there are many pages.  Actually what we do is duplicate the
+content - we provide static content on the server site and then angular
+requests content dynamically an overrides static data.</p>
+<p>A better (and more complex) solution is to crawl the website and give static page
+snapshots to search engines.  This can be done with a headless browser like
+<a href="http://phantomjs.org/">PhantomJS</a> which you can run periodically to generate
+static page snapshots.</p>
+<p>There is also an easy way to do this - use a service like
+<a href="http://www.brombone.com/">BromBone</a>.  It will do complex part of the job for
+you and you only need to redirect search bots to static versions of your pages
+generated by BromBone.</p>
+<h2 id="links">Links</h2>
+<p><a href="https://github.com/ithkuil/angular-on-server">Pre-rendering AngularJS on the server with Node.js and jsdom</a> and <a href="http://www.reddit.com/r/javascript/comments/1a3fdj/prerendering_angularjs_on_the_server_with_nodejs/">discussion on reddit</a></p>
+<p>[angular and SEO discussion on google groups] (<a href="https://groups.google.com/forum/m/?fromgroups#!topic/angular/2uk2GYff28E">https://groups.google.com/forum/m/?fromgroups#!topic/angular/2uk2GYff28E</a>)</p>
+<p>[Ajax crawling - google developers] (<a href="https://developers.google.com/webmasters/ajax-crawling/docs/getting-started">https://developers.google.com/webmasters/ajax-crawling/docs/getting-started</a>)</p>
+<p>[AngularJS and SEO - approach based on PantomJS] (<a href="http://www.yearofmoo.com/2012/11/angularjs-and-seo.html">http://www.yearofmoo.com/2012/11/angularjs-and-seo.html</a>) and <a href="https://github.com/steeve/angular-seo">github repository</a></p>
+<p>[BromBone - make your javascript powered website crawlable by Google (and other search engines)] (<a href="http://www.brombone.com">http://www.brombone.com</a>)</p>
+</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+  </body>
+</html>
+
