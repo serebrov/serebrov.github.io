@@ -29,7 +29,8 @@
 
 </code></pre><p>In my case it was reproduced on the 64 bit machine with <a href="http://aws.amazon.com/amazon-linux-ami/">Amazon Linux AMI</a>.
 The problem itself is known and there is <a href="http://code.google.com/p/selenium/issues/detail?id=2852">an issue in selenium tracker</a>.</p>
-<p>It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
+<p><!-- more -->
+It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
 In my system there are following versions of <code>libX11</code>:</p>
 <pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">find</span> <span class="o">/</span> <span class="o">|</span> <span class="nx">grep</span> <span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span>
 <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib64</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span>       <span class="o">&lt;--</span> <span class="nx">symbolic</span> <span class="nx">link</span> <span class="nx">to</span> <span class="err">`</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mf">6.3</span><span class="p">.</span><span class="mi">0</span><span class="s1">&#39;</span>

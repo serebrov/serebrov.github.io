@@ -2,8 +2,6 @@
 
 var _ = require('lodash');
 var path = require('path');
-var glob = require("glob")
-var front = require('front-matter');
 var fs = require('fs-extra');
 
 var optimist = require('optimist')
@@ -20,24 +18,11 @@ var optimist = require('optimist')
       }
     });
 
-var Handlebars = require('handlebars');
-var layouts = require('handlebars-layouts');
-// some pretty usefull helpers I can use here!
-require('handlebars-helpers').register(Handlebars, {});
-layouts(Handlebars);
-
-//Get partials
+var registerPatials = require('./lib/registerPartials');
 var tplPath = 'build/templates/*.hbs';
-glob(tplPath, {}, function(er, files) {
-    //Register partials
-    _.each(files, function(file) {
-        var name = path.basename(file, '.hbs');
-        //console.log('Register partial: ' + name);
-        var contents = fs.readFileSync(file).toString();
-        //console.log('Register partial: ' + name);
-        Handlebars.registerPartial(name, contents);
-    });
 
+registerPatials.register(tplPath)
+.then(function(Handlebars) {
 
     var templatePath = optimist.argv['t'];
     var template = fs.readFileSync(templatePath, 'utf-8');

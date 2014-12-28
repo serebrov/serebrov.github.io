@@ -2,11 +2,13 @@
 date: 2012-02-01
 tags: git
 ---
-git - easy way to checkout and track remote branch
+git - checkout and track remote branch
 ============================================
 
-    #creates and checks out "feature" branch that tracks "origin/feature"
-    $ git checkout -t origin/feature
+```bash
+#creates and checks out "feature" branch that tracks "origin/feature"
+$ git checkout -t origin/feature
+```
 
 <!-- more -->
 Links

@@ -1,3 +1,7 @@
+---
+date: 2012-02-20
+tags: selenium
+---
 selenium - problem with loading x\_ignore\_nofocus.so
 ===================================================
 
@@ -13,6 +17,7 @@ Selenium fails to start Firefox with following error:
 In my case it was reproduced on the 64 bit machine with [Amazon Linux AMI](http://aws.amazon.com/amazon-linux-ami/).
 The problem itself is known and there is [an issue in selenium tracker](http://code.google.com/p/selenium/issues/detail?id=2852).
 
+<!-- more -->
 It is because `x_ignore_nofocus` library tries to load 32bit version of the `libX11` instead of 64bit.
 In my system there are following versions of `libX11`:
 

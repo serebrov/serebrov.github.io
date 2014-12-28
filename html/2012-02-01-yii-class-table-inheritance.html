@@ -46,95 +46,96 @@ So views can not provide a good abstract level when you want to create and updat
 <h2 id="single-table-inheritance-and-additional-data-in-external-tables">Single table inheritance and additional data in external tables</h2>
 <p>This approach is implemented in the <a href="https://github.com/sebgoo/yiimti/tree/master/www/protected/modules/aggregation">&quot;aggregation&quot; module</a> of my test application.
 A data structure is following:</p>
-<pre>
--- single table inheritance table
-CREATE TABLE `car` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(45) NULL ,
-  `type` ENUM('Car','SportCar','FamilyCar') NULL DEFAULT 'Car' ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="c1">-- single table inheritance table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="n">car</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span> <span class="p">,</span>
+  <span class="o">`</span><span class="n">name</span><span class="o">`</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="o">`</span><span class="k">type</span><span class="o">`</span> <span class="n">ENUM</span><span class="p">(</span><span class="s1">&#39;Car&#39;</span><span class="p">,</span><span class="s1">&#39;SportCar&#39;</span><span class="p">,</span><span class="s1">&#39;FamilyCar&#39;</span><span class="p">)</span> <span class="k">NULL</span> <span class="k">DEFAULT</span> <span class="s1">&#39;Car&#39;</span> <span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
 
--- additional data for a SportCar class
-CREATE TABLE `sport_car_data` (
-  `car_id` INT NOT NULL ,
-  `power` INT NOT NULL ,
-  PRIMARY KEY (`car_id`) ,
-  CONSTRAINT `fk_sport_car_data_car`
-    FOREIGN KEY (`car_id` )
-    REFERENCES `car` (`id` ))
-ENGINE = InnoDB;
+<span class="c1">-- additional data for a SportCar class</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="n">sport_car_data</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">car_id</span><span class="o">`</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="o">`</span><span class="n">power</span><span class="o">`</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">car_id</span><span class="o">`</span><span class="p">)</span> <span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_sport_car_data_car</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">car_id</span><span class="o">`</span> <span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">car</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="p">))</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
 
--- additional data for a FamilyCar class
-CREATE TABLE `family_car_data` (
-  `car_id` INT NOT NULL ,
-  `seats` INT NOT NULL ,
-  PRIMARY KEY (`car_id`) ,
-  CONSTRAINT `fk_family_car_data_car`
-    FOREIGN KEY (`car_id` )
-    REFERENCES `car` (`id` ))
-ENGINE = InnoDB;
-</pre>
-
-<p>Here the &#39;car&#39; table is a single inheritance table with type field (ENUM with class names).
-Base class is &#39;Car&#39;:</p>
-<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">Car</span> <span class="kr">extends</span> <span class="nx">CActiveRecord</span> <span class="p">{</span>
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kr">protected</span> <span class="kd">function</span> <span class="nx">instantiate</span><span class="p">(</span><span class="nx">$attributes</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">$class</span><span class="o">=</span><span class="nx">$attributes</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">];</span>
-        <span class="nx">$model</span><span class="o">=</span><span class="k">new</span> <span class="nx">$class</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">$model</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">beforeSave</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">isNewRecord</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">get_class</span><span class="p">(</span><span class="nx">$this</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nx">parent</span><span class="o">::</span><span class="nx">beforeSave</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kr">class</span> <span class="nx">FamilyCar</span> <span class="kr">extends</span> <span class="nx">Car</span> <span class="p">{</span>
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">relations</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
-            <span class="s1">&#39;data&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nx">HAS_ONE</span><span class="p">,</span> <span class="s1">&#39;FamilyCarData&#39;</span><span class="p">,</span> <span class="s1">&#39;car_id&#39;</span><span class="p">),</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kd">function</span> <span class="nx">defaultScope</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
-            <span class="s1">&#39;condition&#39;</span><span class="o">=&gt;</span><span class="s2">&quot;type=&#39;FamilyCar&#39;&quot;</span><span class="p">,</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kr">class</span> <span class="nx">SportCar</span> <span class="kr">extends</span> <span class="nx">Car</span> <span class="p">{</span>
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">tableName</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="s1">&#39;car&#39;</span><span class="p">;</span>
-    <span class="p">}</span>
-
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">relations</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
-            <span class="s1">&#39;data&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nx">HAS_ONE</span><span class="p">,</span> <span class="s1">&#39;SportCarData&#39;</span><span class="p">,</span> <span class="s1">&#39;car_id&#39;</span><span class="p">),</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="kd">function</span> <span class="nx">defaultScope</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
-            <span class="s1">&#39;condition&#39;</span><span class="o">=&gt;</span><span class="s2">&quot;type=&#39;SportCar&#39;&quot;</span><span class="p">,</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="c1">-- additional data for a FamilyCar class</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="o">`</span><span class="n">family_car_data</span><span class="o">`</span> <span class="p">(</span>
+  <span class="o">`</span><span class="n">car_id</span><span class="o">`</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="o">`</span><span class="n">seats</span><span class="o">`</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">car_id</span><span class="o">`</span><span class="p">)</span> <span class="p">,</span>
+  <span class="k">CONSTRAINT</span> <span class="o">`</span><span class="n">fk_family_car_data_car</span><span class="o">`</span>
+    <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">(</span><span class="o">`</span><span class="n">car_id</span><span class="o">`</span> <span class="p">)</span>
+    <span class="k">REFERENCES</span> <span class="o">`</span><span class="n">car</span><span class="o">`</span> <span class="p">(</span><span class="o">`</span><span class="n">id</span><span class="o">`</span> <span class="p">))</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">InnoDB</span><span class="p">;</span>
 </pre></div>
 
-</code></pre><p>Some notes:</p>
+</code></pre>
+<p>Here the &#39;car&#39; table is a single inheritance table with type field (ENUM with class names).
+Base class is &#39;Car&#39;:</p>
+<pre><code class="lang-php"><div class="highlight"><pre><span class="x">class Car extends CActiveRecord {</span>
+<span class="x">    public function tableName() {</span>
+<span class="x">        return &#39;car&#39;;</span>
+<span class="x">    }</span>
+
+<span class="x">    protected function instantiate($attributes) {</span>
+<span class="x">        $class=$attributes[&#39;type&#39;];</span>
+<span class="x">        $model=new $class(null);</span>
+<span class="x">        return $model;</span>
+<span class="x">    }</span>
+
+<span class="x">    public function beforeSave() {</span>
+<span class="x">        if ($this-&gt;isNewRecord) {</span>
+<span class="x">            $this-&gt;type = get_class($this);</span>
+<span class="x">        }</span>
+<span class="x">        return parent::beforeSave();</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+
+<span class="x">class FamilyCar extends Car {</span>
+<span class="x">    public function tableName() {</span>
+<span class="x">        return &#39;car&#39;;</span>
+<span class="x">    }</span>
+
+<span class="x">    public function relations() {</span>
+<span class="x">        return array(</span>
+<span class="x">            &#39;data&#39; =&gt; array(self::HAS_ONE, &#39;FamilyCarData&#39;, &#39;car_id&#39;),</span>
+<span class="x">        );</span>
+<span class="x">    }</span>
+
+<span class="x">    function defaultScope() {</span>
+<span class="x">        return array(</span>
+<span class="x">            &#39;condition&#39;=&gt;&quot;type=&#39;FamilyCar&#39;&quot;,</span>
+<span class="x">        );</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+
+<span class="x">class SportCar extends Car {</span>
+<span class="x">    public function tableName() {</span>
+<span class="x">        return &#39;car&#39;;</span>
+<span class="x">    }</span>
+
+<span class="x">    public function relations() {</span>
+<span class="x">        return array(</span>
+<span class="x">            &#39;data&#39; =&gt; array(self::HAS_ONE, &#39;SportCarData&#39;, &#39;car_id&#39;),</span>
+<span class="x">        );</span>
+<span class="x">    }</span>
+
+<span class="x">    function defaultScope() {</span>
+<span class="x">        return array(</span>
+<span class="x">            &#39;condition&#39;=&gt;&quot;type=&#39;SportCar&#39;&quot;,</span>
+<span class="x">        );</span>
+<span class="x">    }</span>
+<span class="x">}</span>
+</pre></div>
+
+</code></pre>
+<p>Some notes:</p>
 <ol>
 <li>Class name is used as value for &quot;type&quot; field, so there is no need in switch in the <code>Car::instantiante</code> method (like in the <a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">original solution</a>).</li>
 <li>The <code>Car::defaultScope()</code> method is defined in the child classes only. This way we can use base <code>Car</code> class to process all models regardless of type and child classes <code>FamilyCar</code> and <code>SportCar</code> to work with one model type only.</li>
@@ -142,63 +143,65 @@ Base class is &#39;Car&#39;:</p>
 </ol>
 <p>With this approach you should handle two models in controllers and views related to subclasses (<code>FamilyCar</code> and <code>SportCar</code>).</p>
 <p>For example, create action in the <code>FamilyCar</code> controller:</p>
-<pre><code><div class="highlight"><pre><span class="kr">public</span> <span class="kd">function</span> <span class="nx">actionCreate</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">//create base model and model with extended data</span>
-    <span class="nx">$model</span><span class="o">=</span><span class="k">new</span> <span class="nx">FamilyCar</span><span class="p">;</span>
-    <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">=</span><span class="k">new</span> <span class="nx">FamilyCarData</span><span class="p">;</span>
+<pre><code class="lang-PHP"><div class="highlight"><pre><span class="x">public function actionCreate() {</span>
+<span class="x">    //create base model and model with extended data</span>
+<span class="x">    $model=new FamilyCar;</span>
+<span class="x">    $model-&gt;data=new FamilyCarData;</span>
 
-    <span class="k">if</span><span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCarData&#39;</span><span class="p">]))</span> <span class="p">{</span>
-        <span class="c1">//get properties for both models and save them</span>
-        <span class="c1">//of cause it is better to use transaction here</span>
-        <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">attributes</span><span class="o">=</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCar&#39;</span><span class="p">];</span>
-        <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">attributes</span><span class="o">=</span><span class="nx">$_POST</span><span class="p">[</span><span class="s1">&#39;FamilyCarData&#39;</span><span class="p">];</span>
-        <span class="k">if</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">save</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">car_id</span> <span class="o">=</span> <span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">id</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="o">-&gt;</span><span class="nx">save</span><span class="p">())</span> <span class="p">{</span>
-                <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">redirect</span><span class="p">(</span><span class="nx">array</span><span class="p">(</span><span class="s1">&#39;view&#39;</span><span class="p">,</span><span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">id</span><span class="p">));</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+<span class="x">    if(isset($_POST[&#39;FamilyCarData&#39;])) {</span>
+<span class="x">        //get properties for both models and save them</span>
+<span class="x">        //of cause it is better to use transaction here</span>
+<span class="x">        $model-&gt;attributes=$_POST[&#39;FamilyCar&#39;];</span>
+<span class="x">        $model-&gt;data-&gt;attributes=$_POST[&#39;FamilyCarData&#39;];</span>
+<span class="x">        if($model-&gt;save()) {</span>
+<span class="x">            $model-&gt;data-&gt;car_id = $model-&gt;id;</span>
+<span class="x">            if ($model-&gt;data-&gt;save()) {</span>
+<span class="x">                $this-&gt;redirect(array(&#39;view&#39;,&#39;id&#39;=&gt;$model-&gt;id));</span>
+<span class="x">            }</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
 
-    <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;create&#39;</span><span class="p">,</span><span class="nx">array</span><span class="p">(</span>
-        <span class="s1">&#39;model&#39;</span><span class="o">=&gt;</span><span class="nx">$model</span><span class="p">,</span>
-    <span class="p">));</span>
-<span class="p">}</span>
+<span class="x">    $this-&gt;render(&#39;create&#39;,array(</span>
+<span class="x">        &#39;model&#39;=&gt;$model,</span>
+<span class="x">    ));</span>
+<span class="x">}</span>
 </pre></div>
 
-</code></pre><p>And the view code will be like this:</p>
-<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;form&quot;</span><span class="o">&gt;</span>
+</code></pre>
+<p>And the view code will be like this:</p>
+<pre><code class="lang-html+php"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;form&quot;</span><span class="nt">&gt;</span>
 
-<span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">$form</span><span class="o">=</span><span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">beginWidget</span><span class="p">(</span><span class="s1">&#39;CActiveForm&#39;</span><span class="p">,</span> <span class="nx">array</span><span class="p">(</span>
+<span class="cp">&lt;?php</span> <span class="nv">$form</span><span class="o">=</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">beginWidget</span><span class="p">(</span><span class="s1">&#39;CActiveForm&#39;</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">&#39;id&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;family-car-form&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;enableAjaxValidation&#39;</span><span class="o">=&gt;</span><span class="kc">false</span><span class="p">,</span>
-<span class="p">));</span> <span class="o">?&gt;</span>
+    <span class="s1">&#39;enableAjaxValidation&#39;</span><span class="o">=&gt;</span><span class="k">false</span><span class="p">,</span>
+<span class="p">));</span> <span class="cp">?&gt;</span>
 
-    <span class="o">&lt;</span><span class="nx">p</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="o">&gt;</span><span class="nx">Fields</span> <span class="kd">with</span> <span class="o">&lt;</span><span class="nx">span</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;required&quot;</span><span class="o">&gt;*&lt;</span><span class="err">/span&gt; are required.&lt;/p&gt;</span>
+    <span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">&quot;note&quot;</span><span class="nt">&gt;</span>Fields with <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;required&quot;</span><span class="nt">&gt;</span>*<span class="nt">&lt;/span&gt;</span> are required.<span class="nt">&lt;/p&gt;</span>
 
-    <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">errorSummary</span><span class="p">(</span><span class="nx">$model</span><span class="p">);</span> <span class="o">?&gt;</span>
+    <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">errorSummary</span><span class="p">(</span><span class="nv">$model</span><span class="p">);</span> <span class="cp">?&gt;</span>
 
-    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">labelEx</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">textField</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">error</span><span class="p">(</span><span class="nx">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-    <span class="o">&lt;</span><span class="err">/div&gt;</span>
-    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">labelEx</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">textField</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">$form</span><span class="o">-&gt;</span><span class="nx">error</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">labelEx</span><span class="p">(</span><span class="nv">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">textField</span><span class="p">(</span><span class="nv">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="nv">$model</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">labelEx</span><span class="p">(</span><span class="nv">$model</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">textField</span><span class="p">(</span><span class="nv">$model</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nv">$form</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="nv">$model</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">,</span><span class="s1">&#39;seats&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
 
-    <span class="o">&lt;</span><span class="nx">div</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;row buttons&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">echo</span> <span class="nx">CHtml</span><span class="o">::</span><span class="nx">submitButton</span><span class="p">(</span><span class="nx">$model</span><span class="o">-&gt;</span><span class="nx">isNewRecord</span> <span class="o">?</span> <span class="s1">&#39;Create&#39;</span> <span class="o">:</span> <span class="s1">&#39;Save&#39;</span><span class="p">);</span> <span class="o">?&gt;</span>
-    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row buttons&quot;</span><span class="nt">&gt;</span>
+        <span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">CHtml</span><span class="o">::</span><span class="na">submitButton</span><span class="p">(</span><span class="nv">$model</span><span class="o">-&gt;</span><span class="na">isNewRecord</span> <span class="o">?</span> <span class="s1">&#39;Create&#39;</span> <span class="o">:</span> <span class="s1">&#39;Save&#39;</span><span class="p">);</span> <span class="cp">?&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
 
-<span class="o">&lt;?</span><span class="nx">php</span> <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">endWidget</span><span class="p">();</span> <span class="o">?&gt;</span>
+<span class="cp">&lt;?php</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">endWidget</span><span class="p">();</span> <span class="cp">?&gt;</span>
 
-<span class="o">&lt;</span><span class="err">/div&gt;&lt;!-- form --&gt;</span>
+<span class="nt">&lt;/div&gt;</span><span class="c">&lt;!-- form --&gt;</span>
 </pre></div>
 
-</code></pre><p>Here we can access extended data through relation: <code>$model-&gt;data</code>.</p>
+</code></pre>
+<p>Here we can access extended data through relation: <code>$model-&gt;data</code>.</p>
 <h2 id="summary">Summary</h2>
 <p>It is possible to use MySQL views to implement class table inheritance, but I would not recommend this, because of complexities with create / update data code.
 Views are convenient when you list records and simplify configuration of CListView and CGRidView widgets.</p>

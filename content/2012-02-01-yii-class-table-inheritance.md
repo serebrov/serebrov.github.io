@@ -38,7 +38,7 @@ Single table inheritance and additional data in external tables
 This approach is implemented in the ["aggregation" module](https://github.com/sebgoo/yiimti/tree/master/www/protected/modules/aggregation) of my test application.
 A data structure is following:
 
-<pre>
+```sql
 -- single table inheritance table
 CREATE TABLE `car` (
   `id` INT NOT NULL AUTO_INCREMENT ,
@@ -66,65 +66,67 @@ CREATE TABLE `family_car_data` (
     FOREIGN KEY (`car_id` )
     REFERENCES `car` (`id` ))
 ENGINE = InnoDB;
-</pre>
+```
 
 Here the 'car' table is a single inheritance table with type field (ENUM with class names).
 Base class is 'Car':
 
-    class Car extends CActiveRecord {
-        public function tableName() {
-            return 'car';
-        }
-
-        protected function instantiate($attributes) {
-            $class=$attributes['type'];
-            $model=new $class(null);
-            return $model;
-        }
-
-        public function beforeSave() {
-            if ($this->isNewRecord) {
-                $this->type = get_class($this);
-            }
-            return parent::beforeSave();
-        }
+```php
+class Car extends CActiveRecord {
+    public function tableName() {
+        return 'car';
     }
 
-    class FamilyCar extends Car {
-        public function tableName() {
-            return 'car';
-        }
-
-        public function relations() {
-            return array(
-                'data' => array(self::HAS_ONE, 'FamilyCarData', 'car_id'),
-            );
-        }
-
-        function defaultScope() {
-            return array(
-                'condition'=>"type='FamilyCar'",
-            );
-        }
+    protected function instantiate($attributes) {
+        $class=$attributes['type'];
+        $model=new $class(null);
+        return $model;
     }
 
-    class SportCar extends Car {
-        public function tableName() {
-            return 'car';
+    public function beforeSave() {
+        if ($this->isNewRecord) {
+            $this->type = get_class($this);
         }
-
-        public function relations() {
-            return array(
-                'data' => array(self::HAS_ONE, 'SportCarData', 'car_id'),
-            );
-        }
-
-        function defaultScope() {
-            return array(
-                'condition'=>"type='SportCar'",
-            );
-        }
+        return parent::beforeSave();
     }
+}
+
+class FamilyCar extends Car {
+    public function tableName() {
+        return 'car';
+    }
+
+    public function relations() {
+        return array(
+            'data' => array(self::HAS_ONE, 'FamilyCarData', 'car_id'),
+        );
+    }
+
+    function defaultScope() {
+        return array(
+            'condition'=>"type='FamilyCar'",
+        );
+    }
+}
+
+class SportCar extends Car {
+    public function tableName() {
+        return 'car';
+    }
+
+    public function relations() {
+        return array(
+            'data' => array(self::HAS_ONE, 'SportCarData', 'car_id'),
+        );
+    }
+
+    function defaultScope() {
+        return array(
+            'condition'=>"type='SportCar'",
+        );
+    }
+}
+```
 
 Some notes:
 
@@ -136,60 +138,64 @@ With this approach you should handle two models in controllers and views related
 
 For example, create action in the `FamilyCar` controller:
 
-    public function actionCreate() {
-        //create base model and model with extended data
-        $model=new FamilyCar;
-        $model->data=new FamilyCarData;
+```PHP
+public function actionCreate() {
+    //create base model and model with extended data
+    $model=new FamilyCar;
+    $model->data=new FamilyCarData;
 
-        if(isset($_POST['FamilyCarData'])) {
-            //get properties for both models and save them
-            //of cause it is better to use transaction here
-            $model->attributes=$_POST['FamilyCar'];
-            $model->data->attributes=$_POST['FamilyCarData'];
-            if($model->save()) {
-                $model->data->car_id = $model->id;
-                if ($model->data->save()) {
-                    $this->redirect(array('view','id'=>$model->id));
-                }
+    if(isset($_POST['FamilyCarData'])) {
+        //get properties for both models and save them
+        //of cause it is better to use transaction here
+        $model->attributes=$_POST['FamilyCar'];
+        $model->data->attributes=$_POST['FamilyCarData'];
+        if($model->save()) {
+            $model->data->car_id = $model->id;
+            if ($model->data->save()) {
+                $this->redirect(array('view','id'=>$model->id));
             }
         }
-
-        $this->render('create',array(
-            'model'=>$model,
-        ));
     }
+
+    $this->render('create',array(
+        'model'=>$model,
+    ));
+}
+```
 
 And the view code will be like this:
 
-    <div class="form">
+```html+php
+<div class="form">
 
-    <?php $form=$this->beginWidget('CActiveForm', array(
-        'id'=>'family-car-form',
-        'enableAjaxValidation'=>false,
-    )); ?>
+<?php $form=$this->beginWidget('CActiveForm', array(
+    'id'=>'family-car-form',
+    'enableAjaxValidation'=>false,
+)); ?>
 
-        <p class="note">Fields with <span class="required">*</span> are required.</p>
+    <p class="note">Fields with <span class="required">*</span> are required.</p>
 
-        <?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
 
-        <div class="row">
-            <?php echo $form->labelEx($model,'name'); ?>
-            <?php echo $form->textField($model,'name'); ?>
-            <?php echo $form->error($model,'name'); ?>
-        </div>
-        <div class="row">
-            <?php echo $form->labelEx($model->data,'seats'); ?>
-            <?php echo $form->textField($model->data,'seats'); ?>
-            <?php echo $form->error($model->data,'seats'); ?>
-        </div>
+    <div class="row">
+        <?php echo $form->labelEx($model,'name'); ?>
+        <?php echo $form->textField($model,'name'); ?>
+        <?php echo $form->error($model,'name'); ?>
+    </div>
+    <div class="row">
+        <?php echo $form->labelEx($model->data,'seats'); ?>
+        <?php echo $form->textField($model->data,'seats'); ?>
+        <?php echo $form->error($model->data,'seats'); ?>
+    </div>
 
-        <div class="row buttons">
-            <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
-        </div>
+    <div class="row buttons">
+        <?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+    </div>
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
-    </div><!-- form -->
+</div><!-- form -->
+```
 
 Here we can access extended data through relation: `$model->data`.
 

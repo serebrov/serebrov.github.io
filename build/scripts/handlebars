@@ -2,18 +2,7 @@
 
 var front = require('front-matter');
 var fs = require('fs-extra');
-//var Q = require('q');
 var markdown = require('./lib/markdown');
-
-// var marked = require('marked');
-// // Async highlighting with pygmentize-bundled
-// marked.setOptions({
-//   highlight: function (code, lang, callback) {
-//     require('pygmentize-bundled-cached')({ lang: lang, format: 'html' }, code, function (err, result) {
-//       callback(err, result.toString());
-//     });
-//   }
-// });
 
 var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 template...', {

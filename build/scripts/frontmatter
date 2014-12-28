@@ -1,19 +1,8 @@
 #!/usr/bin/env node
 
-var _ = require('lodash');
-var path = require('path');
-var glob = require("glob")
 var front = require('front-matter');
 var fs = require('fs-extra');
-var marked = require('marked');
-// Async highlighting with pygmentize-bundled
-marked.setOptions({
-  highlight: function (code, lang, callback) {
-    require('pygmentize-bundled-cached')({ lang: lang, format: 'html' }, code, function (err, result) {
-      callback(err, result.toString());
-    });
-  }
-});
+var markdown = require('./lib/markdown');
 
 var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 template...', {
@@ -30,11 +19,10 @@ var meta = parsed.attributes;
 var moreIdx = parsed.body.search('\<\!-- more --\>')
 if (moreIdx) {
     meta.intro = parsed.body.substr(0, moreIdx);
-    marked(meta.intro, function(err, content) {
+    markdown(meta.intro).then(function(content) {
         meta.intro = content;
         console.log(JSON.stringify(meta));
     });
 } else {
     console.log(JSON.stringify(meta));
 }
-

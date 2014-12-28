@@ -1,3 +1,7 @@
+---
+date: 2012-02-30
+tags: selenium
+---
 selenium - python Firefox webdriver - unsafe setters in firefox_profile.py
 ============================================
 
@@ -14,6 +18,7 @@ I tried to disable native events for Firefox webdriver in a following way:
 
 After that Firefox starts, but python code can not connect to the webdriver extension.
 
+<!-- more -->
 Test fails with error like this:
 
     Traceback (most recent call last):

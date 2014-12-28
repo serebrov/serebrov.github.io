@@ -1,3 +1,7 @@
+---
+date: 2012-02-20
+tags: selenium
+---
 selenium - run tests on a virtual display
 ============================================
 
@@ -12,6 +16,7 @@ Install x11vnc
 
     sudo apt-get install x11vnc
 
+<!-- more -->
 Run tests on virtual display
 ----------------------------
 
