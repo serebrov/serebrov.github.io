@@ -1,3 +1,7 @@
+---
+title: jQuery - check minimal required version
+tags: jquery,js
+---
 jQuery - check minimal required version
 ============================================
 To check whether jQuery is loaded to the page and verify minimum version:
