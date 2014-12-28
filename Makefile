@@ -12,16 +12,18 @@ PYGMENTS_CSS = $(DEST)/css/pygments.css
 all: $(NOTES_HTML) $(NOTES_META) $(WWW_BS_CSS) $(WWW_BS_FONTS) $(PYGMENTS_CSS) $(DEST)/index.html
 
 #Order only dependency on dir (dir only will be created if it does not exist)
-$(DEST)/html/%.html: content/%.md build/templates/bootstrap.hbs build/scripts/handlebars | $(DEST)/html
+$(DEST)/html/%.html: content/%.md build/templates/bootstrap.hbs build/templates/post.hbs build/scripts/handlebars | $(DEST)/html
 	mkdir -p $(@D)
 	build/scripts/handlebars $< > $@
 
-$(DEST)/html/%.json: content/%.md
+$(DEST)/html/%.json: content/%.md build/scripts/frontmatter
 	mkdir -p $(@D)
 	build/scripts/frontmatter $< > $@
 
-$(DEST)/index.html: $(NOTES_HTML) build/templates/bootstrap.hbs build/templates/index.hbs
-	build/scripts/index -t build/templates/index.hbs $(NOTES_HTML) > $@
+reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
+
+$(DEST)/index.html: $(NOTES_HTML) $(NOTES_META) build/templates/bootstrap.hbs build/templates/index.hbs
+	build/scripts/index -t build/templates/index.hbs $(call reverse,$(NOTES_HTML)) > $@
 
 $(DEST)/css/%.css: $(BS)/css/%.css | $(DEST)/css
 	mkdir -p $(@D)

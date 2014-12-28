@@ -14,6 +14,7 @@
     "highlight.js": "~8.4.0",
     "pygmentize-bundled-cached": "~1.0.0",
     "handlebars-helpers": "~0.5.8",
-    "grunt": "~0.4.5"
+    "grunt": "~0.4.5",
+    "q": "~1.1.2"
   }
 }

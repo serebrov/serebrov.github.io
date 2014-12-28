@@ -18,7 +18,8 @@
     <![endif]-->
   </head>
   <body>
-    <div><h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
+    <div class="container">
+      <div class="row"><h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
 <p>To use fugitive as you mergetool you can use the following.</p>
 <pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">config</span> <span class="o">--</span><span class="nx">global</span> <span class="nx">mergetool</span><span class="p">.</span><span class="nx">fugitive</span><span class="p">.</span><span class="nx">cmd</span> <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
 <span class="nx">git</span> <span class="nx">config</span> <span class="o">--</span><span class="nx">global</span> <span class="nx">merge</span><span class="p">.</span><span class="nx">tool</span> <span class="nx">fugitive</span>
@@ -28,6 +29,7 @@
 <p><a href="http://stackoverflow.com/questions/7309707/my-git-mergetool-open-4not-3-windows-in-vimdiff">stackoverflow</a>
 <a href="http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/">fugitive screencast</a></p>
 </div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

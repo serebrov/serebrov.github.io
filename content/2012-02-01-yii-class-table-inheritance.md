@@ -1,3 +1,7 @@
+---
+date: 2012-02-01
+tags: yii
+---
  yii - class table inheritance
 ===========================================
 
@@ -8,6 +12,7 @@ Possible solutions are:
 1. Add support for class table inheritance to the active record class. There are some implementations of this method (see [here](http://www.yiiframework.com/forum/index.php?/topic/5803-my-multi-table-inheritance-approach/) and [here](http://www.yiiframework.com/forum/index.php?/topic/12978-class-table-inheritance/page__view__findpost__p__64041) for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.
 2. Use MySQL VIEWs. MySQL supports a VIEW which can be updated by INSERT and UPDATE statements. So we can hide two tables (for base and child classes) behind the view and use it as a usual single table.
 3. Use single table inheritance and keep an extended data in separate tables.
+<!-- more -->
 
 I wanted to examine options #2 and #3 and made a [simple yii application](https://github.com/sebgoo/yiimti).
 

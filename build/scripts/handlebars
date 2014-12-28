@@ -1,20 +1,19 @@
 #!/usr/bin/env node
 
-var _ = require('lodash');
-var path = require('path');
-var glob = require("glob")
 var front = require('front-matter');
 var fs = require('fs-extra');
-var marked = require('marked');
+//var Q = require('q');
+var markdown = require('./lib/markdown');
 
-// Async highlighting with pygmentize-bundled
-marked.setOptions({
-  highlight: function (code, lang, callback) {
-    require('pygmentize-bundled-cached')({ lang: lang, format: 'html' }, code, function (err, result) {
-      callback(err, result.toString());
-    });
-  }
-});
+// var marked = require('marked');
+// // Async highlighting with pygmentize-bundled
+// marked.setOptions({
+//   highlight: function (code, lang, callback) {
+//     require('pygmentize-bundled-cached')({ lang: lang, format: 'html' }, code, function (err, result) {
+//       callback(err, result.toString());
+//     });
+//   }
+// });
 
 var optimist = require('optimist')
     .usage('Precompile handlebar templates.\nUsage: $0 template...', {
@@ -30,47 +29,21 @@ var optimist = require('optimist')
       }
     });
 
-var Handlebars = require('handlebars');
-var layouts = require('handlebars-layouts');
-// some pretty usefull helpers I can use here!
-//require('handlebars-helpers').register(Handlebars, {});
-layouts(Handlebars);
+var registerPatials = require('./lib/registerPartials');
+var tplPath = 'build/templates/*.hbs';
 
-var buffer = fs.readFileSync(optimist.argv._[0]);
-var parsed = front(buffer.toString());
-var meta = parsed.attributes;
-
-var md = marked(parsed.body, function(err, content) {
-    md = content;
+registerPatials.register(tplPath)
+.then(function(Handlebars) {
+  var buffer = fs.readFileSync(optimist.argv._[0]);
+  var parsed = front(buffer.toString());
+  var meta = parsed.attributes;
+  return markdown(parsed.body)
+  .then(function(md) {
     meta.body = new Handlebars.SafeString(md);
 
-    var templatePath = meta['template'] ? meta['template'] : 'build/templates/bootstrap.html5';
+    var templatePath = meta['template'] ? meta['template'] : 'build/templates/post.hbs';
     var template = fs.readFileSync(templatePath, 'utf-8');
     template = Handlebars.compile(template);
     console.log(template(meta));
+  });
 });
-
-//console.log('Options: ' + optimist.argv);
-
-//Get partials
-//var fPath = optimist.argv['p'] + '/**/*.hbs';
-//console.log('Register partials: ' + fPath);
-
-// glob(fPath, {}, function(er, files) {
-//     //Register partials
-//     _.each(files, function(file) {
-//         var name = path.basename(file, '.hbs');
-//         //console.log('Register partial: ' + name);
-//         var contents = fs.readFileSync(file).toString();
-//         //console.log('Register partial: ' + name);
-//         Handlebars.registerPartial(name, contents);
-//     });
-
-//     //Render template
-//     var buffer = fs.readFileSync(optimist.argv._[0]);
-//     var parsed = front(buffer.toString());
-//     var meta = parsed.attributes;
-//     var template = Handlebars.compile(parsed.body);
-//     console.log(template(meta));
-// });
-

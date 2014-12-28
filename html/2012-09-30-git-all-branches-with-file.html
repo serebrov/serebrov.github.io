@@ -18,7 +18,8 @@
     <![endif]-->
   </head>
   <body>
-    <div><h1 id="git-find-all-branches-where-file-was-changed">git - find all branches where file was changed</h1>
+    <div class="container">
+      <div class="row"><h1 id="git-find-all-branches-where-file-was-changed">git - find all branches where file was changed</h1>
 <p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
 <p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
 <pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">all</span> <span class="o">--</span><span class="nx">format</span><span class="o">=%</span><span class="nx">H</span> <span class="nx">FILENAME</span> <span class="o">|</span> <span class="k">while</span> <span class="nx">read</span> <span class="nx">f</span><span class="p">;</span> <span class="k">do</span> <span class="nx">git</span> <span class="nx">branch</span> <span class="o">--</span><span class="nx">contains</span> <span class="nx">$f</span><span class="p">;</span> <span class="nx">done</span> <span class="o">|</span> <span class="nx">sort</span> <span class="o">-</span><span class="nx">u</span>
@@ -33,6 +34,7 @@
 </pre></div>
 
 </code></pre></div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

@@ -18,7 +18,8 @@
     <![endif]-->
   </head>
   <body>
-    <div><h1 id="global-ajax-response-handler-and-jquery-localtime-plugin">global ajax response handler and jquery.localtime plugin</h1>
+    <div class="container">
+      <div class="row"><h1 id="global-ajax-response-handler-and-jquery-localtime-plugin">global ajax response handler and jquery.localtime plugin</h1>
 <p>The <a href="http://code.google.com/p/jquery-localtime">jquery.localtime plugin</a> allows to convert date/time strings to a local user time on a client site.
 By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.</p>
 <p>Possible solution is to add some special handling to $.ajax &#39;success&#39; handlers, but it can require a lot of modifications.
@@ -159,6 +160,7 @@ While we can create a jQuery object (or array of objects) like this: <code>$(tex
 <p><a href="http://api.jquery.com/ajaxComplete/">jQuery docs: $.ajaxComplete()</a></p>
 <p><a href="http://stackoverflow.com/questions/7256207/how-can-i-intercept-ajax-responses-in-jquery-before-the-event-handler">Stackowerflow: How can I intercept ajax responses in jQuery before the event handler?</a></p>
 </div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

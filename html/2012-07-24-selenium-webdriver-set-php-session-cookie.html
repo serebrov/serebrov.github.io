@@ -18,7 +18,8 @@
     <![endif]-->
   </head>
   <body>
-    <div><h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
+    <div class="container">
+      <div class="row"><h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
 <p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
 <p>Fortunately it is easy to do with javascript. Here is example of a JS code to set the cookie:</p>
 <pre><code><div class="highlight"><pre><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s2">&quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&quot;</span><span class="p">;</span>
@@ -29,6 +30,7 @@
 </pre></div>
 
 </code></pre></div>
+    </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

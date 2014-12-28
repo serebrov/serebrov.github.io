@@ -48,10 +48,14 @@ glob(tplPath, {}, function(er, files) {
     };
 
     _.each(files, function(path) {
-        var file = {
-            path: path
-        };
-        paginate.files.push(file);
+        var metaPath = path.replace(".html",".json");
+        var meta = fs.readFileSync(metaPath, 'utf-8');
+        meta = JSON.parse(meta);
+        if (meta.intro) {
+            meta.intro = new Handlebars.SafeString(meta.intro);
+        }
+        meta.path = path;
+        paginate.files.push(meta);
     });
 
     template = Handlebars.compile(template);
