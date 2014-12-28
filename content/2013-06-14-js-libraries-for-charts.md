@@ -1,6 +1,11 @@
+---
+date: 2013-06-14
+tags: js
+---
 JS libraties for charts (links)
 ============================================
 
+<!-- more -->
 [D3.js](http://d3js.org/)
 --------------------------------------------
 D3.js is a JavaScript library for manipulating documents based on data. D3

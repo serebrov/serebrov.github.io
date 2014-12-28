@@ -1,3 +1,7 @@
+---
+date: 2013-03-23
+tags: php
+---
 PHP - utf-8 strings handling
 ============================================
 
@@ -7,6 +11,7 @@ encoding for string functions to utf-8 in php.ini:
     mbstring.internal_encoding = UTF-8
     mbstring.func_overload = 7
 
+<!-- more -->
 These settings allow us to use "usual" php string functions like substr() for utf-8 strings.
 It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
 

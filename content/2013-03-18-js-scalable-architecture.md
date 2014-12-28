@@ -1,3 +1,7 @@
+---
+date: 2013-03-18
+tags: js,angularjs
+---
 Want Scalable Application Architecture? Check AngularJS.
 ============================================
 
@@ -7,6 +11,7 @@ The [Scalable JavaScript Application Architecture](http://www.youtube.com/watch?
 * [Presentation slides](http://www.slideshare.net/nzakas/scalable-javascript-application-architecture)
 * [Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani](http://addyosmani.com/largescalejavascript/)
 
+<!-- more -->
 The presentation is interesting but it also leaves many open questions.
 In short, the architecture contains following application layers:
 * base library (jquery, etc)

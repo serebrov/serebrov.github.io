@@ -1,7 +1,12 @@
+---
+date: 2013-12-02
+tags: node.js
+---
 Node.js - how to get core module source
 ============================================
 
 It is possible to ask node to show its core module source.
+<!-- more -->
 For example, we want to check the source of the readFileSunc() method:
 
     $ node

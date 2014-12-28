@@ -1,9 +1,14 @@
+---
+date: 2012-09-29
+tags: jquery
+---
 Yii and jquery.localtime.js - display dates in user local timezone
 ===========================================
 
 With this method we work on the server with UTC timezone dates and convert them
 to a user local timezone on client.
 
+<!-- more -->
 Use ‘TIMESTAMP’ type for date/datetime DB fields
 -------------------------------------------
 
@@ -14,14 +19,18 @@ Set UTC timezone for both MySQL and PHP.
 
 Yii db config (MySQL):
 
+```php
     ‘db’ => array(
         'connectionString' => '...’,
         'initSQLs'=>"set time_zone='+00:00’;",
     );
+```
 
 And PHP timezone:
 
+```php
     date_default_timezone_set(‘UTC’);
+```
 
 Generate HTML with UTC dates in ISO 8601
 -------------------------------------------
@@ -46,15 +55,19 @@ jquery.localtimex.js code at the end.
 To disable jquery.localtime.js default initialization pass empty format to setFormat()
 method (or remove jQuery.ready block at the end of jquery.localtime.js).
 
+```html
     <script type="text/javascript" src="/js/jquery.localtime-0.5.js"></script>
     <script type="text/javascript" src="/js/jquery.localtimex.js"></script>
     <script type="text/javascript">$.localtime.setFormat({}); </script>
+```
 
 Use localtimex:
 
+```html
     <script type="text/javascript">
         $('.localtime').localtimex('dd MMM yyyy HH:mm:ss');
     </script>
+```
 
 By default plugin will localize specified elements and re-localize them in the case of ajax updates.
 Date format is ISO 8601, see [description](http://code.google.com/p/jquery-localtime/wiki/Usage).
@@ -84,6 +97,7 @@ Example of usage:
     $myDateMySql = Yii::app()->dateFormatter->format('yyyy-MM-dd', strtotime($UTCValue));
     $myDateTimestamp = strtotime($UTCValue);
 
+```js
 jquery.localtimex.js
 -------------------------------------------
     /**
@@ -167,6 +181,7 @@ jquery.localtimex.js
         }
       };
     }) (jQuery);
+```
 
 Links
 -------------------------------------------

@@ -32,23 +32,25 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
 <p><!-- more -->
 It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
 In my system there are following versions of <code>libX11</code>:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">find</span> <span class="o">/</span> <span class="o">|</span> <span class="nx">grep</span> <span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span>
-<span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib64</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span>       <span class="o">&lt;--</span> <span class="nx">symbolic</span> <span class="nx">link</span> <span class="nx">to</span> <span class="err">`</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mf">6.3</span><span class="p">.</span><span class="mi">0</span><span class="s1">&#39;</span>
-<span class="s1">/usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped</span>
-<span class="s1">/usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;</span>
-<span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mf">6.3</span><span class="p">.</span><span class="mi">0</span>    <span class="o">&lt;--</span> <span class="nx">ELF</span> <span class="mi">32</span><span class="o">-</span><span class="nx">bit</span> <span class="nx">LSB</span> <span class="nx">shared</span> <span class="nx">object</span><span class="p">,</span> <span class="nx">Intel</span> <span class="mi">80386</span><span class="p">,</span> <span class="nx">version</span> <span class="mi">1</span> <span class="p">(</span><span class="nx">SYSV</span><span class="p">),</span> <span class="nx">dynamically</span> <span class="nx">linked</span><span class="p">,</span> <span class="nx">stripped</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>find / <span class="p">|</span> grep libX11.so.6
+    /usr/lib64/libX11.so.6       &lt;-- symbolic link to <span class="sb">`</span>libX11.so.6.3.0<span class="s1">&#39;</span>
+<span class="s1">    /usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped</span>
+<span class="s1">    /usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;</span>
+    /usr/lib/libX11.so.6.3.0    &lt;-- ELF 32-bit LSB shared object, Intel 80386, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, stripped
 </pre></div>
 
-</code></pre><p>At the right side (after &quot;&lt;--&quot;) is an output of <code>file /usr/libX/libX11.so.6xxx</code>.</p>
+</code></pre>
+<p>At the right side (after &quot;&lt;--&quot;) is an output of <code>file /usr/libX/libX11.so.6xxx</code>.</p>
 <h2 id="solution">Solution</h2>
 <p>Change symbolic link <code>/usr/lib/libX11.so.6</code> to point to the 64-bit version <code>/usr/lib64/libX11.so.6.3.0</code>:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">mv</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span><span class="p">.</span><span class="nx">bak</span>
-<span class="err">#</span> <span class="nx">ln</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib64</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mf">6.3</span><span class="p">.</span><span class="mi">0</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">lib</span><span class="o">/</span><span class="nx">libX11</span><span class="p">.</span><span class="nx">so</span><span class="p">.</span><span class="mi">6</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>mv /usr/lib/libX11.so.6 /usr/lib/libX11.so.6.bak
+    <span class="nv">$ </span>ln -s /usr/lib64/libX11.so.6.3.0 /usr/lib/libX11.so.6
 </pre></div>
 
-</code></pre><p>After that selenium started to work.</p>
+</code></pre>
+<p>After that selenium started to work.</p>
 <h2 id="links">Links</h2>
-<p><a href="http://code.google.com/p/selenium/issues/detail?id=2852">bug reprot</a>.</p>
+<p><a href="http://code.google.com/p/selenium/issues/detail?id=2852">bug report</a>.</p>
 </div>
     </div>
 

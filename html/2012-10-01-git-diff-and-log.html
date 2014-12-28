@@ -21,110 +21,124 @@
     <div class="container">
       <div class="row"><h1 id="git-view-changes-diff-and-log">git - view changes - diff and log</h1>
 <h2 id="diff-staged-changes">Diff staged changes</h2>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">diff</span> <span class="o">--</span><span class="nx">cached</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git diff --cached
+    <span class="c"># or</span>
+    git diff --staged
 </pre></div>
 
-</code></pre><p>or</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">diff</span> <span class="o">--</span><span class="nx">staged</span>
+</code></pre>
+<h2 id="diff-pulled-changes">Diff pulled changes</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git pull origin
+    git diff @<span class="o">{</span>1<span class="o">}</span>..
 </pre></div>
 
-</code></pre><h2 id="diff-pulled-changes">Diff pulled changes</h2>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">pull</span> <span class="nx">origin</span>
-<span class="nx">git</span> <span class="nx">diff</span> <span class="err">@</span><span class="p">{</span><span class="mi">1</span><span class="p">}..</span>
+</code></pre>
+<p><!-- more --></p>
+<h2 id="diff-two-branches">Diff two branches</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    ... A ---- B ---- C ---- D  master
+               <span class="se">\</span>
+                E ---- F  <span class="nb">test</span>
 </pre></div>
 
-</code></pre><h2 id="diff-two-branches">Diff two branches</h2>
-<pre><code><div class="highlight"><pre><span class="p">...</span> <span class="nx">A</span> <span class="o">----</span> <span class="nx">B</span> <span class="o">----</span> <span class="nx">C</span> <span class="o">----</span> <span class="nx">D</span>  <span class="nx">master</span>
-           <span class="o">\</span>
-            <span class="nx">E</span> <span class="o">----</span> <span class="nx">F</span>  <span class="nx">test</span>
+</code></pre>
+<p>We can use both <code>git diff</code> (to get differences) or <code>git log</code> (to get list of changes):</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log/diff master..test
+    F
+    E
+
+    git log/diff test..master
+    D
+    C
+
+    git log/diff master...test
+    D
+    C
+    F
+    E
+
+    git log --left-right master...test
+    &lt; D
+    &lt; C
+    &gt; F
+    &gt; E
 </pre></div>
 
-</code></pre><p>We can use both <code>git diff</code> (to get differences) or <code>git log</code> (to get list of changes):</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span><span class="o">/</span><span class="nx">diff</span> <span class="nx">master</span><span class="p">..</span><span class="nx">test</span>
-<span class="nx">F</span>
-<span class="nx">E</span>
-
-<span class="nx">git</span> <span class="nx">log</span><span class="o">/</span><span class="nx">diff</span> <span class="nx">test</span><span class="p">..</span><span class="nx">master</span>
-<span class="nx">D</span>
-<span class="nx">C</span>
-
-<span class="nx">git</span> <span class="nx">log</span><span class="o">/</span><span class="nx">diff</span> <span class="nx">master</span><span class="p">...</span><span class="nx">test</span>
-<span class="nx">D</span>
-<span class="nx">C</span>
-<span class="nx">F</span>
-<span class="nx">E</span>
-
-<span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">left</span><span class="o">-</span><span class="nx">right</span> <span class="nx">master</span><span class="p">...</span><span class="nx">test</span>
-<span class="o">&lt;</span> <span class="nx">D</span>
-<span class="o">&lt;</span> <span class="nx">C</span>
-<span class="o">&gt;</span> <span class="nx">F</span>
-<span class="o">&gt;</span> <span class="nx">E</span>
-</pre></div>
-
-</code></pre><h2 id="git-log-formatting">Git log formatting</h2>
+</code></pre>
+<h2 id="git-log-formatting">Git log formatting</h2>
 <p>Log with diff (p), only last two entries:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">-</span><span class="nx">p</span> <span class="o">-</span><span class="mi">2</span>    
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log -p -2
 </pre></div>
 
-</code></pre><p>One line log:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">pretty</span><span class="o">=</span><span class="nx">oneline</span>
+</code></pre>
+<p>One line log:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --pretty<span class="o">=</span>oneline
 </pre></div>
 
-</code></pre><p>Log with graph:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">pretty</span><span class="o">=</span><span class="nx">format</span><span class="o">:</span><span class="s2">&quot;%h %s&quot;</span> <span class="o">--</span><span class="nx">graph</span>    
+</code></pre>
+<p>Log with graph:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --pretty<span class="o">=</span>format:<span class="s2">&quot;%h %s&quot;</span> --graph
 </pre></div>
 
-</code></pre><p>Format log:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">pretty</span><span class="o">=</span><span class="nx">format</span><span class="o">:</span><span class="s2">&quot;%h - %an, %ar : %s&quot;</span>    
+</code></pre>
+<p>Format log:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --pretty<span class="o">=</span>format:<span class="s2">&quot;%h - %an, %ar : %s&quot;</span>
 </pre></div>
 
-</code></pre><p>Log formatting options:</p>
-<pre><code><div class="highlight"><pre><span class="o">%</span><span class="nx">H</span>  <span class="nx">Commit</span> <span class="nx">hash</span>
-<span class="o">%</span><span class="nx">h</span>  <span class="nx">Abbreviated</span> <span class="nx">commit</span> <span class="nx">hash</span>
-<span class="o">%</span><span class="nx">T</span>  <span class="nx">Tree</span> <span class="nx">hash</span>
-<span class="o">%</span><span class="nx">t</span>  <span class="nx">Abbreviated</span> <span class="nx">tree</span> <span class="nx">hash</span>
-<span class="o">%</span><span class="nx">P</span>  <span class="nx">Parent</span> <span class="nx">hashes</span>
-<span class="o">%</span><span class="nx">p</span>  <span class="nx">Abbreviated</span> <span class="nx">parent</span> <span class="nx">hashes</span>
-<span class="o">%</span><span class="nx">an</span> <span class="nx">Author</span> <span class="nx">name</span>
-<span class="o">%</span><span class="nx">ae</span> <span class="nx">Author</span> <span class="nx">e</span><span class="o">-</span><span class="nx">mail</span>
-<span class="o">%</span><span class="nx">ad</span> <span class="nx">Author</span> <span class="nx">date</span> <span class="p">(</span><span class="nx">format</span> <span class="nx">respects</span> <span class="nx">the</span> <span class="err">–</span><span class="nx">date</span><span class="o">=</span> <span class="nx">option</span><span class="p">)</span>
-<span class="o">%</span><span class="nx">ar</span> <span class="nx">Author</span> <span class="nx">date</span><span class="p">,</span> <span class="nx">relative</span>
-<span class="o">%</span><span class="nx">cn</span> <span class="nx">Committer</span> <span class="nx">name</span>
-<span class="o">%</span><span class="nx">ce</span> <span class="nx">Committer</span> <span class="nx">email</span>
-<span class="o">%</span><span class="nx">cd</span> <span class="nx">Committer</span> <span class="nx">date</span>
-<span class="o">%</span><span class="nx">cr</span> <span class="nx">Committer</span> <span class="nx">date</span><span class="p">,</span> <span class="nx">relative</span>
-<span class="o">%</span><span class="nx">s</span>  <span class="nx">Subject</span><span class="err">&quot;</span>
+</code></pre>
+<p>Log formatting options:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    %H  Commit <span class="nb">hash</span>
+    %h  Abbreviated commit <span class="nb">hash</span>
+    %T  Tree <span class="nb">hash</span>
+    %t  Abbreviated tree <span class="nb">hash</span>
+    %P  Parent hashes
+    %p  Abbreviated parent hashes
+    %an Author name
+    %ae Author e-mail
+    %ad Author date <span class="o">(</span>format respects the –date<span class="o">=</span> option<span class="o">)</span>
+    %ar Author date, relative
+    %cn Committer name
+    %ce Committer email
+    %cd Committer date
+    %cr Committer date, relative
+    %s  Subject
 </pre></div>
 
-</code></pre><h2 id="log-without-merges">Log without merges</h2>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">merges</span>
+</code></pre>
+<h2 id="log-without-merges">Log without merges</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --no-merges
 </pre></div>
 
-</code></pre><h2 id="log-exclude-other-branch-commits">Log - exclude other branch commits</h2>
+</code></pre>
+<h2 id="log-exclude-other-branch-commits">Log - exclude other branch commits</h2>
 <p>Exclude master commits:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="nx">contrib</span> <span class="o">--</span><span class="nx">not</span> <span class="nx">master</span> <span class="p">(</span><span class="nx">or</span> <span class="nx">git</span> <span class="nx">log</span> <span class="nx">contrib</span> <span class="o">^</span><span class="nx">master</span><span class="p">)</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log contrib --not master <span class="o">(</span>or git log contrib ^master<span class="o">)</span>
 </pre></div>
 
-</code></pre><p>Exclude master commits and merges:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="nx">contrib</span> <span class="o">^</span><span class="nx">master</span> <span class="o">--</span><span class="nx">no</span><span class="o">-</span><span class="nx">merges</span>
+</code></pre>
+<p>Exclude master commits and merges:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log contrib ^master --no-merges
 </pre></div>
 
-</code></pre><p>What added in remote branch, but not in local:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">featureA</span> <span class="o">^</span><span class="nx">featureA</span>
+</code></pre>
+<p>What added in remote branch, but not in local:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log origin/featureA ^featureA
 </pre></div>
 
-</code></pre><p>These three commands are equivalent:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="nx">refA</span><span class="p">..</span><span class="nx">refB</span>
-<span class="nx">git</span> <span class="nx">log</span> <span class="o">^</span><span class="nx">refA</span> <span class="nx">refB</span>
-<span class="nx">git</span> <span class="nx">log</span> <span class="nx">refB</span> <span class="o">--</span><span class="nx">not</span> <span class="nx">refA</span>
+</code></pre>
+<p>These three commands are equivalent:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log refA..refB
+    git log ^refA refB
+    git log refB --not refA
 </pre></div>
 
-</code></pre><p>All commits that are reachable from refA or refB but not from refC:        </p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="nx">refA</span> <span class="nx">refB</span> <span class="o">^</span><span class="nx">refC</span>
-<span class="nx">git</span> <span class="nx">log</span> <span class="nx">refA</span> <span class="nx">refB</span> <span class="o">--</span><span class="nx">not</span> <span class="nx">refC</span><span class="err">&quot;</span>                                                            
+</code></pre>
+<p>All commits that are reachable from refA or refB but not from refC:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log refA refB ^refC
+    git log refA refB --not refC
 </pre></div>
 
-</code></pre><h2 id="links">Links</h2>
+</code></pre>
+<h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/61002/how-can-i-generate-a-git-diff-of-whats-changed-since-the-last-time-i-pulled">Stackoverflow: How can I generate a git diff of what&#39;s changed since the last time I pulled?</a></p>
 <p><a href="http://git-scm.com/book/en/Git-Tools-Revision-Selection">ProGit: Git Tools - Revision Selectio</a></p>
 <p><a href="http://git-scm.com/book/en/Git-Basics-Recording-Changes-to-the-Repository#Viewing-Your-Staged-and-Unstaged-Changes">ProGit: Viewing Your Staged and Unstaged Changes</a></p>

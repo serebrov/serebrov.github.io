@@ -29,9 +29,10 @@
 <li>Change is received and merged</li>
 <li>git status shows “Your branch is ahead of &#39;origin/master&#39; by 1 commit.”</li>
 </ul>
-<p>The reason is because during “pull origin master” reference to the remote 
+<p>The reason is because during “pull origin master” reference to the remote
 origin/master is not changed (still points to older version).</p>
-<p>To check this:</p>
+<p><!-- more -->
+To check this:</p>
 <pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">diff</span> <span class="nx">origin</span><span class="o">/</span><span class="nx">master</span>
 </pre></div>
 

@@ -1,3 +1,7 @@
+---
+date: 2012-09-13
+tags: yii
+---
 Yii url rules - optional parameters
 ====================================
 
@@ -10,6 +14,7 @@ Assume we have an action "articles/get" which accepts optional parameters and we
     articles/revisions/[revision id]
     articles/revisions/[revision id]/draft
 
+<!-- more -->
 We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
 
 In the code we have a single 'article/get' action which allows us to get specific article (last revision) by name ('GET articles/my-article') or id ('GET articles/33').

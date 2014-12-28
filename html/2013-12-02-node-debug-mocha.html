@@ -21,21 +21,24 @@
     <div class="container">
       <div class="row"><h1 id="node-js-how-to-debug-mocha-test-with-node-inspector">Node.js - how to debug mocha test with node inspector</h1>
 <p>To debug mocha test with <a href="https://github.com/node-inspector/node-inspector">node inspector</a> use the delay before test:</p>
-<pre><code><div class="highlight"><pre><span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">//start mocha as</span>
-    <span class="c1">//mocha -t 10000 --debug</span>
-    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">done</span><span class="p">();</span>
-    <span class="p">},</span> <span class="mi">5000</span><span class="p">);</span>
-<span class="p">});</span>
+<p><!-- more --></p>
+<pre><code class="lang-js"><div class="highlight"><pre>    <span class="nx">beforeEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//start mocha as</span>
+        <span class="c1">//mocha -t 10000 --debug</span>
+        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">done</span><span class="p">();</span>
+        <span class="p">},</span> <span class="mi">5000</span><span class="p">);</span>
+    <span class="p">});</span>
 </pre></div>
 
-</code></pre><p>This way there are 5 seconds to start the node inspector and set a breakpoint.
+</code></pre>
+<p>This way there are 5 seconds to start the node inspector and set a breakpoint.
 Mocha should be lauched as this:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">mocha</span> <span class="o">-</span><span class="nx">t</span> <span class="mi">10000</span> <span class="o">--</span><span class="nx">debug</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>mocha -t <span class="m">10000</span> --debug
 </pre></div>
 
-</code></pre><p>Same approach can be used not only for tests but for any short-living node app -
+</code></pre>
+<p>Same approach can be used not only for tests but for any short-living node app -
 just wrap the startup code into the setTimeout() call.</p>
 </div>
     </div>

@@ -21,208 +21,442 @@
     <div class="container">
 
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2014-12-19</small>
+      <div><h1 id="amazon-opsworks-node-js-app-with-mongodb-setup">Amazon OpsWorks - node.js app with MongoDB setup</h1>
+<p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html">Amazon OpsWorks</a> provides a way to manage AWS resources
+using <a href="http://docs.chef.io/recipes.html">Chef recipes</a>.</p>
+<p>Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server.
+It is similar to the php application + mysql setup described
+in the OpsWorks <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html">Getting Started guide</a>.</p>
+</div>
       <a href="html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2014-01-04</small>
+      <div><h1 id="git-how-to-revert-multiple-recent-commits">Git - how to revert multiple recent commits</h1>
+<p>Let&#39;s assume we have a history like this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span>
+</pre></div>
+
+</code></pre><p>Where G1-G3 are &#39;good&#39; commits and B1-B3 are &#39;bad&#39; commits and we
+want to revert them.</p>
+</div>
       <a href="html/2014-01-04-git-revert-multiple-recent-comments.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2014-01-04</small>
+      <div><h1 id="how-to-keep-git-log-and-less-output-on-the-screen">How to keep git log and less output on the screen</h1>
+<p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
+screen when you exit from less.
+This is not convenient in many cases so here is how to fix this.</p>
+</div>
       <a href="html/2014-01-04-git-log-and-less-keep-output.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-12-02</small>
+      <div><h1 id="node-js-how-to-debug-mocha-test-with-node-inspector">Node.js - how to debug mocha test with node inspector</h1>
+<p>To debug mocha test with <a href="https://github.com/node-inspector/node-inspector">node inspector</a> use the delay before test:</p>
+</div>
       <a href="html/2013-12-02-node-debug-mocha.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-12-02</small>
+      <div><h1 id="node-js-how-to-get-core-module-source">Node.js - how to get core module source</h1>
+<p>It is possible to ask node to show its core module source.</p>
+</div>
       <a href="html/2013-12-02-node-core-module-source.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-10-22</small>
+      <div><h1 id="elastic-beanstalk-cron-command-and-rds-db-access">Elastic Beanstalk - cron command and RDS DB access</h1>
+</div>
       <a href="html/2013-10-22-elastic-beanstalk-cron-and-db.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-09-11</small>
+      <div><h1 id="elastic-beanstalk-deploy-from-different-machines-by-different-users-or-how-to-get-rid-of-absolute-paths-in-configs-">Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)</h1>
+<p>By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
+If there are manual changes to EB configs it can be complex to manually sync these changes
+between different machines / different users.
+Of cause it is possible to add config files to git repository but there are also several
+parameters in the main config which are absolute paths to local files.
+This way it makes configs not useful for other users (except for the case when different
+users have exactly the same files layout).
+Here is how this problem can be fixed:</p>
+<ol>
+<li>Add eb tools under git control</li>
+<li>Add eb configs under git control</li>
+<li>Patch eb tools to accept relative file paths</li>
+<li>Change paths in configs to relative</li>
+</ol>
+<p>Below are details for each step.</p>
+</div>
       <a href="html/2013-09-11-elastic-beanstalk-configs.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-06-14</small>
+      <div><h1 id="js-libraties-for-charts-links-">JS libraties for charts (links)</h1>
+</div>
       <a href="html/2013-06-14-js-libraries-for-charts.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-06-14</small>
+      <div><h1 id="how-to-setup-git-server-on-ubuntu-with-push-email-notifications">How to setup git server on ubuntu with push email notifications</h1>
+<h2 id="git-server">Git Server</h2>
+<p>Prerequisites are git and ssh-server (apt-get install openssh-server).</p>
+<p>The installation process is described in <a href="http://git-scm.com/book/en/Git-on-the-Server-Setting-Up-the-Server">the Pro Git book</a>.
+Below is the setup process with some comments and updates.</p>
+</div>
       <a href="html/2013-06-14-git-server-setup.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-06-11</small>
+      <div><h1 id="amazon-nosql-solutions">Amazon NoSQL Solutions</h1>
+<p>Amazon provides following <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> storage options:</p>
+<ul>
+<li>[SimpleDB] (<a href="http://aws.amazon.com/simpledb/">http://aws.amazon.com/simpledb/</a>) - Amazon SimpleDB is a highly
+available and flexible non-relational data store that offloads the work of
+database administration. Developers simply store and query data items via web
+services requests and Amazon SimpleDB does the rest.</li>
+<li>[DynamoDB] (<a href="http://aws.amazon.com/dynamodb/">http://aws.amazon.com/dynamodb/</a>) - Amazon DynamoDB is a
+fully-managed, high performance, NoSQL database service that is easy to set
+up, operate, and scale.</li>
+</ul>
+</div>
       <a href="html/2013-06-11-amazon-nosql-review.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-05-24</small>
+      <div><h1 id="angular-js-and-seo-pre-render-content-on-the-server">Angular.js and SEO - pre-render content on the server</h1>
+<p>With angular.js you have an HTML which looks like this:</p>
+<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;span&gt;</span>{{variableValue}}<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;item in items&quot;</span> <span class="na">ng-bind=</span><span class="s">&quot;item.name&quot;</span><span class="nt">&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+</pre></div>
+
+</code></pre>
+<p>The simple way to make this content SEO-friendly is to pre-render data on the server and then allow angular to do it&#39;s job on the client.</p>
+</div>
       <a href="html/2013-05-24-angular-seo.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
+<p>By default angular.js sends all data in json.
+So if you do a POST request to a PHP code then the <code>$_POST</code> superglobal will not be populated.</p>
+<p>This can be solved in two ways - on the client side or on the server side.</p>
+</div>
       <a href="html/2013-05-24-angular-post-to-php.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-03-23</small>
+      <div><h1 id="php-utf-8-strings-handling">PHP - utf-8 strings handling</h1>
+<p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
+encoding for string functions to utf-8 in php.ini:</p>
+<pre><code><div class="highlight"><pre><span class="nx">mbstring</span><span class="p">.</span><span class="nx">internal_encoding</span> <span class="o">=</span> <span class="nx">UTF</span><span class="o">-</span><span class="mi">8</span>
+<span class="nx">mbstring</span><span class="p">.</span><span class="nx">func_overload</span> <span class="o">=</span> <span class="mi">7</span>
+</pre></div>
+
+</code></pre></div>
       <a href="html/2013-03-23-php-utf-8-strings.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2013-03-18</small>
+      <div><h1 id="want-scalable-application-architecture-check-angularjs-">Want Scalable Application Architecture? Check AngularJS.</h1>
+<p>The <a href="http://www.youtube.com/watch?v=mKouqShWI4o">Scalable JavaScript Application Architecture</a> is a  presentation by <a href="http://www.nczonline.net/">Nicholas Zakas</a> where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:</p>
+<ul>
+<li><a href="http://www.ubelly.com/2011/11/scalablejs/">Presentation summary</a></li>
+<li><a href="http://www.slideshare.net/nzakas/scalable-javascript-application-architecture">Presentation slides</a></li>
+<li><a href="http://addyosmani.com/largescalejavascript/">Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani</a></li>
+</ul>
+</div>
       <a href="html/2013-03-18-js-scalable-architecture.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="speedup-unit-tests-by-moving-mysql-data-to-memory-ubuntu-">Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
+<p>There are several ways to speedup slow unit tests which interact with database:</p>
+<ul>
+<li>Refactor code and tests and do not interact with db in unit tests</li>
+<li>Use sqlite db in memory instead of MySql</li>
+<li>Use MySql MEMORY engine</li>
+<li>Move MySql data to memory</li>
+</ul>
+</div>
       <a href="html/2012-12-17-unit-speed-mysql-to-mem.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="php-friend-a-class-via-extend">PHP - friend a class via extend</h1>
+<p>C++ allows to declare one class as a friend of another one.</p>
+<p>This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.</p>
+</div>
       <a href="html/2012-12-09-php-friend-via-extend.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-12-09</small>
+      <div><h1 id="window-managers-for-google-chrome">Window managers for Google Chrome</h1>
+<p>A list of extensions to manage position of chrome tabs / windows and to create splits.
+Descriptions are original texts from extension pages.</p>
+</div>
       <a href="html/2012-12-09-google-chrome-window-manager.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="gimport-yii-extension">GImport yii extension</h1>
+<p>GImport yii extension implements recursive import of directories with caching.</p>
+<p>Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.</p>
+</div>
       <a href="html/2012-10-10-gimport.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="phpmyadmin-and-eaccelerator-problem">phpmyadmin and eaccelerator problem</h1>
+<p>Error when trying to access phpmyadmin (in Chrome):</p>
+<pre><code><div class="highlight"><pre><span class="nb">Error</span> <span class="mi">324</span> <span class="p">(</span><span class="nx">net</span><span class="o">::</span><span class="nx">ERR_EMPTY_RESPONSE</span><span class="p">)</span><span class="o">:</span> <span class="nx">The</span> <span class="nx">server</span> <span class="nx">closed</span> <span class="nx">the</span> <span class="nx">connection</span> <span class="nx">without</span> <span class="nx">sending</span> <span class="nx">any</span> <span class="nx">data</span><span class="p">.</span>
+</pre></div>
+
+</code></pre></div>
       <a href="html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="git-git-rm-already-deleted-files">git - git rm already deleted files</h1>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git add -u
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-10-01-git-rm-deleted-files.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-10-01</small>
+      <div><h1 id="git-find-not-merged-branches">git - find not merged branches</h1>
+</div>
       <a href="html/2012-10-01-git-find-not-merged-branches.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-10-01</small>
+      <div><h1 id="git-view-changes-diff-and-log">git - view changes - diff and log</h1>
+<h2 id="diff-staged-changes">Diff staged changes</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git diff --cached
+    <span class="c"># or</span>
+    git diff --staged
+</pre></div>
+
+</code></pre>
+<h2 id="diff-pulled-changes">Diff pulled changes</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git pull origin
+    git diff @<span class="o">{</span>1<span class="o">}</span>..
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-10-01-git-diff-and-log.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-30</small>
+      <div><h1 id="git-your-branch-is-ahead-of-origin-master-by-1-commit-after-pull">git - Your branch is ahead of &#39;origin/master&#39; by 1 commit after pull</h1>
+<p>Your branch is ahead of &#39;origin/master&#39; by 1 commit (or X commits) after <code>git pull origin master</code>.</p>
+<p>The sequence:</p>
+<ul>
+<li>Have up-to-date repository</li>
+<li>There is a change in the origin/master</li>
+<li>Do <code>git pull origin master</code></li>
+<li>Change is received and merged</li>
+<li>git status shows “Your branch is ahead of &#39;origin/master&#39; by 1 commit.”</li>
+</ul>
+<p>The reason is because during “pull origin master” reference to the remote
+origin/master is not changed (still points to older version).</p>
+</div>
       <a href="html/2012-09-30-git-branch-ahead-after-pull.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-30</small>
+      <div><h1 id="git-find-all-branches-where-file-was-changed">git - find all branches where file was changed</h1>
+<p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
+<p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --all --format<span class="o">=</span>%H FILENAME <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>f<span class="p">;</span> <span class="k">do</span> git branch --contains <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-09-30-git-all-branches-with-file.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-29</small>
+      <div><h1 id="yii-and-jquery-localtime-js-display-dates-in-user-local-timezone">Yii and jquery.localtime.js - display dates in user local timezone</h1>
+<p>With this method we work on the server with UTC timezone dates and convert them
+to a user local timezone on client.</p>
+</div>
       <a href="html/2012-09-29-yii-jquery-localtime.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-25</small>
+      <div><h1 id="global-ajax-response-handler-and-jquery-localtime-plugin">global ajax response handler and jquery.localtime plugin</h1>
+<p>The <a href="http://code.google.com/p/jquery-localtime">jquery.localtime plugin</a> allows to convert date/time strings to a local user time on a client site.
+By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.</p>
+<p>Possible solution is to add some special handling to $.ajax &#39;success&#39; handlers, but it can require a lot of modifications.
+Better way is to set some global handler for all ajax requests and apply conversion to local time there.
+I evaluated several approaches before I could find a working solution.</p>
+</div>
       <a href="html/2012-09-25-global-ajax-handler-and-localtime.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-24</small>
+      <div><h1 id="innodb-notes">innodb notes</h1>
+<p>Below are some notes regarding the innodb transactions and locks.
+Most of them are just a copy-paste from <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html">innodb docs</a> with my notes.
+Also there are some examples of custom-maid deadlocks.</p>
+</div>
       <a href="html/2012-09-24-innodb.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-23</small>
+      <div><h1 id="git-submodule-helpers">git - submodule helpers</h1>
+<p>Below are some git commands which can be useful to resolve problems with submodules.</p>
+</div>
       <a href="html/2012-09-23-git-submodule-helpers.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-09-13</small>
+      <div><h1 id="yii-url-rules-optional-parameters">Yii url rules - optional parameters</h1>
+<p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
+<pre><code><div class="highlight"><pre><span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">99</span>
+<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">98</span><span class="o">/</span><span class="nx">draft</span>
+<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span>
+<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
+</pre></div>
+
+</code></pre></div>
       <a href="html/2012-09-13-yii-url-rules-optional-parameters.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-08-20</small>
+      <div><h1 id="selenium-problem-with-big-file-upload">selenium - problem with big file upload</h1>
+<h2 id="problem">Problem</h2>
+<p>Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.</p>
+</div>
       <a href="html/2012-08-20-selenium-problem-with-big-file-upload.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-08-20</small>
+      <div><h1 id="express-js-and-ejs-reuse-template-on-server-and-client">express.js and ejs - reuse template on server and client</h1>
+<p><a href="https://github.com/visionmedia/ejs">ejs</a> has a <a href="https://github.com/visionmedia/ejs#client-side-support">client-side support</a> but documentation and examples do not describe how to reuse the same template on the server and on the client side.</p>
+<p>For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</p>
+</div>
       <a href="html/2012-08-20-expressjs-ejs-reuse-templates.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-08-02</small>
+      <div><h1 id="selenium-webdriver-get-webelement-by-jquery-selector">selenium webdriver - get webelement by jQuery selector</h1>
+<p>This can be necessary for example for selector like <code>#id &gt; li:visible</code>.</p>
+<p>If you will try to do <code>webdriver.find_element_by_css_selector</code> you will get an error message &quot;The given selector <code>#id &gt; li:visible</code> is either invalid or does not result in a WebElement.&quot;</p>
+</div>
       <a href="html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-07-24</small>
+      <div><h1 id="selenium-webdriver-trigger-event-on-element-via-jquery">selenium webdriver - trigger event on element via jQuery</h1>
+<p>The &#39;executeScript&#39; method of the webdriver receives additional &#39;arguments&#39; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):</p>
+<pre><code><div class="highlight"><pre><span class="nx">event</span> <span class="o">=</span> <span class="s1">&#39;click&#39;</span> <span class="err">#</span><span class="nx">or</span> <span class="s1">&#39;hover&#39;</span> <span class="nx">or</span> <span class="nx">any</span> <span class="nx">other</span>
+<span class="nx">script</span> <span class="o">=</span> <span class="s2">&quot;$(arguments[0]).trigger(&#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;)&quot;</span>
+<span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">web_element</span><span class="p">)</span>
+</pre></div>
+
+</code></pre></div>
       <a href="html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-07-24</small>
+      <div><h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
+<p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
+<p>Fortunately it is easy to do with javascript.</p>
+</div>
       <a href="html/2012-07-24-selenium-webdriver-set-php-session-cookie.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-01-24</small>
+      <div><h1 id="andriod-moblie-network-problem-after-busybox-update">Andriod - moblie network problem after BusyBox update</h1>
+<p>I have LG p500 (Optimus One), rooted with original ROM.</p>
+<p>After update to <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox</a> 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.</p>
+<p>I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&#39;t help. I did a factory reset - also didn&#39;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</p>
+</div>
       <a href="html/2012-06-15-android-mobile-network-problem.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-24</small>
+      <div><h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
+<p>To use fugitive as you mergetool you can use the following.</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
+    git config --global merge.tool fugitive
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-04-24-git-fugitive-to-resolve-conflicts.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
+<p>Copy a word and paste it over other words:</p>
+<pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
+    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
+    viwp     select <span class="s2">&quot;second&quot;</span><span class="p">,</span> then replace it with <span class="s2">&quot;first&quot;</span>.
+    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;third&quot;</span><span class="p">)</span>.
+    viw<span class="s2">&quot;0p     select &quot;</span>third<span class="s2">&quot;, then replace it with &quot;</span><span class="k">first</span>&quot;.
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-04-03-vim-replace-word-with-yanked-text.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-04-03</small>
+      <div><h1 id="-git-rename-branch-local-and-remote-"> git - rename branch (local and remote)</h1>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#rename local branch</span>
+    git branch -m old-branch-name new-branch-name
+
+    <span class="c">#delete remote branch with old name</span>
+    git push origin :old-branch-name
+
+    <span class="c"># create remote renamed branch</span>
+    git push origin new-branch-name
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-04-03-git-rename-branch.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-03-28</small>
+      <div><h1 id="-yii-catch-and-log-mysql-deadlock-errors"> yii - catch and log MySQL deadlock errors</h1>
+<p>This method allows to log InnoDB monitor output when deadlock error occured.
+This way we will have much more useful data to find and fix deadlock.</p>
+</div>
       <a href="html/2012-03-28-yii-catch-and-log-deadlocks.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-03-15</small>
+      <div><h1 id="oauth-1-0-notes">oauth 1.0 notes</h1>
+</div>
       <a href="html/2012-03-15-oauth-1-0.html">Read more »</a>
     </div>
     <div class="row">
-      <small class="pull-left">NaN-NaN-NaN</small>
-      <div></div>
+      <small class="pull-left">2012-02-28</small>
+      <div><h1 id="git-colored-diff-branch-etc-by-default">git - colored diff, branch, etc by default</h1>
+<p>See color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config</a> docs:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git config color.branch auto
+    <span class="nv">$ </span>git config color.diff auto
+    <span class="nv">$ </span>git config color.interactive auto
+    <span class="nv">$ </span>git config color.status auto
+</pre></div>
+
+</code></pre>
+</div>
       <a href="html/2012-02-28-git-default-color-diff.html">Read more »</a>
     </div>
     <div class="row">
@@ -230,14 +464,16 @@
       <div><h1 id="selenium-run-tests-on-a-virtual-display">selenium - run tests on a virtual display</h1>
 <h2 id="set-up">Set up</h2>
 <p>Install xvfb</p>
-<pre><code><div class="highlight"><pre><span class="nx">sudo</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="nx">xvfb</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install xvfb
 </pre></div>
 
-</code></pre><p>Install x11vnc</p>
-<pre><code><div class="highlight"><pre><span class="nx">sudo</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="nx">x11vnc</span>
+</code></pre>
+<p>Install x11vnc</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install x11vnc
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+</div>
       <a href="html/2012-02-20-selenium-run-on-virtual-display.html">Read more »</a>
     </div>
     <div class="row">
@@ -245,14 +481,15 @@
       <div><h1 id="selenium-python-firefox-webdriver-unsafe-setters-in-firefox_profile-py">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</h1>
 <h2 id="problem">Problem</h2>
 <p>I tried to disable native events for Firefox webdriver in a following way:</p>
-<pre><code><div class="highlight"><pre><span class="nx">ffp</span> <span class="o">=</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">firefox</span><span class="p">.</span><span class="nx">firefox_profile</span><span class="p">.</span><span class="nx">FirefoxProfile</span><span class="p">(</span><span class="nx">path</span><span class="p">)</span>
-<span class="k">if</span> <span class="p">(</span><span class="nx">Config</span><span class="p">.</span><span class="nx">ff_native_events_enabled</span> <span class="o">==</span> <span class="nx">False</span><span class="p">)</span><span class="o">:</span>
-    <span class="nx">ffp</span><span class="p">.</span><span class="nx">native_events_enabled</span> <span class="o">=</span> <span class="nx">False</span>
-<span class="nx">ffb</span> <span class="o">=</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">firefox</span><span class="p">.</span><span class="nx">firefox_binary</span><span class="p">.</span><span class="nx">FirefoxBinary</span><span class="p">(</span><span class="nx">firefox_path</span><span class="o">=</span><span class="nx">Config</span><span class="p">.</span><span class="nx">browser_binary</span><span class="p">)</span>
-<span class="nx">selenium</span> <span class="o">=</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">Firefox</span><span class="p">(</span><span class="nx">firefox_profile</span><span class="o">=</span><span class="nx">ffp</span><span class="p">,</span> <span class="nx">firefox_binary</span><span class="o">=</span><span class="nx">ffb</span><span class="p">)</span>
+<pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">ff_native_events_enabled</span> <span class="o">==</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="n">ffp</span><span class="o">.</span><span class="n">native_events_enabled</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">ffb</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_binary</span><span class="o">.</span><span class="n">FirefoxBinary</span><span class="p">(</span><span class="n">firefox_path</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">browser_binary</span><span class="p">)</span>
+    <span class="n">selenium</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">(</span><span class="n">firefox_profile</span><span class="o">=</span><span class="n">ffp</span><span class="p">,</span> <span class="n">firefox_binary</span><span class="o">=</span><span class="n">ffb</span><span class="p">)</span>
 </pre></div>
 
-</code></pre><p>After that Firefox starts, but python code can not connect to the webdriver extension.</p>
+</code></pre>
+<p>After that Firefox starts, but python code can not connect to the webdriver extension.</p>
 </div>
       <a href="html/2012-02-20-selenium-python-webdriver-not-safe-setters.html">Read more »</a>
     </div>

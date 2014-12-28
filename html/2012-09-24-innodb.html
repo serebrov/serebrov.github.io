@@ -23,7 +23,8 @@
 <p>Below are some notes regarding the innodb transactions and locks.
 Most of them are just a copy-paste from <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html">innodb docs</a> with my notes.
 Also there are some examples of custom-maid deadlocks.</p>
-<p>In the examples of MySQL operations different sessions are marked as (1) and (2), for example:</p>
+<p><!-- more -->
+In the examples of MySQL operations different sessions are marked as (1) and (2), for example:</p>
 <ul>
 <li><code>create table child (id int(11) NOT NULL) ENGINE=InnoDB;</code><ul>
 <li>common operation, do it from any session</li>

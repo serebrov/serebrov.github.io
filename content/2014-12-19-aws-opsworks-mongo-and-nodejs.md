@@ -1,3 +1,7 @@
+---
+date: 2014-12-19
+tags: aws
+---
 Amazon OpsWorks - node.js app with MongoDB setup
 ============================================
 
@@ -8,6 +12,7 @@ Here I describe a simple setup of the single-instance node.js app with single-no
 It is similar to the php application + mysql setup described
 in the OpsWorks [Getting Started guide](http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html).
 
+<!-- more -->
 The OpsWorks setup includes:
 * [Stack](http://docs.aws.amazon.com/opsworks/latest/userguide/workingstacks.html) - a container for the deployment process we will setup
 * Two [Layers](http://docs.aws.amazon.com/opsworks/latest/userguide/workinglayers.html) - node.js app and MongoDB

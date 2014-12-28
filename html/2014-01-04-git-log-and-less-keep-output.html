@@ -23,7 +23,8 @@
 <p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
 screen when you exit from less.
 This is not convenient in many cases so here is how to fix this.</p>
-<p>Just for git commands:</p>
+<p><!-- more -->
+Just for git commands:</p>
 <pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">config</span> <span class="o">--</span><span class="nx">global</span> <span class="o">--</span><span class="nx">replace</span><span class="o">-</span><span class="nx">all</span> <span class="nx">core</span><span class="p">.</span><span class="nx">pager</span> <span class="s2">&quot;less -iXFR&quot;</span>
 </pre></div>
 

@@ -21,17 +21,19 @@
     <div class="container">
       <div class="row"><h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
 <p>Copy a word and paste it over other words:</p>
-<pre><code><div class="highlight"><pre><span class="nx">yiw</span>     <span class="nx">yank</span> <span class="nx">inner</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">copy</span> <span class="nx">word</span> <span class="nx">under</span> <span class="nx">cursor</span><span class="p">,</span> <span class="nx">say</span> <span class="s2">&quot;first&quot;</span><span class="p">).</span>
-<span class="p">...</span>     <span class="nx">Move</span> <span class="nx">the</span> <span class="nx">cursor</span> <span class="nx">to</span> <span class="nx">another</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">say</span> <span class="s2">&quot;second&quot;</span><span class="p">).</span>
-<span class="nx">viwp</span>     <span class="nx">select</span> <span class="s2">&quot;second&quot;</span><span class="p">,</span> <span class="nx">then</span> <span class="nx">replace</span> <span class="nx">it</span> <span class="kd">with</span> <span class="s2">&quot;first&quot;</span><span class="p">.</span>
-<span class="p">...</span>     <span class="nx">Move</span> <span class="nx">the</span> <span class="nx">cursor</span> <span class="nx">to</span> <span class="nx">another</span> <span class="nx">word</span> <span class="p">(</span><span class="nx">say</span> <span class="s2">&quot;third&quot;</span><span class="p">).</span>
-<span class="nx">viw</span><span class="s2">&quot;0p     select &quot;</span><span class="nx">third</span><span class="s2">&quot;, then replace it with &quot;</span><span class="nx">first</span><span class="err">&quot;</span><span class="p">.</span>
+<pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
+    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
+    viwp     select <span class="s2">&quot;second&quot;</span><span class="p">,</span> then replace it with <span class="s2">&quot;first&quot;</span>.
+    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;third&quot;</span><span class="p">)</span>.
+    viw<span class="s2">&quot;0p     select &quot;</span>third<span class="s2">&quot;, then replace it with &quot;</span><span class="k">first</span>&quot;.
 </pre></div>
 
-</code></pre><p>Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;). 
-Yanking text also copies the text to register 0 (&quot;0). 
+</code></pre>
+<p><!-- more -->
+Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;).
+Yanking text also copies the text to register 0 (&quot;0).
 So the command yiw copies the current word to &quot;&quot; and to &quot;0.
-Typing viw selects the current word, then pressing p pastes the unnamed register over the visual selection. 
+Typing viw selects the current word, then pressing p pastes the unnamed register over the visual selection.
 The visual selection is deleted to the unnamed register.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://vim.wikia.com/wiki/Replace_a_word_with_yanked_text">vim.wikia.com</a></p>

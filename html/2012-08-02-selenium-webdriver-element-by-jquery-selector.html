@@ -22,7 +22,8 @@
       <div class="row"><h1 id="selenium-webdriver-get-webelement-by-jquery-selector">selenium webdriver - get webelement by jQuery selector</h1>
 <p>This can be necessary for example for selector like <code>#id &gt; li:visible</code>.</p>
 <p>If you will try to do <code>webdriver.find_element_by_css_selector</code> you will get an error message &quot;The given selector <code>#id &gt; li:visible</code> is either invalid or does not result in a WebElement.&quot;</p>
-<p>The workaround is to use jQuery to find element. It can be done with this code (python):</p>
+<p><!-- more -->
+The workaround is to use jQuery to find element. It can be done with this code (python):</p>
 <pre><code><div class="highlight"><pre><span class="nx">script</span> <span class="o">=</span> <span class="s2">&quot;return $(&#39;&quot;</span><span class="o">+</span><span class="nx">selector</span><span class="o">+</span><span class="s2">&quot;&#39;).get(0);&quot;</span>
 <span class="nx">element</span> <span class="o">=</span> <span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="nx">script</span><span class="p">);</span>
 </pre></div>

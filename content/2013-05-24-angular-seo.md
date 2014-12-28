@@ -1,19 +1,26 @@
+---
+date: 2013-05-24
+tags: angularjs
+---
 Angular.js and SEO - pre-render content on the server
 ============================================
 
 With angular.js you have an HTML which looks like this:
 
-    <span>\{{variableValue}}</span>
+```html
+    <span>{{variableValue}}</span>
     <ul>
         <li ng-repeat="item in items" ng-bind="item.name"></li>
     </ul>
+```
 
-The simple way to make this content SEO-friendly is to pre-render data on the server and
-then allow angular to do it's job on the client.
+The simple way to make this content SEO-friendly is to pre-render data on the server and then allow angular to do it's job on the client.
+<!-- more -->
 For simple variables there is [ng-bind](http://docs.angularjs.org/api/ng.directive:ngBind).
 And for lists there is [ng-include](http://docs.angularjs.org/api/ng.directive:ngInclude).
 Here is the example from above with pre-rendered content:
 
+```html
     <span ng-bind="variableValue">Static indexed value</span>
     <ul ng-include="'your/dynamic/list'">
         <li>seo-friendly item1</li>
@@ -22,6 +29,7 @@ Here is the example from above with pre-rendered content:
     <script type="text/ng-template" id="your/dynamic/list">
         <li ng-repeat="item in items" ng-bind="item.name"></li>
     </script>
+```
 
 This way we have initial content for search bots and instructions for angular at the same time.
 

@@ -10,11 +10,13 @@ Problem
 
 I tried to disable native events for Firefox webdriver in a following way:
 
+```python
     ffp = webdriver.firefox.firefox_profile.FirefoxProfile(path)
     if (Config.ff_native_events_enabled == False):
         ffp.native_events_enabled = False
     ffb = webdriver.firefox.firefox_binary.FirefoxBinary(firefox_path=Config.browser_binary)
     selenium = webdriver.Firefox(firefox_profile=ffp, firefox_binary=ffb)
+```
 
 After that Firefox starts, but python code can not connect to the webdriver extension.
 
@@ -43,14 +45,17 @@ Solution
 After some examination I found that webdriver (python code) passes parameters to the fireforx extension through the user.js file in the Firefox profile folder.
 And it looked like this:
 
+```python
     user_pref("security.warn_entering_weak", false);
     user_pref("security.fileuri.strict_origin_policy", false);
     user_pref("webdriver_enable_native_events", False);
     ...
+```
 
 Note that here we have lowercase 'false' for all options except the `webdriver_enable_native_events`.
 The python code which is responsible for this:
 
+```python
     # my code
     ffp.native_events_enabled = False
 
@@ -58,12 +63,15 @@ The python code which is responsible for this:
     @native_events_enabled.setter
     def native_events_enabled(self, value):
         self.default_preferences['webdriver_enable_native_events'] = str(value)
+```
 
 Here python boolean value is converted into the "False" string.
 The solution is to use in my code lowercase string instead of boolean:
 
+```python
     # my code
     ffp.native_events_enabled = "false"
+```
 
 I also added a [bug report](http://code.google.com/p/selenium/issues/detail?id=3400) and hope this will be fixed in selenium code.
 The same problem exist for other boolean-like setter `accept_untrusted_certs`.
@@ -71,7 +79,3 @@ The same problem exist for other boolean-like setter `accept_untrusted_certs`.
 Links
 -----------------
 [bug report](http://code.google.com/p/selenium/issues/detail?id=3400)
-
-
-
-

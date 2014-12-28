@@ -26,6 +26,7 @@
 
 </code></pre><p>Where G1-G3 are &#39;good&#39; commits and B1-B3 are &#39;bad&#39; commits and we
 want to revert them.
+<!-- more -->
 If changes are not pushed to the server yet then the easy way is
 to reset the state to previous commit with <code>git reset --hard HEAD~3</code>.
 Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B3</code> is <code>HEAD~2</code>.
@@ -47,7 +48,7 @@ The <code>HEAD~2^</code> syntax is more convenient if commit SHAs are used to na
 <p>The <code>--no-commit</code> option tells git to do the revert, but do not
 commit it automatically. So now we can review the repository state and commit it.
 After that we will get the history like this:</p>
-<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span> <span class="o">-</span> <span class="nx">R</span><span class="err">&#39;</span>
+<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span> <span class="o">-</span> <span class="nx">R</span><span class="err">`</span>
 </pre></div>
 
 </code></pre><p>Where <code>R&#39;</code> is revert commit which will return repository state to the commit <code>G3</code>.

@@ -1,3 +1,7 @@
+---
+date: 2012-09-25
+tags: jquery
+---
 global ajax response handler and jquery.localtime plugin
 ============================================
 
@@ -8,6 +12,7 @@ Possible solution is to add some special handling to $.ajax 'success' handlers, 
 Better way is to set some global handler for all ajax requests and apply conversion to local time there.
 I evaluated several approaches before I could find a working solution.
 
+<!-- more -->
 First try - run local time conversion in $.ajaxComplete (doesn't work)
 ---------------------------------------------
 

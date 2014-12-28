@@ -21,28 +21,30 @@
     <div class="container">
       <div class="row"><h1 id="angular-js-and-seo-pre-render-content-on-the-server">Angular.js and SEO - pre-render content on the server</h1>
 <p>With angular.js you have an HTML which looks like this:</p>
-<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="err">\</span><span class="p">{{</span><span class="nx">variableValue</span><span class="p">}}</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
-<span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;item in items&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;item.name&quot;</span><span class="o">&gt;&lt;</span><span class="err">/li&gt;</span>
-<span class="o">&lt;</span><span class="err">/ul&gt;</span>
+<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;span&gt;</span>{{variableValue}}<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+        <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;item in items&quot;</span> <span class="na">ng-bind=</span><span class="s">&quot;item.name&quot;</span><span class="nt">&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
 </pre></div>
 
-</code></pre><p>The simple way to make this content SEO-friendly is to pre-render data on the server and
-then allow angular to do it&#39;s job on the client.
+</code></pre>
+<p>The simple way to make this content SEO-friendly is to pre-render data on the server and then allow angular to do it&#39;s job on the client.
+<!-- more -->
 For simple variables there is <a href="http://docs.angularjs.org/api/ng.directive:ngBind">ng-bind</a>.
 And for lists there is <a href="http://docs.angularjs.org/api/ng.directive:ngInclude">ng-include</a>.
 Here is the example from above with pre-rendered content:</p>
-<pre><code><div class="highlight"><pre><span class="o">&lt;</span><span class="nx">span</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;variableValue&quot;</span><span class="o">&gt;</span><span class="nx">Static</span> <span class="nx">indexed</span> <span class="nx">value</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
-<span class="o">&lt;</span><span class="nx">ul</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">include</span><span class="o">=</span><span class="s2">&quot;&#39;your/dynamic/list&#39;&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">seo</span><span class="o">-</span><span class="nx">friendly</span> <span class="nx">item1</span><span class="o">&lt;</span><span class="err">/li&gt;</span>
-    <span class="o">&lt;</span><span class="nx">li</span><span class="o">&gt;</span><span class="nx">seo</span><span class="o">-</span><span class="nx">friendly</span> <span class="nx">item2</span><span class="o">&lt;</span><span class="err">/li&gt;</span>
-<span class="o">&lt;</span><span class="err">/ul&gt;</span>
-<span class="o">&lt;</span><span class="nx">script</span> <span class="nx">type</span><span class="o">=</span><span class="s2">&quot;text/ng-template&quot;</span> <span class="nx">id</span><span class="o">=</span><span class="s2">&quot;your/dynamic/list&quot;</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;item in items&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;item.name&quot;</span><span class="o">&gt;&lt;</span><span class="err">/li&gt;</span>
-<span class="o">&lt;</span><span class="err">/script&gt;</span>
+<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;span</span> <span class="na">ng-bind=</span><span class="s">&quot;variableValue&quot;</span><span class="nt">&gt;</span>Static indexed value<span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;ul</span> <span class="na">ng-include=</span><span class="s">&quot;&#39;your/dynamic/list&#39;&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;li&gt;</span>seo-friendly item1<span class="nt">&lt;/li&gt;</span>
+        <span class="nt">&lt;li&gt;</span>seo-friendly item2<span class="nt">&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/ng-template&quot;</span> <span class="na">id=</span><span class="s">&quot;your/dynamic/list&quot;</span><span class="nt">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">repeat</span><span class="o">=</span><span class="s2">&quot;item in items&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">bind</span><span class="o">=</span><span class="s2">&quot;item.name&quot;</span><span class="o">&gt;&lt;</span><span class="err">/li&gt;</span>
+    <span class="nt">&lt;/script&gt;</span>
 </pre></div>
 
-</code></pre><p>This way we have initial content for search bots and instructions for angular at the same time.</p>
+</code></pre>
+<p>This way we have initial content for search bots and instructions for angular at the same time.</p>
 <p>Note that the solution above works for simple cases but it can be not good for
 complex pages or if there are many pages.  Actually what we do is duplicate the
 content - we provide static content on the server site and then angular

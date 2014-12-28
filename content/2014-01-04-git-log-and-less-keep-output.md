@@ -1,3 +1,7 @@
+---
+date: 2014-01-04
+tags: git
+---
 How to keep git log and less output on the screen
 ============================================
 
@@ -5,6 +9,7 @@ When `git` uses `less` as pager the output of commands like `git log` disappears
 screen when you exit from less.
 This is not convenient in many cases so here is how to fix this.
 
+<!-- more -->
 Just for git commands:
 
     git config --global --replace-all core.pager "less -iXFR"

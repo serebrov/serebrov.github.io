@@ -22,42 +22,45 @@
       <div class="row"><h1 id="-yii-catch-and-log-mysql-deadlock-errors"> yii - catch and log MySQL deadlock errors</h1>
 <p>This method allows to log InnoDB monitor output when deadlock error occured.
 This way we will have much more useful data to find and fix deadlock.
+<!-- more -->
 Extend error handler class:</p>
-<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">AppErrorHandler</span> <span class="kr">extends</span> <span class="nx">CErrorHandler</span> <span class="p">{</span>
-    <span class="kr">protected</span> <span class="kd">function</span> <span class="nx">handleException</span><span class="p">(</span><span class="nx">$exception</span><span class="p">)</span> <span class="p">{</span>
-        <span class="cm">/* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:</span>
-<span class="cm">        * Serialization failure: 1213 Deadlock found when trying to get lock;</span>
-<span class="cm">        * try restarting transaction. The SQL statement executed was:</span>
-<span class="cm">        * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1)</span>
-<span class="cm">        */</span>
-        <span class="c1">//can we check $exception-&gt;getCode() ?</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">$exception</span> <span class="k">instanceof</span> <span class="nx">CDbException</span> 
-            <span class="o">&amp;&amp;</span> <span class="nx">strpos</span><span class="p">(</span><span class="nx">$exception</span><span class="o">-&gt;</span><span class="nx">getMessage</span><span class="p">(),</span> <span class="s1">&#39;Deadlock&#39;</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">false</span>
-        <span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$data</span> <span class="o">=</span> <span class="nx">Yii</span><span class="o">::</span><span class="nx">app</span><span class="p">()</span><span class="o">-&gt;</span><span class="nx">db</span><span class="o">-&gt;</span><span class="nx">createCommand</span><span class="p">(</span><span class="s1">&#39;SHOW ENGINE INNODB STATUS&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="nx">query</span><span class="p">();</span>
-            <span class="nx">$info</span> <span class="o">=</span> <span class="nx">$data</span><span class="o">-&gt;</span><span class="nx">read</span><span class="p">();</span>
-            <span class="nx">$info</span> <span class="o">=</span> <span class="nx">serialize</span><span class="p">(</span><span class="nx">$info</span><span class="p">);</span>
-            <span class="nx">Yii</span><span class="o">::</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Deadlock error, innodb status: &#39;</span> <span class="p">.</span> <span class="nx">$info</span><span class="p">,</span>
-                <span class="nx">CLogger</span><span class="o">::</span><span class="nx">LEVEL_ERROR</span><span class="p">,</span><span class="s1">&#39;system.db.CDbCommand&#39;</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="nx">parent</span><span class="o">::</span><span class="nx">handleException</span><span class="p">(</span><span class="nx">$exception</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    class AppErrorHandler extends CErrorHandler {</span>
+<span class="x">        protected function handleException($exception) {</span>
+<span class="x">            /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:</span>
+<span class="x">            * Serialization failure: 1213 Deadlock found when trying to get lock;</span>
+<span class="x">            * try restarting transaction. The SQL statement executed was:</span>
+<span class="x">            * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1)</span>
+<span class="x">            */</span>
+<span class="x">            //can we check $exception-&gt;getCode() ?</span>
+<span class="x">            if ($exception instanceof CDbException</span>
+<span class="x">                &amp;&amp; strpos($exception-&gt;getMessage(), &#39;Deadlock&#39;) !== false</span>
+<span class="x">            ) {</span>
+<span class="x">                $data = Yii::app()-&gt;db-&gt;createCommand(&#39;SHOW ENGINE INNODB STATUS&#39;)-&gt;query();</span>
+<span class="x">                $info = $data-&gt;read();</span>
+<span class="x">                $info = serialize($info);</span>
+<span class="x">                Yii::log(&#39;Deadlock error, innodb status: &#39; . $info,</span>
+<span class="x">                    CLogger::LEVEL_ERROR,&#39;system.db.CDbCommand&#39;);</span>
+<span class="x">            }</span>
+<span class="x">            return parent::handleException($exception);</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
 </pre></div>
 
-</code></pre><p>Put it in <code>application/protected/components</code> and set in the <code>config/main.php</code>:</p>
-<pre><code><div class="highlight"><pre><span class="k">return</span> <span class="nx">array</span><span class="p">(</span>
-    <span class="p">...</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span>
-        <span class="s1">&#39;errorHandler&#39;</span> <span class="o">=&gt;</span> <span class="nx">array</span><span class="p">(</span>
-            <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;AppErrorHandler&#39;</span><span class="p">,</span>
-        <span class="p">),</span>
-    <span class="p">),</span>
-    <span class="p">...</span>
-<span class="p">);</span>
+</code></pre>
+<p>Put it in <code>application/protected/components</code> and set in the <code>config/main.php</code>:</p>
+<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    return array(</span>
+<span class="x">        ...</span>
+<span class="x">        &#39;components&#39; =&gt; array(</span>
+<span class="x">            &#39;errorHandler&#39; =&gt; array(</span>
+<span class="x">                &#39;class&#39; =&gt; &#39;AppErrorHandler&#39;,</span>
+<span class="x">            ),</span>
+<span class="x">        ),</span>
+<span class="x">        ...</span>
+<span class="x">    );</span>
 </pre></div>
 
-</code></pre><h2 id="links">Links</h2>
+</code></pre>
+<h2 id="links">Links</h2>
 <p><a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-lock-modes.html">InnoDB Lock Modes</a></p>
 <p><a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-record-level-locks.html">InnoDB Record, Gap, and Next-Key Locks</a></p>
 <p><a href="http://forums.mysql.com/read.php?97,79242,79242#msg-79242">MySQL Forums :: Transactions :: Deadlock With DELETE/INSERT Queries</a></p>

@@ -1,3 +1,7 @@
+---
+date: 2012-08-20
+tags: selenium
+---
 selenium - problem with big file upload
 ============================================
 Problem
@@ -5,11 +9,13 @@ Problem
 
 Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.
 
+<!-- more -->
 Solution
 --------------------------------------------
 
 For now I fixed this by commenting out local file upload (three first lines):
 
+```python
     def send_keys(self, *value):
             """Simulates typing into the element."""
             #local_file = LocalFileDetector.is_local_file(*value)
@@ -28,6 +34,7 @@ For now I fixed this by commenting out local file upload (three first lines):
                     for i in range(len(val)):
                         typing.append(val[i])
             self._execute(Command.SEND_KEYS_TO_ELEMENT, {'value': typing})
+```
 
 Usually I do not change external libraries code, but in this case it is easiest way and it should not be necessary (I hope) after next selenium library update.
 

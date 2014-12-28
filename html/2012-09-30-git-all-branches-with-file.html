@@ -22,18 +22,22 @@
       <div class="row"><h1 id="git-find-all-branches-where-file-was-changed">git - find all branches where file was changed</h1>
 <p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
 <p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">all</span> <span class="o">--</span><span class="nx">format</span><span class="o">=%</span><span class="nx">H</span> <span class="nx">FILENAME</span> <span class="o">|</span> <span class="k">while</span> <span class="nx">read</span> <span class="nx">f</span><span class="p">;</span> <span class="k">do</span> <span class="nx">git</span> <span class="nx">branch</span> <span class="o">--</span><span class="nx">contains</span> <span class="nx">$f</span><span class="p">;</span> <span class="nx">done</span> <span class="o">|</span> <span class="nx">sort</span> <span class="o">-</span><span class="nx">u</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git log --all --format<span class="o">=</span>%H FILENAME <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>f<span class="p">;</span> <span class="k">do</span> git branch --contains <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
 </pre></div>
 
-</code></pre><p>Manually inspect:</p>
-<pre><code><div class="highlight"><pre><span class="nx">gitk</span> <span class="o">--</span><span class="nx">all</span> <span class="o">--</span><span class="nx">date</span><span class="o">-</span><span class="nx">order</span> <span class="o">--</span> <span class="nx">FILENAME</span>
+</code></pre>
+<p><!-- more -->
+Manually inspect:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    gitk --all --date-order -- FILENAME
 </pre></div>
 
-</code></pre><p>Find all changes to FILENAME not merged to master:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="k">for</span><span class="o">-</span><span class="nx">each</span><span class="o">-</span><span class="nx">ref</span> <span class="o">--</span><span class="nx">format</span><span class="o">=</span><span class="s2">&quot;%(refname:short)&quot;</span> <span class="nx">refs</span><span class="o">/</span><span class="nx">heads</span> <span class="o">|</span> <span class="nx">grep</span> <span class="o">-</span><span class="nx">v</span> <span class="nx">master</span> <span class="o">|</span> <span class="k">while</span> <span class="nx">read</span> <span class="nx">br</span><span class="p">;</span> <span class="k">do</span> <span class="nx">git</span> <span class="nx">cherry</span> <span class="nx">master</span> <span class="nx">$br</span> <span class="o">|</span> <span class="k">while</span> <span class="nx">read</span> <span class="nx">x</span> <span class="nx">h</span><span class="p">;</span> <span class="k">do</span> <span class="k">if</span> <span class="p">[</span> <span class="s2">&quot;`git log -n 1 --format=%H $h -- FILENAME`&quot;</span> <span class="o">=</span> <span class="s2">&quot;$h&quot;</span> <span class="p">];</span> <span class="nx">then</span> <span class="nx">echo</span> <span class="nx">$br</span><span class="p">;</span> <span class="nx">fi</span><span class="p">;</span> <span class="nx">done</span><span class="p">;</span> <span class="nx">done</span> <span class="o">|</span> <span class="nx">sort</span> <span class="o">-</span><span class="nx">u</span>
+</code></pre>
+<p>Find all changes to FILENAME not merged to master:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git <span class="k">for</span>-each-ref --format<span class="o">=</span><span class="s2">&quot;%(refname:short)&quot;</span> refs/heads <span class="p">|</span> grep -v master <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>br<span class="p">;</span> <span class="k">do</span> git cherry master <span class="nv">$br</span> <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>x h<span class="p">;</span> <span class="k">do</span> <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;`git log -n 1 --format=%H $h -- FILENAME`&quot;</span> <span class="o">=</span> <span class="s2">&quot;$h&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span> <span class="nb">echo</span> <span class="nv">$br</span><span class="p">;</span> <span class="k">fi</span><span class="p">;</span> <span class="k">done</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+</div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

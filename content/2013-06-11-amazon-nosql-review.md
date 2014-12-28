@@ -1,3 +1,7 @@
+---
+date: 2013-06-11
+tags: aws
+---
 Amazon NoSQL Solutions
 ============================================
 
@@ -11,7 +15,7 @@ Amazon provides following [NoSQL](https://en.wikipedia.org/wiki/NoSQL) storage o
   fully-managed, high performance, NoSQL database service that is easy to set
   up, operate, and scale.
 
-
+<!-- more -->
 Amazon's review of big data solutions
 --------------------------------------------
 Amazon's review [Big Data on AWS](http://aws.amazon.com/big-data/) mentions

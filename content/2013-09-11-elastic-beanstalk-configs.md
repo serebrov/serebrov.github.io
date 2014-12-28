@@ -1,3 +1,7 @@
+---
+date: 2013-09-11
+tags: aws
+---
 Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)
 ============================================
 
@@ -17,6 +21,7 @@ Here is how this problem can be fixed:
 
 Below are details for each step.
 
+<!-- more -->
 Add eb tools under git control
 --------------------------------------------
 This is necessary because we want all users to have the same tools version.
@@ -27,6 +32,7 @@ Or copy existing version into the project.
 
 Add a wrapper script to run the original eb tool:
 
+```bash
     #!/bin/sh
 
     # Run the eb tool from the root project directory as
@@ -37,10 +43,12 @@ Add a wrapper script to run the original eb tool:
 
     export PATH=$PATH:$SCRIPT_PATH/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
     eb "$@"
+```
 
 Script should be on the same lever as the extracted directory.
 For example I have:
 
+```bash
     project_root/
     | .ebextensions/
     | .elasticbeanstalk/
@@ -52,6 +60,7 @@ For example I have:
     | | ...
     | ...
     | .gitignore
+```
 
 So I launch the 'eb' as 'console/eb parameters' from the project root directory.
 
@@ -59,7 +68,9 @@ Add eb configs under git control
 --------------------------------------------
 Add the EB configs under git control:
 
+```bash
     $ git add -f .elasticbeanstalk
+```
 
 Patch eb tools to accept relative file paths
 --------------------------------------------
@@ -69,6 +80,7 @@ The file path is .../AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utili
 
 And the changes are:
 
+```bash
     [Lines 41 - 47]
     def read(self, pathfilename):
         #seb: expand path to allow using homedir and relative paths
@@ -86,6 +98,7 @@ And the changes are:
 
         with codecs.open(pathfilename, 'r', encoding=ServiceDefault.CHAR_CODEC) as input_file:
             config_pairs = input_file.read()
+```
 
 Now you can use relative to project root paths in your configs.
 
@@ -93,6 +106,7 @@ Change paths in configs to relative
 --------------------------------------------
 I had three absolute paths in my ./elasticbeanstalk/config:
 
+```bash
     [global]
     ..
     AwsCredentialFile=/home/username/.elasticbeanstalk/aws_credential_file
@@ -109,12 +123,14 @@ I had three absolute paths in my ./elasticbeanstalk/config:
     [branch:production]
     OptionSettingFile=/path/to/project/.elasticbeanstalk/optionsettings.production
     ..
+```
 
 Path to aws credential file can be easily fixed by just removing it - eb tools will use
 config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).
 
 Other two paths (for branch configs) can now be changed to relative:
 
+```bash
     [global]
     # Default credential file path (recognized by both eb tool and git aws.push tool)
     # AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file
@@ -131,12 +147,14 @@ Other two paths (for branch configs) can now be changed to relative:
     [branch:production]
     OptionSettingFile=./.elasticbeanstalk/optionsettings.production
     ...
+```
 
 Use it
 --------------------------------------------
 Make sure you are using the 'eb' wrapper script from the root project directory.
 For example, for 'eb status':
 
+```bash
     $ cd project/root/dir
     $ ./path/to/eb status
     Load sectioned config file: project/root/dir/.elasticbeanstalk/config
@@ -144,4 +162,4 @@ For example, for 'eb status':
     URL	: staging-jp48gay9nx.elasticbeanstalk.com
     Status	: Ready
     Health	: Green
-
+```

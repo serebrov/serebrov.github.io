@@ -1,1 +1,1 @@
-{"intro":""}
+{"date":"2014-01-04T00:00:00.000Z","tags":"git","intro":"<h1 id=\"how-to-keep-git-log-and-less-output-on-the-screen\">How to keep git log and less output on the screen</h1>\n<p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console\nscreen when you exit from less.\nThis is not convenient in many cases so here is how to fix this.</p>\n"}

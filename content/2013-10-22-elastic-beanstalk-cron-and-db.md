@@ -1,5 +1,10 @@
+---
+date: 2013-10-22
+tags: aws
+---
 Elastic Beanstalk - cron command and RDS DB access
 ============================================
+<!-- more -->
 
 Problem
 --------------------------------------------
@@ -19,5 +24,7 @@ Solution
 --------------------------------------------
 Solution is to set the required environment variables before launching the command and this can be done with '/opt/elasticbeanstal/support/envvars' script:
 
+```bash
     0 3 * * * . /opt/elasticbeanstalk/support/envvars; /var/www/html/console/yiic mycommand
+```
 

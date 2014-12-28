@@ -1,3 +1,7 @@
+---
+date: 2012-01-24
+tags: android
+---
 Andriod - moblie network problem after BusyBox update
 ============================================
 I have LG p500 (Optimus One), rooted with original ROM.
@@ -6,6 +10,7 @@ After update to [BusyBox](https://play.google.com/store/apps/details?id=stericso
 
 I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn't help. I did a factory reset - also didn't help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.
 
+<!-- more -->
 So I started examining system logs and found this error:
 
     Failed to replace default route com.android.server.NativeDaemonConnectorException
@@ -21,7 +26,9 @@ Note that I use original LG ROM (not the rom discussed in that thread). Few page
 
 During discussion they suggested to try this command (I modified it a bit because original forum version gave error about wrong arguments. I issued this command in the [Script Manager](https://play.google.com/store/apps/details?id=os.tools.scriptmanager) via su):
 
+```bash
     su -c "ip -4 route replace default via 109.46.130.66 dev rmnet0"
+```
 
 Where ip (109.46.130.66) is ip address from the com.android.server.NativeDaemonConnectorException error above - I think this is dynamic dns server I got from my mobile network provider (different on each connection).
 And this command makes network work! But only for curren session. When I reconnect GPRS the network doesn't work again (because new dns server ip is issued every time).

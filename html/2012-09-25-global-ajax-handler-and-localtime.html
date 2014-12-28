@@ -25,6 +25,7 @@ By default it works when the page is loaded initially, but if some elements are 
 <p>Possible solution is to add some special handling to $.ajax &#39;success&#39; handlers, but it can require a lot of modifications.
 Better way is to set some global handler for all ajax requests and apply conversion to local time there.
 I evaluated several approaches before I could find a working solution.</p>
+<p><!-- more --></p>
 <h2 id="first-try-run-local-time-conversion-in-ajaxcomplete-doesn-t-work-">First try - run local time conversion in $.ajaxComplete (doesn&#39;t work)</h2>
 <pre><code><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">ajaxComplete</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">//code from jquery.localtime.js, jQuery.ready handler</span>

@@ -22,50 +22,52 @@
       <div class="row"><h1 id="php-friend-a-class-via-extend">PHP - friend a class via extend</h1>
 <p>C++ allows to declare one class as a friend of another one.</p>
 <p>This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.</p>
-<p>For example this can be used in <a href="http://sourcemaking.com/design_patterns/state">State pattern</a> to keep <code>setState</code> method of context class protected.</p>
+<p><!-- more -->
+For example this can be used in <a href="http://sourcemaking.com/design_patterns/state">State pattern</a> to keep <code>setState</code> method of context class protected.</p>
 <p>To emulate this in PHP we can inherit state class from context class:</p>
-<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">AContext</span> <span class="p">{</span>
-    <span class="kr">private</span> <span class="nx">$_state</span><span class="p">;</span>
+<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    class AContext {</span>
+<span class="x">        private $_state;</span>
 
-    <span class="kr">protected</span> <span class="kd">function</span> <span class="nx">setState</span><span class="p">(</span><span class="nx">AState</span> <span class="nx">$state</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">_state</span> <span class="o">=</span> <span class="nx">$state</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="x">        protected function setState(AState $state) {</span>
+<span class="x">            $this-&gt;_state = $state;</span>
+<span class="x">        }</span>
 
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">request</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">_state</span><span class="o">-&gt;</span><span class="nx">handle</span><span class="p">();</span>
-    <span class="p">}</span>
+<span class="x">        public function request() {</span>
+<span class="x">            $this-&gt;_state-&gt;handle();</span>
+<span class="x">        }</span>
 
-<span class="p">}</span>
+<span class="x">    }</span>
 
-<span class="kr">abstract</span> <span class="kr">class</span> <span class="nx">AState</span> <span class="kr">extends</span> <span class="nx">AContext</span> <span class="p">{</span>
-    <span class="kr">private</span> <span class="nx">$_owner</span><span class="p">;</span>
+<span class="x">    abstract class AState extends AContext {</span>
+<span class="x">        private $_owner;</span>
 
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">__construct</span><span class="p">(</span><span class="nx">AContext</span> <span class="nx">$owner</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">_owner</span> <span class="o">=</span> <span class="nx">$owner</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="x">        public function __construct(AContext $owner) {</span>
+<span class="x">            $this-&gt;_owner = $owner;</span>
+<span class="x">        }</span>
 
-    <span class="kr">protected</span> <span class="kd">function</span> <span class="nx">getOwner</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">_owner</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="x">        protected function getOwner() {</span>
+<span class="x">            return $this-&gt;_owner;</span>
+<span class="x">        }</span>
 
-    <span class="kr">abstract</span> <span class="kd">function</span> <span class="nx">handle</span><span class="p">();</span>
+<span class="x">        abstract function handle();</span>
 
-<span class="p">}</span>
+<span class="x">    }</span>
 
-<span class="kr">class</span> <span class="nx">AConcreteState</span> <span class="kr">extends</span> <span class="nx">AState</span> <span class="p">{</span>
+<span class="x">    class AConcreteState extends AState {</span>
 
-    <span class="kr">public</span> <span class="kd">function</span> <span class="nx">handle</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">...</span>
-        <span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">getOwner</span><span class="p">()</span><span class="o">-&gt;</span><span class="nx">setState</span><span class="p">(</span><span class="k">new</span> <span class="nx">AnotherState</span><span class="p">(</span><span class="nx">$this</span><span class="o">-&gt;</span><span class="nx">getOwner</span><span class="p">());</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span class="x">        public function handle() {</span>
+<span class="x">            ...</span>
+<span class="x">            $this-&gt;getOwner()-&gt;setState(new AnotherState($this-&gt;getOwner());</span>
+<span class="x">        }</span>
+<span class="x">    }</span>
 
-<span class="kr">class</span> <span class="nx">AnotherState</span> <span class="kr">extends</span> <span class="nx">AState</span> <span class="p">{</span>
-    <span class="p">...</span>
-<span class="p">}</span>
+<span class="x">    class AnotherState extends AState {</span>
+<span class="x">        ...</span>
+<span class="x">    }</span>
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+</div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

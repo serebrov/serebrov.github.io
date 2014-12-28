@@ -24,59 +24,67 @@
 <p>Prerequisites are git and ssh-server (apt-get install openssh-server).</p>
 <p>The installation process is described in <a href="http://git-scm.com/book/en/Git-on-the-Server-Setting-Up-the-Server">the Pro Git book</a>.
 Below is the setup process with some comments and updates.</p>
-<p>Add git user, set some password (you will be asked for it):</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">adduser</span> <span class="nx">git</span>
+<p><!-- more -->
+Add git user, set some password (you will be asked for it):</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo adduser git
 </pre></div>
 
-</code></pre><p>Log in as git user and setup authorized ssh keys:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">su</span> <span class="nx">git</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">cd</span> <span class="o">~</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">mkdir</span> <span class="p">.</span><span class="nx">ssh</span>
+</code></pre>
+<p>Log in as git user and setup authorized ssh keys:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>su git
+    git@localname<span class="nv">$ </span><span class="nb">cd</span> ~
+    git@localname<span class="nv">$ </span>mkdir .ssh
 </pre></div>
 
-</code></pre><p>For each user who need an access to the server add user&#39;s public key into ~/.ssh/authorized_keys
+</code></pre>
+<p>For each user who need an access to the server add user&#39;s public key into ~/.ssh/authorized_keys
 to generate new key-pair for the user use ssh-keygen see <a href="https://help.github.com/articles/generating-ssh-keys">github manual</a> for details.</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">cat</span> <span class="o">/</span><span class="nx">home</span><span class="o">/</span><span class="nx">usera</span><span class="o">/</span><span class="p">.</span><span class="nx">ssh</span><span class="o">/</span><span class="nx">id_rsa</span><span class="p">.</span><span class="nx">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~</span><span class="err">/.ssh/authorized_keys</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">cat</span> <span class="o">/</span><span class="nx">home</span><span class="o">/</span><span class="nx">userb</span><span class="o">/</span><span class="p">.</span><span class="nx">ssh</span><span class="o">/</span><span class="nx">id_rsa</span><span class="p">.</span><span class="nx">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~</span><span class="err">/.ssh/authorized_keys</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git@localname<span class="nv">$ </span>cat /home/usera/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+    git@localname<span class="nv">$ </span>cat /home/userb/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 </pre></div>
 
-</code></pre><p>Change permissions for .ssh folder and authorized_keys file:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">chmod</span> <span class="mi">600</span> <span class="o">~</span><span class="err">/.ssh/authorized_keys</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">chmod</span> <span class="mi">755</span> <span class="o">~</span><span class="err">/.ssh</span>
+</code></pre>
+<p>Change permissions for .ssh folder and authorized_keys file:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git@localname<span class="nv">$ </span>chmod <span class="m">600</span> ~/.ssh/authorized_keys
+    git@localname<span class="nv">$ </span>chmod <span class="m">755</span> ~/.ssh
 </pre></div>
 
-</code></pre><p>Make a dir for repositories and init bare repositories:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">mkdir</span> <span class="o">~</span><span class="err">/server</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">cd</span> <span class="nx">server</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">mkdir</span> <span class="nx">project</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">cd</span> <span class="nx">project</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">git</span><span class="err">@</span><span class="nx">localname$</span> <span class="nx">git</span> <span class="o">--</span><span class="nx">bare</span> <span class="nx">init</span>
+</code></pre>
+<p>Make a dir for repositories and init bare repositories:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    git@localname<span class="nv">$ </span>mkdir ~/server
+    git@localname<span class="nv">$ </span><span class="nb">cd </span>server
+    git@localname<span class="nv">$ </span>mkdir project.git
+    git@localname<span class="nv">$ </span><span class="nb">cd </span>project.git
+    git@localname<span class="nv">$ </span>git --bare init
 </pre></div>
 
-</code></pre><p>Sequrity - set git-shell for the git user:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">check</span> <span class="nx">where</span> <span class="nx">git</span><span class="o">-</span><span class="nx">shell</span> <span class="nx">is</span>
-<span class="nx">$</span> <span class="nx">which</span> <span class="nx">git</span><span class="o">-</span><span class="nx">shell</span>
-<span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">git</span><span class="o">-</span><span class="nx">shell</span>
+</code></pre>
+<p>Sequrity - set git-shell for the git user:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c"># check where git-shell is</span>
+    <span class="nv">$ </span>which git-shell
+    /usr/bin/git-shell
 
-<span class="err">#</span> <span class="nx">edit</span> <span class="nx">the</span> <span class="nx">etc</span><span class="o">/</span><span class="nx">passwd</span>
-<span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">vim</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">passwd</span>
+    <span class="c"># edit the etc/passwd</span>
+    <span class="nv">$ </span>sudo vim /etc/passwd
 
-<span class="err">#</span> <span class="nx">find</span> <span class="nx">the</span> <span class="nx">string</span> <span class="k">for</span> <span class="nx">git</span> <span class="nx">user</span><span class="o">:</span>
-    <span class="nx">git</span><span class="o">:</span><span class="nx">x</span><span class="o">:</span><span class="mi">1000</span><span class="o">:</span><span class="mi">1000</span><span class="o">::</span><span class="err">/home/git:/bin/sh</span>
-<span class="err">#</span> <span class="nx">change</span> <span class="nx">shell</span> <span class="k">for</span> <span class="nx">git</span> <span class="nx">user</span><span class="o">:</span>
-    <span class="nx">git</span><span class="o">:</span><span class="nx">x</span><span class="o">:</span><span class="mi">1000</span><span class="o">:</span><span class="mi">1000</span><span class="o">::</span><span class="err">/home/git:/usr/bin/git-shell</span>
+    <span class="c"># find the string for git user:</span>
+        git:x:1000:1000::/home/git:/bin/sh
+    <span class="c"># change shell for git user:</span>
+        git:x:1000:1000::/home/git:/usr/bin/git-shell
 </pre></div>
 
-</code></pre><p>On the user side - clone the repository or add a remote to existing repository:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">clone</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">clone</span> <span class="nx">ssh</span><span class="o">:</span><span class="c1">//git@server.host.name/home/git/server/project.git</span>
+</code></pre>
+<p>On the user side - clone the repository or add a remote to existing repository:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c"># clone</span>
+    <span class="nv">$ </span>git clone ssh://git@server.host.name/home/git/server/project.git
 
-<span class="err">#</span> <span class="nx">or</span> <span class="nx">add</span> <span class="nx">remote</span>
-<span class="nx">$</span> <span class="nx">cd</span> <span class="nx">project</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">remote</span> <span class="nx">add</span> <span class="nx">origin</span> <span class="nx">ssh</span><span class="o">:</span><span class="c1">//git@server.host.name/home/git/server/project.git</span>
+    <span class="c"># or add remote</span>
+    <span class="nv">$ </span><span class="nb">cd </span>project
+    <span class="nv">$ </span>git remote add origin ssh://git@server.host.name/home/git/server/project.git
 </pre></div>
 
-</code></pre><p>For &#39;server.host.name&#39; there are several options:</p>
+</code></pre>
+<p>For &#39;server.host.name&#39; there are several options:</p>
 <ul>
 <li>if the server has a domain name then just use it</li>
 <li>use sever IP address instead of host name</li>
@@ -95,96 +103,111 @@ See:</p>
 <h4 id="when-the-user-tries-to-execute-a-server-operation-git-asks-for-git-user-password-instead-of-ssh-key-passphrase-">When the user tries to execute a server operation git asks for git user password instead of ssh key passphrase.</h4>
 <p>Check auth log (/var/log/auth.log) for errors.
 In my case there were errors related to git user&#39;s .ssh and authorized_keys permissions:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Aug</span> <span class="mi">15</span> <span class="mi">15</span><span class="o">:</span><span class="mi">25</span><span class="o">:</span><span class="mi">24</span> <span class="nx">seb</span><span class="o">-</span><span class="nx">ubu</span> <span class="nx">sshd</span><span class="p">[</span><span class="mi">4561</span><span class="p">]</span><span class="o">:</span> <span class="nx">Authentication</span> <span class="nx">refused</span><span class="o">:</span> <span class="nx">bad</span> <span class="nx">ownership</span> <span class="nx">or</span> <span class="nx">modes</span> <span class="k">for</span> <span class="nx">file</span> <span class="o">/</span><span class="nx">home</span><span class="o">/</span><span class="nx">git</span><span class="o">/</span><span class="p">.</span><span class="nx">ssh</span><span class="o">/</span><span class="nx">authorized_keys</span>
-<span class="p">...</span>
-<span class="nx">Aug</span> <span class="mi">15</span> <span class="mi">15</span><span class="o">:</span><span class="mi">47</span><span class="o">:</span><span class="mi">48</span> <span class="nx">seb</span><span class="o">-</span><span class="nx">ubu</span> <span class="nx">sshd</span><span class="p">[</span><span class="mi">7145</span><span class="p">]</span><span class="o">:</span> <span class="nx">Authentication</span> <span class="nx">refused</span><span class="o">:</span> <span class="nx">bad</span> <span class="nx">ownership</span> <span class="nx">or</span> <span class="nx">modes</span> <span class="k">for</span> <span class="nx">directory</span> <span class="o">/</span><span class="nx">home</span><span class="o">/</span><span class="nx">git</span><span class="o">/</span><span class="p">.</span><span class="nx">ssh</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    Aug <span class="m">15</span> 15:25:24 seb-ubu sshd<span class="o">[</span>4561<span class="o">]</span>: Authentication refused: bad ownership or modes <span class="k">for</span> file /home/git/.ssh/authorized_keys
+    ...
+    Aug <span class="m">15</span> 15:47:48 seb-ubu sshd<span class="o">[</span>7145<span class="o">]</span>: Authentication refused: bad ownership or modes <span class="k">for</span> directory /home/git/.ssh
 </pre></div>
 
-</code></pre><p>Changing access permissions as described above fixed the issue.</p>
+</code></pre>
+<p>Changing access permissions as described above fixed the issue.</p>
 <h4 id="how-to-make-existing-git-repository-bare">How to make existing git repository bare</h4>
 <p>If you already have a repository and want to put it on the server then it seems to be safe to just
 copy the .git folder from the existing repository:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">source</span><span class="o">:</span> <span class="nx">project</span><span class="o">/</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">$</span> <span class="nx">cp</span> <span class="o">-</span><span class="nx">r</span> <span class="nx">project</span><span class="o">/</span><span class="p">.</span><span class="nx">git</span> <span class="nx">project</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">$</span> <span class="nx">cd</span> <span class="nx">project</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">config</span> <span class="o">--</span><span class="nx">bool</span> <span class="nx">core</span><span class="p">.</span><span class="nx">bare</span> <span class="kc">true</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c"># source: project/.git</span>
+    <span class="nv">$ </span>cp -r project/.git project.git
+    <span class="nv">$ </span><span class="nb">cd </span>project.git
+    <span class="nv">$ </span>git config --bool core.bare <span class="nb">true</span>
 </pre></div>
 
-</code></pre><h2 id="git-server-email-notifications-on-push">Git Server - email notifications on push</h2>
+</code></pre>
+<h2 id="git-server-email-notifications-on-push">Git Server - email notifications on push</h2>
 <p>Git already has a script to handle email notifications after push.
 Check the /usr/share/doc/git/contrib/hooks/post-receive-email for instructions:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">chmod</span> <span class="nx">a</span><span class="o">+</span><span class="nx">x</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">share</span><span class="o">/</span><span class="nx">git</span><span class="o">-</span><span class="nx">core</span><span class="o">/</span><span class="nx">contrib</span><span class="o">/</span><span class="nx">hooks</span><span class="o">/</span><span class="nx">post</span><span class="o">-</span><span class="nx">receive</span><span class="o">-</span><span class="nx">email</span>
-<span class="nx">$</span> <span class="nx">cd</span> <span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nx">your</span><span class="o">/</span><span class="nx">repository</span><span class="p">.</span><span class="nx">git</span>
-<span class="nx">$</span> <span class="nx">ln</span> <span class="o">-</span><span class="nx">sf</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">share</span><span class="o">/</span><span class="nx">git</span><span class="o">-</span><span class="nx">core</span><span class="o">/</span><span class="nx">contrib</span><span class="o">/</span><span class="nx">hooks</span><span class="o">/</span><span class="nx">post</span><span class="o">-</span><span class="nx">receive</span><span class="o">-</span><span class="nx">email</span> <span class="nx">hooks</span><span class="o">/</span><span class="nx">post</span><span class="o">-</span><span class="nx">receive</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo chmod a+x /usr/share/git-core/contrib/hooks/post-receive-email
+    <span class="nv">$ </span><span class="nb">cd</span> /path/to/your/repository.git
+    <span class="nv">$ </span>ln -sf /usr/share/git-core/contrib/hooks/post-receive-email hooks/post-receive
 </pre></div>
 
-</code></pre><p>Configure notifications:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">cd</span> <span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nx">your</span><span class="o">/</span><span class="nx">repository</span><span class="p">.</span><span class="nx">git</span>
+</code></pre>
+<p>Configure notifications:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span><span class="nb">cd</span> /path/to/your/repository.git
 
-<span class="err">#</span> <span class="nx">who</span> <span class="nx">should</span> <span class="nx">receive</span> <span class="nx">notifications</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">config</span> <span class="nx">hooks</span><span class="p">.</span><span class="nx">mailinglist</span> <span class="s2">&quot;user1@example.com user2@example.com&quot;</span>
+    <span class="c"># who should receive notifications</span>
+    <span class="nv">$ </span>git config hooks.mailinglist <span class="s2">&quot;user1@example.com user2@example.com&quot;</span>
 
-<span class="err">#</span> <span class="nx">send</span> <span class="nx">emails</span> <span class="nx">from</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">config</span> <span class="nx">hooks</span><span class="p">.</span><span class="nx">envelopesender</span> <span class="nx">git</span><span class="err">@</span><span class="nx">myserver</span><span class="p">.</span><span class="nx">com</span>
+    <span class="c"># send emails from</span>
+    <span class="nv">$ </span>git config hooks.envelopesender git@myserver.com
 
-<span class="err">#</span> <span class="nx">email</span> <span class="nx">subject</span> <span class="nx">prefix</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">config</span> <span class="nx">hooks</span><span class="p">.</span><span class="nx">emailprefix</span> <span class="s2">&quot;[Git]&quot;</span>
+    <span class="c"># email subject prefix</span>
+    <span class="nv">$ </span>git config hooks.emailprefix <span class="s2">&quot;[Git]&quot;</span>
 
-<span class="err">#</span> <span class="nx">project</span> <span class="nx">name</span> <span class="o">-</span> <span class="nx">edit</span> <span class="s1">&#39;description&#39;</span> <span class="nx">file</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">git</span> <span class="nx">repository</span> <span class="nx">folder</span>
-<span class="nx">$</span> <span class="nx">vim</span> <span class="nx">description</span>
+    <span class="c"># project name - edit &#39;description&#39; file in the git repository folder</span>
+    <span class="nv">$ </span>vim description
 </pre></div>
 
-</code></pre><p>The post-receive-email script requires sendmail to work.
+</code></pre>
+<p>The post-receive-email script requires sendmail to work.
 Below is a description of the sendmail setup process.</p>
 <h2 id="setup-sendmail-on-ubuntu">Setup sendmail on Ubuntu</h2>
-<p>Install it:
-    $ sudo apt-get install sendmail</p>
+<p>Install it:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo apt-get install sendmail
+</pre></div>
+
+</code></pre>
 <p>Check your hosts file - in my case sendmail was incredibly slow and this was fixed by following
 line in /etc/hosts:</p>
-<pre><code><div class="highlight"><pre><span class="mf">127.0</span><span class="p">.</span><span class="mf">0.1</span> <span class="nx">localhost</span><span class="p">.</span><span class="nx">localdomain</span> <span class="nx">localhost</span> <span class="nx">myhostname</span> <span class="o">&lt;---</span> <span class="nx">order</span> <span class="nx">matters</span><span class="o">!!!</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    127.0.0.1 localhost.localdomain localhost myhostname &lt;--- order matters!!!
 </pre></div>
 
-</code></pre><p>Note that you need to use the same order as above - localhost.localdomain, localhost and then
+</code></pre>
+<p>Note that you need to use the same order as above - localhost.localdomain, localhost and then
 myhostname (replace myhostname with your real host name, check the output of &#39;hostname&#39; command).</p>
 <p>Send a test email:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">echo</span> <span class="s2">&quot;My test email being sent from sendmail&quot;</span> <span class="o">|</span> <span class="err">/usr/sbin/sendmail myemail@domain.com</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">&quot;My test email being sent from sendmail&quot;</span> <span class="p">|</span> /usr/sbin/sendmail myemail@domain.com
 </pre></div>
 
-</code></pre><p>If you have problems with emails then check the log: /var/log/mail.log and error log: /var/log/mail.err.</p>
+</code></pre>
+<p>If you have problems with emails then check the log: /var/log/mail.log and error log: /var/log/mail.err.</p>
 <h3 id="setup-smtp-for-sendmail">Setup SMTP for sendmail</h3>
 <p>If you want to setup SMTP server for you emails do the following:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">cd</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">mail</span>
-<span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">mkdir</span> <span class="nx">auth</span>
-<span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">chmod</span> <span class="mi">700</span> <span class="nx">auth</span>
-<span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">vim</span> <span class="nx">client</span><span class="o">-</span><span class="nx">info</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span><span class="nb">cd</span> /etc/mail
+    <span class="nv">$ </span>sudo mkdir auth
+    <span class="nv">$ </span>sudo chmod <span class="m">700</span> auth
+    <span class="nv">$ </span>sudo vim client-info
 </pre></div>
 
-</code></pre><p>Enter following line into the client-info file:</p>
-<pre><code><div class="highlight"><pre><span class="nx">AuthInfo</span><span class="o">:</span><span class="nx">smtp</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">com</span> <span class="s2">&quot;U:mymail@server.com&quot;</span> <span class="s2">&quot;I:mymail@server.com&quot;</span> <span class="s2">&quot;P:mypassword&quot;</span>
+</code></pre>
+<p>Enter following line into the client-info file:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    AuthInfo:smtp.server.com <span class="s2">&quot;U:mymail@server.com&quot;</span> <span class="s2">&quot;I:mymail@server.com&quot;</span> <span class="s2">&quot;P:mypassword&quot;</span>
 </pre></div>
 
-</code></pre><p>Here you put you smtp server name (instead of &#39;smtp.server.com&#39;) and your credentials.
+</code></pre>
+<p>Here you put you smtp server name (instead of &#39;smtp.server.com&#39;) and your credentials.
 &#39;U&#39; is an smtp user (usually your email), &#39;I&#39; is an account (usually also your email) and &#39;P&#39; is a password.
 See details for parameters <a href="http://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy">here</a>.</p>
 <p>Continue setup:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">bash</span> <span class="o">-</span><span class="nx">c</span> <span class="s2">&quot;makemap hash client-info &lt; client-info&quot;</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo bash -c <span class="s2">&quot;makemap hash client-info &lt; client-info&quot;</span>
 </pre></div>
 
-</code></pre><p>Edit the /etc/mail/sendmail.mc and add following lines before the &quot;MAILER_DEFINITIONS&quot; line:</p>
-<pre><code><div class="highlight"><pre><span class="nx">define</span><span class="p">(</span><span class="s1">&#39;SMART_HOST&#39;</span><span class="p">,</span><span class="s1">&#39;smtp.server.com&#39;</span><span class="p">)</span><span class="nx">dnl</span>
-<span class="nx">define</span><span class="p">(</span><span class="s1">&#39;confAUTH_MECHANISMS&#39;</span><span class="p">,</span> <span class="s1">&#39;EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN&#39;</span><span class="p">)</span><span class="nx">dnl</span>
-<span class="nx">FEATURE</span><span class="p">(</span><span class="s1">&#39;authinfo&#39;</span><span class="p">,</span><span class="s1">&#39;hash /etc/mail/auth/client-info&#39;</span><span class="p">)</span><span class="nx">dnl</span>
+</code></pre>
+<p>Edit the /etc/mail/sendmail.mc and add following lines before the &quot;MAILER_DEFINITIONS&quot; line:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    define<span class="o">(</span><span class="s1">&#39;SMART_HOST&#39;</span>,<span class="s1">&#39;smtp.server.com&#39;</span><span class="o">)</span>dnl
+    define<span class="o">(</span><span class="s1">&#39;confAUTH_MECHANISMS&#39;</span>, <span class="s1">&#39;EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN&#39;</span><span class="o">)</span>dnl
+    FEATURE<span class="o">(</span><span class="s1">&#39;authinfo&#39;</span>,<span class="s1">&#39;hash /etc/mail/auth/client-info&#39;</span><span class="o">)</span>dnl
 </pre></div>
 
-</code></pre><p>Process the sendmail.mc with m4:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">bash</span> <span class="o">-</span><span class="nx">c</span> <span class="s2">&quot;m4 sendmail.mc &gt; sendmail.cf&quot;</span>
+</code></pre>
+<p>Process the sendmail.mc with m4:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo bash -c <span class="s2">&quot;m4 sendmail.mc &gt; sendmail.cf&quot;</span>
 </pre></div>
 
-</code></pre><p>Restart sendmail:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">sudo</span> <span class="nx">service</span> <span class="nx">sendmail</span> <span class="nx">restart</span>
+</code></pre>
+<p>Restart sendmail:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>sudo service sendmail restart
 </pre></div>
 
-</code></pre><p>Resources:</p>
+</code></pre>
+<p>Resources:</p>
 <ul>
 <li><a href="http://stackoverflow.com/questions/10359437/sendmail-how-to-configure-sendmail-on-ubuntu">sendmail: how to configure sendmail on ubuntu?</a></li>
 <li><a href="http://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy">Configuring Sendmail with smarthost Ubuntu Gutsy</a></li>

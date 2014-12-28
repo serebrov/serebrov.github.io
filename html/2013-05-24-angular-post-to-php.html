@@ -21,25 +21,28 @@
     <div class="container">
       <div class="row"><h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
 <p>By default angular.js sends all data in json.
-So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.</p>
+So if you do a POST request to a PHP code then the <code>$_POST</code> superglobal will not be populated.</p>
 <p>This can be solved in two ways - on the client side or on the server side.</p>
+<p><!-- more --></p>
 <h2 id="server-side-solution">Server-side solution</h2>
 <p>On the server you can parse input and then decode data from json:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$data</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s2">&quot;php://input&quot;</span><span class="p">);</span>
-<span class="nx">$postData</span> <span class="o">=</span> <span class="nx">json_decode</span><span class="p">(</span><span class="nx">$data</span><span class="p">);</span>
+<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    $data = file_get_contents(&quot;php://input&quot;);</span>
+<span class="x">    $postData = json_decode($data);</span>
 </pre></div>
 
-</code></pre><h2 id="client-side-solution">Client-side solution</h2>
+</code></pre>
+<h2 id="client-side-solution">Client-side solution</h2>
 <p>On the client side the data can be sent in a way PHP expects it:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$http</span><span class="p">({</span>
-    <span class="nx">url</span><span class="o">:</span><span class="nx">url</span>
-    <span class="nx">data</span> <span class="o">:</span> <span class="nx">$</span><span class="p">.</span><span class="nx">param</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
-    <span class="nx">method</span> <span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
-    <span class="nx">headers</span> <span class="o">:</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">}</span>
-<span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
+<pre><code class="lang-js"><div class="highlight"><pre>    <span class="nx">$http</span><span class="p">({</span>
+        <span class="nx">url</span><span class="o">:</span><span class="nx">url</span>
+        <span class="nx">data</span> <span class="o">:</span> <span class="nx">$</span><span class="p">.</span><span class="nx">param</span><span class="p">(</span><span class="nx">data</span><span class="p">),</span>
+        <span class="nx">method</span> <span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+        <span class="nx">headers</span> <span class="o">:</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="s1">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span><span class="p">}</span>
+    <span class="p">}).</span><span class="nx">success</span><span class="p">(</span><span class="nx">callback</span><span class="p">);</span>
 </pre></div>
 
-</code></pre><p>Here we set the &#39;Content-Type&#39; header and encode data using jQuery&#39;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
+</code></pre>
+<p>Here we set the &#39;Content-Type&#39; header and encode data using jQuery&#39;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
 This also can be done for all requests as described <a href="http://stackoverflow.com/questions/12190166/angularjs-any-way-for-http-post-to-send-request-parameters-instead-of-json">on stackoverflow</a>.</p>
 </div>
     </div>

@@ -21,70 +21,75 @@
     <div class="container">
       <div class="row"><h1 id="git-submodule-helpers">git - submodule helpers</h1>
 <p>Below are some git commands which can be useful to resolve problems with submodules.</p>
+<p><!-- more --></p>
 <h2 id="get-a-list-of-commits-inside-a-submodule">Get a list of commits inside a submodule</h2>
 <p>Submodules are identified by SHA-1 hashes so you may need to get a list of them. Do the following inside the submodule folder (or inside the separate submodule repository):</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">log</span> <span class="o">--</span><span class="nx">oneline</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git log --oneline
 
-<span class="mi">5</span><span class="nx">bd722f</span> <span class="nx">commit</span> <span class="mi">5</span>
-<span class="nx">b5c1524</span> <span class="nx">commit</span> <span class="mi">4</span>
-<span class="mi">2444</span><span class="nx">bfa</span> <span class="nx">commit</span> <span class="mi">3</span>
-<span class="nx">e0eadd5</span> <span class="nx">commit</span> <span class="mi">2</span>
-<span class="nx">c180c5a</span> <span class="nx">commit</span> <span class="mi">1</span>
-<span class="mi">702</span><span class="nx">fc8a</span> <span class="nx">commit</span> <span class="mi">0</span>
+    5bd722f commit 5
+    b5c1524 commit 4
+    2444bfa commit 3
+    e0eadd5 commit 2
+    c180c5a commit 1
+    702fc8a commit 0
 </pre></div>
 
-</code></pre><h2 id="view-current-submodule-commit">View current submodule commit</h2>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">submodule</span> <span class="nx">status</span>
+</code></pre>
+<h2 id="view-current-submodule-commit">View current submodule commit</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git submodule status
 
-<span class="mi">5</span><span class="nx">bd722fa26dcdd64128392aa28e08849fe37f111</span> <span class="nx">sub</span> <span class="p">(</span><span class="nx">heads</span><span class="o">/</span><span class="nx">master</span><span class="p">)</span>
+    5bd722fa26dcdd64128392aa28e08849fe37f111 sub <span class="o">(</span>heads/master<span class="o">)</span>
 </pre></div>
 
-</code></pre><h2 id="compare-a-submodule-state-with-another-branch">Compare a submodule state with another branch</h2>
+</code></pre>
+<h2 id="compare-a-submodule-state-with-another-branch">Compare a submodule state with another branch</h2>
 <p>Assume we are on the &quot;branch1&quot; and want to compare &#39;sub&#39; submodule state with master:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">diff</span> <span class="nx">master</span> <span class="o">--</span> <span class="nx">sub</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git diff master -- sub
 
-<span class="nx">diff</span> <span class="o">--</span><span class="nx">git</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="nx">index</span> <span class="mi">702</span><span class="nx">fc8a</span><span class="p">..</span><span class="mi">5</span><span class="nx">bd722f</span> <span class="mi">160000</span>
-<span class="o">---</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span>
-<span class="o">+++</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="err">@@</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span><span class="mi">1</span> <span class="err">@@</span>
-<span class="o">-</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="mi">702</span><span class="nx">fc8a7edcdf5ceba9929958bd6cd7f000eb369</span>
-<span class="o">+</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="mi">5</span><span class="nx">bd722fa26dcdd64128392aa28e08849fe37f111</span>
+    diff --git a/sub b/sub
+    index 702fc8a..5bd722f 160000
+    --- a/sub
+    +++ b/sub
+    @@ -1 +1 @@
+    -Subproject commit 702fc8a7edcdf5ceba9929958bd6cd7f000eb369
+    +Subproject commit 5bd722fa26dcdd64128392aa28e08849fe37f111
 </pre></div>
 
-</code></pre><p>Where &quot;-Subproject commit&quot; is another (master) branch state and &quot;+Subproject commit&quot; is a current branch state.
+</code></pre>
+<p>Where &quot;-Subproject commit&quot; is another (master) branch state and &quot;+Subproject commit&quot; is a current branch state.
 VIEW CHANGES TO SUBMODULE STATE ON THE CURRENT BRANCH
 What we do is show a git log with diffs for submodule (named &#39;sub&#39; in this case):</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">log</span> <span class="o">-</span><span class="nx">p</span> <span class="nx">sub</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git log -p sub
 
-<span class="nx">commit</span> <span class="mi">261</span><span class="nx">aa4bdb6944c77fc98e52748d656e56969ba6a</span>
-<span class="nx">Author</span><span class="o">:</span> <span class="nx">name</span>
-<span class="nb">Date</span><span class="o">:</span>   <span class="nx">Thu</span> <span class="nx">Sep</span> <span class="mi">13</span> <span class="mi">15</span><span class="o">:</span><span class="mi">20</span><span class="o">:</span><span class="mi">48</span> <span class="mi">2012</span> <span class="o">+</span><span class="mi">0300</span>
-<span class="nx">accidental</span> <span class="nx">sub</span> <span class="k">switch</span> <span class="nx">to</span> <span class="nx">commit</span> <span class="mi">5</span>
-<span class="nx">diff</span> <span class="o">--</span><span class="nx">git</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="nx">index</span> <span class="nx">b5c1524</span><span class="p">..</span><span class="mi">5</span><span class="nx">bd722f</span> <span class="mi">160000</span>
-<span class="o">---</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span>
-<span class="o">+++</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="err">@@</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span><span class="mi">1</span> <span class="err">@@</span>
-<span class="o">-</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="nx">b5c15241fe40f122d5225e5c76457802de3ad605</span>
-<span class="o">+</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="mi">5</span><span class="nx">bd722fa26dcdd64128392aa28e08849fe37f111</span>
+    commit 261aa4bdb6944c77fc98e52748d656e56969ba6a
+    Author: name
+    Date:   Thu Sep <span class="m">13</span> 15:20:48 <span class="m">2012</span> +0300
+    accidental sub switch to commit 5
+    diff --git a/sub b/sub
+    index b5c1524..5bd722f 160000
+    --- a/sub
+    +++ b/sub
+    @@ -1 +1 @@
+    -Subproject commit b5c15241fe40f122d5225e5c76457802de3ad605
+    +Subproject commit 5bd722fa26dcdd64128392aa28e08849fe37f111
 
-<span class="nx">commit</span> <span class="mi">073</span><span class="nx">aaf160706d705c6c95ab21327388cd6683486</span>
-<span class="nx">Author</span><span class="o">:</span> <span class="nx">name</span>
-<span class="nb">Date</span><span class="o">:</span>   <span class="nx">Thu</span> <span class="nx">Sep</span> <span class="mi">13</span> <span class="mi">14</span><span class="o">:</span><span class="mi">58</span><span class="o">:</span><span class="mi">41</span> <span class="mi">2012</span> <span class="o">+</span><span class="mi">0300</span>
-<span class="nx">sub</span> <span class="nx">commit</span> <span class="mi">4</span>
-<span class="nx">diff</span> <span class="o">--</span><span class="nx">git</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="nx">index</span> <span class="mi">2444</span><span class="nx">bfa</span><span class="p">..</span><span class="nx">b5c1524</span> <span class="mi">160000</span>
-<span class="o">---</span> <span class="nx">a</span><span class="o">/</span><span class="nx">sub</span>
-<span class="o">+++</span> <span class="nx">b</span><span class="o">/</span><span class="nx">sub</span>
-<span class="err">@@</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span><span class="mi">1</span> <span class="err">@@</span>
-<span class="o">-</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="mi">2444</span><span class="nx">bfa760b5d3cc974658bd18482f9679f52b69</span>
-<span class="o">+</span><span class="nx">Subproject</span> <span class="nx">commit</span> <span class="nx">b5c15241fe40f122d5225e5c76457802de3ad605</span>
+    commit 073aaf160706d705c6c95ab21327388cd6683486
+    Author: name
+    Date:   Thu Sep <span class="m">13</span> 14:58:41 <span class="m">2012</span> +0300
+    sub commit 4
+    diff --git a/sub b/sub
+    index 2444bfa..b5c1524 160000
+    --- a/sub
+    +++ b/sub
+    @@ -1 +1 @@
+    -Subproject commit 2444bfa760b5d3cc974658bd18482f9679f52b69
+    +Subproject commit b5c15241fe40f122d5225e5c76457802de3ad605
 
-<span class="p">...</span>
+    ...
 </pre></div>
 
-</code></pre><p>Where &quot;-Subproject commit&quot; is a previous submodule state and &quot;+Subproject commit&quot; is a new submodule state.</p>
+</code></pre>
+<p>Where &quot;-Subproject commit&quot; is a previous submodule state and &quot;+Subproject commit&quot; is a new submodule state.</p>
 <h2 id="links">Links</h2>
 <p><a href="https://git.wiki.kernel.org/index.php/GitSubmoduleTutorial">GitSubmoduleTutorial</a></p>
 <p><a href="http://git-scm.com/book/en/Git-Tools-Submodules">Pro Git: 6.6 Git Tools - Submodules</a></p>

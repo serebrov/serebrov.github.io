@@ -27,7 +27,8 @@
 <li>Use MySql MEMORY engine</li>
 <li>Move MySql data to memory</li>
 </ul>
-<p>It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:</p>
+<p><!-- more -->
+It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:</p>
 <ul>
 <li>stop mysql</li>
 <li>move /var/lib/mysql to /dev/shm/mysql</li>
@@ -36,96 +37,101 @@
 </ul>
 <p>In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.
 To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.sbin.mysqld</code>:</p>
-<pre><code><div class="highlight"><pre><span class="err">/dev/shm/mysql/ r,</span>
-<span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span><span class="o">/**</span> <span class="nx">rwk</span><span class="p">,</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    /dev/shm/mysql/ r,
+    /dev/shm/mysql/** rwk,
 </pre></div>
 
-</code></pre><p>But it doesn&#39;t work for me and I disabled apparmor for mysql (not recommended):</p>
+</code></pre>
+<p>But it doesn&#39;t work for me and I disabled apparmor for mysql (not recommended):</p>
 <pre><code><div class="highlight"><pre><span class="nx">sudo</span> <span class="nx">mv</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">d</span><span class="o">/</span><span class="nx">usr</span><span class="p">.</span><span class="nx">sbin</span><span class="p">.</span><span class="nx">mysqld</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">apparmor</span><span class="p">.</span><span class="nx">d</span><span class="o">/</span><span class="nx">disable</span>
 </pre></div>
 
 </code></pre><p>Below are shell scripts to move MySql data to /dev/shm and back, restore backed up data and check db state.</p>
 <h2 id="move-db-to-memory-script">Move db to memory script</h2>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
-<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
-<span class="nx">then</span>
-    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="nx">fi</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#!/bin/sh</span>
+    <span class="c">#Check if run as root</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="sb">`</span>whoami<span class="sb">`</span> !<span class="o">=</span> root <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
 
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
-<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup ]</span>
-<span class="nx">then</span>
-    <span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql /var/lib/mysql.backup</span>
-<span class="nx">fi</span>
-<span class="nx">mv</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql /dev/shm/mysql</span>
-<span class="nx">chown</span> <span class="o">-</span><span class="nx">R</span> <span class="nx">mysql</span><span class="o">:</span><span class="nx">mysql</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span>
-<span class="nx">ln</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
-<span class="nx">chown</span> <span class="o">-</span><span class="nx">h</span> <span class="nx">mysql</span><span class="o">:</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+    service mysql stop
+    <span class="k">if</span> <span class="o">[</span> ! -s /var/lib/mysql.backup <span class="o">]</span>
+    <span class="k">then</span>
+        cp -pRL /var/lib/mysql /var/lib/mysql.backup
+    <span class="k">fi</span>
+    mv /var/lib/mysql /dev/shm/mysql
+    chown -R mysql:mysql /dev/shm/mysql
+    ln -s /dev/shm/mysql /var/lib/mysql
+    chown -h mysql:mysql /var/lib/mysql
+    service mysql start
 </pre></div>
 
-</code></pre><h2 id="move-db-to-disk-script">Move db to disk script</h2>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
-<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
-<span class="nx">then</span>
-    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="nx">fi</span>
+</code></pre>
+<h2 id="move-db-to-disk-script">Move db to disk script</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#!/bin/sh</span>
+    <span class="c">#Check if run as root</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="sb">`</span>whoami<span class="sb">`</span> !<span class="o">=</span> root <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
 
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
-<span class="nx">rm</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
-<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="p">]</span>
-<span class="nx">then</span>
-    <span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup /var/lib/mysql</span>
-<span class="k">else</span>
-    <span class="nx">mv</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
-<span class="nx">fi</span>
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+    service mysql stop
+    rm /var/lib/mysql
+    <span class="k">if</span> <span class="o">[</span> ! -s /dev/shm/mysql <span class="o">]</span>
+    <span class="k">then</span>
+        cp -pRL /var/lib/mysql.backup /var/lib/mysql
+    <span class="k">else</span>
+        mv /dev/shm/mysql /var/lib/mysql
+    <span class="k">fi</span>
+    service mysql start
 </pre></div>
 
-</code></pre><h2 id="restore-db-backup-script">Restore db backup script</h2>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
-<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
-<span class="nx">then</span>
-    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="nx">fi</span>
+</code></pre>
+<h2 id="restore-db-backup-script">Restore db backup script</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#!/bin/sh</span>
+    <span class="c">#Check if run as root</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="sb">`</span>whoami<span class="sb">`</span> !<span class="o">=</span> root <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
 
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">stop</span>
-<span class="k">if</span> <span class="p">[</span> <span class="o">!</span> <span class="o">-</span><span class="nx">s</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup ]</span>
-<span class="nx">then</span>
-    <span class="nx">exit</span> <span class="o">-</span><span class="mi">1</span>
-<span class="nx">fi</span>
-<span class="nx">rm</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql</span>
-<span class="nx">cp</span> <span class="o">-</span><span class="nx">pRL</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql.backup /var/lib/mysql</span>
-<span class="nx">rm</span> <span class="o">-</span><span class="nx">rf</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">shm</span><span class="o">/</span><span class="nx">mysql</span>
-<span class="nx">service</span> <span class="nx">mysql</span> <span class="nx">start</span>
+    service mysql stop
+    <span class="k">if</span> <span class="o">[</span> ! -s /var/lib/mysql.backup <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">exit</span> -1
+    <span class="k">fi</span>
+    rm /var/lib/mysql
+    cp -pRL /var/lib/mysql.backup /var/lib/mysql
+    rm -rf /dev/shm/mysql
+    service mysql start
 </pre></div>
 
-</code></pre><h2 id="check-db-state-script">Check db state script</h2>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
-<span class="err">#</span><span class="nx">Check</span> <span class="k">if</span> <span class="nx">run</span> <span class="nx">as</span> <span class="nx">root</span>
-<span class="k">if</span> <span class="p">[</span> <span class="err">`</span><span class="nx">whoami</span><span class="err">`</span> <span class="o">!=</span> <span class="nx">root</span> <span class="p">]</span>
-<span class="nx">then</span>
-    <span class="nx">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="nx">fi</span>
+</code></pre>
+<h2 id="check-db-state-script">Check db state script</h2>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#!/bin/sh</span>
+    <span class="c">#Check if run as root</span>
+    <span class="k">if</span> <span class="o">[</span> <span class="sb">`</span>whoami<span class="sb">`</span> !<span class="o">=</span> root <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;You must be root to do that!&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
 
-<span class="k">if</span> <span class="p">[</span> <span class="o">-</span><span class="nx">L</span> <span class="o">/</span><span class="kd">var</span><span class="err">/lib/mysql ]</span>
-<span class="nx">then</span>
-    <span class="nx">echo</span> <span class="s2">&quot;Mem db&quot;</span>
-    <span class="nx">exit</span> <span class="mi">0</span>
-<span class="k">else</span>
-    <span class="nx">echo</span> <span class="s2">&quot;File db&quot;</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="nx">fi</span>
+    <span class="k">if</span> <span class="o">[</span> -L /var/lib/mysql <span class="o">]</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Mem db&quot;</span>
+        <span class="nb">exit </span>0
+    <span class="k">else</span>
+        <span class="nb">echo</span> <span class="s2">&quot;File db&quot;</span>
+        <span class="nb">exit </span>1
+    <span class="k">fi</span>
 </pre></div>
 
-</code></pre><h2 id="links">Links</h2>
+</code></pre>
+<h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/9500032/unit-test-application-including-database-is-too-slow">Unit test application including database is too slow</a></p>
 <p><a href="http://stackoverflow.com/questions/4894850/force-an-entire-mysql-database-to-be-in-memory">Force an entire MySQL database to be in memory</a></p>
 <p><a href="http://stackoverflow.com/questions/3096148/how-to-run-djangos-test-database-only-in-memory">How to run django&#39;s test database only in memory?</a></p>

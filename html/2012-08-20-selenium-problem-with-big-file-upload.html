@@ -22,29 +22,31 @@
       <div class="row"><h1 id="selenium-problem-with-big-file-upload">selenium - problem with big file upload</h1>
 <h2 id="problem">Problem</h2>
 <p>Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.</p>
+<p><!-- more --></p>
 <h2 id="solution">Solution</h2>
 <p>For now I fixed this by commenting out local file upload (three first lines):</p>
-<pre><code><div class="highlight"><pre><span class="nx">def</span> <span class="nx">send_keys</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="o">*</span><span class="nx">value</span><span class="p">)</span><span class="o">:</span>
-        <span class="s2">&quot;&quot;&quot;Simulates typing into the element.&quot;&quot;&quot;</span>
-        <span class="err">#</span><span class="nx">local_file</span> <span class="o">=</span> <span class="nx">LocalFileDetector</span><span class="p">.</span><span class="nx">is_local_file</span><span class="p">(</span><span class="o">*</span><span class="nx">value</span><span class="p">)</span>
-        <span class="err">#</span><span class="k">if</span> <span class="nx">local_file</span> <span class="nx">is</span> <span class="nx">not</span> <span class="nx">None</span><span class="o">:</span>
-            <span class="err">#</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">_upload</span><span class="p">(</span><span class="nx">local_file</span><span class="p">)</span>
+<pre><code class="lang-python"><div class="highlight"><pre>    <span class="k">def</span> <span class="nf">send_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">value</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Simulates typing into the element.&quot;&quot;&quot;</span>
+            <span class="c">#local_file = LocalFileDetector.is_local_file(*value)</span>
+            <span class="c">#if local_file is not None:</span>
+                <span class="c">#value = self._upload(local_file)</span>
 
-        <span class="nx">typing</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="nx">val</span> <span class="k">in</span> <span class="nx">value</span><span class="o">:</span>
-            <span class="k">if</span> <span class="nx">isinstance</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">Keys</span><span class="p">)</span><span class="o">:</span>
-                <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
-            <span class="nx">elif</span> <span class="nx">isinstance</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="kr">int</span><span class="p">)</span><span class="o">:</span>
-                <span class="nx">val</span> <span class="o">=</span> <span class="nx">str</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span>
-                <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">range</span><span class="p">(</span><span class="nx">len</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="o">:</span>
-                    <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
-            <span class="k">else</span><span class="o">:</span>
-                <span class="k">for</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">range</span><span class="p">(</span><span class="nx">len</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span><span class="o">:</span>
-                    <span class="nx">typing</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">val</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">_execute</span><span class="p">(</span><span class="nx">Command</span><span class="p">.</span><span class="nx">SEND_KEYS_TO_ELEMENT</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="o">:</span> <span class="nx">typing</span><span class="p">})</span>
+            <span class="n">typing</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">Keys</span><span class="p">):</span>
+                    <span class="n">typing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)):</span>
+                        <span class="n">typing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)):</span>
+                        <span class="n">typing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">SEND_KEYS_TO_ELEMENT</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;value&#39;</span><span class="p">:</span> <span class="n">typing</span><span class="p">})</span>
 </pre></div>
 
-</code></pre><p>Usually I do not change external libraries code, but in this case it is easiest way and it should not be necessary (I hope) after next selenium library update.</p>
+</code></pre>
+<p>Usually I do not change external libraries code, but in this case it is easiest way and it should not be necessary (I hope) after next selenium library update.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://code.google.com/p/selenium/issues/detail?id=3812">Bug report</a></p>
 </div>

@@ -35,123 +35,131 @@ Here is how this problem can be fixed:</p>
 <li>Change paths in configs to relative</li>
 </ol>
 <p>Below are details for each step.</p>
+<p><!-- more --></p>
 <h2 id="add-eb-tools-under-git-control">Add eb tools under git control</h2>
 <p>This is necessary because we want all users to have the same tools version.
 Also we are going to make some changes to eb sources to make it understand relative paths.</p>
 <p>Just download <a href="http://aws.amazon.com/code/6752709412171743">eb tools</a> and extract somewhere inside your project.
 Or copy existing version into the project.</p>
 <p>Add a wrapper script to run the original eb tool:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/sh</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#!/bin/sh</span>
 
-<span class="err">#</span> <span class="nx">Run</span> <span class="nx">the</span> <span class="nx">eb</span> <span class="nx">tool</span> <span class="nx">from</span> <span class="nx">the</span> <span class="nx">root</span> <span class="nx">project</span> <span class="nx">directory</span> <span class="nx">as</span>
-<span class="err">#</span> <span class="nx">console</span><span class="o">/</span><span class="nx">eb</span> <span class="p">{</span><span class="nx">parameters</span><span class="p">}</span>
-<span class="err">#</span> <span class="nx">Use</span> <span class="nx">linux</span> <span class="nx">python2</span><span class="p">.</span><span class="mi">7</span> <span class="nx">version</span>
+    <span class="c"># Run the eb tool from the root project directory as</span>
+    <span class="c"># console/eb {parameters}</span>
+    <span class="c"># Use linux python2.7 version</span>
 
-<span class="nx">SCRIPT_PATH</span><span class="o">=</span><span class="err">`</span><span class="nx">dirname</span> <span class="nx">$0</span><span class="err">`</span>
+    <span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
 
-<span class="kr">export</span> <span class="nx">PATH</span><span class="o">=</span><span class="nx">$PATH</span><span class="o">:</span><span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">AWS</span><span class="o">-</span><span class="nx">ElasticBeanstalk</span><span class="o">-</span><span class="nx">CLI</span><span class="o">-</span><span class="mf">2.5</span><span class="p">.</span><span class="mi">1</span><span class="o">/</span><span class="nx">eb</span><span class="o">/</span><span class="nx">linux</span><span class="o">/</span><span class="nx">python2</span><span class="p">.</span><span class="mi">7</span>
-<span class="nx">eb</span> <span class="s2">&quot;$@&quot;</span>
+    <span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:<span class="nv">$SCRIPT_PATH</span>/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
+    eb <span class="s2">&quot;$@&quot;</span>
 </pre></div>
 
-</code></pre><p>Script should be on the same lever as the extracted directory.
+</code></pre>
+<p>Script should be on the same lever as the extracted directory.
 For example I have:</p>
-<pre><code><div class="highlight"><pre><span class="nx">project_root</span><span class="o">/</span>
-<span class="o">|</span> <span class="p">.</span><span class="nx">ebextensions</span><span class="o">/</span>
-<span class="o">|</span> <span class="p">.</span><span class="nx">elasticbeanstalk</span><span class="o">/</span>
-<span class="o">|</span> <span class="p">.</span><span class="nx">git</span><span class="o">/</span>
-<span class="o">|</span> <span class="nx">application</span><span class="o">/</span>
-<span class="o">|</span> <span class="nx">console</span><span class="o">/</span>
-<span class="o">|</span> <span class="o">|</span> <span class="nx">AWS</span><span class="o">-</span><span class="nx">ElasticBeanstalk</span><span class="o">-</span><span class="nx">CLI</span><span class="o">-</span><span class="mf">2.5</span><span class="p">.</span><span class="mi">1</span><span class="o">/</span>
-<span class="o">|</span> <span class="o">|</span> <span class="nx">eb</span><span class="o">*</span>
-<span class="o">|</span> <span class="o">|</span> <span class="p">...</span>
-<span class="o">|</span> <span class="p">...</span>
-<span class="o">|</span> <span class="p">.</span><span class="nx">gitignore</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    project_root/
+    <span class="p">|</span> .ebextensions/
+    <span class="p">|</span> .elasticbeanstalk/
+    <span class="p">|</span> .git/
+    <span class="p">|</span> application/
+    <span class="p">|</span> console/
+    <span class="p">|</span> <span class="p">|</span> AWS-ElasticBeanstalk-CLI-2.5.1/
+    <span class="p">|</span> <span class="p">|</span> eb*
+    <span class="p">|</span> <span class="p">|</span> ...
+    <span class="p">|</span> ...
+    <span class="p">|</span> .gitignore
 </pre></div>
 
-</code></pre><p>So I launch the &#39;eb&#39; as &#39;console/eb parameters&#39; from the project root directory.</p>
+</code></pre>
+<p>So I launch the &#39;eb&#39; as &#39;console/eb parameters&#39; from the project root directory.</p>
 <h2 id="add-eb-configs-under-git-control">Add eb configs under git control</h2>
 <p>Add the EB configs under git control:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">add</span> <span class="o">-</span><span class="nx">f</span> <span class="p">.</span><span class="nx">elasticbeanstalk</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git add -f .elasticbeanstalk
 </pre></div>
 
-</code></pre><h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
+</code></pre>
+<h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
 <p>For the 2.5.1 version I had to make two changes in the config file parser class.</p>
 <p>The file path is .../AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utility/configfile_parser.py.</p>
 <p>And the changes are:</p>
-<pre><code><div class="highlight"><pre><span class="p">[</span><span class="nx">Lines</span> <span class="mi">41</span> <span class="o">-</span> <span class="mi">47</span><span class="p">]</span>
-<span class="nx">def</span> <span class="nx">read</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">pathfilename</span><span class="p">)</span><span class="o">:</span>
-    <span class="err">#</span><span class="nx">seb</span><span class="o">:</span> <span class="nx">expand</span> <span class="nx">path</span> <span class="nx">to</span> <span class="nx">allow</span> <span class="nx">using</span> <span class="nx">homedir</span> <span class="nx">and</span> <span class="nx">relative</span> <span class="nx">paths</span>
-    <span class="nx">pathfilename</span> <span class="o">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">realpath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">expanduser</span><span class="p">(</span><span class="nx">pathfilename</span><span class="p">))</span>
-    <span class="nx">print</span> <span class="s1">&#39;Load sectioned config file: &#39;</span> <span class="o">+</span> <span class="nx">pathfilename</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="o">[</span>Lines <span class="m">41</span> - 47<span class="o">]</span>
+    def <span class="nb">read</span><span class="o">(</span>self, pathfilename<span class="o">)</span>:
+        <span class="c">#seb: expand path to allow using homedir and relative paths</span>
+        <span class="nv">pathfilename</span> <span class="o">=</span> os.path.realpath<span class="o">(</span>os.path.expanduser<span class="o">(</span>pathfilename<span class="o">))</span>
+        print <span class="s1">&#39;Load sectioned config file: &#39;</span> + pathfilename
 
-    <span class="kd">with</span> <span class="nx">codecs</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">pathfilename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nx">encoding</span><span class="o">=</span><span class="nx">ServiceDefault</span><span class="p">.</span><span class="nx">CHAR_CODEC</span><span class="p">)</span> <span class="nx">as</span> <span class="nx">input_file</span><span class="o">:</span>
-        <span class="nx">_RawConfigParser</span><span class="p">.</span><span class="nx">readfp</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">input_file</span><span class="p">)</span>
+        with codecs.open<span class="o">(</span>pathfilename, <span class="s1">&#39;r&#39;</span>, <span class="nv">encoding</span><span class="o">=</span>ServiceDefault.CHAR_CODEC<span class="o">)</span> as input_file:
+            _RawConfigParser.readfp<span class="o">(</span>self, input_file<span class="o">)</span>
 
-<span class="p">[</span><span class="nx">Lines</span> <span class="mi">74</span> <span class="o">-</span> <span class="mi">80</span><span class="p">]</span>
-<span class="nx">def</span> <span class="nx">read</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">pathfilename</span><span class="p">)</span><span class="o">:</span>
-    <span class="err">#</span><span class="nx">seb</span><span class="o">:</span> <span class="nx">expand</span> <span class="nx">path</span> <span class="nx">to</span> <span class="nx">allow</span> <span class="nx">using</span> <span class="nx">homedir</span> <span class="nx">and</span> <span class="nx">relative</span> <span class="nx">paths</span>
-    <span class="nx">pathfilename</span> <span class="o">=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">realpath</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">expanduser</span><span class="p">(</span><span class="nx">pathfilename</span><span class="p">))</span>
-    <span class="nx">print</span> <span class="s1">&#39;Load config file: &#39;</span> <span class="o">+</span> <span class="nx">pathfilename</span>
+    <span class="o">[</span>Lines <span class="m">74</span> - 80<span class="o">]</span>
+    def <span class="nb">read</span><span class="o">(</span>self, pathfilename<span class="o">)</span>:
+        <span class="c">#seb: expand path to allow using homedir and relative paths</span>
+        <span class="nv">pathfilename</span> <span class="o">=</span> os.path.realpath<span class="o">(</span>os.path.expanduser<span class="o">(</span>pathfilename<span class="o">))</span>
+        print <span class="s1">&#39;Load config file: &#39;</span> + pathfilename
 
-    <span class="kd">with</span> <span class="nx">codecs</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="nx">pathfilename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="nx">encoding</span><span class="o">=</span><span class="nx">ServiceDefault</span><span class="p">.</span><span class="nx">CHAR_CODEC</span><span class="p">)</span> <span class="nx">as</span> <span class="nx">input_file</span><span class="o">:</span>
-        <span class="nx">config_pairs</span> <span class="o">=</span> <span class="nx">input_file</span><span class="p">.</span><span class="nx">read</span><span class="p">()</span>
+        with codecs.open<span class="o">(</span>pathfilename, <span class="s1">&#39;r&#39;</span>, <span class="nv">encoding</span><span class="o">=</span>ServiceDefault.CHAR_CODEC<span class="o">)</span> as input_file:
+            <span class="nv">config_pairs</span> <span class="o">=</span> input_file.read<span class="o">()</span>
 </pre></div>
 
-</code></pre><p>Now you can use relative to project root paths in your configs.</p>
+</code></pre>
+<p>Now you can use relative to project root paths in your configs.</p>
 <h2 id="change-paths-in-configs-to-relative">Change paths in configs to relative</h2>
 <p>I had three absolute paths in my ./elasticbeanstalk/config:</p>
-<pre><code><div class="highlight"><pre><span class="p">[</span><span class="nx">global</span><span class="p">]</span>
-<span class="p">..</span>
-<span class="nx">AwsCredentialFile</span><span class="o">=</span><span class="err">/home/username/.elasticbeanstalk/aws_credential_file</span>
-<span class="p">..</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="o">[</span>global<span class="o">]</span>
+    ..
+    <span class="nv">AwsCredentialFile</span><span class="o">=</span>/home/username/.elasticbeanstalk/aws_credential_file
+    ..
 
-<span class="p">[</span><span class="nx">branches</span><span class="p">]</span>
-<span class="nx">staging</span><span class="o">=</span><span class="nx">staging</span>
-<span class="nx">production</span><span class="o">=</span><span class="nx">production</span>
+    <span class="o">[</span>branches<span class="o">]</span>
+    <span class="nv">staging</span><span class="o">=</span>staging
+    <span class="nv">production</span><span class="o">=</span>production
 
-<span class="p">[</span><span class="nx">branch</span><span class="o">:</span><span class="nx">staging</span><span class="p">]</span>
-<span class="nx">OptionSettingFile</span><span class="o">=</span><span class="err">/path/to/project/.elasticbeanstalk/optionsettings.staging</span>
-<span class="p">...</span>
+    <span class="o">[</span>branch:staging<span class="o">]</span>
+    <span class="nv">OptionSettingFile</span><span class="o">=</span>/path/to/project/.elasticbeanstalk/optionsettings.staging
+    ...
 
-<span class="p">[</span><span class="nx">branch</span><span class="o">:</span><span class="nx">production</span><span class="p">]</span>
-<span class="nx">OptionSettingFile</span><span class="o">=</span><span class="err">/path/to/project/.elasticbeanstalk/optionsettings.production</span>
-<span class="p">..</span>
+    <span class="o">[</span>branch:production<span class="o">]</span>
+    <span class="nv">OptionSettingFile</span><span class="o">=</span>/path/to/project/.elasticbeanstalk/optionsettings.production
+    ..
 </pre></div>
 
-</code></pre><p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
+</code></pre>
+<p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
 config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).</p>
 <p>Other two paths (for branch configs) can now be changed to relative:</p>
-<pre><code><div class="highlight"><pre><span class="p">[</span><span class="nx">global</span><span class="p">]</span>
-<span class="err">#</span> <span class="nx">Default</span> <span class="nx">credential</span> <span class="nx">file</span> <span class="nx">path</span> <span class="p">(</span><span class="nx">recognized</span> <span class="nx">by</span> <span class="nx">both</span> <span class="nx">eb</span> <span class="nx">tool</span> <span class="nx">and</span> <span class="nx">git</span> <span class="nx">aws</span><span class="p">.</span><span class="nx">push</span> <span class="nx">tool</span><span class="p">)</span>
-<span class="err">#</span> <span class="nx">AwsCredentialFile</span><span class="o">=~</span><span class="err">/.elasticbeanstalk/aws_credential_file</span>
-<span class="p">...</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="o">[</span>global<span class="o">]</span>
+    <span class="c"># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
+    <span class="c"># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
+    ...
 
-<span class="p">[</span><span class="nx">branches</span><span class="p">]</span>
-<span class="nx">staging</span><span class="o">=</span><span class="nx">staging</span>
-<span class="nx">production</span><span class="o">=</span><span class="nx">production</span>
+    <span class="o">[</span>branches<span class="o">]</span>
+    <span class="nv">staging</span><span class="o">=</span>staging
+    <span class="nv">production</span><span class="o">=</span>production
 
-<span class="p">[</span><span class="nx">branch</span><span class="o">:</span><span class="nx">staging</span><span class="p">]</span>
-<span class="nx">OptionSettingFile</span><span class="o">=</span><span class="p">.</span><span class="o">/</span><span class="p">.</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">optionsettings</span><span class="p">.</span><span class="nx">staging</span>
-<span class="p">...</span>
+    <span class="o">[</span>branch:staging<span class="o">]</span>
+    <span class="nv">OptionSettingFile</span><span class="o">=</span>./.elasticbeanstalk/optionsettings.staging
+    ...
 
-<span class="p">[</span><span class="nx">branch</span><span class="o">:</span><span class="nx">production</span><span class="p">]</span>
-<span class="nx">OptionSettingFile</span><span class="o">=</span><span class="p">.</span><span class="o">/</span><span class="p">.</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">optionsettings</span><span class="p">.</span><span class="nx">production</span>
-<span class="p">...</span>
+    <span class="o">[</span>branch:production<span class="o">]</span>
+    <span class="nv">OptionSettingFile</span><span class="o">=</span>./.elasticbeanstalk/optionsettings.production
+    ...
 </pre></div>
 
-</code></pre><h2 id="use-it">Use it</h2>
+</code></pre>
+<h2 id="use-it">Use it</h2>
 <p>Make sure you are using the &#39;eb&#39; wrapper script from the root project directory.
 For example, for &#39;eb status&#39;:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">cd</span> <span class="nx">project</span><span class="o">/</span><span class="nx">root</span><span class="o">/</span><span class="nx">dir</span>
-<span class="nx">$</span> <span class="p">.</span><span class="o">/</span><span class="nx">path</span><span class="o">/</span><span class="nx">to</span><span class="o">/</span><span class="nx">eb</span> <span class="nx">status</span>
-<span class="nx">Load</span> <span class="nx">sectioned</span> <span class="nx">config</span> <span class="nx">file</span><span class="o">:</span> <span class="nx">project</span><span class="o">/</span><span class="nx">root</span><span class="o">/</span><span class="nx">dir</span><span class="o">/</span><span class="p">.</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">config</span>
-<span class="nx">Load</span> <span class="nx">config</span> <span class="nx">file</span><span class="o">:</span> <span class="err">/home/user/.elasticbeanstalk/aws_credential_file</span>
-<span class="nx">URL</span>    <span class="o">:</span> <span class="nx">staging</span><span class="o">-</span><span class="nx">jp48gay9nx</span><span class="p">.</span><span class="nx">elasticbeanstalk</span><span class="p">.</span><span class="nx">com</span>
-<span class="nx">Status</span>    <span class="o">:</span> <span class="nx">Ready</span>
-<span class="nx">Health</span>    <span class="o">:</span> <span class="nx">Green</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span><span class="nb">cd </span>project/root/dir
+    <span class="nv">$ </span>./path/to/eb status
+    Load sectioned config file: project/root/dir/.elasticbeanstalk/config
+    Load config file: /home/user/.elasticbeanstalk/aws_credential_file
+    URL    : staging-jp48gay9nx.elasticbeanstalk.com
+    Status    : Ready
+    Health    : Green
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+</div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

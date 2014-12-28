@@ -1,3 +1,7 @@
+---
+date: 2012-09-30
+tags: git
+---
 git - Your branch is ahead of 'origin/master' by 1 commit after pull
 ===========================================
 
@@ -10,9 +14,10 @@ The sequence:
 * Change is received and merged
 * git status shows “Your branch is ahead of 'origin/master' by 1 commit.”
 
-The reason is because during “pull origin master” reference to the remote 
+The reason is because during “pull origin master” reference to the remote
 origin/master is not changed (still points to older version).
 
+<!-- more -->
 To check this:
 
     git diff origin/master

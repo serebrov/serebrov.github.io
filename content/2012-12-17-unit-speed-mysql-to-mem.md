@@ -1,3 +1,7 @@
+---
+date: 2012-04-03
+tags: mysql
+---
 Speedup unit tests by moving MySql data to memory [Ubuntu]
 ============================================
 
@@ -7,6 +11,7 @@ There are several ways to speedup slow unit tests which interact with database:
  * Use MySql MEMORY engine
  * Move MySql data to memory
 
+<!-- more -->
 It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
  * stop mysql
  * move /var/lib/mysql to /dev/shm/mysql
@@ -16,8 +21,10 @@ It is better to try other listed approaches and I think of last method as of qui
 In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.
 To fix this it is recommended to add following to the `/etc/apparmor.d/usr.sbin.mysqld`:
 
+```bash
     /dev/shm/mysql/ r,
     /dev/shm/mysql/** rwk,
+```
 
 But it doesn't work for me and I disabled apparmor for mysql (not recommended):
 
@@ -28,6 +35,7 @@ Below are shell scripts to move MySql data to /dev/shm and back, restore backed 
 Move db to memory script
 --------------------------------------------
 
+```bash
     #!/bin/sh
     #Check if run as root
     if [ `whoami` != root ]
@@ -46,11 +54,12 @@ Move db to memory script
     ln -s /dev/shm/mysql /var/lib/mysql
     chown -h mysql:mysql /var/lib/mysql
     service mysql start
-
+```
 
 Move db to disk script
 --------------------------------------------
 
+```bash
     #!/bin/sh
     #Check if run as root
     if [ `whoami` != root ]
@@ -68,11 +77,13 @@ Move db to disk script
         mv /dev/shm/mysql /var/lib/mysql
     fi
     service mysql start
+```
 
 
 Restore db backup script
 --------------------------------------------
 
+```bash
     #!/bin/sh
     #Check if run as root
     if [ `whoami` != root ]
@@ -90,10 +101,12 @@ Restore db backup script
     cp -pRL /var/lib/mysql.backup /var/lib/mysql
     rm -rf /dev/shm/mysql
     service mysql start
+```
 
 Check db state script
 --------------------------------------------
 
+```bash
     #!/bin/sh
     #Check if run as root
     if [ `whoami` != root ]
@@ -110,6 +123,7 @@ Check db state script
         echo "File db"
         exit 1
     fi
+```
 
 
 Links

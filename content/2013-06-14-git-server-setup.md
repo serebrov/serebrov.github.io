@@ -1,3 +1,7 @@
+---
+date: 2013-06-14
+tags: git
+---
 How to setup git server on ubuntu with push email notifications
 ============================================
 
@@ -8,37 +12,49 @@ Prerequisites are git and ssh-server (apt-get install openssh-server).
 The installation process is described in [the Pro Git book](http://git-scm.com/book/en/Git-on-the-Server-Setting-Up-the-Server).
 Below is the setup process with some comments and updates.
 
+<!-- more -->
 Add git user, set some password (you will be asked for it):
 
+```bash
     $ sudo adduser git
+```
 
 Log in as git user and setup authorized ssh keys:
 
+```bash
     $ su git
     git@localname$ cd ~
     git@localname$ mkdir .ssh
+```
 
 For each user who need an access to the server add user's public key into ~/.ssh/authorized_keys
 to generate new key-pair for the user use ssh-keygen see [github manual](https://help.github.com/articles/generating-ssh-keys) for details.
 
+```bash
     git@localname$ cat /home/usera/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
     git@localname$ cat /home/userb/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+```
 
 Change permissions for .ssh folder and authorized_keys file:
 
+```bash
     git@localname$ chmod 600 ~/.ssh/authorized_keys
     git@localname$ chmod 755 ~/.ssh
+```
 
 Make a dir for repositories and init bare repositories:
 
+```bash
     git@localname$ mkdir ~/server
     git@localname$ cd server
     git@localname$ mkdir project.git
     git@localname$ cd project.git
     git@localname$ git --bare init
+```
 
 Sequrity - set git-shell for the git user:
 
+```bash
     # check where git-shell is
     $ which git-shell
     /usr/bin/git-shell
@@ -50,15 +66,18 @@ Sequrity - set git-shell for the git user:
         git:x:1000:1000::/home/git:/bin/sh
     # change shell for git user:
         git:x:1000:1000::/home/git:/usr/bin/git-shell
+```
 
 On the user side - clone the repository or add a remote to existing repository:
 
+```bash
     # clone
     $ git clone ssh://git@server.host.name/home/git/server/project.git
 
     # or add remote
     $ cd project
     $ git remote add origin ssh://git@server.host.name/home/git/server/project.git
+```
 
 For 'server.host.name' there are several options:
 * if the server has a domain name then just use it
@@ -81,9 +100,11 @@ See:
 Check auth log (/var/log/auth.log) for errors.
 In my case there were errors related to git user's .ssh and authorized_keys permissions:
 
+```bash
     Aug 15 15:25:24 seb-ubu sshd[4561]: Authentication refused: bad ownership or modes for file /home/git/.ssh/authorized_keys
     ...
     Aug 15 15:47:48 seb-ubu sshd[7145]: Authentication refused: bad ownership or modes for directory /home/git/.ssh
+```
 
 Changing access permissions as described above fixed the issue.
 
@@ -92,10 +113,12 @@ Changing access permissions as described above fixed the issue.
 If you already have a repository and want to put it on the server then it seems to be safe to just
 copy the .git folder from the existing repository:
 
+```bash
     # source: project/.git
     $ cp -r project/.git project.git
     $ cd project.git
     $ git config --bool core.bare true
+```
 
 Git Server - email notifications on push
 --------------------------------------------
@@ -103,12 +126,15 @@ Git Server - email notifications on push
 Git already has a script to handle email notifications after push.
 Check the /usr/share/doc/git/contrib/hooks/post-receive-email for instructions:
 
+```bash
     $ sudo chmod a+x /usr/share/git-core/contrib/hooks/post-receive-email
     $ cd /path/to/your/repository.git
     $ ln -sf /usr/share/git-core/contrib/hooks/post-receive-email hooks/post-receive
+```
 
 Configure notifications:
 
+```bash
     $ cd /path/to/your/repository.git
 
     # who should receive notifications
@@ -122,6 +148,7 @@ Configure notifications:
 
     # project name - edit 'description' file in the git repository folder
     $ vim description
+```
 
 The post-receive-email script requires sendmail to work.
 Below is a description of the sendmail setup process.
@@ -130,19 +157,25 @@ Setup sendmail on Ubuntu
 --------------------------------------------
 
 Install it:
+```bash
     $ sudo apt-get install sendmail
+```
 
 Check your hosts file - in my case sendmail was incredibly slow and this was fixed by following
 line in /etc/hosts:
 
+```bash
     127.0.0.1 localhost.localdomain localhost myhostname <--- order matters!!!
+```
 
 Note that you need to use the same order as above - localhost.localdomain, localhost and then
 myhostname (replace myhostname with your real host name, check the output of 'hostname' command).
 
 Send a test email:
 
+```bash
     $ echo "My test email being sent from sendmail" | /usr/sbin/sendmail myemail@domain.com
+```
 
 If you have problems with emails then check the log: /var/log/mail.log and error log: /var/log/mail.err.
 
@@ -150,14 +183,18 @@ If you have problems with emails then check the log: /var/log/mail.log and error
 
 If you want to setup SMTP server for you emails do the following:
 
+```bash
     $ cd /etc/mail
     $ sudo mkdir auth
     $ sudo chmod 700 auth
     $ sudo vim client-info
+```
 
 Enter following line into the client-info file:
 
+```bash
     AuthInfo:smtp.server.com "U:mymail@server.com" "I:mymail@server.com" "P:mypassword"
+```
 
 Here you put you smtp server name (instead of 'smtp.server.com') and your credentials.
 'U' is an smtp user (usually your email), 'I' is an account (usually also your email) and 'P' is a password.
@@ -165,21 +202,29 @@ See details for parameters [here](http://www.scalix.com/wiki/index.php?title=Con
 
 Continue setup:
 
+```bash
     $ sudo bash -c "makemap hash client-info < client-info"
+```
 
 Edit the /etc/mail/sendmail.mc and add following lines before the "MAILER_DEFINITIONS" line:
 
+```bash
     define('SMART_HOST','smtp.server.com')dnl
     define('confAUTH_MECHANISMS', 'EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl
     FEATURE('authinfo','hash /etc/mail/auth/client-info')dnl
+```
 
 Process the sendmail.mc with m4:
 
+```bash
     $ sudo bash -c "m4 sendmail.mc > sendmail.cf"
+```
 
 Restart sendmail:
 
+```bash
     $ sudo service sendmail restart
+```
 
 Resources:
 

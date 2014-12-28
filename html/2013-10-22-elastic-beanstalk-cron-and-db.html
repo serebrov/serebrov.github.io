@@ -20,6 +20,8 @@
   <body>
     <div class="container">
       <div class="row"><h1 id="elastic-beanstalk-cron-command-and-rds-db-access">Elastic Beanstalk - cron command and RDS DB access</h1>
+<!-- more -->
+
 <h2 id="problem">Problem</h2>
 <p>I have a console command in php which needs an access to DB.
 The command need to be launched via cron.</p>
@@ -32,10 +34,11 @@ The command need to be launched via cron.</p>
 So the command fails to access the database.</p>
 <h2 id="solution">Solution</h2>
 <p>Solution is to set the required environment variables before launching the command and this can be done with &#39;/opt/elasticbeanstal/support/envvars&#39; script:</p>
-<pre><code><div class="highlight"><pre><span class="mi">0</span> <span class="mi">3</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span> <span class="p">.</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">support</span><span class="o">/</span><span class="nx">envvars</span><span class="p">;</span> <span class="err">/var/www/html/console/yiic mycommand</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="m">0</span> <span class="m">3</span> * * * . /opt/elasticbeanstalk/support/envvars<span class="p">;</span> /var/www/html/console/yiic mycommand
 </pre></div>
 
-</code></pre></div>
+</code></pre>
+</div>
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

@@ -1,3 +1,7 @@
+---
+date: 2012-04-03
+tags: php
+---
 PHP - friend a class via extend
 ============================================
 
@@ -5,10 +9,12 @@ C++ allows to declare one class as a friend of another one.
 
 This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.
 
+<!-- more -->
 For example this can be used in [State pattern](http://sourcemaking.com/design_patterns/state) to keep `setState` method of context class protected.
 
 To emulate this in PHP we can inherit state class from context class:
 
+```php
     class AContext {
         private $_state;
 
@@ -48,4 +54,4 @@ To emulate this in PHP we can inherit state class from context class:
     class AnotherState extends AState {
         ...
     }
-
+```

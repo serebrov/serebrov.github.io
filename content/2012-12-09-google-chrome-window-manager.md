@@ -1,8 +1,13 @@
+---
+date: 2012-12-09
+tags: chrome
+---
 Window managers for Google Chrome
 ============================================
 
 A list of extensions to manage position of chrome tabs / windows and to create splits.
 Descriptions are original texts from extension pages.
+<!-- more -->
 
 [Tabs Outliner](https://chrome.google.com/webstore/detail/tabs-outliner/eggkanocgddhmamlbiijnphhppkpkmkl)
 --------------------------------------------

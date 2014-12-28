@@ -1,10 +1,16 @@
+---
+date: 2012-03-28
+tags: yii
+---
  yii - catch and log MySQL deadlock errors
 ===========================================
 
 This method allows to log InnoDB monitor output when deadlock error occured.
 This way we will have much more useful data to find and fix deadlock.
+<!-- more -->
 Extend error handler class:
 
+```php
     class AppErrorHandler extends CErrorHandler {
         protected function handleException($exception) {
             /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:
@@ -13,7 +19,7 @@ Extend error handler class:
             * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1)
             */
             //can we check $exception->getCode() ?
-            if ($exception instanceof CDbException 
+            if ($exception instanceof CDbException
                 && strpos($exception->getMessage(), 'Deadlock') !== false
             ) {
                 $data = Yii::app()->db->createCommand('SHOW ENGINE INNODB STATUS')->query();
@@ -25,9 +31,11 @@ Extend error handler class:
             return parent::handleException($exception);
         }
     }
+```
 
 Put it in `application/protected/components` and set in the `config/main.php`:
 
+```php
     return array(
         ...
         'components' => array(
@@ -37,6 +45,7 @@ Put it in `application/protected/components` and set in the `config/main.php`:
         ),
         ...
     );
+```
 
 Links
 ------------------------

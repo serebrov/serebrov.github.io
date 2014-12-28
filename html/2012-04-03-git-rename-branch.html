@@ -20,17 +20,20 @@
   <body>
     <div class="container">
       <div class="row"><h1 id="-git-rename-branch-local-and-remote-"> git - rename branch (local and remote)</h1>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="nx">rename</span> <span class="nx">local</span> <span class="nx">branch</span>
-<span class="nx">git</span> <span class="nx">branch</span> <span class="o">-</span><span class="nx">m</span> <span class="nx">old</span><span class="o">-</span><span class="nx">branch</span><span class="o">-</span><span class="nx">name</span> <span class="k">new</span><span class="o">-</span><span class="nx">branch</span><span class="o">-</span><span class="nx">name</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#rename local branch</span>
+    git branch -m old-branch-name new-branch-name
 
-<span class="err">#</span><span class="k">delete</span> <span class="nx">remote</span> <span class="nx">branch</span> <span class="kd">with</span> <span class="nx">old</span> <span class="nx">name</span>
-<span class="nx">git</span> <span class="nx">push</span> <span class="nx">origin</span> <span class="o">:</span><span class="nx">old</span><span class="o">-</span><span class="nx">branch</span><span class="o">-</span><span class="nx">name</span>
+    <span class="c">#delete remote branch with old name</span>
+    git push origin :old-branch-name
 
-<span class="err">#</span> <span class="nx">create</span> <span class="nx">remote</span> <span class="nx">renamed</span> <span class="nx">branch</span>
-<span class="nx">git</span> <span class="nx">push</span> <span class="nx">origin</span> <span class="k">new</span><span class="o">-</span><span class="nx">branch</span><span class="o">-</span><span class="nx">name</span>
+    <span class="c"># create remote renamed branch</span>
+    git push origin new-branch-name
 </pre></div>
 
-</code></pre><h2 id="links">Links</h2>
+</code></pre>
+<!-- more -->
+
+<h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/1526794/git-rename-remote-branch">stackoverflow</a></p>
 </div>
     </div>
