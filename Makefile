@@ -8,15 +8,15 @@ WWW_BS_FONTS := $(patsubst $(BS)/fonts/%, $(DEST)/fonts/%, $(wildcard $(BS)/font
 PYGMENTS_CSS = $(DEST)/css/pygments.css
 
 .DEFAULT: all
-all: $(NOTES_HTML) $(WWW_BS_CSS) $(WWW_BS_FONTS) $(PYGMENTS_CSS)
+all: $(NOTES_HTML) $(WWW_BS_CSS) $(WWW_BS_FONTS) $(PYGMENTS_CSS) $(DEST)/index.html
 
 #Order only dependency on dir (dir only will be created if it does not exist)
 $(DEST)/html/%.html: content/%.md build/templates/bootstrap.hbs build/scripts/build_template | $(DEST)/html
 	mkdir -p $(@D)
-	scripts/build_template $< > $@
+	build/scripts/build_template $< > $@
 
-$(DEST)/index.html: $(NOTES_HTML) build/templates/bootstrap.hbs
-	scripts/build_index -t templates/bootstrap.hbs $(NOTES_HTML) > $@
+$(DEST)/index.html: $(NOTES_HTML) build/templates/bootstrap.hbs build/templates/index.hbs
+	build/scripts/build_index -t build/templates/index.hbs $(NOTES_HTML) > $@
 
 $(DEST)/css/%.css: $(BS)/css/%.css | $(DEST)/css
 	mkdir -p $(@D)
@@ -37,7 +37,7 @@ clean:
 	rm -rf $(DEST)/fonts
 
 serve:
-	cd www && python -m SimpleHTTPServer 8081
+	python -m SimpleHTTPServer 8081
 
 $(DEST):
 	mkdir $@

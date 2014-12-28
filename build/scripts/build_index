@@ -27,7 +27,7 @@ require('handlebars-helpers').register(Handlebars, {});
 layouts(Handlebars);
 
 //Get partials
-var tplPath = 'templates/*.hbs';
+var tplPath = 'build/templates/*.hbs';
 glob(tplPath, {}, function(er, files) {
     //Register partials
     _.each(files, function(file) {

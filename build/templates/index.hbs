@@ -1,6 +1,5 @@
 {{#extend "bootstrap"}}
   {{#content "body"}}
-
    <ul>
       {{#each paginate.files}}
           <li><a href="{{relative ../path this.path}}">
@@ -24,6 +23,5 @@
         <li class="disabled"><a href="#">Next</a></li>
       {{/if}}
     </ul>
-
   {{/content}}
 {{/extend}}

@@ -44,7 +44,7 @@ var md = marked(parsed.body, function(err, content) {
     md = content;
     meta.body = new Handlebars.SafeString(md);
 
-    var templatePath = meta['template'] ? meta['template'] : 'templates/bootstrap.html5';
+    var templatePath = meta['template'] ? meta['template'] : 'build/templates/bootstrap.html5';
     var template = fs.readFileSync(templatePath, 'utf-8');
     template = Handlebars.compile(template);
     console.log(template(meta));
