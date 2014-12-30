@@ -131,8 +131,8 @@ cookbook 'aws', '>= 0.2.4'
 
 My version of the makesnapshots.py is [here](https://gist.github.com/serebrov/38f8c2d47c532243d05a).
 My modification was to allow tagging instances instead of volumes.
-There is already a similar pull request in the [original repository]() so I didn't submit my change back.
-There is also one new option in the config.py (see the full file in the [original repository](https://github.com/evannuil/aws-snapshot-tool/blob/559c1f6cf77b87c66c07b177451e76dcccc385fa/config.sample)):
+There is already a similar pull request in the [original repository](https://github.com/evannuil/aws-snapshot-tool/pull/19) so I didn't submit my change back.
+There is also one new option in the config.py (see the full config example [here](https://github.com/evannuil/aws-snapshot-tool/blob/559c1f6cf77b87c66c07b177451e76dcccc385fa/config.sample)):
 
 ```python
     ...
@@ -164,3 +164,14 @@ Links
 [automated-ebs-snapshots](https://github.com/skymill/automated-ebs-snapshots) and related [article]( http://www.nerdpolytechnic.org/?p=89)
 
 [Automated amazon ebs snapshot backup script with 7 day retention](http://www.stardothosting.com/blog/2012/05/automated-amazon-ebs-snapshot-backup-script-with-7-day-retention/)
+
+[Mongodb to Amazon s3 Backup Script](https://github.com/RGBboy/mongodb-s3-backup)
+
+Chef - setup cron job
+[OpsWorks docs - Running Cron Jobs](http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-extend-cron.html)
+
+[Chef - cron resource](https://docs.chef.io/resource_cron.html)
+
+[Chef - file resource](https://docs.chef.io/resource_file.html) and [cookbook_file](https://docs.chef.io/chef/resources.html#cookbook-file)
+
+[Chef - directory resource](https://docs.chef.io/resource_directory.html)
