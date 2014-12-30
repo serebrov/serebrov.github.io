@@ -5,7 +5,7 @@ tags: aws,mongodb
 AWS - Deployment via OpsWorks from the command line
 =======================================
 
-Below is a simple python script which performs app deployment using OpsWorks API.
+Below is a simple python script which performs application deployment using OpsWorks API library (boto).
 Script performs following steps
 - Execute 'update_custom_cookbooks' deployment command and wait for successful completion (or stop with an error)
 - Execute 'deploy' command and wait for completion
@@ -60,4 +60,17 @@ result = opsworks.create_deployment(stack_id, {"Name":"deploy"}, app_id)
 print('Deploy %s' % result)
 wait_for_deployment(result['DeploymentId'])
 
+```
+
+The script launches deployment command and then polls its status every three seconds until it completes or fails.
+Results look like this:
+
+```bash
+$ ./deploy.py
+Update custom cookbooks {u'DeploymentId': u'e83a0100-52b2-2fe1-ad26-1db85b62dbfb'}
+Waiting for deployment e83a0100-52b2-2fe1-ad26-1db85b62dbfb to complete
+........................Done e83a0100-52b2-2fe1-ad26-1db85b62dbfb
+Deploy {u'DeploymentId': u'85fda652-f215-25fd-b13d-e061adccf535'}
+Waiting for deployment 85fda652-f215-25fd-b13d-e061adccf535 to complete
+.................................Done 85fda652-f215-25fd-b13d-e061adccf535
 ```
