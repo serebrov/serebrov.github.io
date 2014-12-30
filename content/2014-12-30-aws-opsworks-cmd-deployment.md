@@ -1,6 +1,6 @@
 ---
 date: 2014-12-30
-tags: aws,mongodb
+tags: aws
 ---
 AWS - Deployment via OpsWorks from the command line
 =======================================
