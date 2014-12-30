@@ -37,6 +37,7 @@
               <h1 id="aws-setup-mongodb-ebs-volume-backups">AWS - setup mongodb ebs volume backups</h1>
 <p>I described how to setup <a href="http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">mongodb on EC2 using OpsWroks</a> and here is how to setup mongo data backups.</p>
 <p>In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
+<!-- more -->
 The relevant part from the <a href="http://docs.mongodb.org/ecosystem/tutorial/backup-and-restore-mongodb-on-amazon-ec2/">mongodb docs</a>:</p>
 <pre><code><div class="highlight"><pre>    <span class="nx">Backup</span> <span class="kd">with</span> <span class="o">--</span><span class="nx">journal</span>
 

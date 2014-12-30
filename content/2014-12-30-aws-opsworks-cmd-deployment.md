@@ -10,6 +10,7 @@ Script performs following steps
 - Execute 'update_custom_cookbooks' deployment command and wait for successful completion (or stop with an error)
 - Execute 'deploy' command and wait for completion
 
+<!-- more -->
 At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.
 
 ```python

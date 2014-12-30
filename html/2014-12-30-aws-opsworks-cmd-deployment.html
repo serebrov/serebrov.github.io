@@ -41,7 +41,8 @@ Script performs following steps</p>
 <li>Execute &#39;update_custom_cookbooks&#39; deployment command and wait for successful completion (or stop with an error)</li>
 <li>Execute &#39;deploy&#39; command and wait for completion</li>
 </ul>
-<p>At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</p>
+<p><!-- more -->
+At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
 
 <span class="kn">import</span> <span class="nn">boto.opsworks</span>
