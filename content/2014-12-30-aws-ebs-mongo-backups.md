@@ -151,17 +151,17 @@ Links
 
 [aws-snapshot-tool](https://github.com/evannuil/aws-snapshot-tool)
 
+[Bash script for Automatic EBS Snapshots and Cleanup on Amazon Web Services](https://github.com/CaseyLabs/aws-ec2-ebs-automatic-snapshot-bash) and related [post](https://www.caseylabs.com/automated-ebs-volume-snapshot-script-for-linux-bash/)
+
+[ec2-automate-backup tool](https://github.com/colinbjohnson/aws-missing-tools/tree/master/ec2-automate-backup) and related [post](http://www.cloudar.be/awsblog/automating-snapshotsbackups-of-ec2-ebs-volumes/) and another [one]( http://www.nerdpolytechnic.org/?p=89)
+
+[automated-ebs-snapshots](https://github.com/skymill/automated-ebs-snapshots)
+
 [DevOps Backup in Amazon EC2 article](https://medium.com/aws-activate-startup-blog/devops-backup-in-amazon-ec2-190c6fcce41b)
 
 [Stackoverflow: MongoDb EC2 EBS backups](http://stackoverflow.com/questions/18319942/mongodb-ec2-ebs-backups)
 
 [Automated Amazon EBS volume snapshots with boto](http://www.coresoftwaregroup.com/blog/automated-amazon-ebs-volume-snapshots-with-boto)
-
-[Bash script for Automatic EBS Snapshots and Cleanup on Amazon Web Services](https://github.com/CaseyLabs/aws-ec2-ebs-automatic-snapshot-bash) and related [article](https://www.caseylabs.com/automated-ebs-volume-snapshot-script-for-linux-bash/)
-
-[ec2-automate-backup tool](https://github.com/colinbjohnson/aws-missing-tools/tree/master/ec2-automate-backup) and related [article](http://www.cloudar.be/awsblog/automating-snapshotsbackups-of-ec2-ebs-volumes/)
-
-[automated-ebs-snapshots](https://github.com/skymill/automated-ebs-snapshots) and related [article]( http://www.nerdpolytechnic.org/?p=89)
 
 [Automated amazon ebs snapshot backup script with 7 day retention](http://www.stardothosting.com/blog/2012/05/automated-amazon-ebs-snapshot-backup-script-with-7-day-retention/)
 
