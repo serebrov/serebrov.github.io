@@ -161,12 +161,10 @@ Links
 
 [Stackoverflow: MongoDb EC2 EBS backups](http://stackoverflow.com/questions/18319942/mongodb-ec2-ebs-backups)
 
-
 [Automated amazon ebs snapshot backup script with 7 day retention](http://www.stardothosting.com/blog/2012/05/automated-amazon-ebs-snapshot-backup-script-with-7-day-retention/)
 
 [Mongodb to Amazon s3 Backup Script](https://github.com/RGBboy/mongodb-s3-backup)
 
-Chef - setup cron job
 [OpsWorks docs - Running Cron Jobs](http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-extend-cron.html)
 
 [Chef - cron resource](https://docs.chef.io/resource_cron.html)
