@@ -104,6 +104,23 @@ Waiting <span class="k">for</span> deployment 85fda652-f215-25fd-b13d-e061adccf5
 </pre></div>
 
 </code></pre>
+<p>Here is also a similar shell script. It is simpler than the python code and just launches deployments without waiting for results:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
+
+<span class="nv">STACK_ID</span><span class="o">=</span>0a000a00-00a0-00a0-0000-00a00000000a
+<span class="nv">APP_ID</span><span class="o">=</span>00aa000a-aaaa-000a-0a00-a000000a0000
+
+<span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>XXXXXXXXXXXXXXXXXXXX
+<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>xXXxxxxxXXxXXxxXXxXXxxxxXxxXxxxxXXXxXxXX
+
+aws opsworks --region us-east-1 create-deployment --stack-id <span class="nv">$STACK_ID</span> --app-id <span class="nv">$APP_ID</span> --command <span class="s2">&quot;{\&quot;Name\&quot;:\&quot;update_custom_cookbooks\&quot;}&quot;</span>
+aws opsworks --region us-east-1 create-deployment --stack-id <span class="nv">$STACK_ID</span> --app-id <span class="nv">$APP_ID</span> --command <span class="s2">&quot;{\&quot;Name\&quot;:\&quot;deploy\&quot;}&quot;</span>
+</pre></div>
+
+</code></pre>
+<h2 id="links">Links</h2>
+<p><a href="http://docs.aws.amazon.com/cli/latest/reference/opsworks/create-deployment.html">OpsWorks cli - create-deployment command</a></p>
+<p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/cli-examples-create-deployment.html">OpsWorks docs:Deploy an App (create-deployment)</a></p>
 
           </div>
       </div>

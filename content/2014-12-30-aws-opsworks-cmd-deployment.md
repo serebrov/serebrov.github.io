@@ -75,3 +75,26 @@ Deploy {u'DeploymentId': u'85fda652-f215-25fd-b13d-e061adccf535'}
 Waiting for deployment 85fda652-f215-25fd-b13d-e061adccf535 to complete
 .................................Done 85fda652-f215-25fd-b13d-e061adccf535
 ```
+
+Here is also a similar shell script. It is simpler than the python code and just launches deployments without waiting for results:
+
+```bash
+#!/usr/bin/env bash
+
+STACK_ID=0a000a00-00a0-00a0-0000-00a00000000a
+APP_ID=00aa000a-aaaa-000a-0a00-a000000a0000
+
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=xXXxxxxxXXxXXxxXXxXXxxxxXxxXxxxxXXXxXxXX
+
+aws opsworks --region us-east-1 create-deployment --stack-id $STACK_ID --app-id $APP_ID --command "{\"Name\":\"update_custom_cookbooks\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id $STACK_ID --app-id $APP_ID --command "{\"Name\":\"deploy\"}"
+```
+
+## Links
+
+[OpsWorks cli - create-deployment command](http://docs.aws.amazon.com/cli/latest/reference/opsworks/create-deployment.html)
+
+[OpsWorks docs:Deploy an App (create-deployment)](http://docs.aws.amazon.com/opsworks/latest/userguide/cli-examples-create-deployment.html)
+
+
