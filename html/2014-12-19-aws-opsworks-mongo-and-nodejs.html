@@ -143,6 +143,13 @@ The recipes/default.rb is this:</p>
 <p>This recipe invokes <code>npm install -d</code> inside the test app folder and then creates a monit service config.
 So our test app will be watched by monit and restarted in the case of failure.
 This is the same setup the standard OpsWorks node.js layer uses for the main application.</p>
+<p>To see the status of the application run the following command:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>sudo monit status
+</pre></div>
+
+</code></pre>
+<p>This will display status of all services watched by monit.
+And monit logs it&#39;s events to syslog (<code>/var/log/syslog</code>).</p>
 <p>The <code>templates/default/app_test.monitrc.erb</code> contains a config file template:</p>
 <pre><code class="lang-erb"><div class="highlight"><pre><span class="x">check host node_web_app_</span><span class="cp">&lt;%=</span> <span class="vi">@application_name</span> <span class="cp">%&gt;</span><span class="x"> with address 127.0.0.1</span>
 <span class="x">  start program = &quot;/bin/sh -c &#39;cd </span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x"> ; source </span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x">/../shared/app.env ; /usr/bin/env PORT=</span><span class="cp">&lt;%=</span> <span class="vi">@test_port</span> <span class="cp">%&gt;</span><span class="x"> NODE_ENV=</span><span class="cp">&lt;%=</span> <span class="vi">@test_env</span> <span class="cp">%&gt;</span><span class="x"> NODE_PATH=</span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x">/node_modules:</span><span class="cp">&lt;%=</span> <span class="vi">@deploy_to</span> <span class="cp">%&gt;</span><span class="x"> /usr/local/bin/node </span><span class="cp">&lt;%=</span> <span class="vi">@monitored_script</span> <span class="cp">%&gt;</span><span class="x">&#39;&quot;</span>

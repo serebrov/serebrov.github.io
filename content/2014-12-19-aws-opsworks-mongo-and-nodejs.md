@@ -118,6 +118,15 @@ This recipe invokes `npm install -d` inside the test app folder and then creates
 So our test app will be watched by monit and restarted in the case of failure.
 This is the same setup the standard OpsWorks node.js layer uses for the main application.
 
+To see the status of the application run the following command:
+
+```bash
+sudo monit status
+```
+
+This will display status of all services watched by monit.
+And monit logs it's events to syslog (`/var/log/syslog`).
+
 The `templates/default/app_test.monitrc.erb` contains a config file template:
 
 ```erb
