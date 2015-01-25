@@ -34,9 +34,9 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="amazon-dynamodb-add-secondary-index-to-table">Amazon DynamoDB - add secondary index to table</h1>
+              <h1 id="amazon-dynamodb-how-to-add-global-secondary-index">Amazon DynamoDB - how to add global secondary index</h1>
 <p>At the moment it is not possible to add a secondary index into the existing table.
-The possibility to add/modify secondary indexes is <a href="https://forums.aws.amazon.com/ann.jspa?annID=2650">announced</a> but not yet available.</p>
+This feature is <a href="https://forums.aws.amazon.com/ann.jspa?annID=2650">announced</a> but not yet available.</p>
 <p>So the only way is to create a new table and migrate the existing data to it.
 This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html">Amazon EMR</a>.
 <!-- more --></p>
@@ -64,12 +64,15 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
 <p>But in my case the AWS Data Pipeline service was not available for the region where DynamoDB was launched, so I used EMR (and actually data pipeline also uses EMR behind the scenes).</p>
 <p>Amazon EMR allows to create a step of type &#39;Hive program&#39; where we can only specify the S3 path to the hive script to run (all other parameters are optional).</p>
 <p>So we create and upload to S3 the hive script like shown below and then launch or use existing EMR cluster to transfer the data:</p>
-<pre><code class="lang-sql"><div class="highlight"><pre><span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">my_table</span><span class="p">;</span>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="c1">-- This only removes Hive view for dynamo table, not the table itself</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">my_table</span><span class="p">;</span>
 <span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">my_table</span> <span class="p">(</span><span class="n">my_hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">a_range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="n">my_another_hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">another_range</span> <span class="nb">bigint</span><span class="p">)</span>
 <span class="n">STORED</span> <span class="k">BY</span> <span class="s1">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
 <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="ss">&quot;dynamodb.table.name&quot;</span> <span class="o">=</span> <span class="ss">&quot;my_table&quot;</span><span class="p">,</span>
 <span class="ss">&quot;dynamodb.column.mapping&quot;</span> <span class="o">=</span> <span class="ss">&quot;my_hash:my_hash,a_range:a_range,my_another_hash:my_another_hash,another_range:another_range&quot;</span><span class="p">);</span>
 
+<span class="c1">-- The my_table_v2 should alreay exists in dynamo and have the secondary index</span>
+<span class="k">DROP</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">EXISTS</span> <span class="n">my_table_v2</span><span class="p">;</span>
 <span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">my_table_v2</span> <span class="p">(</span><span class="n">my_hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">a_range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="n">my_another_hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">another_range</span> <span class="nb">bigint</span><span class="p">)</span>
 <span class="n">STORED</span> <span class="k">BY</span> <span class="s1">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
 <span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="ss">&quot;dynamodb.table.name&quot;</span> <span class="o">=</span> <span class="ss">&quot;my_table_v2&quot;</span><span class="p">,</span>
@@ -79,6 +82,7 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
 <span class="k">SET</span> <span class="n">dynamodb</span><span class="p">.</span><span class="n">throughput</span><span class="p">.</span><span class="k">read</span><span class="p">.</span><span class="n">percent</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">;</span>
 <span class="k">SET</span> <span class="n">dynamodb</span><span class="p">.</span><span class="n">throughput</span><span class="p">.</span><span class="k">write</span><span class="p">.</span><span class="n">percent</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">;</span>
 
+<span class="c1">-- Copy data from table to table</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">TABLE</span> <span class="n">my_table_v2</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">my_table</span><span class="p">;</span>
 </pre></div>
 

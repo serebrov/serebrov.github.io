@@ -2,11 +2,11 @@
 date: 2015-01-25
 tags: aws,dynamodb
 ---
-Amazon DynamoDB - add secondary index to table
+Amazon DynamoDB - how to add global secondary index
 =======================================
 
 At the moment it is not possible to add a secondary index into the existing table.
-The possibility to add/modify secondary indexes is [announced](https://forums.aws.amazon.com/ann.jspa?annID=2650) but not yet available.
+This feature is [announced](https://forums.aws.amazon.com/ann.jspa?annID=2650) but not yet available.
 
 So the only way is to create a new table and migrate the existing data to it.
 This can be done using [Amazon EMR](http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html).
@@ -46,12 +46,15 @@ Amazon EMR allows to create a step of type 'Hive program' where we can only spec
 So we create and upload to S3 the hive script like shown below and then launch or use existing EMR cluster to transfer the data:
 
 ```sql
+-- This only removes Hive view for dynamo table, not the table itself
 DROP TABLE IF EXISTS my_table;
 CREATE EXTERNAL TABLE my_table (my_hash string, a_range bigint, my_another_hash string, another_range bigint)
 STORED BY 'org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler'
 TBLPROPERTIES ("dynamodb.table.name" = "my_table",
 "dynamodb.column.mapping" = "my_hash:my_hash,a_range:a_range,my_another_hash:my_another_hash,another_range:another_range");
 
+-- The my_table_v2 should alreay exists in dynamo and have the secondary index
+DROP TABLE IF EXISTS my_table_v2;
 CREATE EXTERNAL TABLE my_table_v2 (my_hash string, a_range bigint, my_another_hash string, another_range bigint)
 STORED BY 'org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler'
 TBLPROPERTIES ("dynamodb.table.name" = "my_table_v2",
@@ -61,6 +64,7 @@ TBLPROPERTIES ("dynamodb.table.name" = "my_table_v2",
 SET dynamodb.throughput.read.percent=0.9;
 SET dynamodb.throughput.write.percent=0.9;
 
+-- Copy data from table to table
 INSERT INTO TABLE my_table_v2 SELECT * FROM my_table;
 ```
 
