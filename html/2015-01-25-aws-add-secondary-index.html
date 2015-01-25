@@ -87,17 +87,15 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
 </pre></div>
 
 </code></pre>
+<h2 id="view-results">View results</h2>
+<p>Once the process is finished EMR will show process logs (controller, syslog, stderr, stdout).
+Most of the information is in the <code>stderr</code> log.
+Also note that logs are not available just when the process is finished. Just wait few minutes and logs will appear.</p>
 <h2 id="links">Links</h2>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual">Hive Language Manual</a></p>
-<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF">Hive Operators and User-Defined Functions</a></p>
-<p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EMR_Hive_Commands.html">DynamoDB Guide: Hive Command Examples for Exporting, Importing, and Querying Data in DynamoDB</a></p>
-<p><a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMRforDynamoDB.html">EMR Guide: Export, Import, Query, and Join Tables in DynamoDB Using Amazon EMR</a></p>
+<p><a href="http://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html">Amazon DynamoDB, EMR and Hive notes</a></p>
 <p><a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html">Optimizing Performance for Amazon EMR Operations in DynamoDB</a></p>
-<p><a href="https://aws.amazon.com/articles/Elastic-MapReduce/28549">Using DynamoDB with Amazon Elastic MapReduce</a></p>
+<p><a href="http://arjon.es/2014/01/29/hive-dynamodb-pitfalls/">Hive &amp; DynamoDB Pitfalls</a></p>
 <p><a href="http://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow">Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow</a></p>
-<p><a href="http://martinharrigan.blogspot.com/2013/07/amazon-dynamodb-apache-hive-and-leaky.html">Amazon DynamoDB, Apache Hive and Leaky Abstractions</a></p>
-<p><a href="http://blog.singhanuvrat.com/tech/amazon-aws-hive-emr-and-dynamodb">Amazon AWS: Hive, EMR and DynamoDb</a></p>
-<p><a href="https://ariyabala.wordpress.com/2013/09/13/exploring-dynamo-db/">Exploring Dynamo DB</a></p>
 
           </div>
       </div>

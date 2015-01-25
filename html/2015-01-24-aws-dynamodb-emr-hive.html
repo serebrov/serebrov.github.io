@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1 id="amazon-dynamodb-emr-and-hive-notes">Amazon DynamoDB, EMR and Hive notes</h1>
+<p>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-get-started.html">getting started tutorial</a>.</p>
+<p>Now it is possible to run Hive commands in few following ways:</p>
+<ul>
+<li>Connect via ssh, launch hive and run commands interactively</li>
+<li>Create a script file with commands, upload it to S3 and launch as a ERM &#39;Hive program&#39; <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/CLI_CreatingaJobFlowUsingHive.html">step</a></li>
+<li>Run it from Hue web-interface (see below)</li>
+</ul>
+<!-- more -->
+
+<h3 id="connect-to-hue">Connect to Hue</h3>
+<p>Hue is a Hadoop <a href="http://gethue.com/">web interface</a>. It is automatically installed when EMR cluster is launched.
+The recommended way to connect to Hue is via <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/gsg-hue.html">ssh tunnel</a>, <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/accessing-hue.html">see also</a>.</p>
+<p>But there is a simpler way (but less secure) - open the 8888 port on the master EMR instance:</p>
+<ul>
+<li>open security groups in EC2 console, find ElasticMapReduce-master and add</li>
+<li>Custom TCP Rule, Port 8888, Anywhere</li>
+<li>Check EMR master public DNS</li>
+<li>Open Hue: <a href="http://ec2-XX-XXX-XX-XXX.region-name.compute.amazonaws.com:8888/">http://ec2-XX-XXX-XX-XXX.region-name.compute.amazonaws.com:8888/</a></li>
+</ul>
+<h3 id="analyze-dynamodb-data-with-hive">Analyze DynamoDB data with Hive</h3>
+<p>To analyze the DynamoDB data there are following options:</p>
+<ul>
+<li>Create the external Hive table pointing to DynamoDB table and make queries against it (slow and consumes DynamoDB resources)</li>
+<li>Export data from dynamo to the native Hive table then query this data off-line</li>
+<li>Export data from dynamo to S3 and then query it, in this case queries are a bit slower than for a native Hive table, but data persists on S3, so it is possible to terminate the cluster and then launch it again when necessary</li>
+</ul>
+<p>Example of the script to move data from dynamo to hive native table:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="c1">-- Here you can drop/create an external table at any time - this will not affect real data</span>
+<span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">dynamo_table</span> <span class="p">(</span><span class="n">hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="k">data</span> <span class="n">string</span><span class="p">)</span>
+<span class="n">STORED</span> <span class="k">BY</span> <span class="s1">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
+<span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="ss">&quot;dynamodb.table.name&quot;</span> <span class="o">=</span> <span class="ss">&quot;mytable&quot;</span><span class="p">,</span>
+<span class="ss">&quot;dynamodb.column.mapping&quot;</span> <span class="o">=</span> <span class="ss">&quot;hash:hash,range:range,data:data&quot;</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">hive_table</span> <span class="p">(</span><span class="n">hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="k">data</span> <span class="n">string</span><span class="p">);</span>
+
+<span class="k">SET</span> <span class="n">dynamodb</span><span class="p">.</span><span class="n">throughput</span><span class="p">.</span><span class="k">read</span><span class="p">.</span><span class="n">percent</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">9</span><span class="p">;</span>
+
+<span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">TABLE</span> <span class="n">hive_table</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">dynamo_table</span><span class="p">;</span>
+</pre></div>
+
+</code></pre>
+<p>Example of the script to move data from dynamo to S3:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">dynamo_table</span> <span class="p">(</span><span class="n">hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="k">data</span> <span class="n">string</span><span class="p">)</span>
+<span class="n">STORED</span> <span class="k">BY</span> <span class="s1">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
+<span class="n">TBLPROPERTIES</span> <span class="p">(</span><span class="ss">&quot;dynamodb.table.name&quot;</span> <span class="o">=</span> <span class="ss">&quot;mytable&quot;</span><span class="p">,</span>
+<span class="ss">&quot;dynamodb.column.mapping&quot;</span> <span class="o">=</span> <span class="ss">&quot;hash:hash,range:range,data:data&quot;</span><span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">s3_table</span><span class="p">(</span><span class="n">hash</span> <span class="n">string</span><span class="p">,</span> <span class="n">range</span> <span class="nb">bigint</span><span class="p">,</span> <span class="k">data</span> <span class="n">string</span><span class="p">)</span>
+<span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">&#39;,&#39;</span>
+<span class="k">LOCATION</span> <span class="s1">&#39;s3://my-bucket-name/2015-01-24-dynamo-table-data/&#39;</span><span class="p">;</span>
+
+<span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">TABLE</span> <span class="n">s3_table</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">dynamo_table</span><span class="p">;</span>
+</pre></div>
+
+</code></pre>
+<h3 id="hive-timestamp-to-date-conversions">Hive - timestamp to date conversions</h3>
+<p>Examples of some queries to convert the timestamp to date string:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="c1">-- Convert timestamp to date in UTC+2 timezone</span>
+<span class="k">select</span> <span class="n">hash</span><span class="p">,</span> <span class="n">stamp</span><span class="p">,</span> <span class="n">from_unixtime</span><span class="p">(</span><span class="n">stamp</span><span class="p">,</span> <span class="s1">&#39;y-M-d H:m:sZ+0200&#39;</span><span class="p">)</span> <span class="k">from</span> <span class="n">hive_table</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="c1">-- Select data by date string</span>
+<span class="k">select</span> <span class="n">hash</span><span class="p">,</span> <span class="n">stamp</span> <span class="k">from</span> <span class="n">hive_table</span> <span class="k">where</span> <span class="n">stamp</span> <span class="o">&gt;</span> <span class="n">unix_timestamp</span><span class="p">(</span><span class="s1">&#39;2014-12-25 10:18:41+0200&#39;</span><span class="p">)</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+</pre></div>
+
+</code></pre>
+<h3 id="execute-python-script-from-hive-script">Execute python script from Hive script</h3>
+<p>It is possible to transform data in Hive using external python script (see <a href="http://andreyfradkin.com/posts/2013/06/15/combining-hive-and-python/">here</a> and <a href="http://www.lichun.cc/blog/2012/06/wordcount-mapreduce-example-using-hive-on-local-and-emr/">here</a>).
+And using a fake table it is possible to run the python script from the hive script:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="c1">--</span>
+<span class="c1">-- Run python script to create test tables on dynamo.</span>
+<span class="c1">-- Script should be uploaded to tapway-scripts/ on s3</span>
+<span class="c1">--</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">empty_src</span> <span class="p">(</span><span class="n">id</span> <span class="n">string</span><span class="p">);</span>
+<span class="k">add</span> <span class="n">file</span> <span class="n">s3</span><span class="p">:</span><span class="o">//</span><span class="n">tapway</span><span class="o">-</span><span class="n">scripts</span><span class="o">/</span><span class="n">hive</span><span class="p">.</span><span class="k">copy</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">py</span><span class="p">;</span>
+<span class="k">select</span> <span class="k">transform</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">using</span> <span class="s1">&#39;hive.copy.test.py&#39;</span> <span class="k">from</span> <span class="n">empty_src</span><span class="p">;</span>
+</pre></div>
+
+</code></pre>
+<h2 id="links">Links</h2>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual">Hive Language Manual</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF">Hive Operators and User-Defined Functions</a></p>
+<p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EMR_Hive_Commands.html">DynamoDB Guide: Hive Command Examples for Exporting, Importing, and Querying Data in DynamoDB</a></p>
+<p><a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMRforDynamoDB.html">EMR Guide: Export, Import, Query, and Join Tables in DynamoDB Using Amazon EMR</a></p>
+<p><a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html">Optimizing Performance for Amazon EMR Operations in DynamoDB</a></p>
+<p><a href="https://aws.amazon.com/articles/Elastic-MapReduce/28549">Using DynamoDB with Amazon Elastic MapReduce</a></p>
+<p><a href="http://arjon.es/2014/01/29/hive-dynamodb-pitfalls/">Hive &amp; DynamoDB Pitfalls</a></p>
+<p><a href="http://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow">Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow</a></p>
+<p><a href="http://martinharrigan.blogspot.com/2013/07/amazon-dynamodb-apache-hive-and-leaky.html">Amazon DynamoDB, Apache Hive and Leaky Abstractions</a></p>
+<p><a href="http://blog.singhanuvrat.com/tech/amazon-aws-hive-emr-and-dynamodb">Amazon AWS: Hive, EMR and DynamoDb</a></p>
+<p><a href="https://ariyabala.wordpress.com/2013/09/13/exploring-dynamo-db/">Exploring Dynamo DB</a></p>
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'serebrov'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/js/bootstrap.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+

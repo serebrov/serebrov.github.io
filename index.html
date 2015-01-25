@@ -47,6 +47,21 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
     </div>
     <div class="row">
       <div class="col-md-12">
+        <small class="pull-right">2015-01-24</small>
+        <div><h1 id="amazon-dynamodb-emr-and-hive-notes">Amazon DynamoDB, EMR and Hive notes</h1>
+<p>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-get-started.html">getting started tutorial</a>.</p>
+<p>Now it is possible to run Hive commands in few following ways:</p>
+<ul>
+<li>Connect via ssh, launch hive and run commands interactively</li>
+<li>Create a script file with commands, upload it to S3 and launch as a ERM &#39;Hive program&#39; <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/CLI_CreatingaJobFlowUsingHive.html">step</a></li>
+<li>Run it from Hue web-interface (see below)</li>
+</ul>
+</div>
+        <a class="more" href="html/2015-01-24-aws-dynamodb-emr-hive.html">Read more »</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <small class="pull-right">2014-12-30</small>
         <div><h1 id="aws-deployment-via-opsworks-from-the-command-line">AWS - Deployment via OpsWorks from the command line</h1>
 <p>Below is a simple python script which performs application deployment using OpsWorks API library (boto).
