@@ -51,14 +51,15 @@ to reset the state to previous commit with <code>reset</code>:</p>
 </code></pre>
 <p>Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B1</code> is <code>HEAD~2</code>.
 This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
-<pre><code><div class="highlight"><pre><span class="nx">G1</span> <span class="o">-</span> <span class="nx">G2</span> <span class="o">-</span> <span class="nx">G3</span> <span class="o">-</span> <span class="nx">B1</span> <span class="o">-</span> <span class="nx">B2</span> <span class="o">-</span> <span class="nx">B3</span>
-           <span class="err">\</span>    <span class="err">\</span>    <span class="err">\</span>    <span class="err">\</span><span class="o">--</span> <span class="nx">HEAD</span>
-            <span class="err">\</span>    <span class="err">\</span>    <span class="err">\</span><span class="o">------</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">1</span>
-             <span class="err">\</span>    <span class="err">\</span><span class="o">----------</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">2</span>
-              <span class="err">\</span><span class="o">--------------</span> <span class="nx">HEAD</span><span class="o">~</span><span class="mi">3</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>G1 - G2 - G3 - B1 - B2 - B3
+           <span class="se">\ </span>   <span class="se">\ </span>   <span class="se">\ </span>   <span class="se">\-</span>- HEAD
+            <span class="se">\ </span>   <span class="se">\ </span>   <span class="se">\-</span>----- HEAD~1
+             <span class="se">\ </span>   <span class="se">\-</span>--------- HEAD~2
+              <span class="se">\-</span>------------- HEAD~3
 </pre></div>
 
-</code></pre><p>But if changes are pushed already then it is better to use <code>revert</code>.
+</code></pre>
+<p>But if changes are pushed already then it is better to use <code>revert</code>.
 And here is how to do this for multiple commits:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD~2^..HEAD
 </pre></div>

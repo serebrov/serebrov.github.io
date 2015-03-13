@@ -25,7 +25,7 @@ $ git reset --hard HEAD~3
 Here we can refer to `B3` as `HEAD`, `B2` is `HEAD~1`, `B1` is `HEAD~2`.
 This way the last good commit `G3` is `HEAD~3`:
 
-```
+```bash
 G1 - G2 - G3 - B1 - B2 - B3
            \    \    \    \-- HEAD
             \    \    \------ HEAD~1
