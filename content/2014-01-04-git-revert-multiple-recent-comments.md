@@ -7,21 +7,31 @@ Git - how to revert multiple recent commits
 
 Let's assume we have a history like this:
 
-    G1 - G2 - G3 - B1 - B2 - B3
+```bash
+G1 - G2 - G3 - B1 - B2 - B3
+```
 
 Where G1-G3 are 'good' commits and B1-B3 are 'bad' commits and we
 want to revert them.
-
 <!-- more -->
+
 If changes are not pushed to the server yet then the easy way is
-to reset the state to previous commit with
+to reset the state to previous commit with `reset`:
 
 ```bash
-    git reset --hard HEAD~3
+git reset --hard HEAD~3
 ```
 
 Here we can refer to `B3` as `HEAD`, `B2` is `HEAD~1`, `B1` is `HEAD~2`.
-This way the last good commit `G3` is `HEAD~3`.
+This way the last good commit `G3` is `HEAD~3`:
+
+```bash
+G1 - G2 - G3 - B1 - B2 - B3
+           \   \     \    \-- HEAD
+            \   \     \------ HEAD~1
+             \   \----------- HEAD~2
+              \-------------- HEAD~3
+```
 
 But if changes are pushed already then it is better to use `revert`.
 And here is how to do this for multiple commits:
