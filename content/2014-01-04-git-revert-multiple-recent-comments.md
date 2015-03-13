@@ -19,7 +19,7 @@ If changes are not pushed to the server yet then the easy way is
 to reset the state to previous commit with `reset`:
 
 ```bash
-git reset --hard HEAD~3
+$ git reset --hard HEAD~3
 ```
 
 Here we can refer to `B3` as `HEAD`, `B2` is `HEAD~1`, `B1` is `HEAD~2`.
@@ -37,13 +37,13 @@ But if changes are pushed already then it is better to use `revert`.
 And here is how to do this for multiple commits:
 
 ```bash
-    $ git revert --no-commit HEAD~2^..HEAD
+$ git revert --no-commit HEAD~2^..HEAD
 ```
 
 Or:
 
 ```bash
-    $ git revert --no-commit HEAD~3..HEAD
+$ git revert --no-commit HEAD~3..HEAD
 ```
 
 We need to revert a range of revisions from B1 to B3.
@@ -60,20 +60,20 @@ So now we can review the repository state and commit it.
 After that we will get the history like this:
 
 ```bash
-    G1 - G2 - G3 - B1 - B2 - B3 - R`
+G1 - G2 - G3 - B1 - B2 - B3 - R`
 ```
 
 Where `R'` is a revert commit which will return repository state to the commit `G3`.
 Run git diff to check this (output should be empty):
 
 ```bash
-    $ git diff HEAD~4 HEAD
+$ git diff HEAD~4 HEAD
 ```
 
 Another way to run revert is to specify commits one by one from newest to oldest:
 
 ```bash
-    $ git revert --no-commit HEAD HEAD~1 HEAD~2
+$ git revert --no-commit HEAD HEAD~1 HEAD~2
 ```
 
 In this case there is no need to specify HEAD~3 since it is a good commit we do not want to revert.

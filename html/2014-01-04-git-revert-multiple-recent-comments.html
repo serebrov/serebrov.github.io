@@ -45,7 +45,7 @@ want to revert them.
 <!-- more --></p>
 <p>If changes are not pushed to the server yet then the easy way is
 to reset the state to previous commit with <code>reset</code>:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>git reset --hard HEAD~3
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git reset --hard HEAD~3
 </pre></div>
 
 </code></pre>
@@ -61,12 +61,12 @@ This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
 </code></pre>
 <p>But if changes are pushed already then it is better to use <code>revert</code>.
 And here is how to do this for multiple commits:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git revert --no-commit HEAD~2^..HEAD
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD~2^..HEAD
 </pre></div>
 
 </code></pre>
 <p>Or:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git revert --no-commit HEAD~3..HEAD
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD~3..HEAD
 </pre></div>
 
 </code></pre>
@@ -79,18 +79,18 @@ The <code>HEAD~2^</code> syntax is more convenient if commit SHAs are used to na
 commit it automatically.</p>
 <p>So now we can review the repository state and commit it.
 After that we will get the history like this:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    G1 - G2 - G3 - B1 - B2 - B3 - R<span class="sb">`</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>G1 - G2 - G3 - B1 - B2 - B3 - R<span class="sb">`</span>
 </pre></div>
 
 </code></pre>
 <p>Where <code>R&#39;</code> is a revert commit which will return repository state to the commit <code>G3</code>.
 Run git diff to check this (output should be empty):</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git diff HEAD~4 HEAD
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git diff HEAD~4 HEAD
 </pre></div>
 
 </code></pre>
 <p>Another way to run revert is to specify commits one by one from newest to oldest:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git revert --no-commit HEAD HEAD~1 HEAD~2
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD HEAD~1 HEAD~2
 </pre></div>
 
 </code></pre>
