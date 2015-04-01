@@ -7,7 +7,7 @@ Elastic Beanstalk - python application server structure and celery installation
 
 Elastic beanstalk python application is deployed under `/opt/python/`.
 The application is running under Apache web server.
-<!--more-->
+<!-- more -->
 
 Source folder structure is this:
 
