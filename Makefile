@@ -1,6 +1,7 @@
 DEST := .
 NOTES := $(wildcard content/*.md)
 NOTES_HTML := $(patsubst content/%.md, $(DEST)/html/%.html, $(NOTES))
+NOTES_HTML := $(sort $(NOTES_HTML))
 NOTES_META := $(NOTES_HTML:.html=.json)
 
 BS = build/vendor/bootstrap-3.3.1
