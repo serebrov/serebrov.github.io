@@ -161,7 +161,7 @@ The `celeryd.conf` is copied into the same folder where supervisord.conf resides
 
 The `.ebextensions/utils.sh` script contains additional functions used by deployment script:
 
-```
+```bash
 #!/usr/bin/env bash
 set -e
 
@@ -232,7 +232,7 @@ script_add_line() {
 
 The celeryd.conf in `.ebextensions/files/celeryd.conf` is a supervisord config:
 
-```
+```ini
 [program:celeryd]
 command=/opt/python/current/app/scripts/celeryd
 
@@ -261,7 +261,7 @@ killasgroup=true
 
 Restart hook `.ebextensions/files/99_restart_services.sh` restarts celery application when application server is reloaded or restarted:
 
-```
+```bash
 #!/bin/bash
 
 set -xe
@@ -312,7 +312,7 @@ gcc: error trying to exec 'cc1plus': execvp: No such file or directory
 
 To solve this problem, add following packages into the elasticbeanstalk config:
 
-```
+```yaml
   packages:
     yum:
       gcc: []
