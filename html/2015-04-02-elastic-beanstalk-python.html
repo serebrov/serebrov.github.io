@@ -159,75 +159,76 @@ The script above does this by adding a following lines to it:</p>
 
 </code></pre><p>The <code>celeryd.conf</code> is copied into the same folder where supervisord.conf resides.</p>
 <p>The <code>.ebextensions/utils.sh</code> script contains additional functions used by deployment script:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/usr/bin/env bash</span>
-<span class="nx">set</span> <span class="o">-</span><span class="nx">e</span>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
+<span class="nb">set</span> -e
 
-<span class="nx">SCRIPT_PATH</span><span class="o">=</span><span class="err">`</span><span class="nx">dirname</span> <span class="nx">$0</span><span class="err">`</span>
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
 
-<span class="err">#</span> <span class="nx">An</span> <span class="nx">error</span> <span class="nx">exit</span> <span class="kd">function</span>
-<span class="nx">error_exit</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">echo</span> <span class="s2">&quot;$1&quot;</span> <span class="mi">1</span><span class="o">&gt;&amp;</span><span class="mi">2</span>
-    <span class="nx">exit</span> <span class="mi">1</span>
-<span class="p">}</span>
+<span class="c"># An error exit function</span>
+error_exit<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">echo</span> <span class="s2">&quot;$1&quot;</span> 1&gt;<span class="p">&amp;</span>2
+    <span class="nb">exit </span>1
+<span class="o">}</span>
 
-<span class="err">#</span> <span class="nx">Copy</span> <span class="o">+</span> <span class="nx">chmod</span> <span class="o">+</span> <span class="nx">chown</span>
-<span class="err">#</span> <span class="nx">copy_ext</span> <span class="nx">source</span> <span class="nx">target</span> <span class="mi">0755</span> <span class="nx">user</span><span class="o">:</span><span class="nx">group</span>
-<span class="nx">copy_ext</span><span class="p">()</span> <span class="p">{</span>
-    <span class="err">#</span><span class="nx">cp</span> <span class="o">+</span> <span class="nx">chmod</span> <span class="o">+</span> <span class="nx">chown</span>
-    <span class="nx">local</span> <span class="nx">source</span><span class="o">=</span><span class="nx">$1</span>
-    <span class="nx">local</span> <span class="nx">target</span><span class="o">=</span><span class="nx">$2</span>
-    <span class="nx">local</span> <span class="nx">permission</span><span class="o">=</span><span class="nx">$3</span>
-    <span class="nx">local</span> <span class="nx">user</span><span class="o">=</span><span class="nx">$4</span>
-    <span class="nx">local</span> <span class="nx">group</span><span class="o">=</span><span class="nx">$5</span>
-    <span class="k">if</span> <span class="o">!</span> <span class="nx">cp</span> <span class="nx">$source</span> <span class="nx">$target</span><span class="p">;</span> <span class="nx">then</span>
-        <span class="nx">error_exit</span> <span class="s2">&quot;Can not copy ${source} to ${target}&quot;</span>
-    <span class="nx">fi</span>
-    <span class="k">if</span> <span class="o">!</span> <span class="nx">chmod</span> <span class="o">-</span><span class="nx">R</span> <span class="nx">$permission</span> <span class="nx">$target</span><span class="p">;</span> <span class="nx">then</span>
-        <span class="nx">error_exit</span> <span class="s2">&quot;Can not do chmod ${permission} for ${target}&quot;</span>
-    <span class="nx">fi</span>
-    <span class="k">if</span> <span class="o">!</span> <span class="nx">chown</span> <span class="nx">$user</span><span class="o">:</span><span class="nx">$group</span> <span class="nx">$target</span><span class="p">;</span> <span class="nx">then</span>
-        <span class="nx">error_exit</span> <span class="s2">&quot;Can not do chown ${user}:${group} for ${target}&quot;</span>
-    <span class="nx">fi</span>
-    <span class="nx">echo</span> <span class="s2">&quot;cp_ext: ${source} -&gt; ${target} chmod ${permission} &amp; chown ${user}:${group}&quot;</span>
-<span class="p">}</span>
+<span class="c"># Copy + chmod + chown</span>
+<span class="c"># copy_ext source target 0755 user:group</span>
+copy_ext<span class="o">()</span> <span class="o">{</span>
+    <span class="c">#cp + chmod + chown</span>
+    <span class="nb">local source</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nb">local </span><span class="nv">target</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nb">local </span><span class="nv">permission</span><span class="o">=</span><span class="nv">$3</span>
+    <span class="nb">local </span><span class="nv">user</span><span class="o">=</span><span class="nv">$4</span>
+    <span class="nb">local </span><span class="nv">group</span><span class="o">=</span><span class="nv">$5</span>
+    <span class="k">if</span> ! cp <span class="nv">$source</span> <span class="nv">$target</span><span class="p">;</span> <span class="k">then</span>
+        error_exit <span class="s2">&quot;Can not copy ${source} to ${target}&quot;</span>
+    <span class="k">fi</span>
+    <span class="k">if</span> ! chmod -R <span class="nv">$permission</span> <span class="nv">$target</span><span class="p">;</span> <span class="k">then</span>
+        error_exit <span class="s2">&quot;Can not do chmod ${permission} for ${target}&quot;</span>
+    <span class="k">fi</span>
+    <span class="k">if</span> ! chown <span class="nv">$user</span>:<span class="nv">$group</span> <span class="nv">$target</span><span class="p">;</span> <span class="k">then</span>
+        error_exit <span class="s2">&quot;Can not do chown ${user}:${group} for ${target}&quot;</span>
+    <span class="k">fi</span>
+    <span class="nb">echo</span> <span class="s2">&quot;cp_ext: ${source} -&gt; ${target} chmod ${permission} &amp; chown ${user}:${group}&quot;</span>
+<span class="o">}</span>
 
-<span class="nx">is_leader</span><span class="p">()</span> <span class="p">{</span>
-    <span class="err">#</span> <span class="nx">Check</span> <span class="k">for</span> <span class="nx">leader</span><span class="o">:</span> <span class="err">/opt/elasticbeanstalk/bin/leader-test.sh:</span>
-    <span class="err">#</span> <span class="nx">use</span> <span class="nx">as</span>
-    <span class="err">#</span> <span class="k">if</span> <span class="nx">is_leader</span><span class="p">;</span> <span class="nx">then</span>
-    <span class="err">#</span>    <span class="nx">dosmth</span>
-    <span class="err">#</span> <span class="k">else</span>
-    <span class="err">#</span>    <span class="nx">doelse</span>
-    <span class="err">#</span> <span class="nx">fi</span>
-    <span class="k">if</span> <span class="p">[[</span> <span class="s2">&quot;$EB_IS_COMMAND_LEADER&quot;</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="p">]];</span> <span class="nx">then</span>
-        <span class="err">#</span> <span class="nx">to</span> <span class="nx">be</span> <span class="nx">used</span> <span class="k">in</span> <span class="k">if</span><span class="s1">&#39;s, so &#39;</span><span class="mi">0</span><span class="s1">&#39; means true (like for script exit code - 0 is success)</span>
-<span class="s1">        #return 0</span>
-<span class="s1">        #more clear (true returns 0)</span>
-<span class="s1">        true</span>
-<span class="s1">    else</span>
-<span class="s1">        # to be used in if&#39;</span><span class="nx">s</span><span class="p">,</span> <span class="nx">so</span> <span class="s1">&#39;1&#39;</span> <span class="nx">means</span> <span class="kc">false</span>
-        <span class="err">#</span><span class="k">return</span> <span class="mi">1</span>
-        <span class="err">#</span><span class="nx">more</span> <span class="nx">clear</span> <span class="p">(</span><span class="kc">false</span> <span class="nx">returns</span> <span class="nx">non</span> <span class="nx">zero</span><span class="p">)</span>
-        <span class="kc">false</span>
-    <span class="nx">fi</span>
-<span class="p">}</span>
+is_leader<span class="o">()</span> <span class="o">{</span>
+    <span class="c"># Check for leader: /opt/elasticbeanstalk/bin/leader-test.sh:</span>
+    <span class="c"># use as</span>
+    <span class="c"># if is_leader; then</span>
+    <span class="c">#    dosmth</span>
+    <span class="c"># else</span>
+    <span class="c">#    doelse</span>
+    <span class="c"># fi</span>
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$EB_IS_COMMAND_LEADER&quot;</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+        <span class="c"># to be used in if&#39;s, so &#39;0&#39; means true (like for script exit code - 0 is success)</span>
+        <span class="c">#return 0</span>
+        <span class="c">#more clear (true returns 0)</span>
+        <span class="nb">true</span>
+<span class="nb">    </span><span class="k">else</span>
+        <span class="c"># to be used in if&#39;s, so &#39;1&#39; means false</span>
+        <span class="c">#return 1</span>
+        <span class="c">#more clear (false returns non zero)</span>
+        <span class="nb">false</span>
+<span class="nb">    </span><span class="k">fi</span>
+<span class="o">}</span>
 
-<span class="nx">script_add_line</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">local</span> <span class="nx">target_file</span><span class="o">=</span><span class="nx">$1</span>
-    <span class="nx">local</span> <span class="nx">check_text</span><span class="o">=</span><span class="nx">$2</span>
-    <span class="nx">local</span> <span class="nx">add_text</span><span class="o">=</span><span class="nx">$3</span>
+script_add_line<span class="o">()</span> <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">target_file</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nb">local </span><span class="nv">check_text</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nb">local </span><span class="nv">add_text</span><span class="o">=</span><span class="nv">$3</span>
 
-    <span class="k">if</span> <span class="nx">grep</span> <span class="o">-</span><span class="nx">q</span> <span class="s2">&quot;$check_text&quot;</span> <span class="s2">&quot;$target_file&quot;</span>
-    <span class="nx">then</span>
-        <span class="nx">echo</span> <span class="s2">&quot;Modification ${check_text} found in ${target_file}&quot;</span>
+    <span class="k">if</span> grep -q <span class="s2">&quot;$check_text&quot;</span> <span class="s2">&quot;$target_file&quot;</span>
+    <span class="k">then</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Modification ${check_text} found in ${target_file}&quot;</span>
     <span class="k">else</span>
-        <span class="nx">echo</span> <span class="nx">$</span><span class="p">{</span><span class="nx">add_text</span><span class="p">}</span> <span class="o">&gt;&gt;</span> <span class="nx">$</span><span class="p">{</span><span class="nx">target_file</span><span class="p">}</span>
-        <span class="nx">echo</span> <span class="s2">&quot;Modification ${add_text} added to ${target_file}&quot;</span>
-    <span class="nx">fi</span>
-<span class="p">}</span>
+        <span class="nb">echo</span> <span class="k">${</span><span class="nv">add_text</span><span class="k">}</span> &gt;&gt; <span class="k">${</span><span class="nv">target_file</span><span class="k">}</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Modification ${add_text} added to ${target_file}&quot;</span>
+    <span class="k">fi</span>
+<span class="o">}</span>
 </pre></div>
 
-</code></pre><p>The celeryd.conf in <code>.ebextensions/files/celeryd.conf</code> is a supervisord config:</p>
+</code></pre>
+<p>The celeryd.conf in <code>.ebextensions/files/celeryd.conf</code> is a supervisord config:</p>
 <pre><code><div class="highlight"><pre><span class="p">[</span><span class="nx">program</span><span class="o">:</span><span class="nx">celeryd</span><span class="p">]</span>
 <span class="nx">command</span><span class="o">=</span><span class="err">/opt/python/current/app/scripts/celeryd</span>
 

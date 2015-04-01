@@ -161,7 +161,7 @@ The `celeryd.conf` is copied into the same folder where supervisord.conf resides
 
 The `.ebextensions/utils.sh` script contains additional functions used by deployment script:
 
-```
+```bash
 #!/usr/bin/env bash
 set -e
 
