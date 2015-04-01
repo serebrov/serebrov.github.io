@@ -29,13 +29,13 @@ Another important directory is `/opt/elasticbeanstalk` - here there are EB tool 
 
 Apache is managed by [supervisord](http://supervisord.org/), to check the status run this command:
 
-```bash
+```
 sudo supervisorctl -c /opt/python/etc/supervisord.conf status
 ```
 
 And you can restart apache like this:
 
-```bash
+```
 supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
 ```
 
@@ -44,13 +44,13 @@ supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
 I have a [flask](http://flask.pocoo.org/) application and usually it is started as `python application.py`.
 To run it on the server instance you need to init virtual environment and set environment variables first:
 
-```bash
+```
 source /opt/python/run/venv/bin/activate && source /opt/python/current/env
 ```
 
 Now you can start the application manually:
 
-```bash
+```
 cd /opt/python/current/app
 python application.py
 ```
@@ -114,7 +114,7 @@ More details about this method can be found in the great [Innocuous looking Evil
 
 This deployment script `.ebextensions/deploy.sh`:
 
-```bash
+```
 #!/usr/bin/env bash
 set -e
 
@@ -277,7 +277,7 @@ eventHelper.py --msg "Application server successfully restarted." --severity INF
 
 Finally the script under `scripts/celeryd` is used to set environment variables, activate virtual environment and run celery application:
 
-```bash
+```
 #!/bin/bash
 
 source /opt/python/current/env

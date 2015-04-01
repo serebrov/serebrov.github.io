@@ -53,29 +53,25 @@ The application is running under Apache web server.
 </code></pre><p>Apache logs, deployment logs and system messages log are under <code>/var/log</code>.</p>
 <p>Another important directory is <code>/opt/elasticbeanstalk</code> - here there are EB tool scripts and app server restart hooks.</p>
 <p>Apache is managed by <a href="http://supervisord.org/">supervisord</a>, to check the status run this command:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>sudo supervisorctl -c /opt/python/etc/supervisord.conf status
+<pre><code><div class="highlight"><pre><span class="nx">sudo</span> <span class="nx">supervisorctl</span> <span class="o">-</span><span class="nx">c</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">status</span>
 </pre></div>
 
-</code></pre>
-<p>And you can restart apache like this:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
+</code></pre><p>And you can restart apache like this:</p>
+<pre><code><div class="highlight"><pre><span class="nx">supervisorctl</span> <span class="o">-</span><span class="nx">c</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">restart</span> <span class="nx">httpd</span>
 </pre></div>
 
-</code></pre>
-<h3 id="how-to-launch-python-application-manually">How to launch python application manually</h3>
+</code></pre><h3 id="how-to-launch-python-application-manually">How to launch python application manually</h3>
 <p>I have a <a href="http://flask.pocoo.org/">flask</a> application and usually it is started as <code>python application.py</code>.
 To run it on the server instance you need to init virtual environment and set environment variables first:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre><span class="nb">source</span> /opt/python/run/venv/bin/activate <span class="o">&amp;&amp;</span> <span class="nb">source</span> /opt/python/current/env
+<pre><code><div class="highlight"><pre><span class="nx">source</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">run</span><span class="o">/</span><span class="nx">venv</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">activate</span> <span class="o">&amp;&amp;</span> <span class="nx">source</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">current</span><span class="o">/</span><span class="nx">env</span>
 </pre></div>
 
-</code></pre>
-<p>Now you can start the application manually:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre><span class="nb">cd</span> /opt/python/current/app
-python application.py
+</code></pre><p>Now you can start the application manually:</p>
+<pre><code><div class="highlight"><pre><span class="nx">cd</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">current</span><span class="o">/</span><span class="nx">app</span>
+<span class="nx">python</span> <span class="nx">application</span><span class="p">.</span><span class="nx">py</span>
 </pre></div>
 
-</code></pre>
-<h3 id="how-to-install-celery">How to install celery</h3>
+</code></pre><h3 id="how-to-install-celery">How to install celery</h3>
 <p><a href="http://www.celeryproject.org/">Celery</a> is a distributed task queue.</p>
 <p>Our requirements are following:</p>
 <ul>
@@ -121,40 +117,39 @@ Here I don&#39;t describe the celery application file content - do whatever you 
 <p>In general I find the approach with shell script for beanstalk configuration to be much more convenient than the standard way to put shell script code to the text config file.
 More details about this method can be found in the great <a href="http://www.hudku.com/blog/innocuous-looking-evil-devil/">Innocuous looking Evil Devil</a> article. Check also <a href="http://www.hudku.com/blog/tag/elastic-beanstalk">related posts</a>.</p>
 <p>This deployment script <code>.ebextensions/deploy.sh</code>:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
-<span class="nb">set</span> -e
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/usr/bin/env bash</span>
+<span class="nx">set</span> <span class="o">-</span><span class="nx">e</span>
 
-<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
+<span class="nx">SCRIPT_PATH</span><span class="o">=</span><span class="err">`</span><span class="nx">dirname</span> <span class="nx">$0</span><span class="err">`</span>
 
-<span class="nb">source</span> <span class="nv">$SCRIPT_PATH</span>/utils.sh
-<span class="c"># Check for leader: see utils.sh</span>
-<span class="k">if</span> is_leader<span class="p">;</span> <span class="k">then</span>
-  <span class="nb">echo</span> <span class="s2">&quot;Start leader deploy&quot;</span>
+<span class="nx">source</span> <span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">utils</span><span class="p">.</span><span class="nx">sh</span>
+<span class="err">#</span> <span class="nx">Check</span> <span class="k">for</span> <span class="nx">leader</span><span class="o">:</span> <span class="nx">see</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">sh</span>
+<span class="k">if</span> <span class="nx">is_leader</span><span class="p">;</span> <span class="nx">then</span>
+  <span class="nx">echo</span> <span class="s2">&quot;Start leader deploy&quot;</span>
 <span class="k">else</span>
-  <span class="nb">echo</span> <span class="s2">&quot;Start non-leader deploy&quot;</span>
-<span class="k">fi</span>
+  <span class="nx">echo</span> <span class="s2">&quot;Start non-leader deploy&quot;</span>
+<span class="nx">fi</span>
 
-<span class="c"># copy celery app config</span>
-copy_ext <span class="nv">$SCRIPT_PATH</span>/files/celeryd.conf /opt/python/etc/celeryd.conf <span class="m">0755</span> root root
-<span class="c"># copy restart hook to different hooks folders</span>
-copy_ext <span class="nv">$SCRIPT_PATH</span>/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/appdeploy/enact/99_restart_services.sh <span class="m">0755</span> root root
-copy_ext <span class="nv">$SCRIPT_PATH</span>/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/configdeploy/enact/99_restart_services.sh <span class="m">0755</span> root root
-copy_ext <span class="nv">$SCRIPT_PATH</span>/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/restartappserver/enact/99_restart_services.sh <span class="m">0755</span> root root
+<span class="err">#</span> <span class="nx">copy</span> <span class="nx">celery</span> <span class="nx">app</span> <span class="nx">config</span>
+<span class="nx">copy_ext</span> <span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">files</span><span class="o">/</span><span class="nx">celeryd</span><span class="p">.</span><span class="nx">conf</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">celeryd</span><span class="p">.</span><span class="nx">conf</span> <span class="mi">0755</span> <span class="nx">root</span> <span class="nx">root</span>
+<span class="err">#</span> <span class="nx">copy</span> <span class="nx">restart</span> <span class="nx">hook</span> <span class="nx">to</span> <span class="nx">different</span> <span class="nx">hooks</span> <span class="nx">folders</span>
+<span class="nx">copy_ext</span> <span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">files</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">hooks</span><span class="o">/</span><span class="nx">appdeploy</span><span class="o">/</span><span class="nx">enact</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="mi">0755</span> <span class="nx">root</span> <span class="nx">root</span>
+<span class="nx">copy_ext</span> <span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">files</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">hooks</span><span class="o">/</span><span class="nx">configdeploy</span><span class="o">/</span><span class="nx">enact</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="mi">0755</span> <span class="nx">root</span> <span class="nx">root</span>
+<span class="nx">copy_ext</span> <span class="nx">$SCRIPT_PATH</span><span class="o">/</span><span class="nx">files</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">elasticbeanstalk</span><span class="o">/</span><span class="nx">hooks</span><span class="o">/</span><span class="nx">restartappserver</span><span class="o">/</span><span class="nx">enact</span><span class="o">/</span><span class="mi">99</span><span class="nx">_restart_services</span><span class="p">.</span><span class="nx">sh</span> <span class="mi">0755</span> <span class="nx">root</span> <span class="nx">root</span>
 
-<span class="c"># include celeryd.conf into the supervisord.conf</span>
-script_add_line /opt/python/etc/supervisord.conf <span class="s2">&quot;include&quot;</span> <span class="s2">&quot;[include]&quot;</span>
-script_add_line /opt/python/etc/supervisord.conf <span class="s2">&quot;celeryd.conf&quot;</span> <span class="s2">&quot;files=celeryd.conf &quot;</span>
+<span class="err">#</span> <span class="nx">include</span> <span class="nx">celeryd</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">into</span> <span class="nx">the</span> <span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span>
+<span class="nx">script_add_line</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="s2">&quot;include&quot;</span> <span class="s2">&quot;[include]&quot;</span>
+<span class="nx">script_add_line</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="s2">&quot;celeryd.conf&quot;</span> <span class="s2">&quot;files=celeryd.conf &quot;</span>
 
-<span class="c"># Reread the supervisord config</span>
-supervisorctl -c /opt/python/etc/supervisord.conf reread
-<span class="c"># Update supervisord in cache without restarting all services</span>
-supervisorctl -c /opt/python/etc/supervisord.conf update
-<span class="c"># Start/Restart celeryd through supervisord</span>
-supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
+<span class="err">#</span> <span class="nx">Reread</span> <span class="nx">the</span> <span class="nx">supervisord</span> <span class="nx">config</span>
+<span class="nx">supervisorctl</span> <span class="o">-</span><span class="nx">c</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">reread</span>
+<span class="err">#</span> <span class="nx">Update</span> <span class="nx">supervisord</span> <span class="k">in</span> <span class="nx">cache</span> <span class="nx">without</span> <span class="nx">restarting</span> <span class="nx">all</span> <span class="nx">services</span>
+<span class="nx">supervisorctl</span> <span class="o">-</span><span class="nx">c</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">update</span>
+<span class="err">#</span> <span class="nx">Start</span><span class="o">/</span><span class="nx">Restart</span> <span class="nx">celeryd</span> <span class="nx">through</span> <span class="nx">supervisord</span>
+<span class="nx">supervisorctl</span> <span class="o">-</span><span class="nx">c</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">supervisord</span><span class="p">.</span><span class="nx">conf</span> <span class="nx">restart</span> <span class="nx">celeryd</span>
 </pre></div>
 
-</code></pre>
-<p>A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
+</code></pre><p>A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
 So in any case we need to modify the main supervisord config.
 The script above does this by adding a following lines to it:</p>
 <pre><code><div class="highlight"><pre><span class="p">[</span><span class="nx">include</span><span class="p">]</span>
@@ -274,20 +269,19 @@ The script above does this by adding a following lines to it:</p>
 </pre></div>
 
 </code></pre><p>Finally the script under <code>scripts/celeryd</code> is used to set environment variables, activate virtual environment and run celery application:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<pre><code><div class="highlight"><pre><span class="err">#</span><span class="o">!</span><span class="err">/bin/bash</span>
 
-<span class="nb">source</span> /opt/python/current/env
-<span class="nb">source</span> /opt/python/run/venv/bin/activate
-<span class="nb">cd</span> /opt/python/current/app
-<span class="c"># Note: exec is important here - this way supervisord will control</span>
-<span class="c"># the python script and not the bash script</span>
-<span class="c"># See also: http://sortedaffairs.tumblr.com/post/49113594655/managing-virtualenv-apps-with-supervisor</span>
-<span class="c">#</span>
-<span class="nb">exec</span> /opt/python/run/venv/bin/celery worker -A tasks --loglevel<span class="o">=</span>INFO
+<span class="nx">source</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">current</span><span class="o">/</span><span class="nx">env</span>
+<span class="nx">source</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">run</span><span class="o">/</span><span class="nx">venv</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">activate</span>
+<span class="nx">cd</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">current</span><span class="o">/</span><span class="nx">app</span>
+<span class="err">#</span> <span class="nx">Note</span><span class="o">:</span> <span class="nx">exec</span> <span class="nx">is</span> <span class="nx">important</span> <span class="nx">here</span> <span class="o">-</span> <span class="k">this</span> <span class="nx">way</span> <span class="nx">supervisord</span> <span class="nx">will</span> <span class="nx">control</span>
+<span class="err">#</span> <span class="nx">the</span> <span class="nx">python</span> <span class="nx">script</span> <span class="nx">and</span> <span class="nx">not</span> <span class="nx">the</span> <span class="nx">bash</span> <span class="nx">script</span>
+<span class="err">#</span> <span class="nx">See</span> <span class="nx">also</span><span class="o">:</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//sortedaffairs.tumblr.com/post/49113594655/managing-virtualenv-apps-with-supervisor</span>
+<span class="err">#</span>
+<span class="nx">exec</span> <span class="o">/</span><span class="nx">opt</span><span class="o">/</span><span class="nx">python</span><span class="o">/</span><span class="nx">run</span><span class="o">/</span><span class="nx">venv</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">celery</span> <span class="nx">worker</span> <span class="o">-</span><span class="nx">A</span> <span class="nx">tasks</span> <span class="o">--</span><span class="nx">loglevel</span><span class="o">=</span><span class="nx">INFO</span>
 </pre></div>
 
-</code></pre>
-<p>Actually we configured Elastic Beanstalk to run and manage an additional application.
+</code></pre><p>Actually we configured Elastic Beanstalk to run and manage an additional application.
 The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.</p>
 <h3 id="bonus-how-to-install-zeromq-libaray">Bonus: how to install ZeroMQ libaray</h3>
 <p>To install ZeroMQ python library add it to requirements.txt:</p>
