@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+  <loc>http://serebrov.github.io/</loc>
+  <lastmod>2015-04-01T20:26:30+00:00</lastmod>
+  <changefreq>monthly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</loc>
+  <lastmod>2015-04-02T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2015-02-01-dynamodb-local.html</loc>
+  <lastmod>2015-01-25T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2015-01-25-aws-add-secondary-index.html</loc>
+  <lastmod>2015-01-25T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</loc>
+  <lastmod>2015-01-24T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2014-12-30-aws-opsworks-cmd-deployment.html</loc>
+  <lastmod>2014-12-30T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</loc>
+  <lastmod>2014-12-30T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html</loc>
+  <lastmod>2014-12-19T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</loc>
+  <lastmod>2014-01-04T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</loc>
+  <lastmod>2014-01-04T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</loc>
+  <lastmod>2013-12-02T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-12-02-node-core-module-source.html</loc>
+  <lastmod>2013-12-02T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-10-22-elastic-beanstalk-cron-and-db.html</loc>
+  <lastmod>2013-10-22T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html</loc>
+  <lastmod>2013-09-11T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-06-14-js-libraries-for-charts.html</loc>
+  <lastmod>2013-06-14T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-06-14-git-server-setup.html</loc>
+  <lastmod>2013-06-14T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-06-11-amazon-nosql-review.html</loc>
+  <lastmod>2013-06-11T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-05-24-angular-seo.html</loc>
+  <lastmod>2013-05-24T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</loc>
+  <lastmod>2013-03-23T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</loc>
+  <lastmod>2013-03-18T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-12-09-php-friend-via-extend.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-12-09-google-chrome-window-manager.html</loc>
+  <lastmod>2012-12-09T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-10-10-gimport.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</loc>
+  <lastmod>2012-10-01T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</loc>
+  <lastmod>2012-10-01T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</loc>
+  <lastmod>2012-09-30T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-30-git-all-branches-with-file.html</loc>
+  <lastmod>2012-09-30T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</loc>
+  <lastmod>2012-09-29T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</loc>
+  <lastmod>2012-09-25T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-24-innodb.html</loc>
+  <lastmod>2012-09-24T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-23-git-submodule-helpers.html</loc>
+  <lastmod>2012-09-23T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</loc>
+  <lastmod>2012-09-13T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-08-20-selenium-problem-with-big-file-upload.html</loc>
+  <lastmod>2012-08-20T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</loc>
+  <lastmod>2012-08-20T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html</loc>
+  <lastmod>2012-08-02T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html</loc>
+  <lastmod>2012-07-24T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-07-24-selenium-webdriver-set-php-session-cookie.html</loc>
+  <lastmod>2012-07-24T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</loc>
+  <lastmod>2012-01-24T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</loc>
+  <lastmod>2012-04-24T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-04-03-git-rename-branch.html</loc>
+  <lastmod>2012-04-03T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</loc>
+  <lastmod>2012-03-28T03:00:00+0003</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-03-15-oauth-1-0.html</loc>
+  <lastmod>2012-03-15T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-28-git-default-color-diff.html</loc>
+  <lastmod>2012-02-28T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-20-selenium-run-on-virtual-display.html</loc>
+  <lastmod>2012-02-20T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html</loc>
+  <lastmod>2012-03-01T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html</loc>
+  <lastmod>2012-02-20T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</loc>
+  <lastmod>2012-02-13T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</loc>
+  <lastmod>2012-02-01T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</loc>
+  <lastmod>2012-02-01T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://serebrov.github.io/html/2012-01-24-jquery-check-version.html</loc>
+  <lastmod>2012-01-24T02:00:00+0002</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+

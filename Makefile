@@ -14,7 +14,7 @@ WWW_BS_FONTS := $(patsubst $(BS)/fonts/%, $(DEST)/fonts/%, $(wildcard $(BS)/font
 PYGMENTS_CSS = $(DEST)/css/pygments.css
 
 .DEFAULT: all
-all: $(NOTES_HTML) $(NOTES_META) $(DEST)/css/all.css $(WWW_BS_FONTS) $(DEST)/index.html
+all: $(NOTES_HTML) $(NOTES_META) $(DEST)/css/all.css $(WWW_BS_FONTS) $(DEST)/index.html $(DEST)/sitemap.xml
 
 #Order only dependency on dir (dir only will be created if it does not exist)
 $(DEST)/html/%.html: content/%.md build/templates/bootstrap.hbs build/templates/post.hbs build/scripts/handlebars | $(DEST)/html
@@ -28,7 +28,10 @@ $(DEST)/html/%.json: content/%.md build/scripts/frontmatter
 reverse = $(if $(1),$(call reverse,$(wordlist 2,$(words $(1)),$(1)))) $(firstword $(1))
 
 $(DEST)/index.html: $(NOTES_HTML) $(NOTES_META) build/templates/bootstrap.hbs build/templates/index.hbs
-	build/scripts/index -t build/templates/index.hbs $(call reverse,$(NOTES_HTML)) > $@
+	build/scripts/index -t build/templates/index.hbs -o index.html $(call reverse,$(NOTES_HTML)) > $@
+
+$(DEST)/sitemap.xml: $(NOTES_HTML) build/templates/sitemap.hbs
+	build/scripts/index -t build/templates/sitemap.hbs -o sitemap.xml $(call reverse,$(NOTES_HTML)) > $@
 
 $(DEST)/css/all.css: $(BS_CSS) build/css/custom.css | $(DEST)/css
 	mkdir -p $(@D)
