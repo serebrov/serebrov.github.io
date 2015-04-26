@@ -51,7 +51,11 @@ clean:
 
 serve:
 	node node_modules/bootlint/src/cli.js $(NOTES_HTML)
-	python -m SimpleHTTPServer 8081
+	node server.js
+
+# serve:
+# 	node node_modules/bootlint/src/cli.js $(NOTES_HTML)
+# 	python -m SimpleHTTPServer 8081
 
 $(DEST):
 	mkdir $@
