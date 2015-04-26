@@ -34,6 +34,11 @@
       </div>
       <div class="row">
           <div class="col-md-12">
+              <h1>git - use vim with fugitive to resolve merge conflicts</h1>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
               <p>To use fugitive as you mergetool you can use the following.</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
     git config --global merge.tool fugitive
