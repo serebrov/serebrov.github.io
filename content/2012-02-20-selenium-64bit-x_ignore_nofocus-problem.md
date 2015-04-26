@@ -1,13 +1,10 @@
 ---
-title: selenium - problem with loading x\_ignore\_nofocus.so
+title: selenium - problem with loading x_ignore_nofocus.so
 date: 2012-02-20
 tags: selenium
 ---
 
-Problem
--------
-
-Selenium fails to start Firefox with following error:
+Problem: selenium fails to start Firefox with following error:
 
     'The browser appears to have exited before we could connect.
     The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror

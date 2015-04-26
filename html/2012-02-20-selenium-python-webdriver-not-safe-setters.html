@@ -39,8 +39,9 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h2 id="problem">Problem</h2>
-<p>I tried to disable native events for Firefox webdriver in a following way:</p>
+              <p>Problem: after setting the boolean flags for Firefox profile the webdriver fails with &quot;Can&#39;t load the profile&quot; error.</p>
+<p><!-- more -->
+I tried to disable native events for Firefox webdriver in a following way:</p>
 <pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">ff_native_events_enabled</span> <span class="o">==</span> <span class="bp">False</span><span class="p">):</span>
         <span class="n">ffp</span><span class="o">.</span><span class="n">native_events_enabled</span> <span class="o">=</span> <span class="bp">False</span>
@@ -50,8 +51,7 @@
 
 </code></pre>
 <p>After that Firefox starts, but python code can not connect to the webdriver extension.</p>
-<p><!-- more -->
-Test fails with error like this:</p>
+<p>Test fails with error like this:</p>
 <pre><code><div class="highlight"><pre><span class="nx">Traceback</span> <span class="p">(</span><span class="nx">most</span> <span class="nx">recent</span> <span class="nx">call</span> <span class="nx">last</span><span class="p">)</span><span class="o">:</span>
 <span class="p">...</span>
 <span class="nx">File</span> <span class="s2">&quot;/usr/local/lib/python2.6/dist-packages/selenium/webdriver/firefox/webdriver.py&quot;</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">45</span><span class="p">,</span> <span class="k">in</span> <span class="nx">__init__</span>
@@ -97,7 +97,7 @@ The solution is to use in my code lowercase string instead of boolean:</p>
 
 </code></pre>
 <p>I also added a <a href="http://code.google.com/p/selenium/issues/detail?id=3400">bug report</a> and hope this will be fixed in selenium code.
-The same problem exist for other boolean-like setter <code>accept_untrusted_certs</code>.</p>
+The same problem exist for other boolean setters, like <code>accept_untrusted_certs</code>.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://code.google.com/p/selenium/issues/detail?id=3400">bug report</a></p>
 

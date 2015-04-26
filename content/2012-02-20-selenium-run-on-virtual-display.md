@@ -4,6 +4,11 @@ date: 2012-02-20
 tags: selenium
 ---
 
+Selenium tests require browser to run, so usually we run them on the X-server enabled machine.
+But in some cases, like CI system running on the headless EC2 instance, we want to run it on the virtual display.
+This can be done using xvfb (X virtual framebuffer).
+
+<!-- more -->
 Set up
 -------
 
@@ -19,7 +24,6 @@ Install x11vnc
     sudo apt-get install x11vnc
 ```
 
-<!-- more -->
 Run tests on virtual display
 ----------------------------
 
@@ -53,8 +57,7 @@ Start x11vnc server on the same display:
     x11vnc -display :99
 ```
 
-Use vnc client (for example, [gtkvncviewer](https://launchpad.net/gtkvncviewer))  to connect to the localhost and watch tests.
-
+Use vnc client (for example, [gtkvncviewer](https://launchpad.net/gtkvncviewer)) to connect to the localhost and watch how tests are running.
 
 Links
 -----------------

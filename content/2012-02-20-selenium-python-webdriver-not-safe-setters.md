@@ -4,10 +4,9 @@ date: 2012-02-30
 tags: selenium
 ---
 
+Problem: after setting the boolean flags for Firefox profile the webdriver fails with "Can't load the profile" error.
 
-Problem
--------
-
+<!-- more -->
 I tried to disable native events for Firefox webdriver in a following way:
 
 ```python
@@ -20,7 +19,6 @@ I tried to disable native events for Firefox webdriver in a following way:
 
 After that Firefox starts, but python code can not connect to the webdriver extension.
 
-<!-- more -->
 Test fails with error like this:
 
     Traceback (most recent call last):
@@ -74,7 +72,7 @@ The solution is to use in my code lowercase string instead of boolean:
 ```
 
 I also added a [bug report](http://code.google.com/p/selenium/issues/detail?id=3400) and hope this will be fixed in selenium code.
-The same problem exist for other boolean-like setter `accept_untrusted_certs`.
+The same problem exist for other boolean setters, like `accept_untrusted_certs`.
 
 Links
 -----------------

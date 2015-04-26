@@ -639,17 +639,9 @@ This way we will have much more useful data to find and fix deadlock.</p>
       <div class="col-md-12">
         <small class="pull-right">2012-02-20</small>
         <a class="h2" href="html/2012-02-20-selenium-run-on-virtual-display.html">selenium - run tests on a virtual display</a>
-        <div><h2 id="set-up">Set up</h2>
-<p>Install xvfb</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install xvfb
-</pre></div>
-
-</code></pre>
-<p>Install x11vnc</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install x11vnc
-</pre></div>
-
-</code></pre>
+        <div><p>Selenium tests require browser to run, so usually we run them on the X-server enabled machine.
+But in some cases, like CI system running on the headless EC2 instance, we want to run it on the virtual display.
+This can be done using xvfb (X virtual framebuffer).</p>
 </div>
         <a class="more" href="html/2012-02-20-selenium-run-on-virtual-display.html">Read more »</a>
       </div>
@@ -658,17 +650,7 @@ This way we will have much more useful data to find and fix deadlock.</p>
       <div class="col-md-12">
         <small class="pull-right">2012-03-01</small>
         <a class="h2" href="html/2012-02-20-selenium-python-webdriver-not-safe-setters.html">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</a>
-        <div><h2 id="problem">Problem</h2>
-<p>I tried to disable native events for Firefox webdriver in a following way:</p>
-<pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">ff_native_events_enabled</span> <span class="o">==</span> <span class="bp">False</span><span class="p">):</span>
-        <span class="n">ffp</span><span class="o">.</span><span class="n">native_events_enabled</span> <span class="o">=</span> <span class="bp">False</span>
-    <span class="n">ffb</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_binary</span><span class="o">.</span><span class="n">FirefoxBinary</span><span class="p">(</span><span class="n">firefox_path</span><span class="o">=</span><span class="n">Config</span><span class="o">.</span><span class="n">browser_binary</span><span class="p">)</span>
-    <span class="n">selenium</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">(</span><span class="n">firefox_profile</span><span class="o">=</span><span class="n">ffp</span><span class="p">,</span> <span class="n">firefox_binary</span><span class="o">=</span><span class="n">ffb</span><span class="p">)</span>
-</pre></div>
-
-</code></pre>
-<p>After that Firefox starts, but python code can not connect to the webdriver extension.</p>
+        <div><p>Problem: after setting the boolean flags for Firefox profile the webdriver fails with &quot;Can&#39;t load the profile&quot; error.</p>
 </div>
         <a class="more" href="html/2012-02-20-selenium-python-webdriver-not-safe-setters.html">Read more »</a>
       </div>
@@ -676,9 +658,8 @@ This way we will have much more useful data to find and fix deadlock.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-20</small>
-        <a class="h2" href="html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html">selenium - problem with loading x\_ignore\_nofocus.so</a>
-        <div><h2 id="problem">Problem</h2>
-<p>Selenium fails to start Firefox with following error:</p>
+        <a class="h2" href="html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html">selenium - problem with loading x_ignore_nofocus.so</a>
+        <div><p>Problem: selenium fails to start Firefox with following error:</p>
 <pre><code><div class="highlight"><pre><span class="s1">&#39;The browser appears to have exited before we could connect.</span>
 <span class="s1">The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror</span>
 <span class="s1">says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;</span>

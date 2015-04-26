@@ -39,7 +39,11 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h2 id="set-up">Set up</h2>
+              <p>Selenium tests require browser to run, so usually we run them on the X-server enabled machine.
+But in some cases, like CI system running on the headless EC2 instance, we want to run it on the virtual display.
+This can be done using xvfb (X virtual framebuffer).</p>
+<p><!-- more --></p>
+<h2 id="set-up">Set up</h2>
 <p>Install xvfb</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install xvfb
 </pre></div>
@@ -50,7 +54,6 @@
 </pre></div>
 
 </code></pre>
-<p><!-- more --></p>
 <h2 id="run-tests-on-virtual-display">Run tests on virtual display</h2>
 <p>Start xvbf (virtual display number 99)</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    Xvfb -ac :99
@@ -76,7 +79,7 @@
 </pre></div>
 
 </code></pre>
-<p>Use vnc client (for example, <a href="https://launchpad.net/gtkvncviewer">gtkvncviewer</a>)  to connect to the localhost and watch tests.</p>
+<p>Use vnc client (for example, <a href="https://launchpad.net/gtkvncviewer">gtkvncviewer</a>) to connect to the localhost and watch how tests are running.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://serverfault.com/questions/273095/connect-to-xvfb-remote-to-fix-firefox-headless-crash">Stackoverflow</a></p>
 <p><a href="http://www.semicomplete.com/blog/geekery/xvfb-firefox.html">Xvfb + Firefox</a></p>
