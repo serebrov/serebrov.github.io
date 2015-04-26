@@ -1,9 +1,8 @@
 ---
+title: JS libraties for charts (links)
 date: 2013-06-14
 tags: js
 ---
-JS libraties for charts (links)
-============================================
 
 <!-- more -->
 [D3.js](http://d3js.org/)

@@ -1,9 +1,8 @@
 ---
+title: Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)
 date: 2013-09-11
 tags: aws
 ---
-Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)
-============================================
 
 By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
 If there are manual changes to EB configs it can be complex to manually sync these changes

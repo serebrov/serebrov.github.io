@@ -1,9 +1,9 @@
 ---
+title: git - colored diff, branch, etc by default
 date: 2012-02-28
 tags: git
 ---
-git - colored diff, branch, etc by default
-============================================
+
 
 See color.* options in the [git config](http://schacon.github.com/git/git-config.html) docs:
 

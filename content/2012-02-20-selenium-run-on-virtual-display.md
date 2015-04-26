@@ -1,9 +1,8 @@
 ---
+title: selenium - run tests on a virtual display
 date: 2012-02-20
 tags: selenium
 ---
-selenium - run tests on a virtual display
-============================================
 
 Set up
 -------

@@ -1,9 +1,9 @@
 ---
+title:  git - rename branch (local and remote)
 date: 2012-04-03
 tags: git
 ---
- git - rename branch (local and remote)
-=======================================
+
 
 ```bash
     #rename local branch

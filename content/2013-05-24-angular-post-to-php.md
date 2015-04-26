@@ -1,9 +1,8 @@
 ---
+title: Angular.js POST data to PHP
 date: 2012-04-03
 tags: php,angularjs
 ---
-Angular.js POST data to PHP
-============================================
 
 By default angular.js sends all data in json.
 So if you do a POST request to a PHP code then the `$_POST` superglobal will not be populated.

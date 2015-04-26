@@ -1,9 +1,9 @@
 ---
+title: express.js and ejs - reuse template on server and client
 date: 2012-08-20
 tags: ejs,express.js,node.js
 ---
-express.js and ejs - reuse template on server and client
-============================================
+
 [ejs](https://github.com/visionmedia/ejs) has a [client-side support](https://github.com/visionmedia/ejs#client-side-support) but documentation and examples do not describe how to reuse the same template on the server and on the client side.
 
 For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.

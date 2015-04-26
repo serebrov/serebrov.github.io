@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Elastic Beanstalk - cron command and RDS DB access</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,12 +34,10 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="elastic-beanstalk-cron-command-and-rds-db-access">Elastic Beanstalk - cron command and RDS DB access</h1>
-<!-- more -->
-
-<h2 id="problem">Problem</h2>
+              <h2 id="problem">Problem</h2>
 <p>I have a console command in php which needs an access to DB.
-The command need to be launched via cron.</p>
+The command need to be launched via cron.
+<!-- more --></p>
 <p>The DB connection string looks like like this</p>
 <pre><code><div class="highlight"><pre><span class="s1">&#39;connectionString&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;mysql:host=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_HOSTNAME&#39;</span><span class="p">].</span><span class="s1">&#39;;port=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_PORT&#39;</span><span class="p">].</span><span class="s1">&#39;;dbname=&#39;</span><span class="p">.</span><span class="nx">$_SERVER</span><span class="p">[</span><span class="s1">&#39;RDS_DB_NAME&#39;</span><span class="p">],</span>
 </pre></div>

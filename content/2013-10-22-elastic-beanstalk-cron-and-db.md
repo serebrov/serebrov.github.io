@@ -1,15 +1,14 @@
 ---
+title: Elastic Beanstalk - cron command and RDS DB access
 date: 2013-10-22
 tags: aws
 ---
-Elastic Beanstalk - cron command and RDS DB access
-============================================
-<!-- more -->
 
 Problem
 --------------------------------------------
 I have a console command in php which needs an access to DB.
 The command need to be launched via cron.
+<!-- more -->
 
 The DB connection string looks like like this
 

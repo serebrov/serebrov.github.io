@@ -1,9 +1,9 @@
 ---
+title: Andriod - moblie network problem after BusyBox update
 date: 2012-01-24
 tags: android
 ---
-Andriod - moblie network problem after BusyBox update
-============================================
+
 I have LG p500 (Optimus One), rooted with original ROM.
 
 After update to [BusyBox](https://play.google.com/store/apps/details?id=stericson.busybox) 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.

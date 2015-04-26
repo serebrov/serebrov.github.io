@@ -1,9 +1,9 @@
 ---
+title: git - Your branch is ahead of 'origin/master' by 1 commit after pull
 date: 2012-09-30
 tags: git
 ---
-git - Your branch is ahead of 'origin/master' by 1 commit after pull
-===========================================
+
 
 Your branch is ahead of 'origin/master' by 1 commit (or X commits) after `git pull origin master`.
 

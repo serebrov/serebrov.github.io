@@ -1,9 +1,8 @@
 ---
+title: How to keep git log and less output on the screen
 date: 2014-01-04
 tags: git
 ---
-How to keep git log and less output on the screen
-============================================
 
 When `git` uses `less` as pager the output of commands like `git log` disappears from the console
 screen when you exit from less.

@@ -36,8 +36,8 @@
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2015-04-02</small>
-        <div><h1 id="elastic-beanstalk-python-application-server-structure-and-celery-installation">Elastic Beanstalk - python application server structure and celery installation</h1>
-<p>Elastic beanstalk python application is deployed under <code>/opt/python/</code>.
+        <a class="h2" href="html/2015-04-02-elastic-beanstalk-python.html">Elastic Beanstalk - python application server structure and celery installation</a>
+        <div><p>Elastic beanstalk python application is deployed under <code>/opt/python/</code>.
 The application is running under Apache web server.</p>
 </div>
         <a class="more" href="html/2015-04-02-elastic-beanstalk-python.html">Read more »</a>
@@ -46,8 +46,8 @@ The application is running under Apache web server.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2015-01-25</small>
-        <div><h1 id="local-amazon-dynamodb-tools-dump-restore-and-testing">Local Amazon DynamoDB - tools, dump/restore and testing</h1>
-<h3 id="setup">Setup</h3>
+        <a class="h2" href="html/2015-02-01-dynamodb-local.html">Local Amazon DynamoDB - tools, dump/restore and testing</a>
+        <div><h3 id="setup">Setup</h3>
 <p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html">Download</a> and extract dynamodb local to some folder.</p>
 <p>Launch it (-sharedDb allows us to connect to the same database with other tools):</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>java -Djava.library.path<span class="o">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
@@ -62,8 +62,8 @@ The application is running under Apache web server.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2015-01-25</small>
-        <div><h1 id="amazon-dynamodb-how-to-add-global-secondary-index">Amazon DynamoDB - how to add global secondary index</h1>
-<p>At the moment it is not possible to add a secondary index into the existing table.
+        <a class="h2" href="html/2015-01-25-aws-add-secondary-index.html">Amazon DynamoDB - how to add global secondary index</a>
+        <div><p>At the moment it is not possible to add a secondary index into the existing table.
 This feature is <a href="https://forums.aws.amazon.com/ann.jspa?annID=2650">announced</a> but not yet available.</p>
 <p>So the only way is to create a new table and migrate the existing data to it.
 This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html">Amazon EMR</a>.</p>
@@ -74,8 +74,8 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2015-01-24</small>
-        <div><h1 id="amazon-dynamodb-emr-and-hive-notes">Amazon DynamoDB, EMR and Hive notes</h1>
-<p>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-get-started.html">getting started tutorial</a>.</p>
+        <a class="h2" href="html/2015-01-24-aws-dynamodb-emr-hive.html">Amazon DynamoDB, EMR and Hive notes</a>
+        <div><p>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-get-started.html">getting started tutorial</a>.</p>
 <p>Now it is possible to run Hive commands in few following ways:</p>
 <ul>
 <li>Connect via ssh, launch hive and run commands interactively</li>
@@ -89,8 +89,8 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2014-12-30</small>
-        <div><h1 id="aws-deployment-via-opsworks-from-the-command-line">AWS - Deployment via OpsWorks from the command line</h1>
-<p>Below is a simple python script which performs application deployment using OpsWorks API library (boto).
+        <a class="h2" href="html/2014-12-30-aws-opsworks-cmd-deployment.html">AWS - Deployment via OpsWorks from the command line</a>
+        <div><p>Below is a simple python script which performs application deployment using OpsWorks API library (boto).
 Script performs following steps</p>
 <ul>
 <li>Execute &#39;update_custom_cookbooks&#39; deployment command and wait for successful completion (or stop with an error)</li>
@@ -103,8 +103,8 @@ Script performs following steps</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2014-12-30</small>
-        <div><h1 id="aws-opsworks-setup-mongodb-ebs-volume-backups">AWS OpsWorks - setup mongodb ebs volume backups</h1>
-<p>I described how to setup <a href="http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">mongodb on EC2 using OpsWroks</a> and here is how to setup mongo data backups.</p>
+        <a class="h2" href="html/2014-12-30-aws-ebs-mongo-backups.html">AWS OpsWorks - setup mongodb ebs volume backups</a>
+        <div><p>I described how to setup <a href="http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">mongodb on EC2 using OpsWroks</a> and here is how to setup mongo data backups.</p>
 <p>In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.</p>
 </div>
         <a class="more" href="html/2014-12-30-aws-ebs-mongo-backups.html">Read more »</a>
@@ -113,8 +113,8 @@ Script performs following steps</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2014-12-19</small>
-        <div><h1 id="amazon-opsworks-node-js-app-with-mongodb-setup">Amazon OpsWorks - node.js app with MongoDB setup</h1>
-<p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html">Amazon OpsWorks</a> provides a way to manage AWS resources
+        <a class="h2" href="html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">Amazon OpsWorks - node.js app with MongoDB setup</a>
+        <div><p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html">Amazon OpsWorks</a> provides a way to manage AWS resources
 using <a href="http://docs.chef.io/recipes.html">Chef recipes</a>.</p>
 <p>Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server.
 It is similar to the php application + mysql setup described
@@ -126,8 +126,8 @@ in the OpsWorks <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/ge
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2014-01-04</small>
-        <div><h1 id="git-how-to-revert-multiple-recent-commits">Git - how to revert multiple recent commits</h1>
-<p>Let&#39;s assume we have a history like this:</p>
+        <a class="h2" href="html/2014-01-04-git-revert-multiple-recent-comments.html">Git - how to revert multiple recent commits</a>
+        <div><p>Let&#39;s assume we have a history like this:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>G1 - G2 - G3 - B1 - B2 - B3
 </pre></div>
 
@@ -141,8 +141,8 @@ want to revert them.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2014-01-04</small>
-        <div><h1 id="how-to-keep-git-log-and-less-output-on-the-screen">How to keep git log and less output on the screen</h1>
-<p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
+        <a class="h2" href="html/2014-01-04-git-log-and-less-keep-output.html">How to keep git log and less output on the screen</a>
+        <div><p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
 screen when you exit from less.
 This is not convenient in many cases so here is how to fix this.</p>
 </div>
@@ -152,8 +152,8 @@ This is not convenient in many cases so here is how to fix this.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-12-02</small>
-        <div><h1 id="node-js-how-to-debug-mocha-test-with-node-inspector">Node.js - how to debug mocha test with node inspector</h1>
-<p>To debug mocha test with <a href="https://github.com/node-inspector/node-inspector">node inspector</a> use the delay before test:</p>
+        <a class="h2" href="html/2013-12-02-node-debug-mocha.html">Node.js - how to debug mocha test with node inspector</a>
+        <div><p>To debug mocha test with <a href="https://github.com/node-inspector/node-inspector">node inspector</a> use the delay before test:</p>
 </div>
         <a class="more" href="html/2013-12-02-node-debug-mocha.html">Read more »</a>
       </div>
@@ -161,8 +161,8 @@ This is not convenient in many cases so here is how to fix this.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-12-02</small>
-        <div><h1 id="node-js-how-to-get-core-module-source">Node.js - how to get core module source</h1>
-<p>It is possible to ask node to show its core module source.</p>
+        <a class="h2" href="html/2013-12-02-node-core-module-source.html">Node.js - how to get core module source</a>
+        <div><p>It is possible to ask node to show its core module source.</p>
 </div>
         <a class="more" href="html/2013-12-02-node-core-module-source.html">Read more »</a>
       </div>
@@ -170,7 +170,10 @@ This is not convenient in many cases so here is how to fix this.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-10-22</small>
-        <div><h1 id="elastic-beanstalk-cron-command-and-rds-db-access">Elastic Beanstalk - cron command and RDS DB access</h1>
+        <a class="h2" href="html/2013-10-22-elastic-beanstalk-cron-and-db.html">Elastic Beanstalk - cron command and RDS DB access</a>
+        <div><h2 id="problem">Problem</h2>
+<p>I have a console command in php which needs an access to DB.
+The command need to be launched via cron.</p>
 </div>
         <a class="more" href="html/2013-10-22-elastic-beanstalk-cron-and-db.html">Read more »</a>
       </div>
@@ -178,8 +181,8 @@ This is not convenient in many cases so here is how to fix this.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-09-11</small>
-        <div><h1 id="elastic-beanstalk-deploy-from-different-machines-by-different-users-or-how-to-get-rid-of-absolute-paths-in-configs-">Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)</h1>
-<p>By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
+        <a class="h2" href="html/2013-09-11-elastic-beanstalk-configs.html">Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)</a>
+        <div><p>By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
 If there are manual changes to EB configs it can be complex to manually sync these changes
 between different machines / different users.
 Of cause it is possible to add config files to git repository but there are also several
@@ -201,16 +204,16 @@ Here is how this problem can be fixed:</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-06-14</small>
-        <div><h1 id="js-libraties-for-charts-links-">JS libraties for charts (links)</h1>
-</div>
+        <a class="h2" href="html/2013-06-14-js-libraries-for-charts.html">JS libraties for charts (links)</a>
+        <div></div>
         <a class="more" href="html/2013-06-14-js-libraries-for-charts.html">Read more »</a>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-06-14</small>
-        <div><h1 id="how-to-setup-git-server-on-ubuntu-with-push-email-notifications">How to setup git server on ubuntu with push email notifications</h1>
-<h2 id="git-server">Git Server</h2>
+        <a class="h2" href="html/2013-06-14-git-server-setup.html">How to setup git server on ubuntu with push email notifications</a>
+        <div><h2 id="git-server">Git Server</h2>
 <p>Prerequisites are git and ssh-server (apt-get install openssh-server).</p>
 <p>The installation process is described in <a href="http://git-scm.com/book/en/Git-on-the-Server-Setting-Up-the-Server">the Pro Git book</a>.
 Below is the setup process with some comments and updates.</p>
@@ -221,8 +224,8 @@ Below is the setup process with some comments and updates.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-06-11</small>
-        <div><h1 id="amazon-nosql-solutions">Amazon NoSQL Solutions</h1>
-<p>Amazon provides following <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> storage options:</p>
+        <a class="h2" href="html/2013-06-11-amazon-nosql-review.html">Amazon NoSQL Solutions</a>
+        <div><p>Amazon provides following <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> storage options:</p>
 <ul>
 <li>[SimpleDB] (<a href="http://aws.amazon.com/simpledb/">http://aws.amazon.com/simpledb/</a>) - Amazon SimpleDB is a highly
 available and flexible non-relational data store that offloads the work of
@@ -239,8 +242,8 @@ up, operate, and scale.</li>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-05-24</small>
-        <div><h1 id="angular-js-and-seo-pre-render-content-on-the-server">Angular.js and SEO - pre-render content on the server</h1>
-<p>With angular.js you have an HTML which looks like this:</p>
+        <a class="h2" href="html/2013-05-24-angular-seo.html">Angular.js and SEO - pre-render content on the server</a>
+        <div><p>With angular.js you have an HTML which looks like this:</p>
 <pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;span&gt;</span>{{variableValue}}<span class="nt">&lt;/span&gt;</span>
     <span class="nt">&lt;ul&gt;</span>
         <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;item in items&quot;</span> <span class="na">ng-bind=</span><span class="s">&quot;item.name&quot;</span><span class="nt">&gt;&lt;/li&gt;</span>
@@ -256,8 +259,8 @@ up, operate, and scale.</li>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="angular-js-post-data-to-php">Angular.js POST data to PHP</h1>
-<p>By default angular.js sends all data in json.
+        <a class="h2" href="html/2013-05-24-angular-post-to-php.html">Angular.js POST data to PHP</a>
+        <div><p>By default angular.js sends all data in json.
 So if you do a POST request to a PHP code then the <code>$_POST</code> superglobal will not be populated.</p>
 <p>This can be solved in two ways - on the client side or on the server side.</p>
 </div>
@@ -267,8 +270,8 @@ So if you do a POST request to a PHP code then the <code>$_POST</code> superglob
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-03-23</small>
-        <div><h1 id="php-utf-8-strings-handling">PHP - utf-8 strings handling</h1>
-<p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
+        <a class="h2" href="html/2013-03-23-php-utf-8-strings.html">PHP - utf-8 strings handling</a>
+        <div><p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
 encoding for string functions to utf-8 in php.ini:</p>
 <pre><code><div class="highlight"><pre><span class="nx">mbstring</span><span class="p">.</span><span class="nx">internal_encoding</span> <span class="o">=</span> <span class="nx">UTF</span><span class="o">-</span><span class="mi">8</span>
 <span class="nx">mbstring</span><span class="p">.</span><span class="nx">func_overload</span> <span class="o">=</span> <span class="mi">7</span>
@@ -281,8 +284,8 @@ encoding for string functions to utf-8 in php.ini:</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2013-03-18</small>
-        <div><h1 id="want-scalable-application-architecture-check-angularjs-">Want Scalable Application Architecture? Check AngularJS.</h1>
-<p>The <a href="http://www.youtube.com/watch?v=mKouqShWI4o">Scalable JavaScript Application Architecture</a> is a  presentation by <a href="http://www.nczonline.net/">Nicholas Zakas</a> where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:</p>
+        <a class="h2" href="html/2013-03-18-js-scalable-architecture.html">Want Scalable Application Architecture? Check AngularJS.</a>
+        <div><p>The <a href="http://www.youtube.com/watch?v=mKouqShWI4o">Scalable JavaScript Application Architecture</a> is a  presentation by <a href="http://www.nczonline.net/">Nicholas Zakas</a> where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:</p>
 <ul>
 <li><a href="http://www.ubelly.com/2011/11/scalablejs/">Presentation summary</a></li>
 <li><a href="http://www.slideshare.net/nzakas/scalable-javascript-application-architecture">Presentation slides</a></li>
@@ -295,8 +298,8 @@ encoding for string functions to utf-8 in php.ini:</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="speedup-unit-tests-by-moving-mysql-data-to-memory-ubuntu-">Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
-<p>There are several ways to speedup slow unit tests which interact with database:</p>
+        <a class="h2" href="html/2012-12-17-unit-speed-mysql-to-mem.html">Speedup unit tests by moving MySql data to memory [Ubuntu]</a>
+        <div><p>There are several ways to speedup slow unit tests which interact with database:</p>
 <ul>
 <li>Refactor code and tests and do not interact with db in unit tests</li>
 <li>Use sqlite db in memory instead of MySql</li>
@@ -310,8 +313,8 @@ encoding for string functions to utf-8 in php.ini:</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="php-friend-a-class-via-extend">PHP - friend a class via extend</h1>
-<p>C++ allows to declare one class as a friend of another one.</p>
+        <a class="h2" href="html/2012-12-09-php-friend-via-extend.html">PHP - friend a class via extend</a>
+        <div><p>C++ allows to declare one class as a friend of another one.</p>
 <p>This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.</p>
 </div>
         <a class="more" href="html/2012-12-09-php-friend-via-extend.html">Read more »</a>
@@ -320,8 +323,8 @@ encoding for string functions to utf-8 in php.ini:</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-12-09</small>
-        <div><h1 id="window-managers-for-google-chrome">Window managers for Google Chrome</h1>
-<p>A list of extensions to manage position of chrome tabs / windows and to create splits.
+        <a class="h2" href="html/2012-12-09-google-chrome-window-manager.html">Window managers for Google Chrome</a>
+        <div><p>A list of extensions to manage position of chrome tabs / windows and to create splits.
 Descriptions are original texts from extension pages.</p>
 </div>
         <a class="more" href="html/2012-12-09-google-chrome-window-manager.html">Read more »</a>
@@ -330,8 +333,8 @@ Descriptions are original texts from extension pages.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="gimport-yii-extension">GImport yii extension</h1>
-<p>GImport yii extension implements recursive import of directories with caching.</p>
+        <a class="h2" href="html/2012-10-10-gimport.html">GImport yii extension</a>
+        <div><p>GImport yii extension implements recursive import of directories with caching.</p>
 <p>Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.</p>
 </div>
         <a class="more" href="html/2012-10-10-gimport.html">Read more »</a>
@@ -340,8 +343,8 @@ Descriptions are original texts from extension pages.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="phpmyadmin-and-eaccelerator-problem">phpmyadmin and eaccelerator problem</h1>
-<p>Error when trying to access phpmyadmin (in Chrome):</p>
+        <a class="h2" href="html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html">phpmyadmin and eaccelerator problem</a>
+        <div><p>Error when trying to access phpmyadmin (in Chrome):</p>
 <pre><code><div class="highlight"><pre><span class="nb">Error</span> <span class="mi">324</span> <span class="p">(</span><span class="nx">net</span><span class="o">::</span><span class="nx">ERR_EMPTY_RESPONSE</span><span class="p">)</span><span class="o">:</span> <span class="nx">The</span> <span class="nx">server</span> <span class="nx">closed</span> <span class="nx">the</span> <span class="nx">connection</span> <span class="nx">without</span> <span class="nx">sending</span> <span class="nx">any</span> <span class="nx">data</span><span class="p">.</span>
 </pre></div>
 
@@ -352,8 +355,8 @@ Descriptions are original texts from extension pages.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="git-git-rm-already-deleted-files">git - git rm already deleted files</h1>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git add -u
+        <a class="h2" href="html/2012-10-01-git-rm-deleted-files.html">git - git rm already deleted files</a>
+        <div><pre><code class="lang-bash"><div class="highlight"><pre>    git add -u
 </pre></div>
 
 </code></pre>
@@ -364,16 +367,16 @@ Descriptions are original texts from extension pages.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-10-01</small>
-        <div><h1 id="git-find-not-merged-branches">git - find not merged branches</h1>
-</div>
+        <a class="h2" href="html/2012-10-01-git-find-not-merged-branches.html">git - find not merged branches</a>
+        <div></div>
         <a class="more" href="html/2012-10-01-git-find-not-merged-branches.html">Read more »</a>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-10-01</small>
-        <div><h1 id="git-view-changes-diff-and-log">git - view changes - diff and log</h1>
-<h2 id="diff-staged-changes">Diff staged changes</h2>
+        <a class="h2" href="html/2012-10-01-git-diff-and-log.html">git - view changes - diff and log</a>
+        <div><h2 id="diff-staged-changes">Diff staged changes</h2>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git diff --cached
     <span class="c"># or</span>
     git diff --staged
@@ -393,8 +396,8 @@ Descriptions are original texts from extension pages.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-30</small>
-        <div><h1 id="git-your-branch-is-ahead-of-origin-master-by-1-commit-after-pull">git - Your branch is ahead of &#39;origin/master&#39; by 1 commit after pull</h1>
-<p>Your branch is ahead of &#39;origin/master&#39; by 1 commit (or X commits) after <code>git pull origin master</code>.</p>
+        <a class="h2" href="html/2012-09-30-git-branch-ahead-after-pull.html">git - Your branch is ahead of &#x27;origin/master&#x27; by 1 commit after pull</a>
+        <div><p>Your branch is ahead of &#39;origin/master&#39; by 1 commit (or X commits) after <code>git pull origin master</code>.</p>
 <p>The sequence:</p>
 <ul>
 <li>Have up-to-date repository</li>
@@ -412,8 +415,8 @@ origin/master is not changed (still points to older version).</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-30</small>
-        <div><h1 id="git-find-all-branches-where-file-was-changed">git - find all branches where file was changed</h1>
-<p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
+        <a class="h2" href="html/2012-09-30-git-all-branches-with-file.html">git - find all branches where file was changed</a>
+        <div><p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
 <p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git log --all --format<span class="o">=</span>%H FILENAME <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>f<span class="p">;</span> <span class="k">do</span> git branch --contains <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
 </pre></div>
@@ -426,8 +429,8 @@ origin/master is not changed (still points to older version).</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-29</small>
-        <div><h1 id="yii-and-jquery-localtime-js-display-dates-in-user-local-timezone">Yii and jquery.localtime.js - display dates in user local timezone</h1>
-<p>With this method we work on the server with UTC timezone dates and convert them
+        <a class="h2" href="html/2012-09-29-yii-jquery-localtime.html">Yii and jquery.localtime.js - display dates in user local timezone</a>
+        <div><p>With this method we work on the server with UTC timezone dates and convert them
 to a user local timezone on client.</p>
 </div>
         <a class="more" href="html/2012-09-29-yii-jquery-localtime.html">Read more »</a>
@@ -436,8 +439,8 @@ to a user local timezone on client.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-25</small>
-        <div><h1 id="global-ajax-response-handler-and-jquery-localtime-plugin">global ajax response handler and jquery.localtime plugin</h1>
-<p>The <a href="http://code.google.com/p/jquery-localtime">jquery.localtime plugin</a> allows to convert date/time strings to a local user time on a client site.
+        <a class="h2" href="html/2012-09-25-global-ajax-handler-and-localtime.html">global ajax response handler and jquery.localtime plugin</a>
+        <div><p>The <a href="http://code.google.com/p/jquery-localtime">jquery.localtime plugin</a> allows to convert date/time strings to a local user time on a client site.
 By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.</p>
 <p>Possible solution is to add some special handling to $.ajax &#39;success&#39; handlers, but it can require a lot of modifications.
 Better way is to set some global handler for all ajax requests and apply conversion to local time there.
@@ -449,8 +452,8 @@ I evaluated several approaches before I could find a working solution.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-24</small>
-        <div><h1 id="innodb-notes">innodb notes</h1>
-<p>Below are some notes regarding the innodb transactions and locks.
+        <a class="h2" href="html/2012-09-24-innodb.html">innodb notes</a>
+        <div><p>Below are some notes regarding the innodb transactions and locks.
 Most of them are just a copy-paste from <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html">innodb docs</a> with my notes.
 Also there are some examples of custom-maid deadlocks.</p>
 </div>
@@ -460,8 +463,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-23</small>
-        <div><h1 id="git-submodule-helpers">git - submodule helpers</h1>
-<p>Below are some git commands which can be useful to resolve problems with submodules.</p>
+        <a class="h2" href="html/2012-09-23-git-submodule-helpers.html">git - submodule helpers</a>
+        <div><p>Below are some git commands which can be useful to resolve problems with submodules.</p>
 </div>
         <a class="more" href="html/2012-09-23-git-submodule-helpers.html">Read more »</a>
       </div>
@@ -469,8 +472,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-09-13</small>
-        <div><h1 id="yii-url-rules-optional-parameters">Yii url rules - optional parameters</h1>
-<p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
+        <a class="h2" href="html/2012-09-13-yii-url-rules-optional-parameters.html">Yii url rules - optional parameters</a>
+        <div><p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
 <pre><code><div class="highlight"><pre><span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span>
 <span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
 <span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">99</span>
@@ -486,8 +489,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-08-20</small>
-        <div><h1 id="selenium-problem-with-big-file-upload">selenium - problem with big file upload</h1>
-<h2 id="problem">Problem</h2>
+        <a class="h2" href="html/2012-08-20-selenium-problem-with-big-file-upload.html">selenium - problem with big file upload</a>
+        <div><h2 id="problem">Problem</h2>
 <p>Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.</p>
 </div>
         <a class="more" href="html/2012-08-20-selenium-problem-with-big-file-upload.html">Read more »</a>
@@ -496,8 +499,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-08-20</small>
-        <div><h1 id="express-js-and-ejs-reuse-template-on-server-and-client">express.js and ejs - reuse template on server and client</h1>
-<p><a href="https://github.com/visionmedia/ejs">ejs</a> has a <a href="https://github.com/visionmedia/ejs#client-side-support">client-side support</a> but documentation and examples do not describe how to reuse the same template on the server and on the client side.</p>
+        <a class="h2" href="html/2012-08-20-expressjs-ejs-reuse-templates.html">express.js and ejs - reuse template on server and client</a>
+        <div><p><a href="https://github.com/visionmedia/ejs">ejs</a> has a <a href="https://github.com/visionmedia/ejs#client-side-support">client-side support</a> but documentation and examples do not describe how to reuse the same template on the server and on the client side.</p>
 <p>For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</p>
 </div>
         <a class="more" href="html/2012-08-20-expressjs-ejs-reuse-templates.html">Read more »</a>
@@ -506,8 +509,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-08-02</small>
-        <div><h1 id="selenium-webdriver-get-webelement-by-jquery-selector">selenium webdriver - get webelement by jQuery selector</h1>
-<p>This can be necessary for example for selector like <code>#id &gt; li:visible</code>.</p>
+        <a class="h2" href="html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html">selenium webdriver - get webelement by jQuery selector</a>
+        <div><p>This can be necessary for example for selector like <code>#id &gt; li:visible</code>.</p>
 <p>If you will try to do <code>webdriver.find_element_by_css_selector</code> you will get an error message &quot;The given selector <code>#id &gt; li:visible</code> is either invalid or does not result in a WebElement.&quot;</p>
 </div>
         <a class="more" href="html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html">Read more »</a>
@@ -516,8 +519,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-07-24</small>
-        <div><h1 id="selenium-webdriver-trigger-event-on-element-via-jquery">selenium webdriver - trigger event on element via jQuery</h1>
-<p>The &#39;executeScript&#39; method of the webdriver receives additional &#39;arguments&#39; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):</p>
+        <a class="h2" href="html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html">selenium webdriver - trigger event on element via jQuery</a>
+        <div><p>The &#39;executeScript&#39; method of the webdriver receives additional &#39;arguments&#39; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):</p>
 <pre><code><div class="highlight"><pre><span class="nx">event</span> <span class="o">=</span> <span class="s1">&#39;click&#39;</span> <span class="err">#</span><span class="nx">or</span> <span class="s1">&#39;hover&#39;</span> <span class="nx">or</span> <span class="nx">any</span> <span class="nx">other</span>
 <span class="nx">script</span> <span class="o">=</span> <span class="s2">&quot;$(arguments[0]).trigger(&#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;)&quot;</span>
 <span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">web_element</span><span class="p">)</span>
@@ -530,8 +533,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-07-24</small>
-        <div><h1 id="selenium-webdriver-set-php-session-cookie">selenium webdriver - set php session cookie</h1>
-<p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
+        <a class="h2" href="html/2012-07-24-selenium-webdriver-set-php-session-cookie.html">selenium webdriver - set php session cookie</a>
+        <div><p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
 <p>Fortunately it is easy to do with javascript.</p>
 </div>
         <a class="more" href="html/2012-07-24-selenium-webdriver-set-php-session-cookie.html">Read more »</a>
@@ -540,8 +543,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-01-24</small>
-        <div><h1 id="andriod-moblie-network-problem-after-busybox-update">Andriod - moblie network problem after BusyBox update</h1>
-<p>I have LG p500 (Optimus One), rooted with original ROM.</p>
+        <a class="h2" href="html/2012-06-15-android-mobile-network-problem.html">Andriod - moblie network problem after BusyBox update</a>
+        <div><p>I have LG p500 (Optimus One), rooted with original ROM.</p>
 <p>After update to <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox</a> 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.</p>
 <p>I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&#39;t help. I did a factory reset - also didn&#39;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</p>
 </div>
@@ -551,8 +554,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-24</small>
-        <div><h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
-<p>To use fugitive as you mergetool you can use the following.</p>
+        <a class="h2" href="html/2012-04-24-git-fugitive-to-resolve-conflicts.html">git - use vim with fugitive to resolve merge conflicts</a>
+        <div><p>To use fugitive as you mergetool you can use the following.</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
     git config --global merge.tool fugitive
 </pre></div>
@@ -565,8 +568,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
-<p>Copy a word and paste it over other words:</p>
+        <a class="h2" href="html/2012-04-03-vim-replace-word-with-yanked-text.html">vim - replace a word with yanked text</a>
+        <div><p>Copy a word and paste it over other words:</p>
 <pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
     ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
     viwp     select <span class="s2">&quot;second&quot;</span><span class="p">,</span> then replace it with <span class="s2">&quot;first&quot;</span>.
@@ -582,8 +585,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-04-03</small>
-        <div><h1 id="-git-rename-branch-local-and-remote-"> git - rename branch (local and remote)</h1>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#rename local branch</span>
+        <a class="h2" href="html/2012-04-03-git-rename-branch.html">git - rename branch (local and remote)</a>
+        <div><pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#rename local branch</span>
     git branch -m old-branch-name new-branch-name
 
     <span class="c">#delete remote branch with old name</span>
@@ -601,8 +604,8 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-03-28</small>
-        <div><h1 id="-yii-catch-and-log-mysql-deadlock-errors"> yii - catch and log MySQL deadlock errors</h1>
-<p>This method allows to log InnoDB monitor output when deadlock error occured.
+        <a class="h2" href="html/2012-03-28-yii-catch-and-log-deadlocks.html">yii - catch and log MySQL deadlock errors</a>
+        <div><p>This method allows to log InnoDB monitor output when deadlock error occured.
 This way we will have much more useful data to find and fix deadlock.</p>
 </div>
         <a class="more" href="html/2012-03-28-yii-catch-and-log-deadlocks.html">Read more »</a>
@@ -611,16 +614,16 @@ This way we will have much more useful data to find and fix deadlock.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-03-15</small>
-        <div><h1 id="oauth-1-0-notes">oauth 1.0 notes</h1>
-</div>
+        <a class="h2" href="html/2012-03-15-oauth-1-0.html">oauth 1.0 notes</a>
+        <div></div>
         <a class="more" href="html/2012-03-15-oauth-1-0.html">Read more »</a>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-28</small>
-        <div><h1 id="git-colored-diff-branch-etc-by-default">git - colored diff, branch, etc by default</h1>
-<p>See color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config</a> docs:</p>
+        <a class="h2" href="html/2012-02-28-git-default-color-diff.html">git - colored diff, branch, etc by default</a>
+        <div><p>See color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config</a> docs:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git config color.branch auto
     <span class="nv">$ </span>git config color.diff auto
     <span class="nv">$ </span>git config color.interactive auto
@@ -635,8 +638,8 @@ This way we will have much more useful data to find and fix deadlock.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-20</small>
-        <div><h1 id="selenium-run-tests-on-a-virtual-display">selenium - run tests on a virtual display</h1>
-<h2 id="set-up">Set up</h2>
+        <a class="h2" href="html/2012-02-20-selenium-run-on-virtual-display.html">selenium - run tests on a virtual display</a>
+        <div><h2 id="set-up">Set up</h2>
 <p>Install xvfb</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    sudo apt-get install xvfb
 </pre></div>
@@ -654,8 +657,8 @@ This way we will have much more useful data to find and fix deadlock.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-03-01</small>
-        <div><h1 id="selenium-python-firefox-webdriver-unsafe-setters-in-firefox_profile-py">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</h1>
-<h2 id="problem">Problem</h2>
+        <a class="h2" href="html/2012-02-20-selenium-python-webdriver-not-safe-setters.html">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</a>
+        <div><h2 id="problem">Problem</h2>
 <p>I tried to disable native events for Firefox webdriver in a following way:</p>
 <pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">ff_native_events_enabled</span> <span class="o">==</span> <span class="bp">False</span><span class="p">):</span>
@@ -673,8 +676,8 @@ This way we will have much more useful data to find and fix deadlock.</p>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-20</small>
-        <div><h1 id="selenium-problem-with-loading-x-_ignore-_nofocus-so">selenium - problem with loading x_ignore_nofocus.so</h1>
-<h2 id="problem">Problem</h2>
+        <a class="h2" href="html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html">selenium - problem with loading x\_ignore\_nofocus.so</a>
+        <div><h2 id="problem">Problem</h2>
 <p>Selenium fails to start Firefox with following error:</p>
 <pre><code><div class="highlight"><pre><span class="s1">&#39;The browser appears to have exited before we could connect.</span>
 <span class="s1">The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror</span>
@@ -690,8 +693,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-13</small>
-        <div><h1 id="git-your-branch-and-origin-xxx-have-diverged">Git - Your branch and &#39;origin/xxx&#39; have diverged</h1>
-<p>Git error (not after rebase, see below):</p>
+        <a class="h2" href="html/2012-02-13-git-branches-have-diverged.html">Git - Your branch and &#x27;origin/xxx&#x27; have diverged</a>
+        <div><p>Git error (not after rebase, see below):</p>
 <pre><code><div class="highlight"><pre><span class="nx">Your</span> <span class="nx">branch</span> <span class="nx">and</span> <span class="s1">&#39;origin/xxx&#39;</span> <span class="nx">have</span> <span class="nx">diverged</span><span class="p">,</span>
 <span class="nx">and</span> <span class="nx">have</span> <span class="mi">1</span> <span class="nx">and</span> <span class="mi">1</span> <span class="nx">different</span> <span class="nx">commit</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="nx">each</span><span class="p">,</span> <span class="nx">respectively</span><span class="p">.</span>
 </pre></div>
@@ -704,8 +707,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-01</small>
-        <div><h1 id="git-checkout-and-track-remote-branch">git - checkout and track remote branch</h1>
-<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#creates and checks out &quot;feature&quot; branch that tracks &quot;origin/feature&quot;</span>
+        <a class="h2" href="html/2012-02-10-git-checkout-and-track-remote-branch.html">git - checkout and track remote branch</a>
+        <div><pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#creates and checks out &quot;feature&quot; branch that tracks &quot;origin/feature&quot;</span>
 <span class="nv">$ </span>git checkout -t origin/feature
 </pre></div>
 
@@ -717,8 +720,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-02-01</small>
-        <div><h1 id="-yii-class-table-inheritance"> yii - class table inheritance</h1>
-<p>It seems that we have no perfect solution for <a href="http://martinfowler.com/eaaCatalog/classTableInheritance.html">class table inheritance</a> (or multiple table inheritance) in yii (comparing to the very good one for <a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">single table inheritance</a>).</p>
+        <a class="h2" href="html/2012-02-01-yii-class-table-inheritance.html">yii - class table inheritance</a>
+        <div><p>It seems that we have no perfect solution for <a href="http://martinfowler.com/eaaCatalog/classTableInheritance.html">class table inheritance</a> (or multiple table inheritance) in yii (comparing to the very good one for <a href="http://www.yiiframework.com/wiki/198/single-table-inheritance/">single table inheritance</a>).</p>
 <p>Possible solutions are:</p>
 <ol>
 <li>Add support for class table inheritance to the active record class. There are some implementations of this method (see <a href="http://www.yiiframework.com/forum/index.php?/topic/5803-my-multi-table-inheritance-approach/">here</a> and <a href="http://www.yiiframework.com/forum/index.php?/topic/12978-class-table-inheritance/page__view__findpost__p__64041">here</a> for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</li>
@@ -732,8 +735,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2012-01-24</small>
-        <div><h1 id="jquery-check-minimal-required-version">jQuery - check minimal required version</h1>
-<p>To check whether jQuery is loaded to the page and verify minimum version:</p>
+        <a class="h2" href="html/2012-01-24-jquery-check-version.html">jQuery - check minimal required version</a>
+        <div><p>To check whether jQuery is loaded to the page and verify minimum version:</p>
 <pre><code><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">jQuery</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">||</span>
 <span class="o">!</span><span class="sr">/[1-9]\.[3-9].[1-9]/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">jquery</span><span class="p">)</span>
 <span class="p">)</span> <span class="p">{</span>

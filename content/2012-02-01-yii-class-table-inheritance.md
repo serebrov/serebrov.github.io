@@ -1,9 +1,8 @@
 ---
+title: yii - class table inheritance
 date: 2012-02-01
 tags: yii
 ---
- yii - class table inheritance
-===========================================
 
 It seems that we have no perfect solution for [class table inheritance](http://martinfowler.com/eaaCatalog/classTableInheritance.html) (or multiple table inheritance) in yii (comparing to the very good one for [single table inheritance](http://www.yiiframework.com/wiki/198/single-table-inheritance/)).
 

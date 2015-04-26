@@ -1,9 +1,8 @@
 ---
+title: Git - Your branch and 'origin/xxx' have diverged
 date: 2012-02-13
 tags: git
 ---
-Git - Your branch and 'origin/xxx' have diverged
-============================================
 
 Git error (not after rebase, see below):
 

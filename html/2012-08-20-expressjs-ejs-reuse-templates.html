@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>express.js and ejs - reuse template on server and client</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,8 +34,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="express-js-and-ejs-reuse-template-on-server-and-client">express.js and ejs - reuse template on server and client</h1>
-<p><a href="https://github.com/visionmedia/ejs">ejs</a> has a <a href="https://github.com/visionmedia/ejs#client-side-support">client-side support</a> but documentation and examples do not describe how to reuse the same template on the server and on the client side.</p>
+              <p><a href="https://github.com/visionmedia/ejs">ejs</a> has a <a href="https://github.com/visionmedia/ejs#client-side-support">client-side support</a> but documentation and examples do not describe how to reuse the same template on the server and on the client side.</p>
 <p>For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.
 <!-- more --></p>
 <h2 id="dynamically-get-a-template-from-the-server-and-render-it">Dynamically get a template from the server and render it</h2>

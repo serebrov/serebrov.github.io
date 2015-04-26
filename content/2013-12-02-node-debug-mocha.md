@@ -1,9 +1,8 @@
 ---
+title: Node.js - how to debug mocha test with node inspector
 date: 2013-12-02
 tags: node.js
 ---
-Node.js - how to debug mocha test with node inspector
-============================================
 
 To debug mocha test with [node inspector](https://github.com/node-inspector/node-inspector) use the delay before test:
 

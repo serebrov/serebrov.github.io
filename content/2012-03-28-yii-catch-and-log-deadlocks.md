@@ -1,9 +1,8 @@
 ---
+title: yii - catch and log MySQL deadlock errors
 date: 2012-03-28
 tags: yii
 ---
- yii - catch and log MySQL deadlock errors
-===========================================
 
 This method allows to log InnoDB monitor output when deadlock error occured.
 This way we will have much more useful data to find and fix deadlock.

@@ -1,9 +1,8 @@
 ---
+title: selenium - problem with loading x\_ignore\_nofocus.so
 date: 2012-02-20
 tags: selenium
 ---
-selenium - problem with loading x\_ignore\_nofocus.so
-===================================================
 
 Problem
 -------

@@ -1,9 +1,8 @@
 ---
+title: Elastic Beanstalk - python application server structure and celery installation
 date: 2015-04-02
 tags: aws,eb,python,celery,zeromq
 ---
-Elastic Beanstalk - python application server structure and celery installation
-============================================
 
 Elastic beanstalk python application is deployed under `/opt/python/`.
 The application is running under Apache web server.

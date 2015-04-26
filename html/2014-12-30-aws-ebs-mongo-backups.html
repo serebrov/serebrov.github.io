@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>AWS OpsWorks - setup mongodb ebs volume backups</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,8 +34,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="aws-opsworks-setup-mongodb-ebs-volume-backups">AWS OpsWorks - setup mongodb ebs volume backups</h1>
-<p>I described how to setup <a href="http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">mongodb on EC2 using OpsWroks</a> and here is how to setup mongo data backups.</p>
+              <p>I described how to setup <a href="http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html">mongodb on EC2 using OpsWroks</a> and here is how to setup mongo data backups.</p>
 <p>In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 <!-- more -->
 The relevant part from the <a href="http://docs.mongodb.org/ecosystem/tutorial/backup-and-restore-mongodb-on-amazon-ec2/">mongodb docs</a>:</p>

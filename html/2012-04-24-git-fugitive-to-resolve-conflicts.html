@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>git - use vim with fugitive to resolve merge conflicts</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,8 +34,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="git-use-vim-with-fugitive-to-resolve-merge-conflicts">git - use vim with fugitive to resolve merge conflicts</h1>
-<p>To use fugitive as you mergetool you can use the following.</p>
+              <p>To use fugitive as you mergetool you can use the following.</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
     git config --global merge.tool fugitive
 </pre></div>

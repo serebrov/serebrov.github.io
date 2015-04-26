@@ -1,9 +1,8 @@
 ---
+title: AWS - Deployment via OpsWorks from the command line
 date: 2014-12-30
 tags: aws
 ---
-AWS - Deployment via OpsWorks from the command line
-=======================================
 
 Below is a simple python script which performs application deployment using OpsWorks API library (boto).
 Script performs following steps

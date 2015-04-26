@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,8 +34,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="selenium-python-firefox-webdriver-unsafe-setters-in-firefox_profile-py">selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</h1>
-<h2 id="problem">Problem</h2>
+              <h2 id="problem">Problem</h2>
 <p>I tried to disable native events for Firefox webdriver in a following way:</p>
 <pre><code class="lang-python"><div class="highlight"><pre>    <span class="n">ffp</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">firefox</span><span class="o">.</span><span class="n">firefox_profile</span><span class="o">.</span><span class="n">FirefoxProfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">Config</span><span class="o">.</span><span class="n">ff_native_events_enabled</span> <span class="o">==</span> <span class="bp">False</span><span class="p">):</span>

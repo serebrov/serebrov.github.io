@@ -1,9 +1,9 @@
 ---
+title: git - submodule helpers
 date: 2012-09-23
 tags: git
 ---
-git - submodule helpers
-=========================
+
 Below are some git commands which can be useful to resolve problems with submodules.
 
 <!-- more -->

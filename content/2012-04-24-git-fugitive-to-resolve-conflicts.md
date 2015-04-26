@@ -1,9 +1,9 @@
 ---
+title: git - use vim with fugitive to resolve merge conflicts
 date: 2012-04-24
 tags: vim,git
 ---
-git - use vim with fugitive to resolve merge conflicts
-=======================================
+
 
 To use fugitive as you mergetool you can use the following.
 

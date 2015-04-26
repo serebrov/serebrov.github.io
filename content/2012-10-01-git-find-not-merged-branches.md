@@ -1,9 +1,9 @@
 ---
+title: git - find not merged branches
 date: 2012-10-01
 tags: git
 ---
-git - find not merged branches
-===========================================
+
 
 <!-- more -->
 [git-branch(1)](http://www.kernel.org/pub/software/scm/git/docs/git-branch.html)

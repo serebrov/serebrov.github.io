@@ -1,9 +1,8 @@
 ---
+title: Amazon OpsWorks - node.js app with MongoDB setup
 date: 2014-12-19
 tags: aws
 ---
-Amazon OpsWorks - node.js app with MongoDB setup
-============================================
 
 [Amazon OpsWorks](http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html) provides a way to manage AWS resources
 using [Chef recipes](http://docs.chef.io/recipes.html).

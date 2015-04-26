@@ -1,9 +1,8 @@
 ---
+title: Amazon NoSQL Solutions
 date: 2013-06-11
 tags: aws
 ---
-Amazon NoSQL Solutions
-============================================
 
 Amazon provides following [NoSQL](https://en.wikipedia.org/wiki/NoSQL) storage options:
 

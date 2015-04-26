@@ -1,9 +1,9 @@
 ---
+title: selenium webdriver - trigger event on element via jQuery
 date: 2012-07-24
 tags: selenium
 ---
-selenium webdriver - trigger event on element via jQuery
-============================================
+
 The 'executeScript' method of the webdriver receives additional 'arguments' variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
 
     event = 'click' #or 'hover' or any other

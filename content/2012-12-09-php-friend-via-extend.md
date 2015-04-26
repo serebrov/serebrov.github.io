@@ -1,9 +1,8 @@
 ---
+title: PHP - friend a class via extend
 date: 2012-04-03
 tags: php
 ---
-PHP - friend a class via extend
-============================================
 
 C++ allows to declare one class as a friend of another one.
 

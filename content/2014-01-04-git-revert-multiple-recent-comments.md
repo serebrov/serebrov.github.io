@@ -1,9 +1,8 @@
 ---
+title: Git - how to revert multiple recent commits
 date: 2014-01-04
 tags: git
 ---
-Git - how to revert multiple recent commits
-============================================
 
 Let's assume we have a history like this:
 

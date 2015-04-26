@@ -1,9 +1,9 @@
 ---
+title: jQuery - check minimal required version
 date: 2012-01-24
 tags: jquery
 ---
-jQuery - check minimal required version
-============================================
+
 To check whether jQuery is loaded to the page and verify minimum version:
 
     if (typeof jQuery == 'undefined' ||

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>vim - replace a word with yanked text</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -34,8 +34,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1 id="vim-replace-a-word-with-yanked-text">vim - replace a word with yanked text</h1>
-<p>Copy a word and paste it over other words:</p>
+              <p>Copy a word and paste it over other words:</p>
 <pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
     ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
     viwp     select <span class="s2">&quot;second&quot;</span><span class="p">,</span> then replace it with <span class="s2">&quot;first&quot;</span>.

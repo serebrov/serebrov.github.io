@@ -5,6 +5,7 @@
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">{{formatDate this.date "%Y-%m-%d"}}</small>
+        <a class="h2" href="{{relative ../path this.path}}">{{ this.title }}</a>
         <div>{{ this.intro }}</div>
         <a class="more" href="{{relative ../path this.path}}">Read more »</a>
       </div>

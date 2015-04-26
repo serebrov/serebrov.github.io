@@ -1,9 +1,9 @@
 ---
+title: git - git rm already deleted files
 date: 2012-04-03
 tags: git
 ---
-git - git rm already deleted files
-===========================================
+
 
 ```bash
     git add -u
