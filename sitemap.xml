@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</loc>
+  <lastmod>2015-05-20T03:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</loc>
   <lastmod>2015-04-02T03:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>

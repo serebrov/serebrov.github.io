@@ -11,6 +11,8 @@
     <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
     <link href="/css/all.css" rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -33,6 +35,25 @@
         </div>
       </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <small class="pull-right">2015-05-20</small>
+        <a class="h2" href="html/2015-05-20-cloudwatch-setup.html">Elastic Beanstalk - how to setup CloudWatch Logs</a>
+        <div><p>CloudWatch Logs is an AWS service to collect and monitor system and application logs.
+On the top level setup is this:</p>
+<ul>
+<li>install CloudWatch agent to collect logs data and send to CloudWatch Logs service</li>
+<li>define log metric filters to extract useful data, like number of all errors or information about some specific events</li>
+<li>create alarms for metrics to get notifications about logs</li>
+</ul>
+<p>All the configuration can be done using the Elastic Beanstalk config. In this case when the new environment is launched or existing environment is updated  the CloudWatch Logs setup is done automatically.</p>
+<p>There is an example of the configuration in the Elastic Beanstalk docs - <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html">Using Elastic Beanstalk with Amazon CloudWatch Logs</a>.
+The <code>Setting Up CloudWatch Logs Integration with Configuration Files</code> section briefly describes how to use config examples for different environments, but there is no detailed information about the config files. And config files are complex. It is easy to use examples as is, but it is not that easy to do the setup for own logs.
+I will start with the review of the Apache access log example and will show how to change it to collect data from the error log as well.</p>
+</div>
+        <a class="more" href="html/2015-05-20-cloudwatch-setup.html">Read more »</a>
+      </div>
+    </div>
     <div class="row">
       <div class="col-md-12">
         <small class="pull-right">2015-04-02</small>
@@ -737,9 +758,9 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/js/bootstrap.min.js"></script>
+    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

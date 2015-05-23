@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elastic Beanstalk - how to setup CloudWatch Logs</title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1>Elastic Beanstalk - how to setup CloudWatch Logs</h1>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <p>CloudWatch Logs is an AWS service to collect and monitor system and application logs.
+On the top level setup is this:</p>
+<ul>
+<li>install CloudWatch agent to collect logs data and send to CloudWatch Logs service</li>
+<li>define log metric filters to extract useful data, like number of all errors or information about some specific events</li>
+<li>create alarms for metrics to get notifications about logs</li>
+</ul>
+<p>All the configuration can be done using the Elastic Beanstalk config. In this case when the new environment is launched or existing environment is updated  the CloudWatch Logs setup is done automatically.</p>
+<p>There is an example of the configuration in the Elastic Beanstalk docs - <a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html">Using Elastic Beanstalk with Amazon CloudWatch Logs</a>.
+The <code>Setting Up CloudWatch Logs Integration with Configuration Files</code> section briefly describes how to use config examples for different environments, but there is no detailed information about the config files. And config files are complex. It is easy to use examples as is, but it is not that easy to do the setup for own logs.
+I will start with the review of the Apache access log example and will show how to change it to collect data from the error log as well.
+<!-- more --></p>
+<p>An example for php and python is an archive containing:</p>
+<pre><code><div class="highlight"><pre><span class="nx">cloudwatchlogs</span><span class="o">-</span><span class="nx">apache</span><span class="o">/</span>
+  <span class="nx">cwl</span><span class="o">-</span><span class="nx">setup</span><span class="p">.</span><span class="nx">config</span>
+  <span class="nx">eb</span><span class="o">-</span><span class="nx">logs</span><span class="p">.</span><span class="nx">config</span>
+  <span class="nx">cwl</span><span class="o">-</span><span class="nx">webrequest</span><span class="o">-</span><span class="nx">metrics</span><span class="p">.</span><span class="nx">config</span>
+</pre></div>
+
+</code></pre><p>Files need to be placed under <code>.ebextensions</code> folder. I recommend extracting an archive into <code>.ebextensions/cloudwatchlogs-apache</code>. You can also put an archive file itself, but it will be not convenient to view/edit configs then.</p>
+<p>First two files (<a href="files/cloudwatchlogs-apache/cwl-setup.config">cwl-setup.config</a> and <a href="files/cloudwatchlogs-apache/eb-logs.config">eb-logs.config</a>) are generic and can be used as is.
+These files will setup CloudWatch Logs agent on the instance and configure Elastic Beanstalk logs publication to S3.</p>
+<p>The last one (<a href="files/cloudwatchlogs-apache/cwl-webrequest-metrics.config">cwl-webrequest-metrics.config</a>) is an example of CloudWatch Logs setup for Apache&#39;s access log.</p>
+<p>Config file consists of several sections - &#39;Mappings&#39;, &#39;Outputs&#39;, &#39;Resources&#39;.
+There are cross-references between these sections, like filters defined in &#39;Mappings&#39; section are used later in &#39;Resources&#39; section for metric filters configuration.</p>
+<p>Unfortunately, there is no complete description of this config format in the Elastic Beanstalk documentation.
+As I understand this is actually a CloudFormation template but written in yaml (Elastic Beanstalk config format) instead of json (regular CloudFormation template format).</p>
+<p>General template structure and information about its sections can be found here:
+<a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html">CloudFormation - Template Anatomy</a>.</p>
+<p>Let&#39;s examine a <code>cwl-webrequest-metrics.config</code> file.
+The first section is &#39;Mappings&#39;, here it is:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="c1"># Apache access log pattern:</span>
+<span class="c1">## &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%{Referer}i\&quot; \&quot;%{User-Agent}i\&quot;&quot;</span>
+<span class="c1">## remote_host  remote_logname  remote_user  time_received &quot;request&quot; status response_size &quot;referrer&quot; &quot;user-agent&quot;</span>
+<span class="l-Scalar-Plain">Mappings</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">CWLogs</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">WebRequestLogGroup</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogFile</span><span class="p-Indicator">:</span> <span class="s">&quot;/var/log/httpd/access_log&quot;</span>
+      <span class="l-Scalar-Plain">TimestampFormat</span><span class="p-Indicator">:</span> <span class="s">&quot;%d/%b/%Y:%H:%M:%S</span><span class="nv"> </span><span class="s">%z&quot;</span>
+    <span class="l-Scalar-Plain">FilterPatterns</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">Http4xxMetricFilter</span><span class="p-Indicator">:</span> <span class="s">&quot;[...,</span><span class="nv"> </span><span class="s">status=4*,</span><span class="nv"> </span><span class="s">size,</span><span class="nv"> </span><span class="s">referer,</span><span class="nv"> </span><span class="s">agent]&quot;</span>
+      <span class="l-Scalar-Plain">HttpNon4xxMetricFilter</span><span class="p-Indicator">:</span> <span class="s">&quot;[...,</span><span class="nv"> </span><span class="s">status!=4*,</span><span class="nv"> </span><span class="s">size,</span><span class="nv"> </span><span class="s">referer,</span><span class="nv"> </span><span class="s">agent]&quot;</span>
+      <span class="l-Scalar-Plain">Http5xxMetricFilter</span><span class="p-Indicator">:</span> <span class="s">&quot;[...,</span><span class="nv"> </span><span class="s">status=5*,</span><span class="nv"> </span><span class="s">size,</span><span class="nv"> </span><span class="s">referer,</span><span class="nv"> </span><span class="s">agent]&quot;</span>
+      <span class="l-Scalar-Plain">HttpNon5xxMetricFilter</span><span class="p-Indicator">:</span> <span class="s">&quot;[...,</span><span class="nv"> </span><span class="s">status!=5*,</span><span class="nv"> </span><span class="s">size,</span><span class="nv"> </span><span class="s">referer,</span><span class="nv"> </span><span class="s">agent]&quot;</span>
+</pre></div>
+
+</code></pre>
+<p>Here we see some definitions like log file path (<code>LogFile</code>), log timestamp format (<code>TimestampFormat</code>) and filter patterns (<code>Http4xxMetricfilter</code>, <code>HttpNon4xxMetricFilter</code>, ...).
+These definitions work as constants defined at the top of the template and are referred from other sections of the file.</p>
+<p>Filter patterns will be used to setup metric filters for the access log.
+Here we have patterns which will find all requests with 4XX response code, all requests with non 4XX code, all 5XX responses and all non 5XX responses.</p>
+<p>The <code>TimestampFormat</code> setting is used by CloudWatch Logs agent to get timestamps for log records, so it is important to verify that format is set correctly.
+The timestamp format is the same as used by <a href="https://docs.python.org/2/library/datetime.html#strftime-strptime-behavior">python&#39;s strptime function</a>.
+Some more information about the format can be found in the CloudWatch Logs agent <a href="https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py">setup file</a>, check around the middle of the file, the description of the <code>datetime_format</code> parameter - there is a table with placeholders and examples.</p>
+<p>Since timestamp format is the same as used by python, it is easy to test it using python interpreter. Start python in command line and use code like this:</p>
+<pre><code><div class="highlight"><pre>  <span class="o">&gt;&gt;&gt;</span> <span class="kr">import</span> <span class="nx">time</span>
+  <span class="o">&gt;&gt;&gt;</span> <span class="nx">time</span><span class="p">.</span><span class="nx">strptime</span><span class="p">(</span><span class="s1">&#39;30/03/09 16:31:32.123&#39;</span><span class="p">,</span> <span class="s1">&#39;%d/%m/%y %H:%M:%S.%f&#39;</span><span class="p">)</span>
+</pre></div>
+
+</code></pre><p>In some cases, it can be complex to set the timestap format because there can be just no placeholders to express the real format in the log.
+In this case, try to match at least part of the timestamp.</p>
+<p>For example, Apache error log has a timestamp like <code>Sun May 17 21:59:15.837463 2015</code>. The problem is that there is a fractional part of the second in the middle, before the year and official python docs doesn&#39;t have a placeholder for this case (edit: there is an <code>%f</code> for microseconds, but let&#39;s pretend we don&#39;t know this).</p>
+<p>The pattern I used for Apache error log  is <code>%a %b %d %H:%M:%S</code> (short weekday, short month name, day, hour:minute:second) and it matches only the start of the timestamp and does not include year. But it works good and I guess that CloudWatch agent takes the current year as default.</p>
+<p>Next section in the config file is <code>Outputs</code>:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">Outputs</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">WebRequestCWLogGroup</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Description</span><span class="p-Indicator">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">Cloudwatch</span><span class="nv"> </span><span class="s">Logs</span><span class="nv"> </span><span class="s">Log</span><span class="nv"> </span><span class="s">Group</span><span class="nv"> </span><span class="s">created</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">environments</span><span class="nv"> </span><span class="s">web</span><span class="nv"> </span><span class="s">server</span><span class="nv"> </span><span class="s">access</span><span class="nv"> </span><span class="s">logs.</span><span class="nv"> </span><span class="s">You</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">specify</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">setting</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">environment</span><span class="nv"> </span><span class="s">variable:</span><span class="nv"> </span><span class="s">WebRequestCWLogGroup.</span><span class="nv"> </span><span class="s">Please</span><span class="nv"> </span><span class="s">note:</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">update</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">value,</span><span class="nv"> </span><span class="s">then</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">need</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">go</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">clear</span><span class="nv"> </span><span class="s">out</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">old</span><span class="nv"> </span><span class="s">cloudwatch</span><span class="nv"> </span><span class="s">logs</span><span class="nv"> </span><span class="s">group</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">delete</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">through</span><span class="nv"> </span><span class="s">Cloudwatch</span><span class="nv"> </span><span class="s">Logs.&quot;</span>
+    <span class="l-Scalar-Plain">Value</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot;</span><span class="p-Indicator">}</span>
+</pre></div>
+
+</code></pre>
+<p>Here we describe CloudWatch Logs group.
+Log group is a top level entity, like &quot;production-apache-errors&quot;, &quot;staging-syslog&quot;, etc.
+Inside the group we have streams, each stream contains log records from some EC2 instance.</p>
+<p>Next section is <code>Resources</code> where we define AWS resources used in our setup:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">Resources</span> <span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup</span><span class="p-Indicator">:</span>    <span class="c1">## Must have prefix:  AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0</span>
+    <span class="l-Scalar-Plain">Type</span><span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::LogGroup&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBBeanstalkMetadata</span>
+    <span class="l-Scalar-Plain">DeletionPolicy</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Retain</span>     <span class="c1">## this is required</span>
+    <span class="l-Scalar-Plain">Properties</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span>
+        <span class="s">&quot;Fn::GetOptionSetting&quot;</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">Namespace</span><span class="p-Indicator">:</span> <span class="s">&quot;aws:elasticbeanstalk:application:environment&quot;</span>
+          <span class="l-Scalar-Plain">OptionName</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">WebRequestCWLogGroup</span>
+          <span class="l-Scalar-Plain">DefaultValue</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;-&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[{</span> <span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span> <span class="p-Indicator">},</span> <span class="s">&quot;webrequests&quot;</span><span class="p-Indicator">]]}</span>
+      <span class="l-Scalar-Plain">RetentionInDays</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">14</span>
+</pre></div>
+
+</code></pre>
+<p>Above is the definition of the log group resource.
+Notice the usage of &quot;Fn::FunctionName&quot; constructs, the config file also has a mini-language to refer other sections of the config or to join strings.
+For example, <code>{&quot;Fn::Join&quot;:[&quot;-&quot;, [{ &quot;Ref&quot;:&quot;AWSEBEnvironmentName&quot; }, &quot;webrequests&quot;]]}</code> will take Elastic Beanstalk environment name and add &#39;-webrequests&#39; after it, so the log group name will be &quot;environment-webrequests&quot;.</p>
+<p>Or function call like this (it is used below) <code>{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebRequestLogGroup&quot;, &quot;TimestampFormat&quot;]}</code> will look up a <code>TimestampFormat</code> value in the <code>Mappings</code> config section.</p>
+<p>You can find more information on functions here:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/intrinsic-function-reference.html">Elastic Beanstalk - Intrinsic Function Reference</a></li>
+<li><a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html">CloudFormation - Intrinsic Function Reference</a></li>
+</ul>
+<p>Next resource in the <code>Resources</code> section is an autoscaling group:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="c1">## Register the files/log groups for monitoring</span>
+  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
+      <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">CWLogsAgentConfigSetup</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">files</span><span class="p-Indicator">:</span>
+            <span class="c1">## any .conf file put into /tmp/cwlogs/conf.d will be added to the cwlogs config (see cwl-agent.config)</span>
+            <span class="s">&quot;/tmp/cwlogs/conf.d/apache-access.conf&quot;</span><span class="p-Indicator">:</span>
+              <span class="l-Scalar-Plain">content</span> <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                <span class="no">[apache-access_log]</span>
+                <span class="no">file = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebRequestLogGroup&quot;, &quot;LogFile&quot;]}`</span>
+                <span class="no">log_group_name = `{ &quot;Ref&quot; : &quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot; }`</span>
+                <span class="no">log_stream_name = {instance_id}</span>
+                <span class="no">datetime_format = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebRequestLogGroup&quot;, &quot;TimestampFormat&quot;]}`</span>
+              <span class="l-Scalar-Plain">mode</span>  <span class="p-Indicator">:</span> <span class="s">&quot;000400&quot;</span>
+              <span class="l-Scalar-Plain">owner</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
+              <span class="l-Scalar-Plain">group</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
+</pre></div>
+
+</code></pre>
+<p>Here we describe autoscaling group and say that during the new EC2 instance initialization (<a href="http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-init.html">AWS::CloudFormation::Init</a>) the <code>/tmp/cwlogs/conf.d/apache-access.conf</code> file should be created. This is a CloudWatch agent configuration which instructs an agent to collect data from the apache access log.
+We also describe a content for this file:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">content</span> <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+  <span class="no">[apache-access_log]</span>
+  <span class="no">## We take file name from the Mappings - CWLogs - WebRequestLogGroup - LogFile</span>
+  <span class="no">file = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebRequestLogGroup&quot;, &quot;LogFile&quot;]}`</span>
+  <span class="no">## Log group is a reference to the log group resource we defined above</span>
+  <span class="no">log_group_name = `{ &quot;Ref&quot; : &quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot; }`</span>
+  <span class="no">## Log stream name is an instance id</span>
+  <span class="no">log_stream_name = {instance_id}</span>
+  <span class="no">## date_format for cloudwatch agent is also defined in Mappings section above</span>
+  <span class="no">datetime_format = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebRequestLogGroup&quot;, &quot;TimestampFormat&quot;]}`</span>
+</pre></div>
+
+</code></pre>
+<p>You can find more information about the CloudWatch agent configuration <a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/AgentReference.html">here</a>.</p>
+<p>Next four resources are metric filters. These filters will extract and count messages with specific status codes from the Apache access log.</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="c1">#######################################</span>
+  <span class="c1">## Cloudwatch Logs Metric Filters</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttp4xxMetricFilter</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::MetricFilter&quot;</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot;</span> <span class="p-Indicator">}</span>
+      <span class="l-Scalar-Plain">FilterPattern</span> <span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;CWLogs&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;FilterPatterns&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Http4xxMetricFilter&quot;</span><span class="p-Indicator">]}</span>
+      <span class="l-Scalar-Plain">MetricTransformations</span> <span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">MetricValue</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+          <span class="l-Scalar-Plain">MetricNamespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+          <span class="l-Scalar-Plain">MetricName</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp4xx</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttpNon4xxMetricFilter</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::MetricFilter&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBCWLHttp4xxMetricFilter</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot;</span> <span class="p-Indicator">}</span>
+      <span class="l-Scalar-Plain">FilterPattern</span> <span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;CWLogs&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;FilterPatterns&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;HttpNon4xxMetricFilter&quot;</span><span class="p-Indicator">]}</span>
+      <span class="l-Scalar-Plain">MetricTransformations</span> <span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">MetricValue</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+          <span class="l-Scalar-Plain">MetricNamespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+          <span class="l-Scalar-Plain">MetricName</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp4xx</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttp5xxMetricFilter</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::MetricFilter&quot;</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot;</span> <span class="p-Indicator">}</span>
+      <span class="l-Scalar-Plain">FilterPattern</span> <span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;CWLogs&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;FilterPatterns&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;Http5xxMetricFilter&quot;</span><span class="p-Indicator">]}</span>
+      <span class="l-Scalar-Plain">MetricTransformations</span> <span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">MetricValue</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+          <span class="l-Scalar-Plain">MetricNamespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+          <span class="l-Scalar-Plain">MetricName</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp5xx</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttpNon5xxMetricFilter</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::MetricFilter&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBCWLHttp5xxMetricFilter</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebRequestLogGroup&quot;</span> <span class="p-Indicator">}</span>
+      <span class="l-Scalar-Plain">FilterPattern</span> <span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;CWLogs&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;FilterPatterns&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;HttpNon5xxMetricFilter&quot;</span><span class="p-Indicator">]}</span>
+      <span class="l-Scalar-Plain">MetricTransformations</span> <span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">MetricValue</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0</span>
+          <span class="l-Scalar-Plain">MetricNamespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+          <span class="l-Scalar-Plain">MetricName</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp5xx</span>
+</pre></div>
+
+</code></pre>
+<p>Metric filters use filter patterns defined in the <code>Mappings</code> section.
+Pattern syntax is described <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/FilterAndPatternSyntax.html">here</a> and it is convenient to test patterns in the AWS console:</p>
+<ul>
+<li>Open CloudWatch service in AWS console</li>
+<li>Click <code>Logs</code> on the left, select log group on the right</li>
+<li>Click <code>Create Metric Filter</code> button</li>
+</ul>
+<p>Now you can select existing log data if you already have it or just paste some text from the local log file, enter filter pattern and test it on the log data.</p>
+<p>For example, entering the filter like <code>[timestamp, type = *, ...]</code> you can see what is taken as a timestamp.
+If we have log data like this:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>[Thu May 14 16:26:54.396347 2015] [suexec:notice] [pid 2631] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu May 14 16:26:54.405887 2015] [auth_digest:notice] [pid 2631] AH01757: generating secret for digest authentication ...
+[Thu May 14 16:26:54.406397 2015] [lbmethod_heartbeat:notice] [pid 2631] AH02282: No slotmem from mod_heartmonitor
+[Thu May 14 16:26:54.407930 2015] [mpm_prefork:notice] [pid 2631] AH00163: Apache/2.4.10 (Amazon) mod_wsgi/3.5 Python/2.7.5 configured -- resuming normal operations
+</pre></div>
+
+</code></pre>
+<p>Then the test result for a pattern <code>[timestamp, type = *, ...]</code> will be this:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>Line Number $timestamp                       $type               $3       ...
+1           Thu May 14 16:26:54.396347 2015  suexec:notice       pid 2631
+2           Thu May 14 16:26:54.405887 2015  auth_digest:notice  pid 2631
+3           Thu May 14 16:26:54.406397 2015  ...
+</pre></div>
+
+</code></pre>
+<p>Here the data is considered as a space-delimited, so each word becomes a data column. Spaces can be &quot;escaped&quot; with square brackets, like [Thu May 07 07:03:48.655204 2015] will be considered one field.</p>
+<p>This way for custom application logs it is better to use square brackets to specify log record fields. For example, it is better to use <code>[2015-05-14 19:00:03] [WARNING] -- the warning message</code> instead of <code>2015-05-14 19:00:03 WARNING -- the warning message</code>.</p>
+<p>Note: in the <code>Mappings</code> section we also specify <code>TimestampFormat</code>, but it has no effect for filters and only used by CloudWatch agent.</p>
+<p>And finally we define alarms which will watch for metrics above and generate SNS notification if we have too many 5XX responses (here we count responses) or if percent of 4XX responses becomes high (here we calculate percent value of 4XX responses).</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="c1">######################################################</span>
+  <span class="c1">## Alarms</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttp5xxCountAlarm</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::CloudWatch::Alarm&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBCWLHttpNon5xxMetricFilter</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">AlarmDescription</span><span class="p-Indicator">:</span> <span class="s">&quot;Application</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">returning</span><span class="nv"> </span><span class="s">too</span><span class="nv"> </span><span class="s">many</span><span class="nv"> </span><span class="s">5xx</span><span class="nv"> </span><span class="s">responses</span><span class="nv"> </span><span class="s">(count</span><span class="nv"> </span><span class="s">too</span><span class="nv"> </span><span class="s">high).&quot;</span>
+      <span class="l-Scalar-Plain">MetricName</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp5xx</span>
+      <span class="l-Scalar-Plain">Namespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+      <span class="l-Scalar-Plain">Statistic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Sum</span>
+      <span class="l-Scalar-Plain">Period</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">60</span>
+      <span class="l-Scalar-Plain">EvaluationPeriods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+      <span class="l-Scalar-Plain">Threshold</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">10</span>
+      <span class="l-Scalar-Plain">ComparisonOperator</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GreaterThanThreshold</span>
+      <span class="l-Scalar-Plain">AlarmActions</span><span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="s">&quot;Fn::If&quot;</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">SNSTopicExists</span>
+            <span class="p-Indicator">-</span> <span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">AWSEBOptions</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">options</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">EBSNSTopicArn</span>
+            <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::NoValue&quot;</span> <span class="p-Indicator">}</span>
+
+  <span class="l-Scalar-Plain">AWSEBCWLHttp4xxPercentAlarm</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::CloudWatch::Alarm&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBCWLHttpNon4xxMetricFilter</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">AlarmDescription</span><span class="p-Indicator">:</span> <span class="s">&quot;Application</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">returning</span><span class="nv"> </span><span class="s">too</span><span class="nv"> </span><span class="s">many</span><span class="nv"> </span><span class="s">4xx</span><span class="nv"> </span><span class="s">responses</span><span class="nv"> </span><span class="s">(percentage</span><span class="nv"> </span><span class="s">too</span><span class="nv"> </span><span class="s">high).&quot;</span>
+      <span class="l-Scalar-Plain">MetricName</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLHttp4xx</span>
+      <span class="l-Scalar-Plain">Namespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+      <span class="l-Scalar-Plain">Statistic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Average</span>
+      <span class="l-Scalar-Plain">Period</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">60</span>
+      <span class="l-Scalar-Plain">EvaluationPeriods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+      <span class="l-Scalar-Plain">Threshold</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">0.10</span>
+      <span class="l-Scalar-Plain">ComparisonOperator</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GreaterThanThreshold</span>
+      <span class="l-Scalar-Plain">AlarmActions</span><span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="s">&quot;Fn::If&quot;</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">SNSTopicExists</span>
+            <span class="p-Indicator">-</span> <span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">AWSEBOptions</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">options</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">EBSNSTopicArn</span>
+            <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::NoValue&quot;</span> <span class="p-Indicator">}</span>
+</pre></div>
+
+</code></pre>
+<p>More information about <code>Resources</code> section:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environment-resources.html">Elastic Beanstalk - Customizing Environment Resources</a></li>
+<li><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/template-reference-aeb.html">Elastic Beanstalk - Customizing AWS Resources</a></li>
+</ul>
+<h2 id="apache-error-log-setup">Apache error log setup</h2>
+<p>To create a CloudWatch Log configuration for another log file do the following:</p>
+<ul>
+<li>Copy <code>cwl-webrequest-metrics.config</code> and save under new name into the same folder</li>
+<li>In the <code>Mappings</code> section - change the log file path, timestamp format and filter patterns</li>
+<li>In the <code>AWSEBAutoScalingGroup</code> resource - change the config file name: <code>apache-access.conf</code> to <code>my-log-name.conf</code> and change <code>[apache-access_log]</code> section name in the content</li>
+<li>Search for <code>webrequest</code> and replace all occurences with appropriate name, do the case-insensetive search to change webrequest, WebRequest, etc</li>
+<li>Review filter patterns, metrics and alarms - these will be different for each log file</li>
+</ul>
+<p>For example, a config for apache error log can look like this (file <code>cwl-weberror-metrics.config</code>):</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">Mappings</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">CWLogs</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">WebErrorLogGroup</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogFile</span><span class="p-Indicator">:</span> <span class="s">&quot;/var/log/httpd/error_log&quot;</span>
+      <span class="l-Scalar-Plain">TimestampFormat</span><span class="p-Indicator">:</span> <span class="s">&quot;%a</span><span class="nv"> </span><span class="s">%b</span><span class="nv"> </span><span class="s">%d</span><span class="nv"> </span><span class="s">%H:%M:%S&quot;</span>
+    <span class="l-Scalar-Plain">FilterPatterns</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">AllErrorsFilter</span><span class="p-Indicator">:</span> <span class="s">&quot;[timestamp,</span><span class="nv"> </span><span class="s">type</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">*error*,</span><span class="nv"> </span><span class="s">...]&quot;</span>
+
+
+<span class="l-Scalar-Plain">Outputs</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">WebErrorCWLogGroup</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Description</span><span class="p-Indicator">:</span> <span class="s">&quot;Apache</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">log</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">WebErrorCWLogGroup&quot;</span>
+    <span class="l-Scalar-Plain">Value</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&quot;</span><span class="p-Indicator">}</span>
+
+
+<span class="l-Scalar-Plain">Resources</span> <span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span><span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::LogGroup&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBBeanstalkMetadata</span>
+    <span class="l-Scalar-Plain">DeletionPolicy</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Retain</span>     <span class="c1">## this is required</span>
+    <span class="l-Scalar-Plain">Properties</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span>
+        <span class="s">&quot;Fn::GetOptionSetting&quot;</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">Namespace</span><span class="p-Indicator">:</span> <span class="s">&quot;aws:elasticbeanstalk:application:environment&quot;</span>
+          <span class="l-Scalar-Plain">OptionName</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">WebErrorCWLogGroup</span>
+          <span class="l-Scalar-Plain">DefaultValue</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;-&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[{</span> <span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span> <span class="p-Indicator">},</span> <span class="s">&quot;weberrors&quot;</span><span class="p-Indicator">]]}</span>
+      <span class="l-Scalar-Plain">RetentionInDays</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">14</span>
+
+
+  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
+      <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">CWLogsAgentConfigSetup</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">files</span><span class="p-Indicator">:</span>
+            <span class="s">&quot;/tmp/cwlogs/conf.d/apache-error.conf&quot;</span><span class="p-Indicator">:</span>
+              <span class="l-Scalar-Plain">content</span> <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                <span class="no">[apache-error_log]</span>
+                <span class="no">file = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;LogFile&quot;]}`</span>
+                <span class="no">log_group_name = `{ &quot;Ref&quot; : &quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&quot; }`</span>
+                <span class="no">log_stream_name = {instance_id}</span>
+                <span class="no">datetime_format = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;TimestampFormat&quot;]}`</span>
+              <span class="l-Scalar-Plain">mode</span>  <span class="p-Indicator">:</span> <span class="s">&quot;000400&quot;</span>
+              <span class="l-Scalar-Plain">owner</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
+              <span class="l-Scalar-Plain">group</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
+
+
+  <span class="l-Scalar-Plain">AWSEBCWLAllErrorsFilter</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::Logs::MetricFilter&quot;</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">LogGroupName</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&quot;</span> <span class="p-Indicator">}</span>
+      <span class="l-Scalar-Plain">FilterPattern</span> <span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;CWLogs&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;FilterPatterns&quot;</span><span class="p-Indicator">,</span> <span class="s">&quot;AllErrorsFilter&quot;</span><span class="p-Indicator">]}</span>
+      <span class="l-Scalar-Plain">MetricTransformations</span> <span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">MetricValue</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+          <span class="l-Scalar-Plain">MetricNamespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+          <span class="l-Scalar-Plain">MetricName</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLAllErrorRecords</span>
+
+
+  <span class="l-Scalar-Plain">AWSEBCWLAllErrorsCountAlarm</span> <span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">Type</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::CloudWatch::Alarm&quot;</span>
+    <span class="l-Scalar-Plain">DependsOn</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">AWSEBCWLAllErrorsFilter</span>
+    <span class="l-Scalar-Plain">Properties</span> <span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">AlarmDescription</span><span class="p-Indicator">:</span> <span class="s">&quot;Application</span><span class="nv"> </span><span class="s">generated</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">error_log&quot;</span>
+      <span class="l-Scalar-Plain">MetricName</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">CWLAllErrorRecords</span>
+      <span class="l-Scalar-Plain">Name</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;-&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk-AWSEBCWLAllErrorsCountAlarm&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+      <span class="l-Scalar-Plain">Namespace</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="s">&quot;Fn::Join&quot;</span><span class="p-Indicator">:[</span><span class="s">&quot;/&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">[</span><span class="s">&quot;ElasticBeanstalk&quot;</span><span class="p-Indicator">,</span> <span class="p-Indicator">{</span><span class="s">&quot;Ref&quot;</span><span class="p-Indicator">:</span><span class="s">&quot;AWSEBEnvironmentName&quot;</span><span class="p-Indicator">}]]}</span>
+      <span class="l-Scalar-Plain">Statistic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Sum</span>
+      <span class="l-Scalar-Plain">Period</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">60</span>
+      <span class="l-Scalar-Plain">EvaluationPeriods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+      <span class="l-Scalar-Plain">Threshold</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">1</span>
+      <span class="l-Scalar-Plain">ComparisonOperator</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GreaterThanThreshold</span>
+      <span class="l-Scalar-Plain">AlarmActions</span><span class="p-Indicator">:</span>
+        <span class="p-Indicator">-</span> <span class="s">&quot;Fn::If&quot;</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">SNSTopicExists</span>
+            <span class="p-Indicator">-</span> <span class="s">&quot;Fn::FindInMap&quot;</span><span class="p-Indicator">:</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">AWSEBOptions</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">options</span>
+                <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">EBSNSTopicArn</span>
+            <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="s">&quot;Ref&quot;</span> <span class="p-Indicator">:</span> <span class="s">&quot;AWS::NoValue&quot;</span> <span class="p-Indicator">}</span>
+</pre></div>
+
+</code></pre>
+<p>Note that metrics and alarms are optional and log data will be sent to CloudWatch Logs even if there are no metrics/alarms.
+But in this case, it will be necessary to review logs manually and setup metrics and alarms later if needed.</p>
+<h2 id="links">Links</h2>
+<p><a href="http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.cloudwatchlogs.html">Using Elastic Beanstalk with Amazon CloudWatch Logs (+ config examples)</a></p>
+<p><a href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/mon-scripts-perl.html">Amazon CloudWatch Monitoring Scripts for Linux (sample Perl scripts that demonstrate how to produce and consume Amazon CloudWatch custom metrics)</a></p>
+<p><a href="https://aws.amazon.com/blogs/aws/cloudwatch-log-service/">AWS Blog: Store and Monitor OS &amp; Application Log Files with Amazon CloudWatch (manual setup, note about elastic beanstalk, information about cloud formation and ops works)</a></p>
+<p><a href="http://www.intelligrape.com/blog/logs-monitoring-using-aws-cloudwatch/">Logs Monitoring Using AWS CloudWatch (awslogs agent setup via script + metrics / alarms from the AWS console)</a></p>
+<p><a href="http://stackoverflow.com/questions/1761609/whats-a-good-way-to-collect-logs-from-amazon-ec2-instances">Stackoverflow: What&#39;s a good way to collect logs from Amazon EC2 instances?</a></p>
+<p><a href="https://blog.opsgenie.com/2014/08/how-to-use-cloudwatch-to-generate-alerts-from-logs">How to use CloudWatch to generate alerts from logs?</a></p>
+<div class="popup">
+    <div class="close">close</div>
+    <div class="download"><a href="">Download (<span class="name"></span>)</a></div>
+    <div class="popup-content"></div>
+</div>
+
+<p><style type="text/css">
+</style></p>
+<script type="text/javascript">
+$(document).ready(function() {
+    var popup = {
+      _$link: null,
+
+      show: function($link) {
+        if (this._$link) {
+          this.hide();
+        }
+        this._$link = $link;
+        this._$link.addClass("selected");
+        var self = this;
+        $.get(this._$link.attr('href'), function(data) {
+            $(".popup-content").html(data);
+            $(".popup .download a").attr('href', self._$link.attr('href'));
+            $(".popup .download a span.name").html(
+                self._$link.attr('href').split('/').pop()
+            );
+            $(".popup").slideFadeToggle(function() {
+                //can do something here
+            });
+        });
+      },
+
+      hide: function() {
+        if (!this._$link) {
+          return;
+        }
+        var self = this;
+        $('.popup').slideFadeToggle(function() {
+          self._$link.removeClass('selected');
+          self._$link = null;
+        });
+      }
+    };
+
+    $.fn.slideFadeToggle = function(easing, callback) {
+      return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+    };
+
+    $('.close').on('click', function(e) {
+      popup.hide();
+      e.stopPropagation();
+    });
+    $('body').on('click', function(e) {
+      if ($(e.target).parents('.popup').length > 0) {
+        return;
+      }
+      popup.hide();
+    });
+
+    function isSelectable(link) {
+        var href = $(link).attr('href');
+        if (href && href.endsWith("config")) {
+            return true;
+        }
+        return false;
+    }
+    $("a").each(function(idx, link) {
+        if (isSelectable(link)) {
+          $(link).addClass('selectable');
+        }
+    });
+    $("a").click(function(event) {
+        var elem = $(event.target);
+        if (!isSelectable(elem)) {
+            return true;
+        }
+        if ($(this).hasClass("selected")) {
+            popup.hide();
+        } else {
+            popup.show($(this));
+        }
+        return false;
+    });
+});
+</script>
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'serebrov'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!--script src="/js/bootstrap.min.js"></script-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+

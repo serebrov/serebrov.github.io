@@ -6658,6 +6658,61 @@ code > div.highlight > pre {
     border-bottom: 1px solid #ccc;
     display: block;
 }
+
+a.selected {
+  background-color:#1F75CC;
+  color:white;
+  z-index:100;
+}
+a.selectable {
+  border-bottom: 1px black dotted;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: 90vh;
+  width:90%;
+  margin-left: -45%;
+  margin-top: -45vh;
+  padding: 7px 10px 35px 25px;
+  background-color:#FFFFFF;
+  border:1px solid #999999;
+  cursor:default;
+  display:none;
+  text-align:left;
+  z-index:50;
+  background: lightgrey;
+}
+label {
+  display: block;
+  margin-bottom: 3px;
+  padding-left: 15px;
+  text-indent: -15px;
+}
+.popup p, .popup.div {
+  border-bottom: 1px solid #EFEFEF;
+  margin: 8px 0;
+  padding-bottom: 8px;
+}
+.popup-content {
+  white-space: pre;
+  clear: both;
+  position: absolute;
+  top: 40px;
+  bottom: 10px;
+  right: 10px;
+  left: 10px;
+  overflow-y: scroll;
+  /* height: 100%; */
+  /* margin-top: 40px; */
+}
+.popup .close {
+  float: right;
+}
+.popup .download {
+  float: left;
+}
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
 .err { border: 1px solid #FF0000 } /* Error */
