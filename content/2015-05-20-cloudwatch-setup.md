@@ -165,6 +165,8 @@ content : |
 
 You can find more information about the CloudWatch agent configuration [here](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/AgentReference.html).
 
+Note: it is not always convenient to have one stream per instance, [see the follow up note on how to setup on stream for all instances](/html/2015-06-17-cloudwatch-logs-single-stream.html).
+
 Next four resources are metric filters. These filters will extract and count messages with specific status codes from the Apache access log.
 
 ```yaml
