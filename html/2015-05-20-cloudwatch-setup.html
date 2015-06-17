@@ -403,7 +403,7 @@ But in this case, it will be necessary to review logs manually and setup metrics
 <p>After using CloudWatch Logs for some time I found that it is very inconvenient to have one stream per instance.
 The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.</p>
 <p>A more convenient alternative is to use one stream like <code>error_log</code> for all instances.
-In this case we just set a staic string for stream name instead of {instance_id}, like this:</p>
+In this case we just set a staic string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
 <pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
       <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>
@@ -422,8 +422,8 @@ In this case we just set a staic string for stream name instead of {instance_id}
 </pre></div>
 
 </code></pre>
-<p>Now we need to make sure our log records contain instance id or IP address, so we can understand which instance generated each log record.
-Fortunately, python application logs in the apache&#39;s error_log already have IP address, so nothing to do here. The log looks like this:</p>
+<p>Now we need to make sure our log records contain instance id or IP address, so we can understand which instance generated each log record.</p>
+<p>Fortunately, python application logs in the apache&#39;s error_log already have IP address, so nothing to do here. The log looks like this:</p>
 <pre><code class="lang-text"><div class="highlight"><pre>[Wed Jun 17 16:02:46.944612 2015] [:error] [pid 20405] [remote 172.31.11.92:0] mod_wsgi (pid=20405): Exception occurred processing WSGI script &#39;/opt/python/current/app/application.py&#39;.
 [Wed Jun 17 16:02:46.944686 2015] [:error] [pid 20405] [remote 172.31.11.92:0] Traceback (most recent call last):
 [Wed Jun 17 16:02:46.944711 2015] [:error] [pid 20405] [remote 172.31.11.92:0] File &quot;/opt/python/run/venv/lib/python2.7/site-packages/flask/app.py&quot;, line 1701, in __call__
@@ -466,6 +466,7 @@ Fortunately, python application logs in the apache&#39;s error_log already have 
 <pre><code class="lang-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">boto.utils</span> <span class="kn">import</span> <span class="n">get_instance_metadata</span>
 
+<span class="c"># Logging configuration</span>
 <span class="c"># Note: - `with_time` formatter contains non-standard [%(hostname)s] parameter</span>
 <span class="n">LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -494,17 +495,23 @@ Fortunately, python application logs in the apache&#39;s error_log already have 
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
+<span class="c"># Use `APP_ENV` environment variable or `development` by default</span>
+<span class="c"># We assume that `development` is local and all other enviroments are</span>
+<span class="c"># on Amazon EC2 instances</span>
+<span class="n">APP_ENV</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;APP_ENV&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;APP_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="k">else</span> <span class="s">&#39;development&#39;</span>
 
+<span class="c"># A log filter class to add custom `hostname` property to log records</span>
 <span class="k">class</span> <span class="nc">LogHostnameFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">APP_ENV</span> <span class="o">!=</span> <span class="s">&#39;development&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">APP_ENV</span> <span class="o">!=</span> <span class="s">&#39;development&#39;</span><span class="p">:</span>
             <span class="n">meta</span> <span class="o">=</span> <span class="n">get_instance_metadata</span><span class="p">()</span>
             <span class="n">record</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s">&#39;instance-id&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">record</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
         <span class="k">return</span> <span class="bp">True</span>
 
-<span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">LOGGING_CONFIG</span><span class="p">)</span>
+<span class="c"># Create and configure logger</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">LOGGING_CONFIG</span><span class="p">)</span>
 <span class="n">sys_info_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;sys_info&#39;</span><span class="p">)</span>
 <span class="n">sys_info_logger</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">LogHostnameFilter</span><span class="p">())</span>
 

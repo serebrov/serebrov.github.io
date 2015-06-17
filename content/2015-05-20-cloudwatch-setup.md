@@ -404,7 +404,7 @@ After using CloudWatch Logs for some time I found that it is very inconvenient t
 The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.
 
 A more convenient alternative is to use one stream like `error_log` for all instances.
-In this case we just set a staic string for stream name instead of {instance_id}, like this:
+In this case we just set a staic string for stream name instead of {instance_id}, like this (see `log_stream_name = error_log`):
 
 ```yaml
 
@@ -426,6 +426,7 @@ In this case we just set a staic string for stream name instead of {instance_id}
 ```
 
 Now we need to make sure our log records contain instance id or IP address, so we can understand which instance generated each log record.
+
 Fortunately, python application logs in the apache's error_log already have IP address, so nothing to do here. The log looks like this:
 
 ```text
@@ -476,6 +477,7 @@ And now here is how you can setup a logger to have instance id for log records:
 import logging
 from boto.utils import get_instance_metadata
 
+# Logging configuration
 # Note: - `with_time` formatter contains non-standard [%(hostname)s] parameter
 LOGGING_CONFIG = {
     'version': 1,
@@ -504,17 +506,23 @@ LOGGING_CONFIG = {
         }
     }
 }
+# Use `APP_ENV` environment variable or `development` by default
+# We assume that `development` is local and all other enviroments are
+# on Amazon EC2 instances
+APP_ENV = os.environ['APP_ENV'] if 'APP_ENV' in os.environ else 'development'
 
+# A log filter class to add custom `hostname` property to log records
 class LogHostnameFilter(logging.Filter):
     def filter(self, record):
-        if config.APP_ENV != 'development':
+        if APP_ENV != 'development':
             meta = get_instance_metadata()
             record.hostname = meta['instance-id']
         else:
             record.hostname = 'localhost'
         return True
 
-logging.config.dictConfig(config.LOGGING_CONFIG)
+# Create and configure logger
+logging.config.dictConfig(LOGGING_CONFIG)
 sys_info_logger = logging.getLogger('sys_info')
 sys_info_logger.addFilter(LogHostnameFilter())
 
