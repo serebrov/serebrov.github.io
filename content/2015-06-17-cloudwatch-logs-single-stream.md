@@ -1,10 +1,8 @@
 ---
-title: CloudWatch Logs - how to log data to single stream
+title: CloudWatch Logs - how to log data from multiple instances to the single stream
 date: 2015-05-20
 tags: aws,eb,cw-logs
 ---
-
-## How to log data from multiple instances to the single stream
 
 [After using CloudWatch Logs for some time](/html/2015-05-20-cloudwatch-setup.html) I found that it is very inconvenient to have one stream per instance.
 The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.
