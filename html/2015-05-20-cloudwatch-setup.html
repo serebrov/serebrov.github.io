@@ -61,9 +61,9 @@ I will start with the review of the Apache access log example and will show how 
 </pre></div>
 
 </code></pre><p>Files need to be placed under <code>.ebextensions</code> folder. I recommend extracting an archive into <code>.ebextensions/cloudwatchlogs-apache</code>. You can also put an archive file itself, but it will be not convenient to view/edit configs then.</p>
-<p>First two files (<a href="files/cloudwatchlogs-apache/cwl-setup.config">cwl-setup.config</a> and <a href="files/cloudwatchlogs-apache/eb-logs.config">eb-logs.config</a>) are generic and can be used as is.
+<p>First two files (<a href="files/cloudwatchlogs-apache/cwl-setup.config">cwl-setup.config, click to preview</a> and <a href="files/cloudwatchlogs-apache/eb-logs.config">eb-logs.config, click to preview</a>) are generic and can be used as is.
 These files will setup CloudWatch Logs agent on the instance and configure Elastic Beanstalk logs publication to S3.</p>
-<p>The last one (<a href="files/cloudwatchlogs-apache/cwl-webrequest-metrics.config">cwl-webrequest-metrics.config</a>) is an example of CloudWatch Logs setup for Apache&#39;s access log.</p>
+<p>The last one (<a href="files/cloudwatchlogs-apache/cwl-webrequest-metrics.config">cwl-webrequest-metrics.config, click to preview</a>) is an example of CloudWatch Logs setup for Apache&#39;s access log.</p>
 <p>Config file consists of several sections - &#39;Mappings&#39;, &#39;Outputs&#39;, &#39;Resources&#39;.
 There are cross-references between these sections, like filters defined in &#39;Mappings&#39; section are used later in &#39;Resources&#39; section for metric filters configuration.</p>
 <p>Unfortunately, there is no complete description of this config format in the Elastic Beanstalk documentation.
