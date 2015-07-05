@@ -5,7 +5,8 @@ var Q = require('q');
 marked.setOptions({
   highlight: function (code, lang, callback) {
     require('pygmentize-bundled-cached')({ lang: lang, format: 'html' }, code, function (err, result) {
-      callback(err, result.toString());
+      var data = result ? result.toString(): "";
+      callback(err, data);
     });
   }
 });

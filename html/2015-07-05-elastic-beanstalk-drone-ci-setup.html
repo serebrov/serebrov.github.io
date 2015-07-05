@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to setup Drone CI on EC2 instance via Elastic Beanstalk</title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1>How to setup Drone CI on EC2 instance via Elastic Beanstalk</h1>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <p><a href="https://github.com/drone/drone">Drone CI</a> uses <a href="https://www.docker.com/">Docker</a> containers to run tests for your application hosted on <a href="http://github.com">github</a>.</p>
+<p>It not complex to setup the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
+<!-- more --></p>
+<h1 id="drone-ci-setup">Drone CI setup</h1>
+<p>First you&#39;ll need to create a drone configuration file, <code>.drone.yml</code>, which looks like this:</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">image</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">serebrov/centos-python2.7-java</span>
+<span class="l-Scalar-Plain">env</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">GOPATH=/var/cache/drone</span>
+<span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pip install -r requirements.txt</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">./scripts/ci_test.sh</span>
+<span class="l-Scalar-Plain">notify</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">recipients</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">mymail@gmail.com</span>
+</pre></div>
+
+</code></pre>
+<p>As you can see the setup is really simple. I have a <a href="https://github.com/serebrov/centos-python2.7-java">custom docker image</a> which installs all the application requirements.
+Then drone runs <code>pip install -r requirements.txt</code> to python app dependencies and runs <code>ci_test.sh</code> shell script to launch testing.
+This script looks like this:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<span class="c"># set -e</span>
+
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
+<span class="nv">PYTHON</span><span class="o">=</span>python
+<span class="k">if</span> which python27<span class="p">;</span> <span class="k">then</span>
+    <span class="nv">PYTHON</span><span class="o">=</span>python27
+<span class="k">fi</span>
+
+<span class="nb">cd</span> <span class="nv">$SCRIPT_PATH</span>/..
+
+<span class="nv">$PYTHON</span> -m unittest discover -s tests
+<span class="nv">RESULT_MOCK</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">pushd</span> <span class="nv">$SCRIPT_PATH</span>/../tests/dynamodb-local
+  java -Djava.library.path<span class="o">=</span>./DynamoDBLocal_lib -jar ./DynamoDBLocal.jar -inMemory -sharedDb <span class="p">&amp;</span>
+  <span class="nv">PID</span><span class="o">=</span><span class="nv">$!</span>
+<span class="nb">popd</span>
+<span class="nb">echo</span> <span class="s2">&quot;Started local dynamodb: $PID&quot;</span>
+<span class="nv">USE_MOCK</span><span class="o">=</span> <span class="nv">$PYTHON</span> -m unittest discover -s tests
+<span class="nv">RESULT_LOCALDB</span><span class="o">=</span><span class="nv">$?</span>
+<span class="nb">kill</span> -9 <span class="nv">$PID</span>
+<span class="nb">exit</span> <span class="k">$((</span><span class="nv">$RESULT_MOCK</span><span class="o">+</span><span class="nv">$RESULT_LOCALDB</span><span class="k">))</span>
+</pre></div>
+
+</code></pre>
+<p>My application uses Amazon DynamoDB, and I run tests twice - first using a simple in-memory DynamoDB mock and one more time using <a href="https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/">local dynamo db</a>.</p>
+<p>Mock is used during development and tests run very fast (few seconds) and local dynamodb is much slower and we need few minutes to run tests, but we can catch some specific errors related to the database usage.</p>
+<h1 id="elastic-beanstalk-setup">Elastic Beanstalk setup</h1>
+<p>Elastic Beanstalk setup allows to automatically install Drone CI when new EC2 instance is launched.</p>
+<p>Here it is good to have a single-instance Elastic Beanstalk environment and scripts below will install Drone on the EC instance.</p>
+<p>First, the EB config (<code>.ebextensions/app.config</code>):</p>
+<pre><code class="lang-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">container_commands</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">004-start-container-commands</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">logger &quot;Start deploy script&quot; -t &quot;DEPLOY&quot;</span>
+  <span class="l-Scalar-Plain">005-command</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">chmod +x .ebextensions/deploy.sh</span>
+  <span class="l-Scalar-Plain">006-deploy</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.ebextensions/deploy.sh 2&gt;&amp;1 | /usr/bin/logger -t &quot;DEPLOY&quot; ; test ${PIPESTATUS[0]} -eq 0</span>
+  <span class="l-Scalar-Plain">010-start-container-commands</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">logger &quot;Start container commands&quot; -t &quot;DEPLOY&quot;</span>
+  <span class="l-Scalar-Plain">190-clearcaches</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">(echo &#39;flush_all&#39; | nc localhost 11211) 2&gt;&amp;1 |/usr/bin/logger -t &quot;DEPLOY&quot;</span>
+  <span class="l-Scalar-Plain">200-end-container-commands</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">logger &quot;End container commands&quot; -t &quot;DEPLOY&quot;</span>
+
+<span class="l-Scalar-Plain">packages</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">yum</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">gcc</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+    <span class="l-Scalar-Plain">gcc-c++</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+    <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+    <span class="l-Scalar-Plain">python-devel</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+    <span class="l-Scalar-Plain">atlas-sse3-devel</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+    <span class="l-Scalar-Plain">lapack-devel</span><span class="p-Indicator">:</span> <span class="p-Indicator">[]</span>
+
+<span class="l-Scalar-Plain">services</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">sysvinit</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">docker</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">enabled</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+      <span class="l-Scalar-Plain">ensureRunning</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">true</span>
+</pre></div>
+
+</code></pre>
+<p>It will install packages I need (including docker) and run the <code>deploy.sh</code> script which does the Drone installation:</p>
+<pre><code class="lang-shell">undefined
+</code></pre>
+<p>This script uses <code>utils.sh</code>, you can find it <a href="/html/2015-04-02-elastic-beanstalk-python.html">here</a>.</p>
+<p>There are two more configuration files used in the setup process.</p>
+<p>First is <code>droned.conf</code>, an upstart script.</p>
+<p>You may not need it if your system has systemd, but Amazon Linux I used on my instance didn&#39;t have it and Drone raised this error:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>which: no systemctl in (/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin)
+Apr 14 11:55:44 ip-172-31-1-79 DEPLOY: Couldn&#39;t find systemd to control Drone, cannot proceed.
+Apr 14 11:55:44 ip-172-31-1-79 DEPLOY: Open an issue and tell us about your system.
+added init script
+</pre></div>
+
+</code></pre>
+<p>So I added a custom upstart script to fix this:</p>
+<pre><code class="lang-shell">undefined
+</code></pre>
+<p>Drone parameters can be changed via environment variables in the upstart script or you can attach these environment variables to the instance in the Elastic Beanstalk configuration (in the AWS UI).
+Or you can use a special <code>drone.toml</code> configuration file:</p>
+<pre><code class="lang-ini"><div class="highlight"><pre><span class="c1"># Drone configuration</span>
+<span class="k">[server]</span>
+<span class="na">port</span><span class="o">=</span><span class="s">&quot;:8080&quot;</span>
+
+<span class="c1">#####################################################################</span>
+<span class="c1"># SSL configuration</span>
+<span class="c1">#</span>
+<span class="c1"># [server.ssl]</span>
+<span class="c1"># key=&quot;&quot;</span>
+<span class="c1"># cert=&quot;&quot;</span>
+
+<span class="c1">#####################################################################</span>
+<span class="c1"># Assets configuration</span>
+<span class="c1">#</span>
+<span class="c1"># [server.assets]</span>
+<span class="c1"># folder=&quot;&quot;</span>
+
+<span class="c1"># [session]</span>
+<span class="c1"># secret=&quot;&quot;</span>
+<span class="c1"># expires=&quot;&quot;</span>
+
+<span class="c1">#####################################################################</span>
+<span class="c1"># Database configuration, by default using SQLite3.</span>
+<span class="c1"># You can also use postgres and mysql. See the documentation</span>
+<span class="c1"># for more details.</span>
+
+<span class="k">[database]</span>
+<span class="na">driver</span><span class="o">=</span><span class="s">&quot;sqlite3&quot;</span>
+<span class="na">datasource</span><span class="o">=</span><span class="s">&quot;/var/lib/drone/drone.sqlite&quot;</span>
+
+<span class="k">[github]</span>
+<span class="na">client</span><span class="o">=</span><span class="s">&quot;xxxxxxxxxxxxxxxxxxxx&quot;</span>
+<span class="na">secret</span><span class="o">=</span><span class="s">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>
+<span class="c1"># orgs=[]</span>
+<span class="c1"># open=true</span>
+
+<span class="c1">#####################################################################</span>
+<span class="c1"># SMTP configuration for Drone. This is required if you plan</span>
+<span class="c1"># to send email notifications for build statuses.</span>
+<span class="c1">#</span>
+<span class="k">[smtp]</span>
+<span class="na">host</span><span class="o">=</span><span class="s">&quot;email-smtp.us-east-1.amazonaws.com&quot;</span>
+<span class="na">port</span><span class="o">=</span><span class="s">&quot;25&quot;</span>
+<span class="na">from</span><span class="o">=</span><span class="s">&quot;myemail@gmail.com&quot;</span>
+<span class="na">user</span><span class="o">=</span><span class="s">&quot;XXXXXXXXXXXXXXXXXXXX&quot;</span>
+<span class="na">pass</span><span class="o">=</span><span class="s">&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>
+
+<span class="c1"># [worker]</span>
+<span class="c1"># nodes=[</span>
+<span class="c1">#   &quot;unix:///var/run/docker.sock&quot;,</span>
+<span class="c1">#   &quot;unix:///var/run/docker.sock&quot;</span>
+<span class="c1"># ]</span>
+<span class="k">[worker]</span>
+<span class="na">nodes</span><span class="o">=</span><span class="s">[</span>
+<span class="s">  &quot;unix:///var/run/docker.sock&quot;</span>
+<span class="err">]</span>
+</pre></div>
+
+</code></pre>
+<p>To integrate Drone CI with github you will need to create an application and generate client and secret tokens, see <a href="http://readme.drone.io/setup/config/github/">details here</a>.</p>
+<p>That&#39;s all and now if you launch an environment with this configuration you will have Drone CI running.
+Access it via url like <code>your_eb_environment_url.elasticbeanstalk.com:8080</code>.</p>
+<h1 id="setup-drone-users">Setup Drone users</h1>
+<p>In the configuration above we didn&#39;t set the option to open new user registration to drone, so random people will not see your repositories and tests.
+Instead you will need to explicitly invite all the people who need an access.</p>
+<p>First, login with github as repository owner. This user will become Drone CI admin and will be able to invite other users.
+Now select <code>Users</code> in Drone menu and invite more users (using github accounts).</p>
+<p>If you have problems with user setup, check <a href="https://github.com/drone/drone/issues/553#issuecomment-58988210">this issue</a>.</p>
+<h1 id="persist-drone-ci-users-using-custom-api-image">Persist Drone CI users using custom API image</h1>
+<p>We setup Drone CI to use local sqlite database, it is easy, but the problem is that when your instance is terminated and launched again you will lose all user accounts.</p>
+<p>So when the setup is done a good idea is to make an image of the running instance and then set it as machine image for the Elastic Beanstalk environment:</p>
+<ul>
+<li>Do the following once your Drone is up and running and you added all the users</li>
+<li>Open EC2 instances page in AWS UI, select the instance with Drone and select an action <code>Image -&gt; Create image</code> for it</li>
+<li>Open <code>AMIs</code> page and wait until image is created, get the AMI ID (like ami-d2faa5b0)</li>
+<li>Go to Elastic Beanstalk environment, Configuration, Instances and set <code>Custom AMI ID</code></li>
+</ul>
+<p>Now if you instance is re-created all the settings will stay.
+The drawback is that you&#39;ll need to repeat the process once you add more users.
+Alternative is to use external RDS instance with MySql as Drone database.</p>
+<h1 id="how-to-run-build-locally">How to run build locally</h1>
+<p>To run the build manually, on your local machine, use the following command (you also need to install docker and drone locally):</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>sudo drone build
+</pre></div>
+
+</code></pre>
+<p>You can also run build manually on the EC2 server if you ssh to it and run:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="c"># for some reason it doesn&#39;t work without full path under sudo:</span>
+<span class="nv">$ </span>sudo /usr/local/bin/drone build
+</pre></div>
+
+</code></pre>
+<h1 id="custom-docker-image">Custom Docker image</h1>
+<p>For your drone environment you can choose one of existing docker images, check <a href="https://registry.hub.docker.com/">the docker hub</a>.</p>
+<p>But custom image with additional setup steps can speedup the build process, because you don&#39;t need to wait for dependencies install on each build.</p>
+<p>I use <a href="https://docs.docker.com/docker-hub/builds/">an automaited build feature of docker hub</a> which means that I have a <a href="https://github.com/serebrov/centos-python2.7-java">github repository with docker file and description</a>.</p>
+<p>Every time I push new Dockerfile version to this repository the image is re-build and becomes <a href="https://registry.hub.docker.com/u/serebrov/centos-python2.7-java/">available</a> on the docker hub.</p>
+<p>Note: if you modify a Dockerfile and have already running Drone then it will not see the change. By default image is fetched only once.
+To fix this - add <code>:latest</code> tag to the image name, trigger a build, drone will update the image. See <a href="https://github.com/drone/drone/pull/909/files">this pull request</a> for details.</p>
+<p>I didn&#39;t try it, but probably this issue can also be fixed in a one of following ways:</p>
+<p>1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch</p>
+<p>2) use docker directly to pull the new version of the image</p>
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'serebrov'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!--script src="/js/bootstrap.min.js"></script-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+
