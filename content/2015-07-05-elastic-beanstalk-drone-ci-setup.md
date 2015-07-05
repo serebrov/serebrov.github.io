@@ -4,7 +4,7 @@ date: 2015-07-05
 tags: aws,eb,drone
 ---
 
-[Drone CI](https://github.com/drone/drone) uses [Docker](https://www.docker.com/) containers to run tests for your application hosted on [github](http://github.com).
+[Drone CI](https://github.com/drone/drone) is a Continuous Integration platform. It uses [Docker](https://www.docker.com/) containers to run tests for your application hosted on [github](http://github.com).
 
 It not complex to set up the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
 <!-- more -->

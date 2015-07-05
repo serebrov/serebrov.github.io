@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>How to setup Drone CI on EC2 instance via Elastic Beanstalk</title>
+    <title>How to set up Drone CI on EC2 instance via Elastic Beanstalk</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -36,13 +36,13 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1>How to setup Drone CI on EC2 instance via Elastic Beanstalk</h1>
+              <h1>How to set up Drone CI on EC2 instance via Elastic Beanstalk</h1>
           </div>
       </div>
       <div class="row">
           <div class="col-md-12">
-              <p><a href="https://github.com/drone/drone">Drone CI</a> uses <a href="https://www.docker.com/">Docker</a> containers to run tests for your application hosted on <a href="http://github.com">github</a>.</p>
-<p>It not complex to setup the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
+              <p><a href="https://github.com/drone/drone">Drone CI</a> is a Continuous Integration platform. It uses <a href="https://www.docker.com/">Docker</a> containers to run tests for your application hosted on <a href="http://github.com">github</a>.</p>
+<p>It not complex to set up the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
 <!-- more --></p>
 <h1 id="drone-ci-setup">Drone CI setup</h1>
 <p>First you&#39;ll need to create a drone configuration file, <code>.drone.yml</code>, which looks like this:</p>
@@ -87,8 +87,8 @@ This script looks like this:</p>
 </pre></div>
 
 </code></pre>
-<p>My application uses Amazon DynamoDB, and I run tests twice - first using a simple in-memory DynamoDB mock and one more time using <a href="https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/">local dynamo db</a>.</p>
-<p>Mock is used during development and tests run very fast (few seconds) and local dynamodb is much slower and we need few minutes to run tests, but we can catch some specific errors related to the database usage.</p>
+<p>My application uses Amazon DynamoDB, and I run tests twice - first using a simple in-memory DynamoDB mock and one more time using <a href="https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/">local DynamoDB</a>.</p>
+<p>Mock is used during development and tests run very fast (few seconds) and local DynamoDB is much slower and we need few minutes to run tests, but we can catch some specific errors related to the database usage.</p>
 <h1 id="elastic-beanstalk-setup">Elastic Beanstalk setup</h1>
 <p>Elastic Beanstalk setup allows to automatically install Drone CI when new EC2 instance is launched.</p>
 <p>Here it is good to have a single-instance Elastic Beanstalk environment and scripts below will install Drone on the EC instance.</p>
@@ -202,18 +202,18 @@ Or you can use a special <code>drone.toml</code> configuration file:</p>
 </pre></div>
 
 </code></pre>
-<p>To integrate Drone CI with github you will need to create an application and generate client and secret tokens, see <a href="http://readme.drone.io/setup/config/github/">details here</a>.</p>
+<p>To integrate Drone CI with github, you will need to create an application and generate client and secret tokens, see <a href="http://readme.drone.io/setup/config/github/">details here</a>.</p>
 <p>That&#39;s all and now if you launch an environment with this configuration you will have Drone CI running.
 Access it via url like <code>your_eb_environment_url.elasticbeanstalk.com:8080</code>.</p>
 <h1 id="setup-drone-users">Setup Drone users</h1>
 <p>In the configuration above we didn&#39;t set the option to open new user registration to drone, so random people will not see your repositories and tests.
 Instead you will need to explicitly invite all the people who need an access.</p>
-<p>First, login with github as repository owner. This user will become Drone CI admin and will be able to invite other users.
+<p>First, login with github as the repository owner. This user will become Drone CI admin and will be able to invite other users.
 Now select <code>Users</code> in Drone menu and invite more users (using github accounts).</p>
 <p>If you have problems with user setup, check <a href="https://github.com/drone/drone/issues/553#issuecomment-58988210">this issue</a>.</p>
 <h1 id="persist-drone-ci-users-using-custom-api-image">Persist Drone CI users using custom API image</h1>
-<p>We setup Drone CI to use local sqlite database, it is easy, but the problem is that when your instance is terminated and launched again you will lose all user accounts.</p>
-<p>So when the setup is done a good idea is to make an image of the running instance and then set it as machine image for the Elastic Beanstalk environment:</p>
+<p>We set up Drone CI to use local sqlite database, it is easy, but the problem is that when your instance is terminated and launched again you will lose all user accounts.</p>
+<p>So when the setup is done the good idea is to make an image of the running instance and then set it as machine image for the Elastic Beanstalk environment:</p>
 <ul>
 <li>Do the following once your Drone is up and running and you added all the users</li>
 <li>Open EC2 instances page in AWS UI, select the instance with Drone and select an action <code>Image -&gt; Create image</code> for it</li>
@@ -236,8 +236,8 @@ Alternative is to use external RDS instance with MySql as Drone database.</p>
 
 </code></pre>
 <h1 id="custom-docker-image">Custom Docker image</h1>
-<p>For your drone environment you can choose one of existing docker images, check <a href="https://registry.hub.docker.com/">the docker hub</a>.</p>
-<p>But custom image with additional setup steps can speedup the build process, because you don&#39;t need to wait for dependencies install on each build.</p>
+<p>For your drone environment, you can choose one of existing docker images, check <a href="https://registry.hub.docker.com/">the docker hub</a>.</p>
+<p>But custom image with additional setup steps can speed up the build process, because you don&#39;t need to wait for dependencies install on each build.</p>
 <p>I use <a href="https://docs.docker.com/docker-hub/builds/">an automaited build feature of docker hub</a> which means that I have a <a href="https://github.com/serebrov/centos-python2.7-java">github repository with docker file and description</a>.</p>
 <p>Every time I push new Dockerfile version to this repository the image is re-build and becomes <a href="https://registry.hub.docker.com/u/serebrov/centos-python2.7-java/">available</a> on the docker hub.</p>
 <p>Note: if you modify a Dockerfile and have already running Drone then it will not see the change. By default image is fetched only once.
