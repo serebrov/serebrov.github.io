@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWS PostgreSQL RDS - remaining connection slots are reserved error</title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1>AWS PostgreSQL RDS - remaining connection slots are reserved error</h1>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <p>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>FATAL:  remaining connection slots are reserved <span class="k">for</span> non-replication superuser connections
+</pre></div>
+
+</code></pre>
+<p>The PostgreSQL server was running on the db.t1.micro RDS instance and the &#39;Current activity&#39; column showed &#39;22 connections&#39; and a red line which should represent a connection limit was far away from the 22 value.</p>
+<!-- more -->
+
+<p>Here is how it looked:</p>
+<p><img src="files/2015-09-22-22-connections.png" alt="cwl-setup.config, click to preview">.</p>
+<p>And this connection information is actually misleading.
+After sometime, when database load went down, I was able to login with psql to check max_connections parameter:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="n">template1</span><span class="o">=&gt;</span> <span class="k">show</span> <span class="n">max_connections</span><span class="p">;</span>
+  <span class="n">max_connections</span>
+<span class="c1">-----------------</span>
+ <span class="mi">26</span>
+<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
+</pre></div>
+
+</code></pre>
+<p>This setting (max_connection) can also be found in the RDS UI, under &quot;Parameter Groups&quot;, but the value there is set as <code>{DBInstanceClassMemory/31457280}</code>, so it is complex to be sure about the actual value.
+The db.t1.micro instance has 1GB memory, and calculation like <code>1024*1024*1024/31457280</code> gives around 36, while actually it is 26.</p>
+<p>The default value can be changed, for this it is necessary to create the new parameter group, using the default group as parent and then edit the max_connection value.
+But it looks dangerous to do on production, because more connections will consume more memory and instead of connection limit errors you can end up with out of memory errors.
+So I decided to change the instance type to db.t2.small, it costs twice more, but it has 2GB RAM and default max_connections value is 60.</p>
+<p>In my case the higher connection consumption was not something unexpected, the Elastic Beanstalk scaled the application to 6 EC2 instances under load. Each instance runs a flask application with several threads, so they can easily consume around 20 connections.
+To actually make sure that everything is OK with connections handling, run the following query:</p>
+<pre><code class="lang-sql"><div class="highlight"><pre><span class="n">template1</span><span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+
+ <span class="n">datid</span> <span class="o">|</span>    <span class="n">datname</span>     <span class="o">|</span>  <span class="n">pid</span>  <span class="o">|</span> <span class="n">usesysid</span> <span class="o">|</span>  <span class="n">usename</span>   <span class="o">|</span> <span class="n">application_name</span> <span class="o">|</span>  <span class="n">client_addr</span>  <span class="o">|</span> <span class="n">client_hostname</span> <span class="o">|</span> <span class="n">client_port</span> <span class="o">|</span>         <span class="n">backend_start</span>         <span class="o">|</span>
+<span class="n">xact_start</span>          <span class="o">|</span>          <span class="n">query_start</span>          <span class="o">|</span>         <span class="n">state_change</span>          <span class="o">|</span> <span class="n">waiting</span> <span class="o">|</span> <span class="k">state</span>  <span class="o">|</span> <span class="n">backend_xid</span> <span class="o">|</span> <span class="n">backend_xmin</span> <span class="o">|</span>              <span class="n">query</span>
+<span class="c1">-------+----------------+-------+----------+------------+------------------+---------------+-----------------+-------------+-------------------------------+----------</span>
+<span class="c1">--------------------+-------------------------------+-------------------------------+---------+--------+-------------+--------------+---------------------------------</span>
+ <span class="mi">16384</span> <span class="o">|</span> <span class="n">rdsadmin</span>       <span class="o">|</span>  <span class="mi">3155</span> <span class="o">|</span>       <span class="mi">10</span> <span class="o">|</span> <span class="n">rdsadmin</span>   <span class="o">|</span>                  <span class="o">|</span>               <span class="o">|</span>                 <span class="o">|</span>             <span class="o">|</span>                               <span class="o">|</span>
+                    <span class="o">|</span>                               <span class="o">|</span>                               <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span>             <span class="o">|</span>              <span class="o">|</span> <span class="o">&lt;</span><span class="n">insufficient</span> <span class="n">privilege</span><span class="o">&gt;</span>
+ <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>         <span class="o">|</span>  <span class="mi">3287</span> <span class="o">|</span>    <span class="mi">16397</span> <span class="o">|</span> <span class="n">production</span> <span class="o">|</span>                  <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">17</span><span class="p">.</span><span class="mi">76</span>  <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">51365</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">04</span><span class="p">.</span><span class="mi">800089</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span>
+                    <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">384317</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">384341</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>   <span class="o">|</span>             <span class="o">|</span>              <span class="o">|</span> <span class="k">COMMIT</span>
+ <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>         <span class="o">|</span>  <span class="mi">3562</span> <span class="o">|</span>    <span class="mi">16397</span> <span class="o">|</span> <span class="n">production</span> <span class="o">|</span>                  <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">17</span><span class="p">.</span><span class="mi">76</span>  <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">51393</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">953165</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span>
+                    <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">21</span><span class="p">.</span><span class="mi">216509</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">21</span><span class="p">.</span><span class="mi">216581</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>   <span class="o">|</span>             <span class="o">|</span>              <span class="o">|</span> <span class="k">ROLLBACK</span>
+ <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>         <span class="o">|</span>  <span class="mi">3563</span> <span class="o">|</span>    <span class="mi">16397</span> <span class="o">|</span> <span class="n">production</span> <span class="o">|</span>                  <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">234</span>  <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">33022</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">9628</span><span class="o">+</span><span class="mi">00</span>   <span class="o">|</span>
+                    <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">14</span><span class="p">.</span><span class="mi">379956</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">14</span><span class="p">.</span><span class="mi">379975</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>   <span class="o">|</span>             <span class="o">|</span>              <span class="o">|</span> <span class="k">COMMIT</span>
+ <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>         <span class="o">|</span>  <span class="mi">3564</span> <span class="o">|</span>    <span class="mi">16397</span> <span class="o">|</span> <span class="n">production</span> <span class="o">|</span>                  <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">9</span><span class="p">.</span><span class="mi">234</span>  <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">33023</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">971432</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span>
+                    <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">18</span><span class="p">.</span><span class="mi">301739</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">18</span><span class="p">.</span><span class="mi">301812</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>   <span class="o">|</span>             <span class="o">|</span>              <span class="o">|</span> <span class="k">ROLLBACK</span>
+ <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>         <span class="o">|</span>  <span class="mi">3565</span> <span class="o">|</span>    <span class="mi">16397</span> <span class="o">|</span> <span class="n">production</span> <span class="o">|</span>                  <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">17</span><span class="p">.</span><span class="mi">76</span>  <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">51394</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span><span class="p">.</span><span class="mi">988195</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span>
+ <span class="p">...</span>
+     <span class="mi">1</span> <span class="o">|</span> <span class="n">template1</span>      <span class="o">|</span> <span class="mi">17412</span> <span class="o">|</span>    <span class="mi">16386</span> <span class="o">|</span> <span class="n">root</span>       <span class="o">|</span> <span class="n">psql</span>             <span class="o">|</span> <span class="mi">192</span><span class="p">.</span><span class="mi">33</span><span class="p">.</span><span class="mi">16</span><span class="p">.</span><span class="mi">168</span> <span class="o">|</span>                 <span class="o">|</span>       <span class="mi">35311</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">21</span><span class="p">.</span><span class="mi">814207</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">2</span>
+<span class="mi">2</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">48</span><span class="p">.</span><span class="mi">32563</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">48</span><span class="p">.</span><span class="mi">32563</span><span class="o">+</span><span class="mi">00</span>  <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">48</span><span class="p">.</span><span class="mi">325633</span><span class="o">+</span><span class="mi">00</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">active</span> <span class="o">|</span>             <span class="o">|</span>      <span class="mi">1440784</span> <span class="o">|</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+<span class="p">(</span><span class="mi">16</span> <span class="k">rows</span><span class="p">)</span>
+</pre></div>
+
+</code></pre>
+<p>Here you can see all the connections, queries and last activity time for each connection, so it should be easy to see if there are any hanging connections.</p>
+<h1 id="links">Links</h1>
+<p><a href="https://stackoverflow.com/questions/13640871/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication">Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”</a></p>
+<p><a href="http://stackoverflow.com/questions/11847144/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication">Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”</a></p>
+<p><a href="http://stackoverflow.com/questions/20106536/amazon-rds-postgres-connection-limit">Stackoverflow: Amazon RDS (postgres) connection limit?</a></p>
+<p><a href="http://stackoverflow.com/questions/18291180/flask-unittest-and-sqlalchemy-using-all-connections">Stackoverflow: Flask unittest and sqlalchemy using all connections</a></p>
+<p><a href="http://serverfault.com/questions/577712/postgresql-error-no-more-connections-allowed">Stackoverflow: PostgreSQL ERROR: no more connections allowed</a></p>
+
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'serebrov'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!--script src="/js/bootstrap.min.js"></script-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+

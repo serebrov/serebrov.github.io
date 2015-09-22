@@ -338,5 +338,17 @@ To fix this - add `:latest` tag to the image name, trigger a build, drone will u
 I didn't try it, but probably this issue can also be fixed in a one of following ways:
 
 1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch
-
 2) use docker directly to pull the new version of the image
+
+I use t2.small instance to run drone in a single-instance Elastic Beanstalk environment.
+But take into account that a small EC2 instance can be not enough to build or re-build the image.
+If docker fails with `can not allocate memory` error (check in /var/log/docker) then it is possible to use a larger instance initially and then switch to a smaller one:
+
+- assume that you have a running environment with t2.small instance
+- change the instance type to t2.medium in the environment configuration
+- save, wait until new instance is launched
+- trigger a build by pushing some change, it will take longer than usual to initialize the new container image
+- make sure build was successfully finished
+- make an instance image (from the EC2 console)
+- in the EB environment settings change type back to t2.small and point it to the new image
+- save and wait until it launches, check if build passes on the small instance

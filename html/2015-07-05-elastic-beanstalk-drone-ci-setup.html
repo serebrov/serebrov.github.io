@@ -243,8 +243,21 @@ Alternative is to use external RDS instance with MySql as Drone database.</p>
 <p>Note: if you modify a Dockerfile and have already running Drone then it will not see the change. By default image is fetched only once.
 To fix this - add <code>:latest</code> tag to the image name, trigger a build, drone will update the image. See <a href="https://github.com/drone/drone/pull/909/files">this pull request</a> for details.</p>
 <p>I didn&#39;t try it, but probably this issue can also be fixed in a one of following ways:</p>
-<p>1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch</p>
-<p>2) use docker directly to pull the new version of the image</p>
+<p>1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch
+2) use docker directly to pull the new version of the image</p>
+<p>I use t2.small instance to run drone in a single-instance Elastic Beanstalk environment.
+But take into account that a small EC2 instance can be not enough to build or re-build the image.
+If docker fails with <code>can not allocate memory</code> error (check in /var/log/docker) then it is possible to use a larger instance initially and then switch to a smaller one:</p>
+<ul>
+<li>assume that you have a running environment with t2.small instance</li>
+<li>change the instance type to t2.medium in the environment configuration</li>
+<li>save, wait until new instance is launched</li>
+<li>trigger a build by pushing some change, it will take longer than usual to initialize the new container image</li>
+<li>make sure build was successfully finished</li>
+<li>make an instance image (from the EC2 console)</li>
+<li>in the EB environment settings change type back to t2.small and point it to the new image</li>
+<li>save and wait until it launches, check if build passes on the small instance</li>
+</ul>
 
           </div>
       </div>
