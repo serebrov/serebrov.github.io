@@ -243,8 +243,8 @@ Alternative is to use external RDS instance with MySql as Drone database.</p>
 <p>Note: if you modify a Dockerfile and have already running Drone then it will not see the change. By default image is fetched only once.
 To fix this - add <code>:latest</code> tag to the image name, trigger a build, drone will update the image. See <a href="https://github.com/drone/drone/pull/909/files">this pull request</a> for details.</p>
 <p>I didn&#39;t try it, but probably this issue can also be fixed in a one of following ways:</p>
-<p>1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch
-2) use docker directly to pull the new version of the image</p>
+<p>1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch</p>
+<p>2) use docker directly to pull the new version of the image</p>
 <p>I use t2.small instance to run drone in a single-instance Elastic Beanstalk environment.
 But take into account that a small EC2 instance can be not enough to build or re-build the image.
 If docker fails with <code>can not allocate memory</code> error (check in /var/log/docker) then it is possible to use a larger instance initially and then switch to a smaller one:</p>

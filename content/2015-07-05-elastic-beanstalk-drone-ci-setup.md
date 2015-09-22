@@ -338,6 +338,7 @@ To fix this - add `:latest` tag to the image name, trigger a build, drone will u
 I didn't try it, but probably this issue can also be fixed in a one of following ways:
 
 1) rebuild the elastic beanstalk environment, so everything will be re-built from scratch
+
 2) use docker directly to pull the new version of the image
 
 I use t2.small instance to run drone in a single-instance Elastic Beanstalk environment.
