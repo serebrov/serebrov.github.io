@@ -59,8 +59,6 @@ Here you can see all the connections, queries and last activity time for each co
 
 # Links
 
-[Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”](https://stackoverflow.com/questions/13640871/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication)
-
 [Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”](http://stackoverflow.com/questions/11847144/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication)
 
 [Stackoverflow: Amazon RDS (postgres) connection limit?](http://stackoverflow.com/questions/20106536/amazon-rds-postgres-connection-limit)
