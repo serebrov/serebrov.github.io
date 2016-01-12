@@ -51,8 +51,9 @@
 
 <p>Here is how it looked:</p>
 <p><img src="files/2015-09-22-22-connections.png" alt="cwl-setup.config, click to preview">.</p>
-<p>And this connection information is actually misleading.
-After some time, when the database load went down, I was able to login with psql to check max_connections parameter:</p>
+<p>And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.
+While actually we already at 100% of connections.</p>
+<p>After some time, when the database load went down, I was able to login with psql to check max_connections parameter:</p>
 <pre><code class="lang-sql"><div class="highlight"><pre><span class="n">template1</span><span class="o">=&gt;</span> <span class="k">show</span> <span class="n">max_connections</span><span class="p">;</span>
   <span class="n">max_connections</span>
 <span class="c1">-----------------</span>
@@ -61,10 +62,17 @@ After some time, when the database load went down, I was able to login with psql
 </pre></div>
 
 </code></pre>
-<p>This setting (max_connection) can also be found in the RDS UI, under &quot;Parameter Groups&quot;, but the value there is set as <code>{DBInstanceClassMemory/31457280}</code>, so it is complex to be sure about the actual value.
+<p>So we have 26 max connections and, as stated in comments (thanks, Johannes Schickling), there are also 3 connections reserved to superuser.</p>
+<p>That means we used 25 connections (22 + 3 reserved) out of 26.</p>
+<p>The <code>max_connection</code> setting can also be found in the RDS UI, under &quot;Parameter Groups&quot;, but the value there is set as <code>{DBInstanceClassMemory/31457280}</code>, so it is complex to be sure about the actual value.
 The db.t1.micro instance has 1GB memory, and calculation like <code>1024*1024*1024/31457280</code> gives around 36, while actually it is 26.</p>
-<p>The default value can be changed: create a new parameter group, using the default group as parent and then edit the max_connection value. Once done - go to the db instance settings (Modify action) and set the new parameter group.
-But for me it seems to be dangerous solution to use in production, because more connections will consume more memory and instead of connection limit errors you can end up with out of memory errors.</p>
+<p>The default value can be changed this way:</p>
+<ul>
+<li>create a new parameter group</li>
+<li>using the default group as parent and then edit the max_connection value</li>
+<li>once done - go to the db instance settings (Modify action) and set the new parameter group.</li>
+</ul>
+<p>But for me it seems to be dangerous solution to use in production, because more connections will consume more memory and instead of connection limit errors you can end up with out of memory errors.</p>
 <p>So I decided to change the instance type to db.t2.small, it costs twice more, but it has 2GB RAM and default max_connections value is 60.</p>
 <p>In my case the higher connection consumption was not something unexpected, the Elastic Beanstalk scaled the application to 6 EC2 instances under load. Each instance runs a flask application with several threads, so they can easily consume around 20 connections.
 To actually make sure that everything is OK with connections handling, run the following query:</p>
@@ -84,7 +92,6 @@ To actually make sure that everything is OK with connections handling, run the f
 </code></pre>
 <p>Here you can see all the connections, queries and last activity time for each connection, so it should be easy to see if there are any hanging connections.</p>
 <h1 id="links">Links</h1>
-<p><a href="https://stackoverflow.com/questions/13640871/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication">Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”</a></p>
 <p><a href="http://stackoverflow.com/questions/11847144/heroku-psql-fatal-remaining-connection-slots-are-reserved-for-non-replication">Stackoverflow: Heroku “psql: FATAL: remaining connection slots are reserved for non-replication superuser connections”</a></p>
 <p><a href="http://stackoverflow.com/questions/20106536/amazon-rds-postgres-connection-limit">Stackoverflow: Amazon RDS (postgres) connection limit?</a></p>
 <p><a href="http://stackoverflow.com/questions/18291180/flask-unittest-and-sqlalchemy-using-all-connections">Stackoverflow: Flask unittest and sqlalchemy using all connections</a></p>
