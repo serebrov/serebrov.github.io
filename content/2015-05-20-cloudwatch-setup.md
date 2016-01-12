@@ -9,6 +9,7 @@ On the top level setup is this:
 - install CloudWatch agent to collect logs data and send to CloudWatch Logs service
 - define log metric filters to extract useful data, like number of all errors or information about some specific events
 - create alarms for metrics to get notifications about logs
+- make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue)
 
 All the configuration can be done using the Elastic Beanstalk config. In this case when the new environment is launched or existing environment is updated  the CloudWatch Logs setup is done automatically.
 
