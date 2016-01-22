@@ -34,11 +34,15 @@ The history will look like this:
 The same git error after rebase:
 --------------------------------------------
 
-Your branch and 'origin/xxx' have diverged,
-and have 1 and 1 different commit(s) each, respectively.
-In this case this is normal and expected, your local branch is different then origin version because of rebase.
+This happens if you rebase the branch which was previously pushed to the origin repository.
+Rebase rewrites history, so after it you'll have different local and remote state:
 
-For example, we have a history like this:
+```bash
+    Your branch and 'origin/xxx' have diverged,
+    and have 1 and 1 different commit(s) each, respectively.
+```
+
+In this case this is expected. For example, we have a history like this:
 
 ```bash
     ... o ---- o ---- A ---- B  master, origin/master
