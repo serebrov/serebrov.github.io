@@ -72,6 +72,8 @@ If you absolutely sure this is your case then you can force Git to push your cha
 Links
 --------------------------------------------
 
+[Should I rebase master onto a branch that's been pushed?](http://stackoverflow.com/questions/34918268/should-i-rebase-master-onto-a-branch-thats-been-pushed/34946769#34946769)
+
 [Stackoverflow - master branch and 'origin/master' have diverged, how to 'undiverge' branches'?](http://stackoverflow.com/questions/2452226/master-branch-and-origin-master-have-diverged-how-to-undiverge-branches)
 
 [Stackoverflow - git rebase basics](http://stackoverflow.com/questions/11563319/git-rebase-basics)
