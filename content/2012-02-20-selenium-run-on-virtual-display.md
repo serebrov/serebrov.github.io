@@ -2,6 +2,7 @@
 title: selenium - run tests on a virtual display
 date: 2012-02-20
 tags: selenium
+type: note
 ---
 
 Selenium tests require browser to run, so usually we run them on the X-server enabled machine.

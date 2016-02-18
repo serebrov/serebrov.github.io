@@ -2,6 +2,7 @@
 title: Angular.js and SEO - pre-render content on the server
 date: 2013-05-24
 tags: angularjs
+type: post
 ---
 
 With angular.js you have an HTML which looks like this:

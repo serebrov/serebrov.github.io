@@ -2,6 +2,7 @@
 title: AWS PostgreSQL RDS - remaining connection slots are reserved error
 date: 2015-09-22
 tags: aws,rds,postgresql
+type: note
 ---
 
 Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:

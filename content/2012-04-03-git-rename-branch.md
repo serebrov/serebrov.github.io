@@ -2,6 +2,7 @@
 title:  git - rename branch (local and remote)
 date: 2012-04-03
 tags: git
+type: note
 ---
 
 

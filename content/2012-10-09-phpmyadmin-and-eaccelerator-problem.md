@@ -2,6 +2,7 @@
 title: phpmyadmin and eaccelerator problem
 date: 2012-04-03
 tags: git
+type: note
 ---
 
 Error when trying to access phpmyadmin (in Chrome):

@@ -2,6 +2,7 @@
 title: express.js and ejs - reuse template on server and client
 date: 2012-08-20
 tags: ejs,express.js,node.js
+type: post
 ---
 
 [ejs](https://github.com/visionmedia/ejs) has a [client-side support](https://github.com/visionmedia/ejs#client-side-support) but documentation and examples do not describe how to reuse the same template on the server and on the client side.

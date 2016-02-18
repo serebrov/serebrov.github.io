@@ -2,6 +2,7 @@
 title: Amazon DynamoDB, EMR and Hive notes
 date: 2015-01-24
 tags: aws,dynamodb,emr,hive
+type: note
 ---
 
 First you need the EMR cluster running and you should have ssh connection to the master instance like described in the [getting started tutorial](http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-get-started.html).

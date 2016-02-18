@@ -2,6 +2,7 @@
 title: selenium webdriver - set php session cookie
 date: 2012-07-24
 tags: selenium
+type: note
 ---
 
 To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.

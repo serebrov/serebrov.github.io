@@ -2,6 +2,7 @@
 title: git - git rm already deleted files
 date: 2012-04-03
 tags: git
+type: note
 ---
 
 

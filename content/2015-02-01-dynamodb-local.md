@@ -2,6 +2,7 @@
 title: Local Amazon DynamoDB - tools, dump/restore and testing
 date: 2015-01-25
 tags: aws,dynamodb
+type: note
 ---
 
 ### Setup

@@ -2,7 +2,10 @@
 title: Amazon DynamoDB - how to add global secondary index
 date: 2015-01-25
 tags: aws,dynamodb,emr
+type: note
 ---
+
+Note: this post is outdated, because it is already possible to add a secondary index to the existing table (it was not possible in earlier DynamoDB versions).
 
 At the moment it is not possible to add a secondary index into the existing table.
 This feature is [announced](https://forums.aws.amazon.com/ann.jspa?annID=2650) but not yet available.

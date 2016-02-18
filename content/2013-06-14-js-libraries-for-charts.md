@@ -2,6 +2,7 @@
 title: JS libraties for charts (links)
 date: 2013-06-14
 tags: js
+type: note
 ---
 
 <!-- more -->

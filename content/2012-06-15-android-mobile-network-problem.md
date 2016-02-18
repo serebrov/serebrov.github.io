@@ -2,6 +2,7 @@
 title: Andriod - moblie network problem after BusyBox update
 date: 2012-01-24
 tags: android
+type: post
 ---
 
 I have LG p500 (Optimus One), rooted with original ROM.

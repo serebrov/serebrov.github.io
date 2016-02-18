@@ -2,6 +2,7 @@
 title: Git - Your branch and 'origin/xxx' have diverged
 date: 2012-02-13
 tags: git
+type: note
 ---
 
 Git error (not after rebase, see below):

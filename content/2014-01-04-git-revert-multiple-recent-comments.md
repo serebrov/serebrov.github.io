@@ -2,6 +2,7 @@
 title: Git - how to revert multiple recent commits
 date: 2014-01-04
 tags: git
+type: note
 ---
 
 Let's assume we have a history like this:

@@ -2,6 +2,7 @@
 title: git - colored diff, branch, etc by default
 date: 2012-02-28
 tags: git
+type: note
 ---
 
 

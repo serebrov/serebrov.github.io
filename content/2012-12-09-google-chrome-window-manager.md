@@ -2,6 +2,7 @@
 title: Window managers for Google Chrome
 date: 2012-12-09
 tags: chrome
+type: note
 ---
 
 A list of extensions to manage position of chrome tabs / windows and to create splits.

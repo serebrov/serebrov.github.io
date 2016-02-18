@@ -2,8 +2,8 @@
 title: git - view changes - diff and log
 date: 2012-10-01
 tags: git
+type: note
 ---
-
 
 Diff staged changes
 -------------------------------------------

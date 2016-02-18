@@ -2,6 +2,7 @@
 title: selenium webdriver - get webelement by jQuery selector
 date: 2012-08-02
 tags: selenium
+type: note
 ---
 
 

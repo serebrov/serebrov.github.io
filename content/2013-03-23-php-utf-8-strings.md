@@ -2,6 +2,7 @@
 title: PHP - utf-8 strings handling
 date: 2013-03-23
 tags: php
+type: note
 ---
 
 Enable mbstring [function overloading mode](http://www.php.net/manual/en/mbstring.overload.php) and set default

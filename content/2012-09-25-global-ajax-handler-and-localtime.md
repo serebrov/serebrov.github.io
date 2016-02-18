@@ -2,8 +2,8 @@
 title: global ajax response handler and jquery.localtime plugin
 date: 2012-09-25
 tags: jquery
+type: note
 ---
-
 
 The [jquery.localtime plugin](http://code.google.com/p/jquery-localtime) allows to convert date/time strings to a local user time on a client site.
 By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.

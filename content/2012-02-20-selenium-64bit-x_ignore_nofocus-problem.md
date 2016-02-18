@@ -2,6 +2,7 @@
 title: selenium - problem with loading x_ignore_nofocus.so
 date: 2012-02-20
 tags: selenium
+type: note
 ---
 
 Problem: selenium fails to start Firefox with following error:
