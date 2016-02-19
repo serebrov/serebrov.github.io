@@ -1,1 +1,1 @@
-{"title":"Node.js - how to debug mocha test with node inspector","date":"2013-12-02T00:00:00.000Z","tags":"node.js","intro":"<p>To debug mocha test with <a href=\"https://github.com/node-inspector/node-inspector\">node inspector</a> use the delay before test:</p>\n"}
+{"title":"Node.js - how to debug mocha test with node inspector","date":"2013-12-02T00:00:00.000Z","tags":"node.js","type":"note","intro":"<p>To debug mocha test with <a href=\"https://github.com/node-inspector/node-inspector\">node inspector</a> use the delay before test:</p>\n"}

@@ -1,5 +1,5 @@
 ---
-title: OOP SOLID principles: L - Liskov substitution principle
+title: OOP SOLID Principles "L" - Liskov Substitution Principle
 date: 2016-02-18
 tags: oop
 type: post
@@ -16,6 +16,8 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
 The basic idea is that if you have an object of type `T` then you can also use objects of its subclasses instead of it.
 
 Or, in other words: the subclass should behave the same way as it's base class. It can add some new features on top of the base class (that's the purpose of inheritance, right?), but it can not break expectations about the base class.
+
+<!--more-->
 
 The expectations about the base class include:
 

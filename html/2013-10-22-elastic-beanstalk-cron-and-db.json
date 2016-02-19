@@ -1,1 +1,1 @@
-{"title":"Elastic Beanstalk - cron command and RDS DB access","date":"2013-10-22T00:00:00.000Z","tags":"aws","intro":"<h2 id=\"problem\">Problem</h2>\n<p>I have a console command in php which needs an access to DB.\nThe command need to be launched via cron.</p>\n"}
+{"title":"Elastic Beanstalk - cron command and RDS DB access","date":"2013-10-22T00:00:00.000Z","tags":"aws","type":"note","intro":"<h2 id=\"problem\">Problem</h2>\n<p>I have a console command in php which needs an access to DB.\nThe command need to be launched via cron.</p>\n"}
