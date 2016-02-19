@@ -65,17 +65,17 @@
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
 <p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
 <p>Let&#39;s imagine we have following class hierarchy:</p>
-<pre><code class="lang-sh"><div class="highlight"><pre>   .------------.          .------------.          .-------------.
-   <span class="p">|</span> LiveBeing  <span class="p">|</span>          <span class="p">|</span>   Animal   <span class="p">|</span>&lt;<span class="p">|</span>--------<span class="p">|</span>     Cat     <span class="p">|</span>
-   <span class="p">|</span>------------<span class="p">|</span>&lt;<span class="p">|</span>--------<span class="p">|</span>------------<span class="p">|</span>          <span class="p">|</span>-------------<span class="p">|</span>
-   <span class="p">|</span> + breeze<span class="o">()</span> <span class="p">|</span>          <span class="p">|</span> + eat<span class="o">()</span>    <span class="p">|</span>&lt;<span class="p">|</span>---.    <span class="p">|</span> + mew<span class="o">()</span>     <span class="p">|</span>
-   <span class="s1">&#39;------------&#39;</span>          <span class="s1">&#39;------------&#39;</span>     <span class="p">|</span>    <span class="s1">&#39;-------------&#39;</span>
-                                              <span class="p">|</span>
-                                              <span class="p">|</span>     .------------.
-                                              <span class="p">|</span>     <span class="p">|</span>    Dog     <span class="p">|</span>
-                                              <span class="s1">&#39;-----|------------|</span>
-<span class="s1">                                                    | + bark()   |</span>
-<span class="s1">                                                    &#39;</span>------------<span class="err">&#39;</span>
+<pre><code class="lang-text"><div class="highlight"><pre>   .------------.          .------------.          .-------------.
+   | LiveBeing  |          |   Animal   |&lt;|--------|     Cat     |
+   |------------|&lt;|--------|------------|          |-------------|
+   | + breeze() |          | + eat()    |&lt;|---.    | + mew()     |
+   &#39;------------&#39;          &#39;------------&#39;     |    &#39;-------------&#39;
+                                              |
+                                              |     .------------.
+                                              |     |    Dog     |
+                                              &#39;-----|------------|
+                                                    | + bark()   |
+                                                    &#39;------------&#39;
 </pre></div>
 
 </code></pre>

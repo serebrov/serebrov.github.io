@@ -39,7 +39,7 @@ Signature requirements are requirements for input argument types and return type
 
 Let's imagine we have following class hierarchy:
 
-```sh
+```text
    .------------.          .------------.          .-------------.
    | LiveBeing  |          |   Animal   |<|--------|     Cat     |
    |------------|<|--------|------------|          |-------------|
