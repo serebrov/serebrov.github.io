@@ -47,11 +47,11 @@
 <span class="nx">Then</span> <span class="nx">f</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="nx">should</span> <span class="nx">be</span> <span class="kc">true</span> <span class="k">for</span> <span class="nx">objects</span> <span class="nx">y</span> <span class="nx">of</span> <span class="nx">type</span> <span class="nx">S</span> <span class="nx">where</span> <span class="nx">S</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">subtype</span> <span class="nx">of</span> <span class="nx">T</span><span class="p">.</span>
 </pre></div>
 
-</code></pre><p>The basic idea is that if you have an object of type <code>T</code> then you can also use objects of its subclasses instead of it.</p>
-<p>Or, in other words: the subclass should behave the same way as it&#39;s base class. It can add some new features on top of the base class (that&#39;s the purpose of inheritance, right?), but it can not break expectations about the base class.</p>
-<!--more-->
+</code></pre><p>The basic idea - if you have an object of type <code>T</code> then you can also use objects of its subclasses instead of it.</p>
+<p>Or, in other words: the subclass should behave the same way as the base class. It can add some new features on top of the base class (that&#39;s the purpose of inheritance, right?), but it can not break expectations about the base class behavior.</p>
+<!-- more -->
 
-<p>The expectations about the base class include:</p>
+<p>The expectations about the base class can include:</p>
 <ul>
 <li>input parameters for class methods</li>
 <li>returned values of the class methods</li>
@@ -60,50 +60,51 @@
 <li>other expectations about what the object does and how</li>
 </ul>
 <p>Some of these expectations can be enforced by the programming language, but some of them can only be expressed as the documentation.</p>
-<p>This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn one class into something completely different represented by the subclass.</p>
+<p>This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn the class into something completely different.</p>
 <p>Let&#39;s see what rules do we need to follow in the code.</p>
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
-<p>Signature requirements are requirements for input argument types and return type of the class methods.
-Let&#39;s imagine we have following class hierarchy:</p>
-<pre><code><div class="highlight"><pre>   <span class="p">.</span><span class="o">------------</span><span class="p">.</span>          <span class="p">.</span><span class="o">------------</span><span class="p">.</span>          <span class="p">.</span><span class="o">-------------</span><span class="p">.</span>
-   <span class="o">|</span> <span class="nx">LiveBeing</span>  <span class="o">|</span>          <span class="o">|</span>   <span class="nx">Animal</span>   <span class="o">|&lt;|--------|</span>     <span class="nx">Cat</span>     <span class="o">|</span>
-   <span class="o">|------------|&lt;|--------|------------|</span>          <span class="o">|-------------|</span>
-   <span class="o">|</span> <span class="o">+</span> <span class="nx">breeze</span><span class="p">()</span> <span class="o">|</span>          <span class="o">|</span> <span class="o">+</span> <span class="nx">eat</span><span class="p">()</span>    <span class="o">|&lt;|---</span><span class="p">.</span>    <span class="o">|</span> <span class="o">+</span> <span class="nx">mew</span><span class="p">()</span>     <span class="o">|</span>
-   <span class="s1">&#39;------------&#39;</span>          <span class="s1">&#39;------------&#39;</span>     <span class="o">|</span>    <span class="s1">&#39;-------------&#39;</span>
-                                              <span class="o">|</span>
-                                              <span class="o">|</span>     <span class="p">.</span><span class="o">------------</span><span class="p">.</span>
-                                              <span class="o">|</span>     <span class="o">|</span>    <span class="nx">Dog</span>     <span class="o">|</span>
+<p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
+<p>Let&#39;s imagine we have following class hierarchy:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>   .------------.          .------------.          .-------------.
+   <span class="p">|</span> LiveBeing  <span class="p">|</span>          <span class="p">|</span>   Animal   <span class="p">|</span>&lt;<span class="p">|</span>--------<span class="p">|</span>     Cat     <span class="p">|</span>
+   <span class="p">|</span>------------<span class="p">|</span>&lt;<span class="p">|</span>--------<span class="p">|</span>------------<span class="p">|</span>          <span class="p">|</span>-------------<span class="p">|</span>
+   <span class="p">|</span> + breeze<span class="o">()</span> <span class="p">|</span>          <span class="p">|</span> + eat<span class="o">()</span>    <span class="p">|</span>&lt;<span class="p">|</span>---.    <span class="p">|</span> + mew<span class="o">()</span>     <span class="p">|</span>
+   <span class="s1">&#39;------------&#39;</span>          <span class="s1">&#39;------------&#39;</span>     <span class="p">|</span>    <span class="s1">&#39;-------------&#39;</span>
+                                              <span class="p">|</span>
+                                              <span class="p">|</span>     .------------.
+                                              <span class="p">|</span>     <span class="p">|</span>    Dog     <span class="p">|</span>
                                               <span class="s1">&#39;-----|------------|</span>
 <span class="s1">                                                    | + bark()   |</span>
-<span class="s1">                                                    &#39;</span><span class="o">------------</span><span class="err">&#39;</span>
+<span class="s1">                                                    &#39;</span>------------<span class="err">&#39;</span>
 </pre></div>
 
-</code></pre><p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>. 
-I will use this hierarchy to explain the signature rules.</p>
+</code></pre>
+<p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>. </p>
+<p>I will use this hierarchy to explain the signature rules.</p>
 <h2 id="covariance-parent-child-of-return-types-in-the-subtype">Covariance (Parent -&gt; Child -&gt; ...) of return types in the subtype</h2>
-<p>This rule means that a child class can override the method to return a more specific type (<code>Cat</code> instead of <code>Animal</code>).
-Of course it can return the same type, but it can not return more general type (<code>LiveBeing</code>) instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
-<p>This one is easy to understand and it feels natural.
+<p>This rule means that the child class can override a method to return a more specific type (<code>Cat</code> instead of <code>Animal</code>).</p>
+<p>Of course it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
+<p>This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:</p>
-<pre><code class="lang-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="n">Animal</span> <span class="nf">findPet</span><span class="p">()</span>
-      <span class="k">return</span> <span class="k">new</span> <span class="n">Animal</span><span class="p">()</span>
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
+  <span class="n">Animal</span> <span class="n">findPet</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">new</span> <span class="n">Animal</span><span class="p">()</span>
 
 <span class="k">class</span> <span class="nc">CatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="n">Cat</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="c1">// Covariance - subclass returns more specific type</span>
-      <span class="k">return</span> <span class="k">new</span> <span class="n">Cat</span><span class="p">()</span>  
+      <span class="o">//</span> <span class="n">Covariance</span> <span class="o">-</span> <span class="n">subclass</span> <span class="n">returns</span> <span class="n">more</span> <span class="n">specific</span> <span class="nb">type</span>
+      <span class="k">return</span> <span class="n">new</span> <span class="n">Cat</span><span class="p">()</span>  
 
 <span class="k">class</span> <span class="nc">BadOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="n">LiveBeing</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="c1">// Contravariance, breaks the rule and returns more generic type</span>
-      <span class="k">return</span> <span class="k">new</span> <span class="n">LiveBeing</span><span class="p">()</span>
+      <span class="o">//</span> <span class="n">Contravariance</span><span class="p">,</span> <span class="n">breaks</span> <span class="n">the</span> <span class="n">rule</span> <span class="ow">and</span> <span class="n">returns</span> <span class="n">more</span> <span class="n">generic</span> <span class="nb">type</span>
+      <span class="k">return</span> <span class="n">new</span> <span class="n">LiveBeing</span><span class="p">()</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-    <span class="c1">// OK for Owner, we can put an Animal object into the `animal` variable.</span>
-    <span class="c1">// OK for CatOwner, we can put a Cat object into the `animal` variable.</span>
-    <span class="c1">// Problem for a BadOwner object, a LiveBeing object can not use be used </span>
-    <span class="c1">// the same way as Animal object.</span>
+    <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">Owner</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="n">put</span> <span class="n">an</span> <span class="n">Animal</span> <span class="nb">object</span> <span class="n">into</span> <span class="n">the</span> <span class="sb">`animal`</span> <span class="n">variable</span><span class="o">.</span>
+    <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">CatOwner</span><span class="p">,</span> <span class="n">we</span> <span class="n">can</span> <span class="n">put</span> <span class="n">a</span> <span class="n">Cat</span> <span class="nb">object</span> <span class="n">into</span> <span class="n">the</span> <span class="sb">`animal`</span> <span class="n">variable</span><span class="o">.</span>
+    <span class="o">//</span> <span class="n">Problem</span> <span class="k">for</span> <span class="n">a</span> <span class="n">BadOwner</span> <span class="nb">object</span><span class="p">,</span> <span class="n">a</span> <span class="n">LiveBeing</span> <span class="nb">object</span> <span class="n">can</span> <span class="ow">not</span> <span class="n">use</span> <span class="n">be</span> <span class="n">used</span> 
+    <span class="o">//</span> <span class="n">the</span> <span class="n">same</span> <span class="n">way</span> <span class="k">as</span> <span class="n">Animal</span> <span class="nb">object</span><span class="o">.</span>
     <span class="n">Animal</span> <span class="n">animal</span> <span class="o">=</span> <span class="n">owner</span><span class="o">-&gt;</span><span class="n">findPet</span><span class="p">();</span>
     <span class="n">amimal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">();</span>
 </pre></div>
@@ -115,46 +116,46 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&#39;t have such a method).</p>
 <h2 id="contravariance-child-parent-of-method-arguments-in-the-subtype">Contravariance (Child -&gt; Parent -&gt; ...) of method arguments in the subtype</h2>
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
-<pre><code class="lang-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="kt">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
-    <span class="p">...</span> 
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
+    <span class="o">...</span> 
 
 <span class="k">class</span> <span class="nc">GoodOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="c1">// Contravariance - subclass accepts more generic type</span>
-  <span class="kt">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
-    <span class="p">...</span> 
+  <span class="o">//</span> <span class="n">Contravariance</span> <span class="o">-</span> <span class="n">subclass</span> <span class="n">accepts</span> <span class="n">more</span> <span class="n">generic</span> <span class="nb">type</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
+    <span class="o">...</span> 
 
 <span class="k">class</span> <span class="nc">BadCatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="kt">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Cat</span> <span class="n">cat</span><span class="p">)</span>
-    <span class="p">...</span> 
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Cat</span> <span class="n">cat</span><span class="p">)</span>
+    <span class="o">...</span> 
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-  <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="k">new</span> <span class="n">Dog</span><span class="p">)</span> <span class="c1">// OK for Owner, he accepts any Animal, including the Dog</span>
-                       <span class="c1">// OK for GoodOwner, he accepts any LiveBeing, including the Dog</span>
-                       <span class="c1">// Problem for CatOwner, he doesn&#39;t expect the Dog</span>
+  <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">)</span> <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">Owner</span><span class="p">,</span> <span class="n">he</span> <span class="n">accepts</span> <span class="nb">any</span> <span class="n">Animal</span><span class="p">,</span> <span class="n">including</span> <span class="n">the</span> <span class="n">Dog</span>
+                       <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">GoodOwner</span><span class="p">,</span> <span class="n">he</span> <span class="n">accepts</span> <span class="nb">any</span> <span class="n">LiveBeing</span><span class="p">,</span> <span class="n">including</span> <span class="n">the</span> <span class="n">Dog</span>
+                       <span class="o">//</span> <span class="n">Problem</span> <span class="k">for</span> <span class="n">CatOwner</span><span class="p">,</span> <span class="n">he</span> <span class="n">doesn</span><span class="s">&#39;t expect the Dog</span>
 </pre></div>
 
 </code></pre>
-<p>In practice, it may feel natural to break this rule and define the <code>CatOwner</code> class as above.
-But in this case, <code>CatOwner</code> breaks LSP, we can not use it in the same case where we can use the <code>Owner</code> object.</p>
+<p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.
+But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
 <p>Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:</p>
-<pre><code class="lang-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="kt">void</span> <span class="nf">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
-    <span class="n">animal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
+    <span class="n">animal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
 
 <span class="k">class</span> <span class="nc">GoodOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="kt">void</span> <span class="nf">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
-    <span class="c1">// Problem: LiveBeing doesn&#39;t have the `eat` method</span>
-    <span class="n">being</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
+    <span class="o">//</span> <span class="n">Problem</span><span class="p">:</span> <span class="n">LiveBeing</span> <span class="n">doesn</span><span class="s">&#39;t have the `eat` method</span>
+    <span class="n">being</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
 </pre></div>
 
 </code></pre>
-<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat</code>, because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.
-And this way, it also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
-<p>In the any case, if the method doesn&#39;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior than in the parent class.</p>
+<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method, because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.
+And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
+<p>By the way, if the method doesn&#39;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
 <p>No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.</p>
-<pre><code class="lang-cpp"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BadFoodException</span>
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BadFoodException</span>
 
 <span class="k">class</span> <span class="nc">BadCatFoodException</span> <span class="n">extends</span> <span class="n">BadFoodException</span>
 
@@ -162,38 +163,36 @@ And this way, it also can not just forward the execution to the parent method wi
 
 
 <span class="k">class</span> <span class="nc">Owner</span>
-  <span class="kt">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isGoodFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
-      <span class="k">throw</span> <span class="n">BadFoodException</span><span class="p">()</span>
-    <span class="p">...</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">isGoodFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
+      <span class="n">throw</span> <span class="n">BadFoodException</span><span class="p">()</span>
+    <span class="o">...</span>
 
 <span class="k">class</span> <span class="nc">BadOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="kt">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">isHighQualityFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
-      <span class="k">throw</span> <span class="n">LowQualityFoodException</span><span class="p">()</span>
-    <span class="p">...</span>
+  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="err">!</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">isHighQualityFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
+      <span class="n">throw</span> <span class="n">LowQualityFoodException</span><span class="p">()</span>
+    <span class="o">...</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-  <span class="n">try</span>
-    <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="k">new</span> <span class="n">Dog</span><span class="p">,</span> <span class="k">new</span> <span class="n">SomeFood</span><span class="p">)</span> 
-  <span class="k">catch</span> <span class="p">(</span><span class="n">BadFoodException</span> <span class="n">error</span><span class="p">)</span>
-    <span class="c1">// OK for Owner, it can rasie BadFoodException</span>
-    <span class="c1">// OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)</span>
-    <span class="c1">// Problem for BadOwner, it can raise LowQualityFoodException and it will not be</span>
-    <span class="c1">// caught here</span>
-    <span class="p">...</span>
+  <span class="k">try</span>
+    <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">new</span> <span class="n">SomeFood</span><span class="p">)</span> 
+  <span class="n">catch</span> <span class="p">(</span><span class="n">BadFoodException</span> <span class="n">error</span><span class="p">)</span>
+    <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">Owner</span><span class="p">,</span> <span class="n">it</span> <span class="n">can</span> <span class="n">rasie</span> <span class="n">BadFoodException</span>
+    <span class="o">//</span> <span class="n">OK</span> <span class="k">for</span> <span class="n">CatOwner</span><span class="p">,</span> <span class="n">it</span> <span class="n">can</span> <span class="k">raise</span> <span class="n">BadCatFoodException</span> <span class="p">(</span><span class="n">subclass</span> <span class="n">of</span> <span class="n">BadFoodException</span><span class="p">)</span>
+    <span class="o">//</span> <span class="n">Problem</span> <span class="k">for</span> <span class="n">BadOwner</span><span class="p">,</span> <span class="n">it</span> <span class="n">can</span> <span class="k">raise</span> <span class="n">LowQualityFoodException</span> <span class="ow">and</span> <span class="n">it</span> <span class="n">will</span> <span class="ow">not</span> <span class="n">be</span>
+    <span class="o">//</span> <span class="n">caught</span> <span class="n">here</span>
+    <span class="o">...</span>
 </pre></div>
 
 </code></pre>
 <p>If we don&#39;t follow the rule about exception types, the client code written for the base class <code>Owner</code> will fail for the subclass <code>BadOwner</code> and this way we violate the <code>LSP</code>.</p>
 <h1 id="inheritance-requirements">Inheritance requirements</h1>
-<p>These requirements describe additional rules for inherited methods.</p>
-<p>The <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by contract</a> concept defines the &quot;contract&quot; for each method.
-The &quot;contract&quot; includes preconditions, postconditions and invariants:</p>
+<p>These requirements describe additional rules for inherited methods related to the <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by contract</a> concept. It defines the &quot;contract&quot; for each method which includes preconditions, postconditions and invariants:</p>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Precondition">Precondition</a> is a condition or predicate that must always be true just prior to the execution of some section of code.</li>
 <li><a href="https://en.wikipedia.org/wiki/Postcondition">Postcondition</a> is a condition or predicate that must always be true just after the execution of some section of code</li>
-<li><a href="https://en.wikipedia.org/wiki/Invariant_(computer_science">Invariant</a>) is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.</li>
+<li><a href="https://en.wikipedia.org/wiki/Invariant_(computer_science)">Invariant</a> is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.</li>
 </ul>
 <h2 id="preconditions-cannot-be-strengthened-in-a-subtype">Preconditions cannot be strengthened in a subtype</h2>
 <p>In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).

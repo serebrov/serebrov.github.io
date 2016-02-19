@@ -13,13 +13,13 @@ Let f(x) be a property provable about objects x of type T.
 Then f(y) should be true for objects y of type S where S is a subtype of T.
 ```
 
-The basic idea is that if you have an object of type `T` then you can also use objects of its subclasses instead of it.
+The basic idea - if you have an object of type `T` then you can also use objects of its subclasses instead of it.
 
-Or, in other words: the subclass should behave the same way as it's base class. It can add some new features on top of the base class (that's the purpose of inheritance, right?), but it can not break expectations about the base class.
+Or, in other words: the subclass should behave the same way as the base class. It can add some new features on top of the base class (that's the purpose of inheritance, right?), but it can not break expectations about the base class behavior.
 
-<!--more-->
+<!-- more -->
 
-The expectations about the base class include:
+The expectations about the base class can include:
 
 - input parameters for class methods
 - returned values of the class methods
@@ -29,16 +29,17 @@ The expectations about the base class include:
 
 Some of these expectations can be enforced by the programming language, but some of them can only be expressed as the documentation.
 
-This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn one class into something completely different represented by the subclass.
+This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn the class into something completely different.
 
 Let's see what rules do we need to follow in the code.
 
 # Methods Signature Requirements
 
 Signature requirements are requirements for input argument types and return type of the class methods.
+
 Let's imagine we have following class hierarchy:
 
-```
+```bash
    .------------.          .------------.          .-------------.
    | LiveBeing  |          |   Animal   |<|--------|     Cat     |
    |------------|<|--------|------------|          |-------------|
@@ -53,17 +54,19 @@ Let's imagine we have following class hierarchy:
 ```
 
 Here the `LiveBeing` is the base class which is inherited by `Animal` which in turn is inherited by `Cat` and `Dog`. 
+
 I will use this hierarchy to explain the signature rules.
 
 ## Covariance (Parent -> Child -> ...) of return types in the subtype 
 
-This rule means that a child class can override the method to return a more specific type (`Cat` instead of `Animal`).
-Of course it can return the same type, but it can not return more general type (`LiveBeing`) instead of `Animal`) and it can not return a completely different type (`House` instead of `Animal`).
+This rule means that the child class can override a method to return a more specific type (`Cat` instead of `Animal`).
 
-This one is easy to understand and it feels natural.
+Of course it can return the same type, but it can not return more generic type (like `LiveBeing` instead of `Animal`) and it can not return a completely different type (`House` instead of `Animal`).
+
+This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:
 
-```cpp
+```python
 
 class Owner
   Animal findPet()
@@ -99,7 +102,7 @@ For example, if we call `animal->eat()` this will not work for the `LiveBeing` (
 This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the `LiveBeing` instead of `Animal`).
 
 
-```cpp
+```python
 class Owner
   void feed(Animal animal)
     ... 
@@ -119,12 +122,12 @@ function doAction(Owner owner)
                        // Problem for CatOwner, he doesn't expect the Dog
 ```
 
-In practice, it may feel natural to break this rule and define the `CatOwner` class as above.
-But in this case, `CatOwner` breaks LSP, we can not use it in the same case where we can use the `Owner` object.
+In practice, it may feel tempting to break this rule and define the class like `BadCatOwner` above.
+But, as we can see, the `BadCatOwner` breaks LSP and we can not use it in the same case where we can use the `Owner` object.
 
 Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:
 
-```cpp
+```python
 class Owner
   void feed(Animal animal)
     animal->eat(this->findFood());
@@ -136,16 +139,16 @@ class GoodOwner extends Owner
 
 ```
 
-There is a problem here - the `GoodOnwer::feed` can not call the `being->eat`, because `LiveBeing` doesn't have the `eat` method.
-And this way, it also can not just forward the execution to the parent method with something like `parent::feed(being)`.
+There is a problem here - the `GoodOnwer::feed` can not call the `being->eat()` method, because `LiveBeing` doesn't have the `eat` method.
+And this way, `GoodOwner` also can not just forward the execution to the parent method with something like `parent::feed(being)`.
 
-In the any case, if the method doesn't use parent implementation, it may [indicate the LSP violation](http://stackoverflow.com/q/35070912/4612064) - potentially we can have a different behavior than in the parent class.
+By the way, if the method doesn't use parent implementation, it may [indicate the LSP violation](http://stackoverflow.com/q/35070912/4612064) - potentially we can have a different behavior for this subtype than in the parent class.
 
 ## Exceptions should be same or subtypes of the base method exceptions
 
 No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.
 
-```cpp
+```python
 class BadFoodException
 
 class BadCatFoodException extends BadFoodException
@@ -181,14 +184,11 @@ If we don't follow the rule about exception types, the client code written for t
 
 # Inheritance requirements
 
-These requirements describe additional rules for inherited methods.
-
-The [Design by contract](https://en.wikipedia.org/wiki/Design_by_contract) concept defines the "contract" for each method.
-The "contract" includes preconditions, postconditions and invariants:
+These requirements describe additional rules for inherited methods related to the [Design by contract](https://en.wikipedia.org/wiki/Design_by_contract) concept. It defines the "contract" for each method which includes preconditions, postconditions and invariants:
 
 - [Precondition](https://en.wikipedia.org/wiki/Precondition) is a condition or predicate that must always be true just prior to the execution of some section of code.
 - [Postcondition](https://en.wikipedia.org/wiki/Postcondition) is a condition or predicate that must always be true just after the execution of some section of code
-- [Invariant](https://en.wikipedia.org/wiki/Invariant_(computer_science)) is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.
+- [Invariant][1] is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.
 
 ## Preconditions cannot be strengthened in a subtype
 
@@ -304,3 +304,5 @@ doAction(Time time)
 [Wikipedia:Liskov substitution principle](https://en.wikipedia.org/wiki/Liskov_substitution_principle)
 [Agile Design Principles: The Liskov Substitution Principle](http://www.engr.mun.ca/~theo/Courses/sd/5895-downloads/sd-principles-3.ppt.pdf)
 [Wikipedia: Covariance and contravariance](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages)
+
+[1]: https://en.wikipedia.org/wiki/Invariant_(computer_science)
