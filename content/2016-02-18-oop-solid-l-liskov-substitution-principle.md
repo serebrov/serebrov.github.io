@@ -39,7 +39,7 @@ Signature requirements are requirements for input argument types and return type
 
 Let's imagine we have following class hierarchy:
 
-```bash
+```sh
    .------------.          .------------.          .-------------.
    | LiveBeing  |          |   Animal   |<|--------|     Cat     |
    |------------|<|--------|------------|          |-------------|
@@ -74,19 +74,19 @@ class Owner
 
 class CatOwner extends Owner
   Cat findPet()
-      // Covariance - subclass returns more specific type
+      # Covariance - subclass returns more specific type
       return new Cat()  
 
 class BadOwner extends Owner
   LiveBeing findPet()
-      // Contravariance, breaks the rule and returns more generic type
+      # Contravariance, breaks the rule and returns more generic type
       return new LiveBeing()
 
 function doAction(Owner owner)
-    // OK for Owner, we can put an Animal object into the `animal` variable.
-    // OK for CatOwner, we can put a Cat object into the `animal` variable.
-    // Problem for a BadOwner object, a LiveBeing object can not use be used 
-    // the same way as Animal object.
+    # OK for Owner, we can put an Animal object into the `animal` variable.
+    # OK for CatOwner, we can put a Cat object into the `animal` variable.
+    # Problem for a BadOwner object, a LiveBeing object can not use be used 
+    # the same way as Animal object.
     Animal animal = owner->findPet();
     amimal->eat();
 ```
@@ -108,7 +108,7 @@ class Owner
     ... 
 
 class GoodOwner extends Owner
-  // Contravariance - subclass accepts more generic type
+  # Contravariance - subclass accepts more generic type
   void feed(LiveBeing being)
     ... 
 
@@ -117,9 +117,9 @@ class BadCatOwner extends Owner
     ... 
 
 function doAction(Owner owner)
-  owner->feed(new Dog) // OK for Owner, he accepts any Animal, including the Dog
-                       // OK for GoodOwner, he accepts any LiveBeing, including the Dog
-                       // Problem for CatOwner, he doesn't expect the Dog
+  owner->feed(new Dog) # OK for Owner, he accepts any Animal, including the Dog
+                       # OK for GoodOwner, he accepts any LiveBeing, including the Dog
+                       # Problem for CatOwner, he doesn't expect the Dog
 ```
 
 In practice, it may feel tempting to break this rule and define the class like `BadCatOwner` above.
@@ -134,7 +134,7 @@ class Owner
 
 class GoodOwner extends Owner
   void feed(LiveBeing being)
-    // Problem: LiveBeing doesn't have the `eat` method
+    # Problem: LiveBeing doesn't have the `eat` method
     being->eat(this->findFood());
 
 ```
@@ -158,13 +158,13 @@ class LowQualityFoodException
 
 class Owner
   void feed(Animal animal, Food food)
-    if (!this->isGoodFood(food))
+    if (not this->isGoodFood(food))
       throw BadFoodException()
     ...
 
 class BadOwner extends Owner
   void feed(Animal animal, Food food)
-    if (!this->isHighQualityFood(food))
+    if (not this->isHighQualityFood(food))
       throw LowQualityFoodException()
     ...
 
@@ -172,10 +172,10 @@ function doAction(Owner owner)
   try
     owner->feed(new Dog, new SomeFood) 
   catch (BadFoodException error)
-    // OK for Owner, it can rasie BadFoodException
-    // OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)
-    // Problem for BadOwner, it can raise LowQualityFoodException and it will not be
-    // caught here
+    # OK for Owner, it can rasie BadFoodException
+    # OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)
+    # Problem for BadOwner, it can raise LowQualityFoodException and it will not be
+    # caught here
     ...
 
 ```
@@ -200,20 +200,20 @@ The same logic applies not only to the types of arguments, but to the other kind
 ```python
 class The24Hours
   void setHour(int hour)
-    // hour should be between 0 and 23
+    # hour should be between 0 and 23
     assert (0 <= hour and hour <=23)
     ...
 
 class TheDay extends The24Hours
   void setHour (int hour)
-    // breaks the rule and strengthens the precondition
-    // day hour should be between 8 and 16
+    # breaks the rule and strengthens the precondition
+    # day hour should be between 8 and 16
     assert (8 <= hour and hour <= 16)
    ...
 
 function doAction(The24Hours hours)
-  hours->setHour(3); // OK for `The24Hours` object
-                     // Problem for `TheDay` - it will raise an error
+  hours->setHour(3); # OK for `The24Hours` object
+                     # Problem for `TheDay` - it will raise an error
 ```
 
 So the stronger precondition in the child class broke the client code which worked for the parent class.
@@ -236,13 +236,13 @@ class The24Hours
 class TheTime extends The24Hours
   number setHour(number hour, number hourFraction)
     this.hour = hour + hourFraction / 100
-    // the postcondition is weaker (float is a wider area than integer)
+    # the postcondition is weaker (float is a wider area than integer)
     assert (this.hour is float)  
     return this.hour
 
 function doAction(The24Hours hours)
-  int result = hours->setHour(3); // OK for The24Hours
-                                  // Problem for TheTime, it returns float
+  int result = hours->setHour(3); # OK for The24Hours
+                                  # Problem for TheTime, it returns float
 ```
 
 So again, due to `LSP` violation we can not use the child class instead of parent.
@@ -253,12 +253,12 @@ Invariant is something that is not changed during the method execution. It can b
 
 ```python
 class The24Hours
-  // invariant: this.hour is not changed
+  # invariant: this.hour is not changed
   number getHour()
     return this.hour
 
 class TheCounter extends The24Hours
-  // invariant violation: this.hour is changed
+  # invariant violation: this.hour is changed
   number getHour()
     result = this.hour
     this.hour += 1
@@ -266,9 +266,9 @@ class TheCounter extends The24Hours
 
 function doAction(The24Hours hours)
   if (hours->getHour() <= 12) 
+     # OK for The24Hours
+     # Problem for TheTime, now getHour() can return value > 12
      print 'First half of the day', hours->getHour()
-    // OK for The24Hours
-    // Problem for TheTime, now getHour() can return value > 12
 ```
 
 ## History constraint (the "history rule")
@@ -280,21 +280,21 @@ For example:
 
 ```
 class Time
-  // it is immutable, once time is set, there is no way to change it
+  # it is immutable, once time is set, there is no way to change it
   constructor(int hour, int minute)
   getTime()
 
 class FlexibleTime extends Time
-  // violates the "history" rule
-  // it allows to change the object state
-  // but the clients who use Time, can be broken due to this
+  # violates the "history" rule
+  # it allows to change the object state
+  # but the clients who use Time, can be broken due to this
   setTime(int hour, int minute)
 
 doAction(Time time)
   print 'Now it is: ', time->getTime()
   doOtherAction(time)
-  // OK for Time, it can not be changed, so value is the same
-  // Problem for FlexibleTime, the `doOtherAction` could change it
+  # OK for Time, it can not be changed, so value is the same
+  # Problem for FlexibleTime, the `doOtherAction` could change it
   print 'Now it is still: ', time->getTime()
 
 ```
@@ -302,7 +302,10 @@ doAction(Time time)
 # Links
 
 [Wikipedia:Liskov substitution principle](https://en.wikipedia.org/wiki/Liskov_substitution_principle)
+
 [Agile Design Principles: The Liskov Substitution Principle](http://www.engr.mun.ca/~theo/Courses/sd/5895-downloads/sd-principles-3.ppt.pdf)
-[Wikipedia: Covariance and contravariance](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages)
+
+[Wikipedia: Covariance and contravariance][2]
 
 [1]: https://en.wikipedia.org/wiki/Invariant_(computer_science)
+[2]: https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages
