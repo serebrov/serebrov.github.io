@@ -112,8 +112,8 @@ Here is an example in pseudo-code:</p>
 </code></pre>
 <p>The <code>doAction</code> function demonstrates a possible use case.
 It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>Animal</code> and <code>Cat</code> should behave the same.</p>
-<p>But the <code>BadOwner</code> returns a <code>LiveBeing</code> and it is a problem. There is no guarantee that <code>LiveBeing</code> object behaves the same as <code>Animal</code>.
-For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&#39;t have such a method).</p>
+<p>But the <code>BadOwner</code> returns a <code>LiveBeing</code> and it is a problem. There is no guarantee that <code>LiveBeing</code> object behaves the same as <code>Animal</code>.</p>
+<p>For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&#39;t have such a method).</p>
 <h2 id="contravariance-child-parent-of-method-arguments-in-the-subtype">Contravariance (Child -&gt; Parent -&gt; ...) of method arguments in the subtype</h2>
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
@@ -136,8 +136,8 @@ For example, if we call <code>animal-&gt;eat()</code> this will not work for the
 </pre></div>
 
 </code></pre>
-<p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.
-But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
+<p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.</p>
+<p>But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
 <p>Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
   <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
@@ -150,8 +150,8 @@ But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use i
 </pre></div>
 
 </code></pre>
-<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method, because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.
-And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
+<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method, because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.</p>
+<p>And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
 <p>By the way, if the method doesn&#39;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
 <p>No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.</p>
@@ -195,8 +195,8 @@ And this way, <code>GoodOwner</code> also can not just forward the execution to 
 <li><a href="https://en.wikipedia.org/wiki/Invariant_(computer_science)">Invariant</a> is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.</li>
 </ul>
 <h2 id="preconditions-cannot-be-strengthened-in-a-subtype">Preconditions cannot be strengthened in a subtype</h2>
-<p>In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).
-This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts wider range of arguments).</p>
+<p>In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).</p>
+<p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts wider range of arguments).</p>
 <p>The same logic applies not only to the types of arguments, but to the other kind of expectations as well, such as a range of the integer argument:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
   <span class="n">void</span> <span class="n">setHour</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">)</span>
@@ -217,31 +217,32 @@ This is a more generic rule of the contravariance rule for method arguments. The
 </pre></div>
 
 </code></pre>
-<p>So the stronger precondition in the child class broke the client code which worked for the parent class.
-At the same time if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
+<p>So the stronger precondition in the child class broke the client code which worked for the parent class.</p>
+<p>At the same time if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
 <h2 id="postconditions-cannot-be-weakened-in-a-subtype">Postconditions cannot be weakened in a subtype</h2>
-<p>Postconditions are usually expectations related to the method return value.
-Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
+<p>Postconditions are usually expectations related to the method return value.</p>
+<p>Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
 <p>An example of postcondition rule violation:</p>
-<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">The24Hours</span>
-  <span class="nx">number</span> <span class="nx">setHour</span><span class="p">(</span><span class="nx">number</span> <span class="nx">hour</span><span class="p">)</span>
-    <span class="p">...</span>
-    <span class="nx">assert</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hour</span> <span class="nx">is</span> <span class="nx">integer</span><span class="p">)</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">hour</span>
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
+  <span class="n">number</span> <span class="n">setHour</span><span class="p">(</span><span class="n">number</span> <span class="n">hour</span><span class="p">)</span>
+    <span class="o">...</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="n">integer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
 
-<span class="kr">class</span> <span class="nx">TheTime</span> <span class="kr">extends</span> <span class="nx">The24Hours</span>
-  <span class="nx">number</span> <span class="nx">setHour</span><span class="p">(</span><span class="nx">number</span> <span class="nx">hour</span><span class="p">,</span> <span class="nx">number</span> <span class="nx">hourFraction</span><span class="p">)</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">hour</span> <span class="o">=</span> <span class="nx">hour</span> <span class="o">+</span> <span class="nx">hourFraction</span> <span class="o">/</span> <span class="mi">100</span>
-    <span class="err">#</span> <span class="nx">the</span> <span class="nx">postcondition</span> <span class="nx">is</span> <span class="nx">weaker</span> <span class="p">(</span><span class="kr">float</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">wider</span> <span class="nx">area</span> <span class="nx">than</span> <span class="nx">integer</span><span class="p">)</span>
-    <span class="nx">assert</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hour</span> <span class="nx">is</span> <span class="kr">float</span><span class="p">)</span>  
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">hour</span>
+<span class="k">class</span> <span class="nc">TheTime</span> <span class="n">extends</span> <span class="n">The24Hours</span>
+  <span class="n">number</span> <span class="n">setHour</span><span class="p">(</span><span class="n">number</span> <span class="n">hour</span><span class="p">,</span> <span class="n">number</span> <span class="n">hourFraction</span><span class="p">)</span>
+    <span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">hour</span> <span class="o">+</span> <span class="n">hourFraction</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="c"># the postcondition is weaker (float is a wider area than integer)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">)</span>  
+    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
 
-<span class="kd">function</span> <span class="nx">doAction</span><span class="p">(</span><span class="nx">The24Hours</span> <span class="nx">hours</span><span class="p">)</span>
-  <span class="kr">int</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">hours</span><span class="o">-&gt;</span><span class="nx">setHour</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="err">#</span> <span class="nx">OK</span> <span class="k">for</span> <span class="nx">The24Hours</span>
-                                  <span class="err">#</span> <span class="nx">Problem</span> <span class="k">for</span> <span class="nx">TheTime</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">returns</span> <span class="kr">float</span>
+<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
+  <span class="nb">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">hours</span><span class="o">-&gt;</span><span class="n">setHour</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c"># OK for The24Hours</span>
+                                  <span class="c"># Problem for TheTime, it returns float</span>
 </pre></div>
 
-</code></pre><p>So again, due to <code>LSP</code> violation we can not use the child class instead of parent.</p>
+</code></pre>
+<p>So again, due to <code>LSP</code> violation we can not use the child class instead of parent.</p>
 <h2 id="invariants-of-the-parent-type-must-be-preserved-in-a-subtype">Invariants of the parent type must be preserved in a subtype</h2>
 <p>Invariant is something that is not changed during the method execution. It can be the whole or part of the object internal state:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
@@ -265,29 +266,30 @@ Again, this the more generic rule similar to the covariance rule (method can ret
 
 </code></pre>
 <h2 id="history-constraint-the-history-rule-">History constraint (the &quot;history rule&quot;)</h2>
-<p>The subtypes should not introduce new methods that will allow to modify the object state in a way that is not possible for the parent class.
-The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
+<p>The subtypes should not introduce new methods that will allow to modify the object state in a way that is not possible for the parent class.</p>
+<p>The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
 <p>For example:</p>
-<pre><code><div class="highlight"><pre><span class="kr">class</span> <span class="nx">Time</span>
-  <span class="err">#</span> <span class="nx">it</span> <span class="nx">is</span> <span class="nx">immutable</span><span class="p">,</span> <span class="nx">once</span> <span class="nx">time</span> <span class="nx">is</span> <span class="nx">set</span><span class="p">,</span> <span class="nx">there</span> <span class="nx">is</span> <span class="nx">no</span> <span class="nx">way</span> <span class="nx">to</span> <span class="nx">change</span> <span class="nx">it</span>
-  <span class="nx">constructor</span><span class="p">(</span><span class="kr">int</span> <span class="nx">hour</span><span class="p">,</span> <span class="kr">int</span> <span class="nx">minute</span><span class="p">)</span>
-  <span class="nx">getTime</span><span class="p">()</span>
+<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Time</span>
+  <span class="c"># it is immutable, once time is set, there is no way to change it</span>
+  <span class="n">constructor</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">int</span> <span class="n">minute</span><span class="p">)</span>
+  <span class="n">getTime</span><span class="p">()</span>
 
-<span class="kr">class</span> <span class="nx">FlexibleTime</span> <span class="kr">extends</span> <span class="nx">Time</span>
-  <span class="err">#</span> <span class="nx">violates</span> <span class="nx">the</span> <span class="s2">&quot;history&quot;</span> <span class="nx">rule</span>
-  <span class="err">#</span> <span class="nx">it</span> <span class="nx">allows</span> <span class="nx">to</span> <span class="nx">change</span> <span class="nx">the</span> <span class="nx">object</span> <span class="nx">state</span>
-  <span class="err">#</span> <span class="nx">but</span> <span class="nx">the</span> <span class="nx">clients</span> <span class="nx">who</span> <span class="nx">use</span> <span class="nx">Time</span><span class="p">,</span> <span class="nx">can</span> <span class="nx">be</span> <span class="nx">broken</span> <span class="nx">due</span> <span class="nx">to</span> <span class="k">this</span>
-  <span class="nx">setTime</span><span class="p">(</span><span class="kr">int</span> <span class="nx">hour</span><span class="p">,</span> <span class="kr">int</span> <span class="nx">minute</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FlexibleTime</span> <span class="n">extends</span> <span class="n">Time</span>
+  <span class="c"># violates the &quot;history&quot; rule</span>
+  <span class="c"># it allows to change the object state</span>
+  <span class="c"># but the clients who use Time, can be broken due to this</span>
+  <span class="n">setTime</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">int</span> <span class="n">minute</span><span class="p">)</span>
 
-<span class="nx">doAction</span><span class="p">(</span><span class="nx">Time</span> <span class="nx">time</span><span class="p">)</span>
-  <span class="nx">print</span> <span class="s1">&#39;Now it is: &#39;</span><span class="p">,</span> <span class="nx">time</span><span class="o">-&gt;</span><span class="nx">getTime</span><span class="p">()</span>
-  <span class="nx">doOtherAction</span><span class="p">(</span><span class="nx">time</span><span class="p">)</span>
-  <span class="err">#</span> <span class="nx">OK</span> <span class="k">for</span> <span class="nx">Time</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">can</span> <span class="nx">not</span> <span class="nx">be</span> <span class="nx">changed</span><span class="p">,</span> <span class="nx">so</span> <span class="nx">value</span> <span class="nx">is</span> <span class="nx">the</span> <span class="nx">same</span>
-  <span class="err">#</span> <span class="nx">Problem</span> <span class="k">for</span> <span class="nx">FlexibleTime</span><span class="p">,</span> <span class="nx">the</span> <span class="err">`</span><span class="nx">doOtherAction</span><span class="err">`</span> <span class="nx">could</span> <span class="nx">change</span> <span class="nx">it</span>
-  <span class="nx">print</span> <span class="s1">&#39;Now it is still: &#39;</span><span class="p">,</span> <span class="nx">time</span><span class="o">-&gt;</span><span class="nx">getTime</span><span class="p">()</span>
+<span class="n">doAction</span><span class="p">(</span><span class="n">Time</span> <span class="n">time</span><span class="p">)</span>
+  <span class="k">print</span> <span class="s">&#39;Now it is: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">-&gt;</span><span class="n">getTime</span><span class="p">()</span>
+  <span class="n">doOtherAction</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+  <span class="c"># OK for Time, it can not be changed, so value is the same</span>
+  <span class="c"># Problem for FlexibleTime, the `doOtherAction` could change it</span>
+  <span class="k">print</span> <span class="s">&#39;Now it is still: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">-&gt;</span><span class="n">getTime</span><span class="p">()</span>
 </pre></div>
 
-</code></pre><h1 id="links">Links</h1>
+</code></pre>
+<h1 id="links">Links</h1>
 <p><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia:Liskov substitution principle</a></p>
 <p><a href="http://www.engr.mun.ca/~theo/Courses/sd/5895-downloads/sd-principles-3.ppt.pdf">Agile Design Principles: The Liskov Substitution Principle</a></p>
 <p><a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages">Wikipedia: Covariance and contravariance</a></p>

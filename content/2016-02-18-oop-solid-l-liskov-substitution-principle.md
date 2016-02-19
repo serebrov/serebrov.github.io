@@ -95,6 +95,7 @@ The `doAction` function demonstrates a possible use case.
 It is OK if `owner` is a `CatOwner`, because both `Animal` and `Cat` should behave the same.
 
 But the `BadOwner` returns a `LiveBeing` and it is a problem. There is no guarantee that `LiveBeing` object behaves the same as `Animal`.
+
 For example, if we call `animal->eat()` this will not work for the `LiveBeing` (it doesn't have such a method).
 
 ## Contravariance (Child -> Parent -> ...) of method arguments in the subtype
@@ -123,6 +124,7 @@ function doAction(Owner owner)
 ```
 
 In practice, it may feel tempting to break this rule and define the class like `BadCatOwner` above.
+
 But, as we can see, the `BadCatOwner` breaks LSP and we can not use it in the same case where we can use the `Owner` object.
 
 Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:
@@ -140,6 +142,7 @@ class GoodOwner extends Owner
 ```
 
 There is a problem here - the `GoodOnwer::feed` can not call the `being->eat()` method, because `LiveBeing` doesn't have the `eat` method.
+
 And this way, `GoodOwner` also can not just forward the execution to the parent method with something like `parent::feed(being)`.
 
 By the way, if the method doesn't use parent implementation, it may [indicate the LSP violation](http://stackoverflow.com/q/35070912/4612064) - potentially we can have a different behavior for this subtype than in the parent class.
@@ -193,6 +196,7 @@ These requirements describe additional rules for inherited methods related to th
 ## Preconditions cannot be strengthened in a subtype
 
 In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).
+
 This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (`LiveBeing` instead of `Animal`), this is a weaker precondition (subclass accepts wider range of arguments).
 
 The same logic applies not only to the types of arguments, but to the other kind of expectations as well, such as a range of the integer argument:
@@ -217,16 +221,18 @@ function doAction(The24Hours hours)
 ```
 
 So the stronger precondition in the child class broke the client code which worked for the parent class.
+
 At the same time if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.
 
 ## Postconditions cannot be weakened in a subtype
 
 Postconditions are usually expectations related to the method return value.
+
 Again, this the more generic rule similar to the covariance rule (method can return `Cat` instead of `Animal`), the postcondition is strengthened.
 
 An example of postcondition rule violation:
 
-```
+```python
 class The24Hours
   number setHour(number hour)
     ...
@@ -274,11 +280,12 @@ function doAction(The24Hours hours)
 ## History constraint (the "history rule")
 
 The subtypes should not introduce new methods that will allow to modify the object state in a way that is not possible for the parent class.
+
 The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.
 
 For example:
 
-```
+```python
 class Time
   # it is immutable, once time is set, there is no way to change it
   constructor(int hour, int minute)
