@@ -41,7 +41,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <p>According to the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">wikipedia</a> the Liskov Substitution Principle (LSP) is defined as:</p>
+              <p>According to the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia</a> the Liskov Substitution Principle (LSP) is defined as:</p>
 <pre><code><div class="highlight"><pre><span class="nx">Subtype</span> <span class="nx">Requirement</span><span class="o">:</span>
 <span class="nx">Let</span> <span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="nx">be</span> <span class="nx">a</span> <span class="nx">property</span> <span class="nx">provable</span> <span class="nx">about</span> <span class="nx">objects</span> <span class="nx">x</span> <span class="nx">of</span> <span class="nx">type</span> <span class="nx">T</span><span class="p">.</span>
 <span class="nx">Then</span> <span class="nx">f</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="nx">should</span> <span class="nx">be</span> <span class="kc">true</span> <span class="k">for</span> <span class="nx">objects</span> <span class="nx">y</span> <span class="nx">of</span> <span class="nx">type</span> <span class="nx">S</span> <span class="nx">where</span> <span class="nx">S</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">subtype</span> <span class="nx">of</span> <span class="nx">T</span><span class="p">.</span>
@@ -55,12 +55,12 @@
 <ul>
 <li>input parameters for class methods</li>
 <li>returned values of the class methods</li>
-<li>exceptions thrown by the class methods</li>
+<li>exceptions are thrown by the class methods</li>
 <li>how method calls change the object state</li>
 <li>other expectations about what the object does and how</li>
 </ul>
 <p>Some of these expectations can be enforced by the programming language, but some of them can only be expressed as the documentation.</p>
-<p>This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn the class into something completely different.</p>
+<p>This way to follow the LSP it is not only important to follow the coding rules, but also to use common sense and do not use the inheritance to turn the class into something completely different.</p>
 <p>Let&#39;s see what rules do we need to follow in the code.</p>
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
 <p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
@@ -79,11 +79,11 @@
 </pre></div>
 
 </code></pre>
-<p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>. </p>
+<p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>.</p>
 <p>I will use this hierarchy to explain the signature rules.</p>
 <h2 id="covariance-parent-child-of-return-types-in-the-subtype">Covariance (Parent -&gt; Child -&gt; ...) of return types in the subtype</h2>
 <p>This rule means that the child class can override a method to return a more specific type (<code>Cat</code> instead of <code>Animal</code>).</p>
-<p>Of course it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
+<p>Of course, it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
 <p>This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
@@ -93,17 +93,17 @@ Here is an example in pseudo-code:</p>
 <span class="k">class</span> <span class="nc">CatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="n">Cat</span> <span class="n">findPet</span><span class="p">()</span>
       <span class="c"># Covariance - subclass returns more specific type</span>
-      <span class="k">return</span> <span class="n">new</span> <span class="n">Cat</span><span class="p">()</span>  
+      <span class="k">return</span> <span class="n">new</span> <span class="n">Cat</span><span class="p">()</span>
 
 <span class="k">class</span> <span class="nc">BadOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="n">LiveBeing</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="c"># Contravariance, breaks the rule and returns more generic type</span>
+      <span class="c"># Contravariance - breaks the rule and returns more generic type</span>
       <span class="k">return</span> <span class="n">new</span> <span class="n">LiveBeing</span><span class="p">()</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
     <span class="c"># OK for Owner, we can put an Animal object into the `animal` variable.</span>
     <span class="c"># OK for CatOwner, we can put a Cat object into the `animal` variable.</span>
-    <span class="c"># Problem for a BadOwner object, a LiveBeing object can not use be used </span>
+    <span class="c"># Problem for a BadOwner object, a LiveBeing object can not use be used</span>
     <span class="c"># the same way as Animal object.</span>
     <span class="n">Animal</span> <span class="n">animal</span> <span class="o">=</span> <span class="n">owner</span><span class="o">-&gt;</span><span class="n">findPet</span><span class="p">();</span>
     <span class="n">amimal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">();</span>
@@ -118,16 +118,16 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
   <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
-    <span class="o">...</span> 
+    <span class="o">...</span>
 
 <span class="k">class</span> <span class="nc">GoodOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="c"># Contravariance - subclass accepts more generic type</span>
   <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
-    <span class="o">...</span> 
+    <span class="o">...</span>
 
 <span class="k">class</span> <span class="nc">BadCatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
   <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Cat</span> <span class="n">cat</span><span class="p">)</span>
-    <span class="o">...</span> 
+    <span class="o">...</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
   <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">)</span> <span class="c"># OK for Owner, he accepts any Animal, including the Dog</span>
@@ -150,7 +150,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 </pre></div>
 
 </code></pre>
-<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method, because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.</p>
+<p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.</p>
 <p>And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
 <p>By the way, if the method doesn&#39;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
@@ -176,9 +176,9 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
   <span class="k">try</span>
-    <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">new</span> <span class="n">SomeFood</span><span class="p">)</span> 
+    <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">new</span> <span class="n">SomeFood</span><span class="p">)</span>
   <span class="n">catch</span> <span class="p">(</span><span class="n">BadFoodException</span> <span class="n">error</span><span class="p">)</span>
-    <span class="c"># OK for Owner, it can rasie BadFoodException</span>
+    <span class="c"># OK for Owner, it can raise BadFoodException</span>
     <span class="c"># OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)</span>
     <span class="c"># Problem for BadOwner, it can raise LowQualityFoodException and it will not be</span>
     <span class="c"># caught here</span>
@@ -195,9 +195,9 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <li><a href="https://en.wikipedia.org/wiki/Invariant_(computer_science)">Invariant</a> is a condition that can be relied upon to be true during execution of a program, or during some portion of it.  For example, a loop invariant is a condition that is true at the beginning and end of every execution of a loop.</li>
 </ul>
 <h2 id="preconditions-cannot-be-strengthened-in-a-subtype">Preconditions cannot be strengthened in a subtype</h2>
-<p>In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).</p>
-<p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts wider range of arguments).</p>
-<p>The same logic applies not only to the types of arguments, but to the other kind of expectations as well, such as a range of the integer argument:</p>
+<p>In most cases preconditions are expectations about method input arguments, also an object&#39;s internal state can be a part of the precondition.</p>
+<p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts a wider range of arguments).</p>
+<p>The same logic applies not only to the types of arguments but to the other kind of expectations as well, such as a range of the integer argument:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
   <span class="n">void</span> <span class="n">setHour</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">)</span>
     <span class="c"># hour should be between 0 and 23</span>
@@ -218,7 +218,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 
 </code></pre>
 <p>So the stronger precondition in the child class broke the client code which worked for the parent class.</p>
-<p>At the same time if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
+<p>At the same time, if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
 <h2 id="postconditions-cannot-be-weakened-in-a-subtype">Postconditions cannot be weakened in a subtype</h2>
 <p>Postconditions are usually expectations related to the method return value.</p>
 <p>Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
@@ -233,7 +233,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
   <span class="n">number</span> <span class="n">setHour</span><span class="p">(</span><span class="n">number</span> <span class="n">hour</span><span class="p">,</span> <span class="n">number</span> <span class="n">hourFraction</span><span class="p">)</span>
     <span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">hour</span> <span class="o">+</span> <span class="n">hourFraction</span> <span class="o">/</span> <span class="mi">100</span>
     <span class="c"># the postcondition is weaker (float is a wider area than integer)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">)</span>  
+    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
@@ -242,7 +242,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 </pre></div>
 
 </code></pre>
-<p>So again, due to <code>LSP</code> violation we can not use the child class instead of parent.</p>
+<p>So again, due to <code>LSP</code> violation, we can not use the child class instead of the parent.</p>
 <h2 id="invariants-of-the-parent-type-must-be-preserved-in-a-subtype">Invariants of the parent type must be preserved in a subtype</h2>
 <p>Invariant is something that is not changed during the method execution. It can be the whole or part of the object internal state:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
@@ -258,7 +258,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">hours</span><span class="o">-&gt;</span><span class="n">getHour</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">)</span> 
+  <span class="k">if</span> <span class="p">(</span><span class="n">hours</span><span class="o">-&gt;</span><span class="n">getHour</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">)</span>
      <span class="c"># OK for The24Hours</span>
      <span class="c"># Problem for TheTime, now getHour() can return value &gt; 12</span>
      <span class="k">print</span> <span class="s">&#39;First half of the day&#39;</span><span class="p">,</span> <span class="n">hours</span><span class="o">-&gt;</span><span class="n">getHour</span><span class="p">()</span>
@@ -266,7 +266,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 
 </code></pre>
 <h2 id="history-constraint-the-history-rule-">History constraint (the &quot;history rule&quot;)</h2>
-<p>The subtypes should not introduce new methods that will allow to modify the object state in a way that is not possible for the parent class.</p>
+<p>The subtypes should not introduce new methods that will allow modifying the object state in a way that is not possible for the parent class.</p>
 <p>The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
 <p>For example:</p>
 <pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Time</span>
@@ -276,8 +276,8 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 
 <span class="k">class</span> <span class="nc">FlexibleTime</span> <span class="n">extends</span> <span class="n">Time</span>
   <span class="c"># violates the &quot;history&quot; rule</span>
-  <span class="c"># it allows to change the object state</span>
-  <span class="c"># but the clients who use Time, can be broken due to this</span>
+  <span class="c"># it allows changing the object state</span>
+  <span class="c"># but the clients who use Time can be broken due to this</span>
   <span class="n">setTime</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">int</span> <span class="n">minute</span><span class="p">)</span>
 
 <span class="n">doAction</span><span class="p">(</span><span class="n">Time</span> <span class="n">time</span><span class="p">)</span>

@@ -5,7 +5,7 @@ tags: oop
 type: post
 ---
 
-According to the [wikipedia](https://en.wikipedia.org/wiki/Liskov_substitution_principle) the Liskov Substitution Principle (LSP) is defined as:
+According to the [Wikipedia](https://en.wikipedia.org/wiki/Liskov_substitution_principle) the Liskov Substitution Principle (LSP) is defined as:
 
 ```
 Subtype Requirement:
@@ -23,13 +23,13 @@ The expectations about the base class can include:
 
 - input parameters for class methods
 - returned values of the class methods
-- exceptions thrown by the class methods
+- exceptions are thrown by the class methods
 - how method calls change the object state
 - other expectations about what the object does and how
 
 Some of these expectations can be enforced by the programming language, but some of them can only be expressed as the documentation.
 
-This way to follow the LSP it is not only important to follow the coding rules, but also to use the common sense and do not use the inheritance to turn the class into something completely different.
+This way to follow the LSP it is not only important to follow the coding rules, but also to use common sense and do not use the inheritance to turn the class into something completely different.
 
 Let's see what rules do we need to follow in the code.
 
@@ -53,15 +53,15 @@ Let's imagine we have following class hierarchy:
                                                     '------------'
 ```
 
-Here the `LiveBeing` is the base class which is inherited by `Animal` which in turn is inherited by `Cat` and `Dog`. 
+Here the `LiveBeing` is the base class which is inherited by `Animal` which in turn is inherited by `Cat` and `Dog`.
 
 I will use this hierarchy to explain the signature rules.
 
-## Covariance (Parent -> Child -> ...) of return types in the subtype 
+## Covariance (Parent -> Child -> ...) of return types in the subtype
 
 This rule means that the child class can override a method to return a more specific type (`Cat` instead of `Animal`).
 
-Of course it can return the same type, but it can not return more generic type (like `LiveBeing` instead of `Animal`) and it can not return a completely different type (`House` instead of `Animal`).
+Of course, it can return the same type, but it can not return more generic type (like `LiveBeing` instead of `Animal`) and it can not return a completely different type (`House` instead of `Animal`).
 
 This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:
@@ -75,17 +75,17 @@ class Owner
 class CatOwner extends Owner
   Cat findPet()
       # Covariance - subclass returns more specific type
-      return new Cat()  
+      return new Cat()
 
 class BadOwner extends Owner
   LiveBeing findPet()
-      # Contravariance, breaks the rule and returns more generic type
+      # Contravariance - breaks the rule and returns more generic type
       return new LiveBeing()
 
 function doAction(Owner owner)
     # OK for Owner, we can put an Animal object into the `animal` variable.
     # OK for CatOwner, we can put a Cat object into the `animal` variable.
-    # Problem for a BadOwner object, a LiveBeing object can not use be used 
+    # Problem for a BadOwner object, a LiveBeing object can not use be used
     # the same way as Animal object.
     Animal animal = owner->findPet();
     amimal->eat();
@@ -106,16 +106,16 @@ This means that a child class can override the method to accept a more generic a
 ```python
 class Owner
   void feed(Animal animal)
-    ... 
+    ...
 
 class GoodOwner extends Owner
   # Contravariance - subclass accepts more generic type
   void feed(LiveBeing being)
-    ... 
+    ...
 
 class BadCatOwner extends Owner
   void feed(Cat cat)
-    ... 
+    ...
 
 function doAction(Owner owner)
   owner->feed(new Dog) # OK for Owner, he accepts any Animal, including the Dog
@@ -141,7 +141,7 @@ class GoodOwner extends Owner
 
 ```
 
-There is a problem here - the `GoodOnwer::feed` can not call the `being->eat()` method, because `LiveBeing` doesn't have the `eat` method.
+There is a problem here - the `GoodOnwer::feed` can not call the `being->eat()` method because `LiveBeing` doesn't have the `eat` method.
 
 And this way, `GoodOwner` also can not just forward the execution to the parent method with something like `parent::feed(being)`.
 
@@ -173,9 +173,9 @@ class BadOwner extends Owner
 
 function doAction(Owner owner)
   try
-    owner->feed(new Dog, new SomeFood) 
+    owner->feed(new Dog, new SomeFood)
   catch (BadFoodException error)
-    # OK for Owner, it can rasie BadFoodException
+    # OK for Owner, it can raise BadFoodException
     # OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)
     # Problem for BadOwner, it can raise LowQualityFoodException and it will not be
     # caught here
@@ -195,11 +195,11 @@ These requirements describe additional rules for inherited methods related to th
 
 ## Preconditions cannot be strengthened in a subtype
 
-In most cases preconditions are expectations about method input arguments (not always as object has an internal state which is also a part of the precondition).
+In most cases preconditions are expectations about method input arguments, also an object's internal state can be a part of the precondition.
 
-This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (`LiveBeing` instead of `Animal`), this is a weaker precondition (subclass accepts wider range of arguments).
+This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (`LiveBeing` instead of `Animal`), this is a weaker precondition (subclass accepts a wider range of arguments).
 
-The same logic applies not only to the types of arguments, but to the other kind of expectations as well, such as a range of the integer argument:
+The same logic applies not only to the types of arguments but to the other kind of expectations as well, such as a range of the integer argument:
 
 ```python
 class The24Hours
@@ -222,7 +222,7 @@ function doAction(The24Hours hours)
 
 So the stronger precondition in the child class broke the client code which worked for the parent class.
 
-At the same time if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.
+At the same time, if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.
 
 ## Postconditions cannot be weakened in a subtype
 
@@ -243,7 +243,7 @@ class TheTime extends The24Hours
   number setHour(number hour, number hourFraction)
     this.hour = hour + hourFraction / 100
     # the postcondition is weaker (float is a wider area than integer)
-    assert (this.hour is float)  
+    assert (this.hour is float)
     return this.hour
 
 function doAction(The24Hours hours)
@@ -251,7 +251,7 @@ function doAction(The24Hours hours)
                                   # Problem for TheTime, it returns float
 ```
 
-So again, due to `LSP` violation we can not use the child class instead of parent.
+So again, due to `LSP` violation, we can not use the child class instead of the parent.
 
 ## Invariants of the parent type must be preserved in a subtype
 
@@ -271,7 +271,7 @@ class TheCounter extends The24Hours
     return result
 
 function doAction(The24Hours hours)
-  if (hours->getHour() <= 12) 
+  if (hours->getHour() <= 12)
      # OK for The24Hours
      # Problem for TheTime, now getHour() can return value > 12
      print 'First half of the day', hours->getHour()
@@ -279,7 +279,7 @@ function doAction(The24Hours hours)
 
 ## History constraint (the "history rule")
 
-The subtypes should not introduce new methods that will allow to modify the object state in a way that is not possible for the parent class.
+The subtypes should not introduce new methods that will allow modifying the object state in a way that is not possible for the parent class.
 
 The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.
 
@@ -293,8 +293,8 @@ class Time
 
 class FlexibleTime extends Time
   # violates the "history" rule
-  # it allows to change the object state
-  # but the clients who use Time, can be broken due to this
+  # it allows changing the object state
+  # but the clients who use Time can be broken due to this
   setTime(int hour, int minute)
 
 doAction(Time time)
