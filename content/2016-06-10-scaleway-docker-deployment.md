@@ -1,8 +1,8 @@
 ---
-title: Deploying multiple web applications with Docker on Scaleway
+title: Setup Automatic Deployment, Update and Backup of Multiple Web Applications with Docker on Scaleway
 date: 2016-06-10
 tags: docker
-type: note
+type: post
 ---
 
 The purpose of this setup is:
@@ -306,19 +306,19 @@ The `web-deploy` project also includes setup for HAProxy and MySQL containers.
 
 ## HAProxy setup
 
-This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point. Requests to port 80 are reverse-proxied to other containers.
+This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point on the server. Requests to port 80 are reverse-proxied to other containers.
 The Dockerfile is simple:
 
-```
+```text
 FROM haproxy:1.5
 COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 # this is needed to setup ssl for one of projects
 COPY ./mycompany.pem /etc/ssl/certs/
 ```
 
-The configuration file looks like this:
+The configuration file (web-deploy/haproxy/haproxy.cfg) looks like this:
 
-```
+```text
 global
     log /dev/log local2
     maxconn     2048
@@ -384,7 +384,7 @@ backend projectd
     server srv_redmine 127.0.0.1:8100
 ```
 
-The build script is:
+And the build script (web-deploy/haproxy/build.sh) is this:
 
 ```bash
 #!/usr/bin/env bash
@@ -407,22 +407,22 @@ popd
 
 The HAProxy container is launched with `--net=host` option, so it can directly access all the ports exposed by other containers.
 
+The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
+See the config file and [this post](https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04) for more information.
+
+The HAProxy stats are available via http://hostname.com/haproxyStats. Login and password are set in the config file (haproxy.cfg, see the `stats auth` line in `defaults` section).
+
 Some hints to to debug problems with HAProxy setup:
 
 - Uncomment 'debug' in the config file
 - Check 'docker logs web-haproxy'
 - Check system log (/var/log/syslog), with the configuration above the HAProxy container will log to host's system log (see https://github.com/dockerfile/haproxy/issues/3)
 
-The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
-See the config file and [this post](https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04) for more information.
-
-The HAProxy stats are available via http: hostname.com/haproxyStats. Login and password are in the config file.
-
 ## MySql setup
 
 The MySql container (it is under web-deploy/mysql folder) also has a simple Dockerfile:
 
-```
+```text
 FROM mysql:5.6
 ENV MYSQL_ROOT_PASSWORD=myrootpassword
 
@@ -450,7 +450,7 @@ popd
 The data folder is mapped to the host machine to /var/web/mysql-data.
 The app containers which need the database are linked to this container.
 
-## Docker on the server
+## Useful Docker Commands
 
 Some useful commands to view and manage Docker containers:
 
