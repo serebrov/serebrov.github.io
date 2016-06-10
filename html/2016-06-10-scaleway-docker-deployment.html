@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Deploying multiple web applications with Docker on Scaleway</title>
+    <title>Setup Automatic Deployment, Update and Backup of Multiple Web Applications with Docker on Scaleway</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -36,7 +36,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1>Deploying multiple web applications with Docker on Scaleway</h1>
+              <h1>Setup Automatic Deployment, Update and Backup of Multiple Web Applications with Docker on Scaleway</h1>
           </div>
       </div>
       <div class="row">
@@ -71,7 +71,7 @@ docker-machine create --driver generic <span class="se">\</span>
 
 </code></pre>
 <p>To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).</p>
-<p>Here I use the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href="https://docs.docker.com/machine/drivers/">AWS, Digital Ocean, etc</a>.</p>
+<p>Here I have used the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href="https://docs.docker.com/machine/drivers/">AWS, Digital Ocean, etc</a>.</p>
 <p>Check the full setup script <a href="files/scaleway-docker/init-docker.sh">here</a>, on Scaleway I also had to create loopback devices because docker setup failed with <code>[graphdriver] prior storage driver \&quot;devicemapper\&quot; failed: loopback attach failed</code>.</p>
 <p>If something goes wrong during the setup, run <code>docker-machine rm scaleway</code>, fix the problem and run the setup again.</p>
 <h2 id="deployment-setup">Deployment setup</h2>
@@ -315,81 +315,83 @@ docker <span class="nb">exec</span> <span class="nv">$APP_NAME</span> sh -c <spa
 <p>Note: the <code>docker_rm_app_image</code> function from the build script is defined in the <a href="files/scaleway-docker/utils.sh">utils.sh script</a>.</p>
 <p>The <code>web-deploy</code> project also includes setup for HAProxy and MySQL containers.</p>
 <h2 id="haproxy-setup">HAProxy setup</h2>
-<p>This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point. Requests to port 80 are reverse-proxied to other containers.
+<p>This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point on the server. Requests to port 80 are reverse-proxied to other containers.
 The Dockerfile is simple:</p>
-<pre><code><div class="highlight"><pre><span class="nx">FROM</span> <span class="nx">haproxy</span><span class="o">:</span><span class="mf">1.5</span>
-<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span><span class="nx">haproxy</span><span class="p">.</span><span class="nx">cfg</span> <span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">local</span><span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">haproxy</span><span class="o">/</span><span class="nx">haproxy</span><span class="p">.</span><span class="nx">cfg</span>
-<span class="err">#</span> <span class="k">this</span> <span class="nx">is</span> <span class="nx">needed</span> <span class="nx">to</span> <span class="nx">setup</span> <span class="nx">ssl</span> <span class="k">for</span> <span class="nx">one</span> <span class="nx">of</span> <span class="nx">projects</span>
-<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span><span class="nx">mycompany</span><span class="p">.</span><span class="nx">pem</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">ssl</span><span class="o">/</span><span class="nx">certs</span><span class="o">/</span>
+<pre><code class="lang-text"><div class="highlight"><pre>FROM haproxy:1.5
+COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+# this is needed to setup ssl for one of projects
+COPY ./mycompany.pem /etc/ssl/certs/
 </pre></div>
 
-</code></pre><p>The configuration file looks like this:</p>
-<pre><code><div class="highlight"><pre><span class="nx">global</span>
-    <span class="nx">log</span> <span class="o">/</span><span class="nx">dev</span><span class="o">/</span><span class="nx">log</span> <span class="nx">local2</span>
-    <span class="nx">maxconn</span>     <span class="mi">2048</span>
-    <span class="nx">tune</span><span class="p">.</span><span class="nx">ssl</span><span class="p">.</span><span class="k">default</span><span class="o">-</span><span class="nx">dh</span><span class="o">-</span><span class="nx">param</span> <span class="mi">2048</span>
-    <span class="err">#</span><span class="nx">debug</span>
+</code></pre>
+<p>The configuration file (web-deploy/haproxy/haproxy.cfg) looks like this:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>global
+    log /dev/log local2
+    maxconn     2048
+    tune.ssl.default-dh-param 2048
+    #debug
 
-<span class="nx">defaults</span>
-    <span class="nx">log</span>     <span class="nx">global</span>
-    <span class="nx">option</span>  <span class="nx">dontlognull</span>
-    <span class="nx">mode</span> <span class="nx">http</span>
-    <span class="nx">option</span> <span class="nx">forwardfor</span>
-    <span class="nx">option</span> <span class="nx">http</span><span class="o">-</span><span class="nx">server</span><span class="o">-</span><span class="nx">close</span>
-    <span class="nx">timeout</span> <span class="nx">connect</span> <span class="mi">5000</span><span class="nx">ms</span>
-    <span class="nx">timeout</span> <span class="nx">client</span> <span class="mi">50000</span><span class="nx">ms</span>
-    <span class="nx">timeout</span> <span class="nx">server</span> <span class="mi">50000</span><span class="nx">s</span>
-    <span class="nx">stats</span> <span class="nx">enable</span>
-    <span class="nx">stats</span> <span class="nx">auth</span> <span class="nx">haadimn</span><span class="o">:</span><span class="nx">ZyXuuXYZ</span>
-    <span class="nx">stats</span> <span class="nx">uri</span> <span class="o">/</span><span class="nx">haproxyStats</span>
+defaults
+    log     global
+    option  dontlognull
+    mode http
+    option forwardfor
+    option http-server-close
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000s
+    stats enable
+    stats auth haadimn:ZyXuuXYZ
+    stats uri /haproxyStats
 
-<span class="nx">frontend</span> <span class="nx">http</span><span class="o">-</span><span class="k">in</span>
-    <span class="nx">bind</span> <span class="o">*:</span><span class="mi">80</span>
+frontend http-in
+    bind *:80
 
-    <span class="err">#</span> <span class="nx">Define</span> <span class="nx">hosts</span> <span class="nx">based</span> <span class="nx">on</span> <span class="nx">domain</span> <span class="nx">names</span>
-    <span class="nx">acl</span> <span class="nx">host_projecta</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">projecta</span><span class="p">.</span><span class="nx">com</span>
-    <span class="nx">acl</span> <span class="nx">host_projecta</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">www</span><span class="p">.</span><span class="nx">projecta</span><span class="p">.</span><span class="nx">com</span>
-    <span class="err">#</span> <span class="k">this</span> <span class="nx">name</span> <span class="nx">is</span> <span class="nx">used</span> <span class="k">for</span> <span class="nx">local</span> <span class="nx">testing</span>
-    <span class="nx">acl</span> <span class="nx">host_projecta</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">www</span><span class="p">.</span><span class="nx">projecta</span><span class="p">.</span><span class="nx">local</span>
-    <span class="nx">acl</span> <span class="nx">host_projectb</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">projectb</span><span class="p">.</span><span class="nx">com</span>
-    <span class="nx">acl</span> <span class="nx">host_projectb</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">www</span><span class="p">.</span><span class="nx">projectb</span><span class="p">.</span><span class="nx">com</span>
-    <span class="err">#</span> <span class="nx">handle</span> <span class="nx">sub</span><span class="o">-</span><span class="nx">domains</span> <span class="p">(</span><span class="nx">use</span> <span class="nx">hdr_end</span> <span class="nx">here</span><span class="p">,</span> <span class="nx">not</span> <span class="nx">hdr</span><span class="p">)</span>
-    <span class="nx">acl</span> <span class="nx">host_projectc</span> <span class="nx">hdr_end</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">projectc</span><span class="p">.</span><span class="nx">com</span>
+    # Define hosts based on domain names
+    acl host_projecta hdr(host) -i projecta.com
+    acl host_projecta hdr(host) -i www.projecta.com
+    # this name is used for local testing
+    acl host_projecta hdr(host) -i www.projecta.local
+    acl host_projectb hdr(host) -i projectb.com
+    acl host_projectb hdr(host) -i www.projectb.com
+    # handle sub-domains (use hdr_end here, not hdr)
+    acl host_projectc hdr_end(host) -i projectc.com
 
-    <span class="err">#</span> <span class="nx">redirect</span> <span class="nx">projectd</span> <span class="nx">to</span> <span class="nx">https</span>
-    <span class="nx">redirect</span> <span class="nx">scheme</span> <span class="nx">https</span> <span class="k">if</span> <span class="nx">host_projectd</span> <span class="o">!</span><span class="p">{</span> <span class="nx">ssl_fc</span> <span class="p">}</span>
+    # redirect projectd to https
+    redirect scheme https if host_projectd !{ ssl_fc }
 
-    <span class="err">##</span> <span class="nx">figure</span> <span class="nx">out</span> <span class="nx">backend</span> <span class="nx">to</span> <span class="nx">use</span> <span class="nx">based</span> <span class="nx">on</span> <span class="nx">domainname</span>
-    <span class="nx">use_backend</span> <span class="nx">projecta</span> <span class="k">if</span> <span class="nx">host_projecta</span>
-    <span class="nx">use_backend</span> <span class="nx">projectb</span> <span class="k">if</span> <span class="nx">host_projectb</span>
-    <span class="nx">use_backend</span> <span class="nx">projectc</span> <span class="k">if</span> <span class="nx">host_projectc</span>
+    ## figure out backend to use based on domainname
+    use_backend projecta if host_projecta
+    use_backend projectb if host_projectb
+    use_backend projectc if host_projectc
 
-<span class="nx">frontend</span> <span class="nx">https</span><span class="o">-</span><span class="k">in</span>
-    <span class="nx">bind</span> <span class="o">*:</span><span class="mi">443</span> <span class="nx">ssl</span> <span class="nx">crt</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">ssl</span><span class="o">/</span><span class="nx">certs</span><span class="o">/</span><span class="nx">mycompany</span><span class="p">.</span><span class="nx">pem</span>
+frontend https-in
+    bind *:443 ssl crt /etc/ssl/certs/mycompany.pem
 
-    <span class="err">#</span> <span class="nx">Define</span> <span class="nx">hosts</span> <span class="nx">based</span> <span class="nx">on</span> <span class="nx">domain</span> <span class="nx">names</span>
-    <span class="nx">acl</span> <span class="nx">host_projectd</span> <span class="nx">hdr</span><span class="p">(</span><span class="nx">host</span><span class="p">)</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">projectd</span><span class="p">.</span><span class="nx">com</span>
+    # Define hosts based on domain names
+    acl host_projectd hdr(host) -i projectd.com
 
-    <span class="nx">use_backend</span> <span class="nx">projectd</span> <span class="k">if</span> <span class="nx">host_projectd</span>
+    use_backend projectd if host_projectd
 
-<span class="nx">backend</span> <span class="nx">projecta</span>
-    <span class="nx">balance</span> <span class="nx">roundrobin</span>
-    <span class="nx">server</span> <span class="nx">srv_pawnshop</span><span class="o">-</span><span class="nx">soft</span><span class="o">-</span><span class="nx">ru</span> <span class="mf">127.0</span><span class="p">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">8091</span>
+backend projecta
+    balance roundrobin
+    server srv_pawnshop-soft-ru 127.0.0.1:8091
 
-<span class="nx">backend</span> <span class="nx">projectb</span>
-    <span class="nx">balance</span> <span class="nx">roundrobin</span>
-    <span class="nx">server</span> <span class="nx">srv_pawnshop</span><span class="o">-</span><span class="nx">soft</span><span class="o">-</span><span class="nx">kz</span> <span class="mf">127.0</span><span class="p">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">8092</span>
+backend projectb
+    balance roundrobin
+    server srv_pawnshop-soft-kz 127.0.0.1:8092
 
-<span class="nx">backend</span> <span class="nx">projectc</span>
-    <span class="nx">balance</span> <span class="nx">roundrobin</span>
-    <span class="nx">server</span> <span class="nx">srv_lombard</span> <span class="mf">127.0</span><span class="p">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">8093</span>
+backend projectc
+    balance roundrobin
+    server srv_lombard 127.0.0.1:8093
 
-<span class="nx">backend</span> <span class="nx">projectd</span>
-    <span class="nx">balance</span> <span class="nx">roundrobin</span>
-    <span class="nx">server</span> <span class="nx">srv_redmine</span> <span class="mf">127.0</span><span class="p">.</span><span class="mf">0.1</span><span class="o">:</span><span class="mi">8100</span>
+backend projectd
+    balance roundrobin
+    server srv_redmine 127.0.0.1:8100
 </pre></div>
 
-</code></pre><p>The build script is:</p>
+</code></pre>
+<p>And the build script (web-deploy/haproxy/build.sh) is this:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
 
 <span class="nb">export</span> <span class="p">|</span> grep DOCKER
@@ -409,24 +411,25 @@ docker run -d --restart always --net<span class="o">=</span>host -p 80:80 -p 443
 
 </code></pre>
 <p>The HAProxy container is launched with <code>--net=host</code> option, so it can directly access all the ports exposed by other containers.</p>
+<p>The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
+See the config file and <a href="https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04">this post</a> for more information.</p>
+<p>The HAProxy stats are available via <a href="http://hostname.com/haproxyStats">http://hostname.com/haproxyStats</a>. Login and password are set in the config file (haproxy.cfg, see the <code>stats auth</code> line in <code>defaults</code> section).</p>
 <p>Some hints to to debug problems with HAProxy setup:</p>
 <ul>
 <li>Uncomment &#39;debug&#39; in the config file</li>
 <li>Check &#39;docker logs web-haproxy&#39;</li>
 <li>Check system log (/var/log/syslog), with the configuration above the HAProxy container will log to host&#39;s system log (see <a href="https://github.com/dockerfile/haproxy/issues/3">https://github.com/dockerfile/haproxy/issues/3</a>)</li>
 </ul>
-<p>The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
-See the config file and <a href="https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04">this post</a> for more information.</p>
-<p>The HAProxy stats are available via http: hostname.com/haproxyStats. Login and password are in the config file.</p>
 <h2 id="mysql-setup">MySql setup</h2>
 <p>The MySql container (it is under web-deploy/mysql folder) also has a simple Dockerfile:</p>
-<pre><code><div class="highlight"><pre><span class="nx">FROM</span> <span class="nx">mysql</span><span class="o">:</span><span class="mf">5.6</span>
-<span class="nx">ENV</span> <span class="nx">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="nx">myrootpassword</span>
+<pre><code class="lang-text"><div class="highlight"><pre>FROM mysql:5.6
+ENV MYSQL_ROOT_PASSWORD=myrootpassword
 
-<span class="nx">VOLUME</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/mysql</span>
+VOLUME /var/www/mysql
 </pre></div>
 
-</code></pre><p>The build script looks like this:</p>
+</code></pre>
+<p>The build script looks like this:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
 
 <span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
@@ -445,7 +448,7 @@ docker run -d -v /var/web/mysql-data:/var/lib/mysql --restart always --name <spa
 </code></pre>
 <p>The data folder is mapped to the host machine to /var/web/mysql-data.
 The app containers which need the database are linked to this container.</p>
-<h2 id="docker-on-the-server">Docker on the server</h2>
+<h2 id="useful-docker-commands">Useful Docker Commands</h2>
 <p>Some useful commands to view and manage Docker containers:</p>
 <ul>
 <li>Information about docker <code>docker info</code></li>
@@ -464,7 +467,7 @@ The app containers which need the database are linked to this container.</p>
 <li>Run multiple processes inside application containers (application and cron) usind supervisor or runit, for example, see <a href="http://phusion.github.io/baseimage-docker/">http://phusion.github.io/baseimage-docker/</a>.</li>
 <li>Run multiple processes via <code>CMD</code> instruction in the Dockerfile (for example, see <a href="http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html">http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html</a>)</li>
 </ul>
-<p>Here I chose the first option to use host machine cron. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.</p>
+<p>Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.</p>
 <p>The <a href="files/scaleway-docker/init-db-files.sh">web-deploy/init-db-files.sh</a> script contains code to setup cron, here is the related part:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>  docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd
   docker-machine scp -r ./config/web-cron scaleway:/etc/cron.d/
@@ -477,23 +480,24 @@ The <code>s3cmd</code> is used to backup databases and files from the shared sto
 The <code>.s3cfg</code> contains credentials for <a href="http://s3tools.org/s3cmd">s3cmd</a>, it can be generated by running <code>s3cmd --configure</code>.</p>
 <p>Backups are very important, because at the moment Scaleway does not provide highly reliable hardware (no RAID disks, see <a href="https://community.scaleway.com/t/i-have-questions-about-scaleway/891/2">this thread</a>).
 And to <a href="https://www.scaleway.com/docs/backup-your-data-with-snapshots/">make a snapshot</a>, you need to archive the instance (it takes few minutes), make the snapshot and launch the instance again, so there is a noticeable down-time period.
-So I used cront to backup files and databases to Amazon&#39;s S3.</p>
+So I used cron to backup files and databases to Amazon&#39;s S3.</p>
 <p>Note: Scaleway has compatible to S3 storage, called <a href="https://www.scaleway.com/features/sis/">SIS</a>, but at the moment it is not available (at least in my account).
 When I try to create bucket from the command line it returns <code>S3 error: 400 (TooManyBuckets): You have attempted to create more buckets than allowed</code>.
 And the note in the Scaleway UI states &quot;We&#39;re currently scaling up our SIS infrastructure to handle the load generated by all our new users. All new bucket creation are currently forbidden to preserve the service quality for current SIS users.&quot;.</p>
 <p>The cron file to perform backups looks this way:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">In</span> <span class="nx">the</span> <span class="k">case</span> <span class="nx">of</span> <span class="nx">problems</span><span class="p">,</span> <span class="nx">cron</span> <span class="nx">sends</span> <span class="nx">local</span> <span class="nx">email</span><span class="p">,</span> <span class="nx">can</span> <span class="nx">be</span> <span class="nx">checked</span> <span class="kd">with</span> <span class="nx">mutt</span>
-<span class="err">#</span> <span class="p">(</span><span class="nx">it</span> <span class="nx">requires</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="nx">postfix</span> <span class="nx">mutt</span><span class="p">)</span>
-<span class="err">#</span> <span class="nx">Also</span> <span class="nx">check</span> <span class="nx">cron</span> <span class="nx">messages</span> <span class="k">in</span> <span class="err">/var/log/syslog</span>
-<span class="err">#</span> <span class="nx">update</span> <span class="nx">geolite</span> <span class="nx">database</span>
-<span class="err">#</span> <span class="nx">Note</span><span class="o">:</span> <span class="nx">docker</span> <span class="nx">exec</span> <span class="nx">should</span> <span class="nx">not</span> <span class="nx">have</span> <span class="o">-</span><span class="nx">t</span> <span class="p">(</span><span class="nx">tty</span><span class="p">)</span> <span class="nx">option</span><span class="p">,</span> <span class="nx">there</span> <span class="nx">is</span> <span class="nx">no</span> <span class="nx">tty</span><span class="p">,</span> <span class="o">-</span><span class="nx">i</span> <span class="nx">is</span> <span class="nx">also</span> <span class="nx">not</span> <span class="nx">needed</span>
-<span class="mi">0</span> <span class="mi">1</span> <span class="o">*</span> <span class="o">*</span> <span class="nx">Sun</span> <span class="nx">root</span> <span class="nx">docker</span> <span class="nx">exec</span> <span class="nx">projecta</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/service/cron-update-geoip-db.sh</span>
-<span class="err">#</span> <span class="nx">backup</span> <span class="nx">all</span> <span class="nx">databases</span> <span class="nx">to</span> <span class="nx">s3</span>
-<span class="mi">0</span> <span class="mi">5</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>   <span class="nx">root</span> <span class="nx">docker</span> <span class="nx">exec</span> <span class="nx">web</span><span class="o">-</span><span class="nx">mysql</span> <span class="nx">sh</span> <span class="o">-</span><span class="nx">c</span> <span class="s1">&#39;exec mysqldump --all-databases -uroot -p&quot;$MYSQL_ROOT_PASSWORD&quot;&#39;</span> <span class="o">|</span> <span class="nx">gzip</span> <span class="o">-</span><span class="mi">9</span> <span class="o">&gt;</span> <span class="nx">all</span><span class="o">-</span><span class="nx">databases</span><span class="p">.</span><span class="nx">sql</span><span class="p">.</span><span class="nx">gz</span> <span class="o">&amp;&amp;</span> <span class="nx">s3cmd</span> <span class="nx">put</span> <span class="nx">all</span><span class="o">-</span><span class="nx">databases</span><span class="p">.</span><span class="nx">sql</span><span class="p">.</span><span class="nx">gz</span> <span class="nx">s3</span><span class="o">:</span><span class="c1">//myweb-backup/$(date +\%Y-\%m-\%d-\%H-\%M-\%S)-all-databases.sql.gz &amp;&amp; rm all-databases.sql.gz</span>
-<span class="mi">0</span> <span class="mi">6</span> <span class="o">*</span> <span class="o">*</span> <span class="o">*</span>   <span class="nx">root</span> <span class="nx">s3cmd</span> <span class="nx">sync</span> <span class="o">/</span><span class="kd">var</span><span class="sr">/web s3:/</span><span class="o">/</span><span class="nx">myweb</span><span class="o">-</span><span class="nx">backup</span><span class="o">/</span><span class="nx">storage</span><span class="o">/</span>
+<pre><code class="lang-text"><div class="highlight"><pre># In the case of problems, cron sends local email, can be checked with mutt
+# (it requires apt-get install postfix mutt)
+# Also check cron messages in /var/log/syslog
+# update geolite database
+# Note: docker exec should not have -t (tty) option, there is no tty, -i is also not needed
+0 1 * * Sun root docker exec projecta /var/www/service/cron-update-geoip-db.sh
+# backup all databases to s3
+0 5 * * *   root docker exec web-mysql sh -c &#39;exec mysqldump --all-databases -uroot -p&quot;$MYSQL_ROOT_PASSWORD&quot;&#39; | gzip -9 &gt; all-databases.sql.gz &amp;&amp; s3cmd put all-databases.sql.gz s3://myweb-backup/$(date +\%Y-\%m-\%d-\%H-\%M-\%S)-all-databases.sql.gz &amp;&amp; rm all-databases.sql.gz
+0 6 * * *   root s3cmd sync /var/web s3://myweb-backup/storage/
 </pre></div>
 
-</code></pre><p>The command to backup mysql databases does few things:</p>
+</code></pre>
+<p>The command to backup mysql databases does few things:</p>
 <ul>
 <li>Run <code>mysqldump</code> inside the MySQL container via <code>docker exec</code></li>
 <li>Pipe the result to <code>gzip</code> to archive it</li>

@@ -1,7 +1,7 @@
 ---
 title: Setup Automatic Deployment, Update and Backup of Multiple Web Applications with Docker on Scaleway
 date: 2016-06-10
-tags: docker
+tags: docker, scaleway
 type: post
 ---
 
@@ -41,7 +41,7 @@ docker-machine create --driver generic \
 
 To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).
 
-Here I use the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
+Here I have used the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
 
 Check the full setup script [here](files/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
 
@@ -470,7 +470,7 @@ There are few options to run cron with docker:
 * Run multiple processes inside application containers (application and cron) usind supervisor or runit, for example, see http://phusion.github.io/baseimage-docker/.
 * Run multiple processes via `CMD` instruction in the Dockerfile (for example, see http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html)
 
-Here I chose the first option to use host machine cron. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.
+Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.
 
 The [web-deploy/init-db-files.sh](files/scaleway-docker/init-db-files.sh) script contains code to setup cron, here is the related part:
 
@@ -486,7 +486,7 @@ The `.s3cfg` contains credentials for [s3cmd](http://s3tools.org/s3cmd), it can 
 
 Backups are very important, because at the moment Scaleway does not provide highly reliable hardware (no RAID disks, see [this thread](https://community.scaleway.com/t/i-have-questions-about-scaleway/891/2)).
 And to [make a snapshot](https://www.scaleway.com/docs/backup-your-data-with-snapshots/), you need to archive the instance (it takes few minutes), make the snapshot and launch the instance again, so there is a noticeable down-time period.
-So I used cront to backup files and databases to Amazon's S3.
+So I used cron to backup files and databases to Amazon's S3.
 
 Note: Scaleway has compatible to S3 storage, called [SIS](https://www.scaleway.com/features/sis/), but at the moment it is not available (at least in my account).
 When I try to create bucket from the command line it returns `S3 error: 400 (TooManyBuckets): You have attempted to create more buckets than allowed`.
@@ -494,7 +494,7 @@ And the note in the Scaleway UI states "We're currently scaling up our SIS infra
 
 The cron file to perform backups looks this way:
 
-```
+```text
 # In the case of problems, cron sends local email, can be checked with mutt
 # (it requires apt-get install postfix mutt)
 # Also check cron messages in /var/log/syslog
