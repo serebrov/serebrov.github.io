@@ -79,18 +79,18 @@ docker-machine create --driver generic <span class="se">\</span>
 <h3 id="projects-layout">Projects layout</h3>
 <p>There are several web applications which I want do deploy, each packaged into the docker container.</p>
 <p>On the filesystem they reside in the same <code>~/web</code> folder along with the <code>web-deploy</code> project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>in ~/web <span class="err">$</span>
-projectA/
+<pre><code class="lang-text"><div class="highlight"><pre>in ~/web $
+projecta.com/
    Dockerfile
    config/
    db/
    www/
-projectB/
+projectb.com/
    Dockerfile
    config/
    db/
    www/
-projectC/
+projectc.com/
    Dockerfile
    app/
    config/
@@ -101,70 +101,72 @@ web-deploy/
 
 </code></pre>
 <p>The typical Dockerfile for the php application looks like this:</p>
-<pre><code><div class="highlight"><pre><span class="nx">FROM</span> <span class="nx">php</span><span class="o">:</span><span class="mf">5.6</span><span class="o">-</span><span class="nx">apache</span>
+<pre><code class="lang-text"><div class="highlight"><pre>FROM php:5.6-apache
 
-<span class="nx">RUN</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">update</span> <span class="o">&amp;&amp;</span> <span class="o">\</span>
-  <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">y</span> <span class="nx">msmtp</span> <span class="nx">wget</span> <span class="o">&amp;&amp;</span> <span class="o">\</span>
-  <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">clean</span>
+RUN apt-get update &amp;&amp; \
+  apt-get install -y msmtp wget &amp;&amp; \
+  apt-get clean
 
-<span class="nx">RUN</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">update</span> <span class="o">&amp;&amp;</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">y</span> <span class="o">\</span>
-        <span class="nx">libfreetype6</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-        <span class="nx">libjpeg62</span><span class="o">-</span><span class="nx">turbo</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-        <span class="nx">libmcrypt</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-        <span class="nx">libpng12</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-    <span class="o">&amp;&amp;</span> <span class="nx">docker</span><span class="o">-</span><span class="nx">php</span><span class="o">-</span><span class="nx">ext</span><span class="o">-</span><span class="nx">install</span> <span class="o">-</span><span class="nx">j$</span><span class="p">(</span><span class="nx">nproc</span><span class="p">)</span> <span class="nx">iconv</span> <span class="nx">mcrypt</span> <span class="o">\</span>
-    <span class="o">&amp;&amp;</span> <span class="nx">docker</span><span class="o">-</span><span class="nx">php</span><span class="o">-</span><span class="nx">ext</span><span class="o">-</span><span class="nx">configure</span> <span class="nx">gd</span> <span class="o">--</span><span class="kd">with</span><span class="o">-</span><span class="nx">freetype</span><span class="o">-</span><span class="nx">dir</span><span class="o">=</span><span class="err">/usr/include/ --with-jpeg-dir=/usr/include/ \</span>
-    <span class="o">&amp;&amp;</span> <span class="nx">docker</span><span class="o">-</span><span class="nx">php</span><span class="o">-</span><span class="nx">ext</span><span class="o">-</span><span class="nx">install</span> <span class="o">-</span><span class="nx">j$</span><span class="p">(</span><span class="nx">nproc</span><span class="p">)</span> <span class="nx">gd</span> <span class="nx">pdo</span> <span class="nx">pdo_mysql</span> <span class="nx">mysql</span> <span class="nx">mysqli</span>
+RUN apt-get update &amp;&amp; apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+    &amp;&amp; docker-php-ext-install -j$(nproc) iconv mcrypt \
+    &amp;&amp; docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    &amp;&amp; docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mysql mysqli
 
-<span class="nx">COPY</span> <span class="nx">config</span><span class="o">/</span><span class="nx">msmtprc</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">msmtprc</span>
+COPY config/msmtprc /etc/msmtprc
 
-<span class="nx">RUN</span> <span class="nx">echo</span> <span class="s1">&#39;sendmail_path = &quot;/usr/bin/msmtp -t -i&quot;&#39;</span> <span class="o">&gt;</span> <span class="err">/usr/local/etc/php/conf.d/mail.ini</span>
-<span class="nx">RUN</span> <span class="nx">a2enmod</span> <span class="nx">expires</span> <span class="o">&amp;&amp;</span> <span class="nx">a2enmod</span> <span class="nx">rewrite</span>
+RUN echo &#39;sendmail_path = &quot;/usr/bin/msmtp -t -i&quot;&#39; &gt; /usr/local/etc/php/conf.d/mail.ini
+RUN a2enmod expires &amp;&amp; a2enmod rewrite
 
-<span class="nx">COPY</span> <span class="nx">www</span><span class="o">/</span> <span class="err">/var/www/html/</span>
+COPY www/ /var/www/html/
 
-<span class="nx">VOLUME</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/html/files</span>
+VOLUME /var/www/html/files
 </pre></div>
 
-</code></pre><p>This container is based on the official <a href="https://hub.docker.com/\_/php/">php image</a>.
+</code></pre>
+<p>This container is based on the official <a href="https://hub.docker.com/\_/php/">php image</a>.
 To make the php <code>mail</code> function work, I also setup <code>msmtp</code> and configure php to use it.
 The example of the msmtp configuration file is <a href="files/scaleway-docker/msmtprc">here</a>.</p>
 <p>On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch &quot;Block SMTP&quot; from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).</p>
 <p>Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:</p>
-<pre><code><div class="highlight"><pre><span class="err">#</span> <span class="nx">re</span><span class="o">-</span><span class="nx">use</span> <span class="nx">image</span> <span class="nx">which</span> <span class="nx">we</span> <span class="nx">already</span> <span class="nx">use</span>
-<span class="nx">FROM</span> <span class="nx">php</span><span class="o">:</span><span class="mf">5.6</span><span class="o">-</span><span class="nx">apache</span>
-<span class="nx">MAINTAINER</span> <span class="nx">serebrov</span><span class="err">@</span><span class="nx">gmail</span><span class="p">.</span><span class="nx">com</span>
+<pre><code class="lang-text"><div class="highlight"><pre># re-use image which we already use
+FROM php:5.6-apache
+MAINTAINER serebrov@gmail.com
 
-<span class="nx">RUN</span> <span class="nx">DEBIAN_FRONTEND</span><span class="o">=</span><span class="nx">noninteractive</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">update</span> <span class="o">\</span>
-    <span class="o">&amp;&amp;</span> <span class="nx">apt</span><span class="o">-</span><span class="nx">get</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">y</span> <span class="nx">ruby</span> <span class="nx">libruby</span> <span class="o">\</span>
-    <span class="nx">libapache2</span><span class="o">-</span><span class="nx">mod</span><span class="o">-</span><span class="nx">passenger</span> <span class="nx">ruby</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-    <span class="nx">libmysqlclient</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">libmagickcore</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">libmagickwand</span><span class="o">-</span><span class="nx">dev</span> <span class="o">\</span>
-    <span class="nx">build</span><span class="o">-</span><span class="nx">essential</span> <span class="o">\</span>
-    <span class="nx">apache2</span> <span class="nx">ruby</span><span class="o">-</span><span class="nx">passenger</span> <span class="o">\</span>
-    <span class="o">&amp;&amp;</span> <span class="nx">gem</span> <span class="nx">install</span> <span class="nx">bundler</span>
+RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+    &amp;&amp; apt-get install -y ruby libruby \
+    libapache2-mod-passenger ruby-dev \
+    libmysqlclient-dev libmagickcore-dev libmagickwand-dev \
+    build-essential \
+    apache2 ruby-passenger \
+    &amp;&amp; gem install bundler
 
-<span class="nx">WORKDIR</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/redmine/</span>
-<span class="nx">COPY</span> <span class="p">.</span><span class="o">/</span> <span class="err">/var/www/redmine/</span>
-<span class="nx">COPY</span> <span class="nx">config_prod</span><span class="o">/*</span><span class="p">.</span><span class="nx">yml</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/redmine/config/</span>
+WORKDIR /var/www/redmine/
+COPY ./ /var/www/redmine/
+COPY config_prod/*.yml /var/www/redmine/config/
 
-<span class="nx">RUN</span> <span class="nx">bundle</span> <span class="nx">install</span>
+RUN bundle install
 
-<span class="nx">COPY</span> <span class="nx">config_prod</span><span class="o">/</span><span class="nx">redmine</span><span class="p">.</span><span class="nx">conf</span> <span class="o">/</span><span class="nx">etc</span><span class="o">/</span><span class="nx">apache2</span><span class="o">/</span><span class="nx">sites</span><span class="o">-</span><span class="nx">available</span>
-<span class="nx">RUN</span> <span class="nx">chown</span> <span class="o">-</span><span class="nx">R</span> <span class="nx">www</span><span class="o">-</span><span class="nx">data</span><span class="o">:</span><span class="nx">www</span><span class="o">-</span><span class="nx">data</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/redmine</span>
-<span class="nx">RUN</span> <span class="nx">a2enmod</span> <span class="nx">passenger</span>
-<span class="nx">RUN</span> <span class="nx">a2ensite</span> <span class="nx">redmine</span>
+COPY config_prod/redmine.conf /etc/apache2/sites-available
+RUN chown -R www-data:www-data /var/www/redmine
+RUN a2enmod passenger
+RUN a2ensite redmine
 
-<span class="nx">VOLUME</span> <span class="o">/</span><span class="kd">var</span><span class="err">/www/redmine/files</span>
+VOLUME /var/www/redmine/files
 </pre></div>
 
-</code></pre><p>This container is based on the same base official php container as php applications just to reuse the already downloaded layers.
+</code></pre>
+<p>This container is based on the same base official php container as php applications just to reuse the already downloaded layers.
 Ruby application is running under apache with mod passenger.</p>
 <h2 id="the-web-deploy-project">The web deploy project</h2>
 <p>The <code>web-deploy</code> project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>in ~/web <span class="err">$</span>
-projectA/
-projectB/
-projectC/
+<pre><code class="lang-text"><div class="highlight"><pre>in ~/web $
+projecta.com/
+projectb.com/
+projectc.com/
    ...
 web-deploy/
   deploy.sh
@@ -173,11 +175,23 @@ web-deploy/
   mysql-cli.sh
   utils.sh
   /haproxy
+    Dockerfile
+    build.sh
+    haproxy.cfg
+    mycompany.pem
   /mysql
+    dumps/
+      load-dumps.sh
+      projecta.sql
+      projectb.sql
+      projectc.sql
+    Dockerfile
+    build.sh
+    init-db.sh
   /build
-    projectA.sh
-    projectB.sh
-    projectC.sh
+    projecta.com.sh
+    projectb.com.sh
+    projectc.com.sh
 </pre></div>
 
 </code></pre>
@@ -192,9 +206,9 @@ web-deploy/
 There are several modes it can be used it:</p>
 <ul>
 <li><code>./deploy.sh</code> - deploy (or update) all projects locally</li>
-<li><code>./deploy.sh local projectA</code> - deploy only projectA locally</li>
-<li><code>./deploy.sh production</code> - deploy only projectA on the remote server</li>
-<li><code>./deploy.sh production projectA</code> - deploy only projectA on the remote server</li>
+<li><code>./deploy.sh local projecta.com</code> - deploy only projecta.com locally</li>
+<li><code>./deploy.sh production</code> - deploy only projecta.com on the remote server</li>
+<li><code>./deploy.sh production projecta.com</code> - deploy only projecta.com on the remote server</li>
 </ul>
 <p>The script looks like this:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
@@ -257,11 +271,11 @@ docker ps
 <span class="nb">set</span> -e
 
 <span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
-<span class="nv">APP_NAME</span><span class="o">=</span>projectA
+<span class="nv">APP_NAME</span><span class="o">=</span>projecta
 <span class="nv">CONTAINER_NAME</span><span class="o">=</span><span class="nv">$APP_NAME</span>-docker
 <span class="nv">PORT</span><span class="o">=</span>8091
 <span class="nb">source</span> <span class="nv">$SCRIPT_PATH</span>/../utils.sh
-<span class="nv">SRC</span><span class="o">=</span><span class="nv">$SCRIPT_PATH</span>/../../projectA
+<span class="nv">SRC</span><span class="o">=</span><span class="nv">$SCRIPT_PATH</span>/../../projecta.com
 
 <span class="c"># if we are running locally, the container will use sources from the host filesystem</span>
 <span class="c"># (we create the volume pointing to /html)</span>
@@ -283,7 +297,7 @@ docker_rm_app_image <span class="nv">$APP_NAME</span>
 <span class="c"># rebuild the image</span>
 docker build -t <span class="nv">$CONTAINER_NAME</span> .
 <span class="c"># start the container</span>
-docker run -d -p <span class="nv">$PORT</span>:80 -v /var/web/projectA/files:/var/www/html/data/upload --name <span class="nv">$APP_NAME</span> --link web-mysql:mysql --restart always <span class="nv">$ENV_DOCKER_OPTS</span> <span class="nv">$CONTAINER_NAME</span>
+docker run -d -p <span class="nv">$PORT</span>:80 -v /var/web/projecta.com/files:/var/www/html/data/upload --name <span class="nv">$APP_NAME</span> --link web-mysql:mysql --restart always <span class="nv">$ENV_DOCKER_OPTS</span> <span class="nv">$CONTAINER_NAME</span>
 <span class="c"># initially files belong to the root user of the host OS</span>
 <span class="c"># make them available to containter&#39;s www-data user</span>
 docker <span class="nb">exec</span> <span class="nv">$APP_NAME</span> sh -c <span class="s1">&#39;chown -R www-data:www-data /var/www/html/files&#39;</span>
@@ -294,7 +308,7 @@ docker <span class="nb">exec</span> <span class="nv">$APP_NAME</span> sh -c <spa
 <ul>
 <li>This project will use port 8091 on the host machine (can be accessed as localhost:8091), this port also will be mentioned in the HAProxy config to redirect requests to this app based on the requested domain name</li>
 <li>For local deployment the container will use source files from the host machine folder, so we can edit them directly without having to login to container, this is very convenient for local development</li>
-<li>The web application files will be stored in the volume, which is available on the host machine at /var/web/projectA/files</li>
+<li>The web application files will be stored in the volume, which is available on the host machine at /var/web/projecta.com/files</li>
 <li>The problem with permissions to the shared volume is solved by running <code>chown</code> from within the container (apache runs as www-data and after creation the files folder will belong to root user)</li>
 <li>This build script is used both for local and remote deployment, the remote part is handled by Docker Machine which allows to run docker commands against the remote host (this is handled in the <code>deploy.sh</code> script)</li>
 </ul>

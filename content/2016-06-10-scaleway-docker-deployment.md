@@ -58,19 +58,19 @@ There are several web applications which I want do deploy, each packaged into th
 
 On the filesystem they reside in the same `~/web` folder along with the `web-deploy` project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):
 
-```bash
+```text
 in ~/web $
-projectA/
+projecta.com/
    Dockerfile
    config/
    db/
    www/
-projectB/
+projectb.com/
    Dockerfile
    config/
    db/
    www/
-projectC/
+projectc.com/
    Dockerfile
    app/
    config/
@@ -81,7 +81,7 @@ web-deploy/
 
 The typical Dockerfile for the php application looks like this:
 
-```
+```text
 FROM php:5.6-apache
 
 RUN apt-get update && \
@@ -115,7 +115,7 @@ On Scaleway by default SMTP ports are disabled. To make emails work, it is neces
 
 Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:
 
-```
+```text
 # re-use image which we already use
 FROM php:5.6-apache
 MAINTAINER serebrov@gmail.com
@@ -149,11 +149,11 @@ Ruby application is running under apache with mod passenger.
 
 The `web-deploy` project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.
 
-```bash
+```text
 in ~/web $
-projectA/
-projectB/
-projectC/
+projecta.com/
+projectb.com/
+projectc.com/
    ...
 web-deploy/
   deploy.sh
@@ -162,11 +162,23 @@ web-deploy/
   mysql-cli.sh
   utils.sh
   /haproxy
+    Dockerfile
+    build.sh
+    haproxy.cfg
+    mycompany.pem
   /mysql
+    dumps/
+      load-dumps.sh
+      projecta.sql
+      projectb.sql
+      projectc.sql
+    Dockerfile
+    build.sh
+    init-db.sh
   /build
-    projectA.sh
-    projectB.sh
-    projectC.sh
+    projecta.com.sh
+    projectb.com.sh
+    projectc.com.sh
 ```
 
 Top level scripts include:
@@ -179,9 +191,9 @@ Top level scripts include:
 The `deploy.sh` script uses docker-machine to build and run the containers on the remote server.
 There are several modes it can be used it:
 - `./deploy.sh` - deploy (or update) all projects locally
-- `./deploy.sh local projectA` - deploy only projectA locally
-- `./deploy.sh production` - deploy only projectA on the remote server
-- `./deploy.sh production projectA` - deploy only projectA on the remote server
+- `./deploy.sh local projecta.com` - deploy only projecta.com locally
+- `./deploy.sh production` - deploy only projecta.com on the remote server
+- `./deploy.sh production projecta.com` - deploy only projecta.com on the remote server
 
 The script looks like this:
 
@@ -248,11 +260,11 @@ The build script looks like this:
 set -e
 
 SCRIPT_PATH=`dirname $0`
-APP_NAME=projectA
+APP_NAME=projecta
 CONTAINER_NAME=$APP_NAME-docker
 PORT=8091
 source $SCRIPT_PATH/../utils.sh
-SRC=$SCRIPT_PATH/../../projectA
+SRC=$SCRIPT_PATH/../../projecta.com
 
 # if we are running locally, the container will use sources from the host filesystem
 # (we create the volume pointing to /html)
@@ -274,7 +286,7 @@ docker_rm_app_image $APP_NAME
 # rebuild the image
 docker build -t $CONTAINER_NAME .
 # start the container
-docker run -d -p $PORT:80 -v /var/web/projectA/files:/var/www/html/data/upload --name $APP_NAME --link web-mysql:mysql --restart always $ENV_DOCKER_OPTS $CONTAINER_NAME
+docker run -d -p $PORT:80 -v /var/web/projecta.com/files:/var/www/html/data/upload --name $APP_NAME --link web-mysql:mysql --restart always $ENV_DOCKER_OPTS $CONTAINER_NAME
 # initially files belong to the root user of the host OS
 # make them available to containter's www-data user
 docker exec $APP_NAME sh -c 'chown -R www-data:www-data /var/www/html/files'
@@ -284,7 +296,7 @@ Few interesting things happen here:
 
 - This project will use port 8091 on the host machine (can be accessed as localhost:8091), this port also will be mentioned in the HAProxy config to redirect requests to this app based on the requested domain name
 - For local deployment the container will use source files from the host machine folder, so we can edit them directly without having to login to container, this is very convenient for local development
-- The web application files will be stored in the volume, which is available on the host machine at /var/web/projectA/files
+- The web application files will be stored in the volume, which is available on the host machine at /var/web/projecta.com/files
 - The problem with permissions to the shared volume is solved by running `chown` from within the container (apache runs as www-data and after creation the files folder will belong to root user)
 - This build script is used both for local and remote deployment, the remote part is handled by Docker Machine which allows to run docker commands against the remote host (this is handled in the `deploy.sh` script)
 
