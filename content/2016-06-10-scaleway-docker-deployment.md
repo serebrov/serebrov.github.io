@@ -41,7 +41,7 @@ docker-machine create --driver generic \
 
 Here I use the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
 
-Check the full setup script [here](files/scaleway-docker/init-remote.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
+Check the full setup script [here](files/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
 
 If something goes wrong during the setup, run `docker-machine rm scaleway`, fix the problem and run the setup again.
 
