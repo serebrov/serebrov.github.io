@@ -8,7 +8,7 @@
 # If something goes wrong during the setup, run
 # `docker-machine rm scaleway` and try again
 
-SSH_HOST=163.172.131.19
+SSH_HOST=111.111.111.11
 SSH_USER=root
 SSH_KEY=~/.ssh/id_rsa_scaleway
 
@@ -34,5 +34,5 @@ docker-machine create --driver generic \
  --generic-ip-address $SSH_HOST \
  --generic-ssh-user $SSH_USER \
  --generic-ssh-key $SSH_KEY \
- --engine-storage-driver overlay \
+# --engine-storage-driver overlay \
  scaleway

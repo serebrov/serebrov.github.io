@@ -39,6 +39,8 @@ docker-machine create --driver generic \
  scaleway
 ```
 
+To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).
+
 Here I use the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
 
 Check the full setup script [here](files/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
@@ -108,6 +110,8 @@ VOLUME /var/www/html/files
 This container is based on the official [php image](https://hub.docker.com/\_/php/).
 To make the php `mail` function work, I also setup `msmtp` and configure php to use it.
 The example of the msmtp configuration file is [here](files/scaleway-docker/msmtprc).
+
+On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch "Block SMTP" from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).
 
 Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:
 
