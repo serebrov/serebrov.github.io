@@ -1,5 +1,5 @@
 ---
-title: Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on Scaleway
+title: Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server
 date: 2016-06-10
 tags: docker, scaleway
 type: post
@@ -42,6 +42,7 @@ docker-machine create --driver generic \
 To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).
 
 Here I have used the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
+Note: Scaleway has the [Docker Machine plugin](https://github.com/scaleway/docker-machine-driver-scaleway), using it you can do even more and automatically launch the new instance during the setup.
 
 Check the full setup script [here](files/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
 

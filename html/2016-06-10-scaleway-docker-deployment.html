@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on Scaleway</title>
+    <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -36,7 +36,7 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on Scaleway</h1>
+              <h1>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</h1>
           </div>
       </div>
       <div class="row">
@@ -71,7 +71,8 @@ docker-machine create --driver generic <span class="se">\</span>
 
 </code></pre>
 <p>To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).</p>
-<p>Here I have used the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href="https://docs.docker.com/machine/drivers/">AWS, Digital Ocean, etc</a>.</p>
+<p>Here I have used the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href="https://docs.docker.com/machine/drivers/">AWS, Digital Ocean, etc</a>.
+Note: Scaleway has the <a href="https://github.com/scaleway/docker-machine-driver-scaleway">Docker Machine plugin</a>, using it you can do even more and automatically launch the new instance during the setup.</p>
 <p>Check the full setup script <a href="files/scaleway-docker/init-docker.sh">here</a>, on Scaleway I also had to create loopback devices because docker setup failed with <code>[graphdriver] prior storage driver \&quot;devicemapper\&quot; failed: loopback attach failed</code>.</p>
 <p>If something goes wrong during the setup, run <code>docker-machine rm scaleway</code>, fix the problem and run the setup again.</p>
 <h2 id="deployment-setup">Deployment setup</h2>
