@@ -44,8 +44,9 @@
               <p><a href="/html/2015-05-20-cloudwatch-setup.html">After using CloudWatch Logs for some time</a> I found that it is very inconvenient to have one stream per instance.
 The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.</p>
 <p>A more convenient alternative is to use one stream like <code>error_log</code> for all instances.
-<!-- more -->
-In this case we just set a staic string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
+<!-- more --></p>
+<p><strong>Update</strong>: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.</p>
+<p>In this case we just set a static string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
 <pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
       <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>

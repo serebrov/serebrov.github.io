@@ -10,7 +10,10 @@ The Logs UI is really complex to use - I need to remember instance names, open t
 
 A more convenient alternative is to use one stream like `error_log` for all instances.
 <!-- more -->
-In this case we just set a staic string for stream name instead of {instance_id}, like this (see `log_stream_name = error_log`):
+
+**Update**: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.
+
+In this case we just set a static string for stream name instead of {instance_id}, like this (see `log_stream_name = error_log`):
 
 ```yaml
 
