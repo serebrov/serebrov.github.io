@@ -13,7 +13,7 @@ A more convenient alternative is to use one stream like `error_log` for all inst
 
 **Update**: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.
 
-In this case we just set a static string for stream name instead of {instance_id}, like this (see `log_stream_name = error_log`):
+To use the single stream, we can just set a static string for stream name instead of {instance_id}, like this (see `log_stream_name = error_log`):
 
 ```yaml
 

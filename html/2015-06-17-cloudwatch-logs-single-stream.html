@@ -46,7 +46,7 @@ The Logs UI is really complex to use - I need to remember instance names, open t
 <p>A more convenient alternative is to use one stream like <code>error_log</code> for all instances.
 <!-- more --></p>
 <p><strong>Update</strong>: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.</p>
-<p>In this case we just set a static string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
+<p>To use the single stream, we can just set a static string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
 <pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
       <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>
