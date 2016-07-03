@@ -44,7 +44,7 @@ General git guidelines:
 
 I assume that you have the task description in some project management like [Redmine](http://www.redmine.org/) or [Trello](https://trello.com/).
 
-### 2) Check If Repository Is Clean
+### 2) Check If Working Copy Is Clean
 
 Check if there are no uncommited changes:
 
@@ -56,8 +56,7 @@ Check if there are no uncommited changes:
     nothing to commit, working directory clean
 ```
 
-Note: if there are uncommited changes, you can whether go on with following steps.
-In the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). The [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) command can be used to temporary save you changes into the special `stash` area and you can restore them later with `git stash pop`.
+Note: if there are uncommited changes, you can try to go on with following steps; in the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). An alternative is to use the [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) command to temporary save your changes into the special `stash` area, you can restore these changes later with `git stash pop`.
 
 ### 3) Switch to the Master Branch and Update the Code
 

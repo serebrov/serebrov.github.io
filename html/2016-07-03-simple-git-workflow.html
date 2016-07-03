@@ -74,7 +74,7 @@ Once done, the work from the branch is merged back to the master branch.</p>
 <h2 id="the-simple-git-workflow">The Simple Git Workflow</h2>
 <h3 id="1-select-a-task-to-work-on">1) Select a Task to Work on</h3>
 <p>I assume that you have the task description in some project management like <a href="http://www.redmine.org/">Redmine</a> or <a href="https://trello.com/">Trello</a>.</p>
-<h3 id="2-check-if-repository-is-clean">2) Check If Repository Is Clean</h3>
+<h3 id="2-check-if-working-copy-is-clean">2) Check If Working Copy Is Clean</h3>
 <p>Check if there are no uncommited changes:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git status
 
@@ -84,8 +84,7 @@ Once done, the work from the branch is merged back to the master branch.</p>
 </pre></div>
 
 </code></pre>
-<p>Note: if there are uncommited changes, you can whether go on with following steps.
-In the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). The <a href="https://git-scm.com/book/en/v1/Git-Tools-Stashing">git stash</a> command can be used to temporary save you changes into the special <code>stash</code> area and you can restore them later with <code>git stash pop</code>.</p>
+<p>Note: if there are uncommited changes, you can try to go on with following steps; in the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). An alternative is to use the <a href="https://git-scm.com/book/en/v1/Git-Tools-Stashing">git stash</a> command to temporary save your changes into the special <code>stash</code> area, you can restore these changes later with <code>git stash pop</code>.</p>
 <h3 id="3-switch-to-the-master-branch-and-update-the-code">3) Switch to the Master Branch and Update the Code</h3>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git checkout master
     <span class="nv">$ </span>git pull
