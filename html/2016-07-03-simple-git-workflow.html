@@ -53,6 +53,17 @@ Once done, the work from the branch is merged back to the master branch.</p>
 <li><code>staging</code> - branch to test changes before we update production, it is never modified directly, only periodically updated from the <code>master</code> branch</li>
 <li><code>production</code> - production state, it is never modified directly, only updated from the <code>staging</code> before we deploy new version to the production</li>
 </ul>
+<pre><code class="lang-text"><div class="highlight"><pre>    ... o ---- o ---- o --- o - ... ----------------------- o ---- production
+                                                           /
+    ... o ---- o ---- o --- o - ... ----------- o - ... - o ------ staging
+                                               /
+    ... -- o -------------- o --------------- o --- ... ---------- master
+           \               / \               /
+            o ---- o ---- o   o --- o ----- o
+            (task 1 branch)   (task 2 branch)
+</pre></div>
+
+</code></pre>
 <p>General git guidelines:</p>
 <ul>
 <li>Always write meaningful commit messages, never leave them empty</li>
@@ -61,17 +72,21 @@ Once done, the work from the branch is merged back to the master branch.</p>
 <li>Always check <code>git</code> command output to make sure there are no errors</li>
 </ul>
 <h2 id="the-simple-git-workflow">The Simple Git Workflow</h2>
-<p>1) Select a task to work on</p>
-<p>2) Check if repository is clean (there are no uncommited changes):</p>
+<h3 id="1-select-a-task-to-work-on">1) Select a Task to Work on</h3>
+<p>I assume that you have the task description in some project management like <a href="http://www.redmine.org/">Redmine</a> or <a href="https://trello.com/">Trello</a>.</p>
+<h3 id="2-check-if-repository-is-clean">2) Check If Repository Is Clean</h3>
+<p>Check if there are no uncommited changes:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git status
 
     On branch master
-    Your branch is up-to-date with <span class="s1">&#39;origin/master&#39;</span>.
+    Your branch is up-to-date with <span class="s1">&#39;origin/some_branch&#39;</span>.
     nothing to commit, working directory clean
 </pre></div>
 
 </code></pre>
-<p>3) Switch to the master branch and update code:</p>
+<p>Note: if there are uncommited changes, you can whether go on with following steps.
+In the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). The <a href="https://git-scm.com/book/en/v1/Git-Tools-Stashing">git stash</a> command can be used to temporary save you changes into the special <code>stash</code> area and you can restore them later with <code>git stash pop</code>.</p>
+<h3 id="3-switch-to-the-master-branch-and-update-the-code">3) Switch to the Master Branch and Update the Code</h3>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git checkout master
     <span class="nv">$ </span>git pull
 
@@ -89,22 +104,25 @@ Once done, the work from the branch is merged back to the master branch.</p>
 </code></pre>
 <p>Note: It is not necessary to do <code>git checkout master</code> if you are already on <code>master</code>, but if you are a beginner, it is better to stick to the defined steps to avoid mistakes.</p>
 <p>If there are no remote code changes, the output will look like this:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git pull                                                                         11:23
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git pull
     Already up-to-date.
 </pre></div>
 
 </code></pre>
-<p>4) Create the new branch for the new task</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git checkout -b my-task-description
+<h3 id="4-create-the-new-branch-for-the-new-task">4) Create the New Branch for the New Task</h3>
+<p>I prefer <code>XXXX-my-task-description</code> naming convention for branches, where <code>XXXX</code> is a task ID in the project management system and <code>my-task-description</code> is a short task definition.
+For example, <code>1234-user-login</code> (a task to add user login page) or <code>2345-fix-facebook-signup</code> (a task to fix issue with Facebook sign-up).</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git checkout -b XXXX-my-task-description
 </pre></div>
 
 </code></pre>
+<p>Note: it is safe to create the new branch, even if you already have some changes.</p>
 <p>Push the new branch to the server and track (-u) changes between local and remote branches:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git push -u origin HEAD
 </pre></div>
 
 </code></pre>
-<p>5) Work on the task:</p>
+<h3 id="5-work-on-the-task">5) Work on the Task</h3>
 <p>Do some changes, check the code state:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git status
 </pre></div>
@@ -116,7 +134,7 @@ Once done, the work from the branch is merged back to the master branch.</p>
 
 </code></pre><p>To add only specific files, use <code>git add file_name.ext</code> command.</p>
 <p>If there are some files you don&#39;t want to add under git control permanently, create or update the <a href="https://git-scm.com/docs/gitignore">.gitignore</a> file and put file names or file patterns to ignore into it.</p>
-<p>6) Commit your changes and push to the remote repository:</p>
+<h3 id="6-commit-your-changes-and-push-to-the-remote-repository">6) Commit Your Changes and Push to the Remote Repository</h3>
 <p>Check that changes are staged for commit:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git status
 
@@ -137,14 +155,16 @@ Once done, the work from the branch is merged back to the master branch.</p>
 
 </code></pre>
 <p>At the moment you added your changes to the local repository.</p>
-<p>Now push these changess to the remote repository:</p>
+<p>Now push these changes to the remote repository:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git push origin HEAD
 </pre></div>
 
 </code></pre>
-<p>7) Repeat steps 5-6 as your work on the task.</p>
-<h2 id="how-to-merge-finished-work-to-master-branch-with-github-com">How to Merge Finished Work to master branch with github.com</h2>
-<p>Similar technique can be used not only with github, but with other git servers too (for example, bitbucket).</p>
+<h3 id="7-repeat-steps-5-6-as-you-work-on-the-task">7) Repeat Steps 5-6 as You Work on the Task</h3>
+<p>Do as many commits and pushes as you need while working on the task.</p>
+<h2 id="how-to-merge-finished-work-to-master-branch-with-github-com">How to Merge Finished Work to Master Branch with github.com</h2>
+<p>When the task is done, we need to merge it back to <code>master</code> branch.
+This can be done using github <code>pull request</code> feature:</p>
 <ul>
 <li>Each feature is developed on the separate branch (as described above)</li>
 <li>Once branch is finished the developer creates pull request (in the github.com UI):<ul>
@@ -162,7 +182,8 @@ Once done, the work from the branch is merged back to the master branch.</p>
 </ul>
 </li>
 </ul>
-<h2 id="how-to-merge-finished-work-to-master-branch-manually">How to Merge Finished Work to master branch manually</h2>
+<p>Similar technique can be used not only with github, but with other git servers too (for example, bitbucket).</p>
+<h2 id="how-to-merge-finished-work-to-master-branch-manually">How to Merge Finished Work to Master Branch Manually</h2>
 <p>Once the work is finished on the branch, the change can be reviewed manually.</p>
 <p>1) Make sure the automatic tests suite has passed successfully on the branch, check that everything is commited and pushed:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git status
@@ -187,7 +208,7 @@ I recommend using <a href="http://kdiff3.sourceforge.net/">kdiff3</a> as a merge
 </pre></div>
 
 </code></pre>
-<h2 id="how-to-handle-staging-production-changes">How to Handle staging / production changes</h2>
+<h2 id="how-to-update-staging-production-branches">How to Update staging / production Branches</h2>
 <p>The <code>staging</code> branch is a code state which is a candidate for next production update.
 This branch is only updated from <code>master</code> branch:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre>   <span class="c"># checkout master and pull remote changes if any</span>
@@ -215,8 +236,8 @@ This branch is only updated from <code>master</code> branch:</p>
 </pre></div>
 
 </code></pre>
-<h2 id="alternative-git-scenarios">Alternative git scenarios</h2>
-<h3 id="work-on-the-branch-created-by-someone-else-">Work on the branch created by someone else.</h3>
+<h2 id="alternative-git-scenarios">Alternative git Scenarios</h2>
+<h3 id="work-on-the-branch-created-by-someone-else">Work on the Branch Created by Someone Else</h3>
 <p>Note: while it is possible for several developers to work on the same branch at the same time, but it is better to avoid this and create separate branch for each developer.</p>
 <p>So this is for the case when someone created the branch, but did not finish the work and passed the task to you.
 This also can be useful to review other developer&#39;s work locally.</p>
@@ -233,7 +254,7 @@ This also can be useful to review other developer&#39;s work locally.</p>
 </pre></div>
 
 </code></pre>
-<h3 id="merge-changes-from-another-branch">Merge changes from another branch</h3>
+<h3 id="merge-changes-from-another-branch">Merge Changes from Another Branch</h3>
 <p>Sometimes you may need to merge code from some other branch.</p>
 <p>For example to stay in sync with master branch or to get changes from some other branch which is not finished yet.</p>
 <p>Usually it is better to avoid such merges because this makes your current branch history confusing.

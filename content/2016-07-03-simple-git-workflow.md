@@ -19,6 +19,18 @@ Special branches are `master`, `staging` and `production`:
 * `staging` - branch to test changes before we update production, it is never modified directly, only periodically updated from the `master` branch
 * `production` - production state, it is never modified directly, only updated from the `staging` before we deploy new version to the production
 
+
+```text
+    ... o ---- o ---- o --- o - ... ----------------------- o ---- production
+                                                           /
+    ... o ---- o ---- o --- o - ... ----------- o - ... - o ------ staging
+                                               /
+    ... -- o -------------- o --------------- o --- ... ---------- master
+           \               / \               /
+            o ---- o ---- o   o --- o ----- o
+            (task 1 branch)   (task 2 branch)
+```
+
 General git guidelines:
 
 * Always write meaningful commit messages, never leave them empty
@@ -28,20 +40,26 @@ General git guidelines:
 
 ## The Simple Git Workflow
 
-1) Select a task to work on
+### 1) Select a Task to Work on
 
-2) Check if repository is clean (there are no uncommited changes):
+I assume that you have the task description in some project management like [Redmine](http://www.redmine.org/) or [Trello](https://trello.com/).
+
+### 2) Check If Repository Is Clean
+
+Check if there are no uncommited changes:
 
 ```bash
     $ git status
 
     On branch master
-    Your branch is up-to-date with 'origin/master'.
+    Your branch is up-to-date with 'origin/some_branch'.
     nothing to commit, working directory clean
 ```
 
-3) Switch to the master branch and update code:
+Note: if there are uncommited changes, you can whether go on with following steps.
+In the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). The [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) command can be used to temporary save you changes into the special `stash` area and you can restore them later with `git stash pop`.
 
+### 3) Switch to the Master Branch and Update the Code
 
 ```bash
     $ git checkout master
@@ -63,15 +81,20 @@ Note: It is not necessary to do `git checkout master` if you are already on `mas
 If there are no remote code changes, the output will look like this:
 
 ```bash
-    $ git pull                                                                         11:23
+    $ git pull
     Already up-to-date.
 ```
 
-4) Create the new branch for the new task
+### 4) Create the New Branch for the New Task
+
+I prefer `XXXX-my-task-description` naming convention for branches, where `XXXX` is a task ID in the project management system and `my-task-description` is a short task definition.
+For example, `1234-user-login` (a task to add user login page) or `2345-fix-facebook-signup` (a task to fix issue with Facebook sign-up).
 
 ```bash
-    $ git checkout -b my-task-description
+    $ git checkout -b XXXX-my-task-description
 ```
+
+Note: it is safe to create the new branch, even if you already have some changes.
 
 Push the new branch to the server and track (-u) changes between local and remote branches:
 
@@ -79,7 +102,7 @@ Push the new branch to the server and track (-u) changes between local and remot
     $ git push -u origin HEAD
 ```
 
-5) Work on the task:
+### 5) Work on the Task
 
 Do some changes, check the code state:
 
@@ -97,8 +120,7 @@ To add only specific files, use `git add file_name.ext` command.
 
 If there are some files you don't want to add under git control permanently, create or update the [.gitignore](https://git-scm.com/docs/gitignore) file and put file names or file patterns to ignore into it.
 
-
-6) Commit your changes and push to the remote repository:
+### 6) Commit Your Changes and Push to the Remote Repository
 
 Check that changes are staged for commit:
 
@@ -123,17 +145,20 @@ Commit the changes:
 
 At the moment you added your changes to the local repository.
 
-Now push these changess to the remote repository:
+Now push these changes to the remote repository:
 
 ```bash
     $ git push origin HEAD
 ```
 
-7) Repeat steps 5-6 as your work on the task.
+### 7) Repeat Steps 5-6 as You Work on the Task
 
-## How to Merge Finished Work to master branch with github.com
+Do as many commits and pushes as you need while working on the task.
 
-Similar technique can be used not only with github, but with other git servers too (for example, bitbucket).
+## How to Merge Finished Work to Master Branch with github.com
+
+When the task is done, we need to merge it back to `master` branch.
+This can be done using github `pull request` feature:
 
 * Each feature is developed on the separate branch (as described above)
 * Once branch is finished the developer creates pull request (in the github.com UI):
@@ -147,7 +172,9 @@ Similar technique can be used not only with github, but with other git servers t
  * Click `Merge pull requests` button and confirm merge
  * Note: github will not allow to merge the branch if there are conflicts. In this case you need to merge changes from master branch to you current branch, fix the conflicts and then push your branch to the server again.
 
-## How to Merge Finished Work to master branch manually
+Similar technique can be used not only with github, but with other git servers too (for example, bitbucket).
+
+## How to Merge Finished Work to Master Branch Manually
 
 Once the work is finished on the branch, the change can be reviewed manually.
 
@@ -179,7 +206,7 @@ I recommend using [kdiff3](http://kdiff3.sourceforge.net/) as a merge tool. Inst
     $ git push origin head
 ```
 
-## How to Handle staging / production changes
+## How to Update staging / production Branches
 
 The `staging` branch is a code state which is a candidate for next production update.
 This branch is only updated from `master` branch:
@@ -210,9 +237,9 @@ Once testing on the `staging` branch is done, it can be merged to the `productio
    $ git push origin HEAD
 ```
 
-## Alternative git scenarios
+## Alternative git Scenarios
 
-### Work on the branch created by someone else.
+### Work on the Branch Created by Someone Else
 
 Note: while it is possible for several developers to work on the same branch at the same time, but it is better to avoid this and create separate branch for each developer.
 
@@ -232,7 +259,7 @@ This also can be useful to review other developer's work locally.
     # work on the branch as described in the main scenario
 ```
 
-### Merge changes from another branch
+### Merge Changes from Another Branch
 
 Sometimes you may need to merge code from some other branch.
 
