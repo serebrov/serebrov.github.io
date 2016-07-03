@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2016-07-03-simple-git-workflow.html</loc>
+  <lastmod>2016-07-03T03:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html</loc>
   <lastmod>2016-06-10T03:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
