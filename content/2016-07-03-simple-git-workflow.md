@@ -31,6 +31,9 @@ Special branches are `master`, `staging` and `production`:
             (task 1 branch)   (task 2 branch)
 ```
 
+Task branches should be short-living, each task should take a few hours or, at maximum, a few days to complete.
+So usually should be not necessary to merge updates back from master to the task branch.
+
 General git guidelines:
 
 * Always write meaningful commit messages, never leave them empty
