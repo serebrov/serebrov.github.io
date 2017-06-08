@@ -380,7 +380,6 @@ Resources :
     Properties :
       AlarmDescription: "Application generated an error in error_log"
       MetricName: CWLAllErrorRecords
-      Name: {"Fn::Join":["-", ["ElasticBeanstalk-AWSEBCWLAllErrorsCountAlarm", {"Ref":"AWSEBEnvironmentName"}]]}
       Namespace: {"Fn::Join":["/", ["ElasticBeanstalk", {"Ref":"AWSEBEnvironmentName"}]]}
       Statistic: Sum
       Period: 60
