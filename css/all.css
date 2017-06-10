@@ -1340,8 +1340,8 @@ samp {
 code {
   padding: 2px 4px;
   font-size: 90%;
-  color: #19177C;
-  background-color: #f5f5f5;
+  color: #c7254e;
+  background-color: #f9f2f4;
   border-radius: 0;
 }
 kbd {
@@ -6712,6 +6712,12 @@ label {
 }
 .popup .download {
   float: left;
+}
+
+.index-row .title {
+  font-size: 19px;
+  box-shadow: 0px 0.2px 0px 0px black;
+  color: #3c9a5f;
 }
 .hll { background-color: #ffffcc }
 .c { color: #408080; font-style: italic } /* Comment */
