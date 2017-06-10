@@ -84,3 +84,12 @@ label {
   box-shadow: 0px 0.2px 0px 0px black;
   color: #3c9a5f;
 }
+.index-row h1 {
+  font-size: 20px;
+}
+.index-row h2 {
+  font-size: 18px;
+}
+.index-row h3 {
+  font-size: 16px;
+}
