@@ -45,7 +45,7 @@ $(DEST)/fonts/%: $(BS)/fonts/% | $(DEST)/fonts
 .PHONY: clean serve
 
 clean:
-	rm -rf $(DEST)/html
+	rm $(DEST)/html/*.html
 	rm -rf $(DEST)/css
 	rm -rf $(DEST)/fonts
 
