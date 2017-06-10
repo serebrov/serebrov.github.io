@@ -101,7 +101,8 @@ services:
 
 It will install packages I need (including docker) and run the `deploy.sh` script which does the Drone installation:
 
-```shell
+```sh
+
 #!/usr/bin/env bash
 set -e
 
@@ -157,7 +158,8 @@ added init script
 
 So I added a custom upstart script to fix this:
 
-```shell
+```sh
+
 #!upstart
 description "Droned upstart job"
 

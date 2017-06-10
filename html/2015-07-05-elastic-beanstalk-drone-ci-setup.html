@@ -125,7 +125,43 @@ This script looks like this:</p>
 
 </code></pre>
 <p>It will install packages I need (including docker) and run the <code>deploy.sh</code> script which does the Drone installation:</p>
-<pre><code class="lang-shell">undefined
+<pre><code class="lang-sh"><div class="highlight"><pre><span class="c">#!/usr/bin/env bash</span>
+<span class="nb">set</span> -e
+
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="sb">`</span>dirname <span class="nv">$0</span><span class="sb">`</span>
+
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$APP_ENV</span> !<span class="o">=</span> <span class="s2">&quot;staging&quot;</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">echo</span> <span class="s1">&#39;Not a staging env, exit without installation&#39;</span>
+  <span class="nb">exit </span>0
+<span class="k">fi</span>
+copy_ext <span class="nv">$SCRIPT_PATH</span>/files/droned.conf /etc/init/droned.conf <span class="m">0755</span> root root
+<span class="nb">echo</span> <span class="s2">&quot;Start drone check/install&quot;</span>
+<span class="k">if</span> which /usr/local/bin/drone<span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Found drone, skip install&quot;</span>
+    copy_ext <span class="nv">$SCRIPT_PATH</span>/files/drone.toml /etc/drone/drone.toml <span class="m">0755</span> root root
+    <span class="k">if</span> <span class="o">(</span>stop droned<span class="o">)</span><span class="p">;</span> <span class="k">then</span>
+      <span class="nb">echo</span> <span class="s1">&#39;Stopped drone&#39;</span>
+    <span class="k">fi</span>
+    start droned
+<span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Installing drone&quot;</span>
+    wget downloads.drone.io/master/drone.rpm
+    yum -y -q install drone.rpm
+    <span class="c"># Create a user and group &#39;droned&#39;, -M == no home dir</span>
+    <span class="c"># Note: better to use separate user, but there was a permission error:</span>
+    <span class="c">#   Post http:///var/run/docker.sock/v1.9/build?q=1&amp;rm=1&amp;t=drone-4dcf1ea3fb: dial unix /var/run/docker.sock: permission denied</span>
+    <span class="c"># so for now use sudo, would be good to use droned user (see upstart script)</span>
+    <span class="c"># probably this should help: https://docs.docker.com/installation/ubuntulinux/#create-a-docker-group</span>
+    adduser -M --user-group droned
+    passwd -l droned
+    chown -R droned:droned /var/lib/drone
+    <span class="c"># # to prevent &#39;sudo: sorry, you must have a tty to run sudo&#39;</span>
+    sed -ie <span class="s1">&#39;s/Defaults.*requiretty.*/# Defaults requiretyy/gI&#39;</span> /etc/sudoers
+    copy_ext <span class="nv">$SCRIPT_PATH</span>/files/drone.toml /etc/drone/drone.toml <span class="m">0755</span> root root
+    start droned
+<span class="k">fi</span>
+</pre></div>
+
 </code></pre>
 <p>This script uses <code>utils.sh</code>, you can find it <a href="/html/2015-04-02-elastic-beanstalk-python.html">here</a>.</p>
 <p>There are two more configuration files used in the setup process.</p>
@@ -139,7 +175,63 @@ added init script
 
 </code></pre>
 <p>So I added a custom upstart script to fix this:</p>
-<pre><code class="lang-shell">undefined
+<pre><code class="lang-sh"><div class="highlight"><pre><span class="c">#!upstart</span>
+description <span class="s2">&quot;Droned upstart job&quot;</span>
+
+start on startup
+stop on shutdown
+
+script
+    <span class="c"># custom http server settings</span>
+    <span class="c"># export DRONE_SERVER_PORT=&quot;&quot;</span>
+    <span class="c"># export DRONE_SERVER_SSL_KEY=&quot;&quot;</span>
+    <span class="c"># export DRONE_SERVER_SSL_CERT=&quot;&quot;</span>
+
+    <span class="c"># session settings</span>
+    <span class="c"># export DRONE_SESSION_SECRET=&quot;&quot;</span>
+    <span class="c"># export DRONE_SESSION_EXPIRES=&quot;&quot;</span>
+
+    <span class="c"># custom database settings</span>
+    <span class="c"># export DRONE_DATABASE_DRIVER=&quot;&quot;</span>
+    <span class="c"># export DRONE_DATABASE_DATASOURCE=&quot;&quot;</span>
+
+    <span class="c"># github configuration</span>
+    <span class="c"># export DRONE_GITHUB_CLIENT=&quot;&quot;</span>
+    <span class="c"># export DRONE_GITHUB_SECRET=&quot;&quot;</span>
+    <span class="c"># export DRONE_GITHUB_OPEN=false</span>
+
+    <span class="c"># email configuration</span>
+    <span class="c"># export DRONE_SMTP_HOST=&quot;&quot;</span>
+    <span class="c"># export DRONE_SMTP_PORT=&quot;&quot;</span>
+    <span class="c"># export DRONE_SMTP_FROM=&quot;&quot;</span>
+    <span class="c"># export DRONE_SMTP_USER=&quot;&quot;</span>
+    <span class="c"># export DRONE_SMTP_PASS=&quot;&quot;</span>
+
+    <span class="c"># worker nodes</span>
+    <span class="c"># these are optional. If not specified Drone will add</span>
+    <span class="c"># two worker nodes that connect to $DOCKER_HOST</span>
+    <span class="c"># export DRONE_WORKER_NODES=&quot;tcp://0.0.0.0:2375,tcp://0.0.0.0:2375&quot;</span>
+
+    <span class="nb">echo</span> <span class="nv">$$</span> &gt; /var/run/droned.pid
+    <span class="c"># exec sudo -u droned \</span>
+    <span class="c">#  DRONE_SERVER_PORT=$DRONE_SERVER_PORT \</span>
+    <span class="c">#  DRONE_GIHUB_CLIENT=$DRONE_GIHUB_CLIENT \</span>
+    <span class="c">#  /usr/local/bin/droned &gt;&gt; /var/log/droned.log 2&gt;&amp;1</span>
+    <span class="c"># exec sudo -u droned \</span>
+    <span class="nb">exec </span>sudo <span class="se">\</span>
+     /usr/local/bin/droned --config<span class="o">=</span>/etc/drone/drone.toml &gt;&gt; /var/log/droned.log 2&gt;<span class="p">&amp;</span>1
+end script
+
+pre-start script
+    <span class="nb">echo</span> <span class="s2">&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting&quot;</span> &gt;&gt; /var/log/droned.log
+end script
+
+pre-stop script
+    rm /var/run/droned.pid
+    <span class="nb">echo</span> <span class="s2">&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping&quot;</span> &gt;&gt; /var/log/droned.log
+end script
+</pre></div>
+
 </code></pre>
 <p>Drone parameters can be changed via environment variables in the upstart script or you can attach these environment variables to the instance in the Elastic Beanstalk configuration (in the AWS UI).
 Or you can use a special <code>drone.toml</code> configuration file:</p>
