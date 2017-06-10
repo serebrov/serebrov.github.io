@@ -16,7 +16,7 @@ To be able to load a template from a file we need to put shared templates (used 
 
 Render on the server (this code will be inside of a parent view which uses 'template.ejs' as partial):
 
-```html
+```text
     <div class="dataItems">
     <% for (var i=0; i < dataItems.length; i++) { %>
         <%- partial('../public/tpl/template', {data: dataItems[i]}) %>
@@ -50,7 +50,9 @@ Render on the client (you need to include client version of ejs.js into the page
 ```
 
 Here the 'getTemplate' function will load a template from the file on the server and return its contents. To reduce server load it could be enhanced to cache already loaded templates.
-PREPARE A TEMPLATE ON THE SERVER AND USE IT ON THE CLIENT
+
+Prepare a Template on the Server and Use it on the Client
+--------------------------------------------
 With this method we do not need to put the template into the public folder. Assume we have our template in `views/_template.ejs`. Before rendering the view we put this template into the variable:
 
 ```js
@@ -58,14 +60,14 @@ With this method we do not need to put the template into the public folder. Assu
         template: require('fs').readFileSync('./views/_template.ejs', 'utf-8')
     };
     res.render('myview', {
-        …,
+        // …,
         templates: templates
     });
 ```
 
 The server-side rendering will be usual use of partial. Another thing we need to do inside the view is to convert 'templates' view variable into client-side javascript variable.
 
-```html
+```text
     <div class="dataItems">
     <% for (var i=0; i < dataItems.length; i++) { %>
         <%- partial('_template', {data: dataItems[i]}) %>

@@ -47,11 +47,11 @@
 <h2 id="dynamically-get-a-template-from-the-server-and-render-it">Dynamically get a template from the server and render it</h2>
 <p>To be able to load a template from a file we need to put shared templates (used both on the sever and the client) under the &quot;public&quot; folder. Assume we have &quot;public/tpl/template.ejs&quot;.</p>
 <p>Render on the server (this code will be inside of a parent view which uses &#39;template.ejs&#39; as partial):</p>
-<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;dataItems&quot;</span><span class="nt">&gt;</span>
-    <span class="err">&lt;</span>% for (var i=0; i <span class="nt">&lt; dataItems.length</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span> <span class="err">{</span> <span class="err">%</span><span class="nt">&gt;</span>
-        <span class="err">&lt;</span>%- partial(&#39;../public/tpl/template&#39;, {data: dataItems[i]}) %&gt;
-    <span class="err">&lt;</span>% } %&gt;
-    <span class="nt">&lt;/div&gt;</span>
+<pre><code class="lang-text"><div class="highlight"><pre>    &lt;div class=&quot;dataItems&quot;&gt;
+    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
+        &lt;%- partial(&#39;../public/tpl/template&#39;, {data: dataItems[i]}) %&gt;
+    &lt;% } %&gt;
+    &lt;/div&gt;
 </pre></div>
 
 </code></pre>
@@ -79,32 +79,32 @@
 </pre></div>
 
 </code></pre>
-<p>Here the &#39;getTemplate&#39; function will load a template from the file on the server and return its contents. To reduce server load it could be enhanced to cache already loaded templates.
-PREPARE A TEMPLATE ON THE SERVER AND USE IT ON THE CLIENT
-With this method we do not need to put the template into the public folder. Assume we have our template in <code>views/_template.ejs</code>. Before rendering the view we put this template into the variable:</p>
+<p>Here the &#39;getTemplate&#39; function will load a template from the file on the server and return its contents. To reduce server load it could be enhanced to cache already loaded templates.</p>
+<h2 id="prepare-a-template-on-the-server-and-use-it-on-the-client">Prepare a Template on the Server and Use it on the Client</h2>
+<p>With this method we do not need to put the template into the public folder. Assume we have our template in <code>views/_template.ejs</code>. Before rendering the view we put this template into the variable:</p>
 <pre><code class="lang-js"><div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">templates</span> <span class="o">=</span> <span class="p">{</span>
         <span class="nx">template</span><span class="o">:</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">).</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;./views/_template.ejs&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
     <span class="p">};</span>
     <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;myview&#39;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="err">…</span><span class="p">,</span>
+        <span class="c1">// …,</span>
         <span class="nx">templates</span><span class="o">:</span> <span class="nx">templates</span>
     <span class="p">});</span>
 </pre></div>
 
 </code></pre>
 <p>The server-side rendering will be usual use of partial. Another thing we need to do inside the view is to convert &#39;templates&#39; view variable into client-side javascript variable.</p>
-<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;dataItems&quot;</span><span class="nt">&gt;</span>
-    <span class="err">&lt;</span>% for (var i=0; i <span class="nt">&lt; dataItems.length</span><span class="err">;</span> <span class="na">i</span><span class="err">++)</span> <span class="err">{</span> <span class="err">%</span><span class="nt">&gt;</span>
-        <span class="err">&lt;</span>%- partial(&#39;_template&#39;, {data: dataItems[i]}) %&gt;
-    <span class="err">&lt;</span>% } %&gt;
-    <span class="nt">&lt;/div&gt;</span>
+<pre><code class="lang-text"><div class="highlight"><pre>    &lt;div class=&quot;dataItems&quot;&gt;
+    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
+        &lt;%- partial(&#39;_template&#39;, {data: dataItems[i]}) %&gt;
+    &lt;% } %&gt;
+    &lt;/div&gt;
 
-    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
-        <span class="nx">jQuery</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-        <span class="c1">//save templates to variable</span>
-        <span class="nb">window</span><span class="p">.</span><span class="nx">templates</span> <span class="o">=</span> <span class="o">&lt;%-</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">templates</span><span class="p">)</span><span class="o">%&gt;</span><span class="p">;</span>
-        <span class="p">});</span>
-    <span class="nt">&lt;/script&gt;</span>
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        jQuery(document).ready(function(){
+        //save templates to variable
+        window.templates = &lt;%-JSON.stringify(templates)%&gt;;
+        });
+    &lt;/script&gt;
 </pre></div>
 
 </code></pre>
