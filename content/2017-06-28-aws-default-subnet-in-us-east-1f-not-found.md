@@ -1,6 +1,6 @@
 ---
 title: AWS error - Default subnet in us-east-1f not found
-date: 2016-07-03
+date: 2017-06-29
 tags: aws
 type: note
 ---
@@ -22,7 +22,7 @@ And the similar one when trying to create the new environment:
 ```text
 Creating load balancer failed Reason: Default subnet in us-east-1f not found
 Created CloudWatch alarm named: awseb-e-tet63me2mx-stack-AWSEBCWLAllErrorsCountAlarm-3XCPMJ1ZGJ18
-Stack named 'awseb-e-tet63me2mx-stack' aborted operation. 
+Stack named 'awseb-e-tet63me2mx-stack' aborted operation.
 Current state: 'CREATE_FAILED'
 Reason: The following resource(s) failed to create: [AWSEBLoadBalancer].
 ```
