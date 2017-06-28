@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>git - find all branches where file was changed</title>
+    <title>AWS error - Default subnet in us-east-1f not found</title>
 
     <!-- Bootstrap -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -36,28 +36,48 @@
       </div>
       <div class="row">
           <div class="col-md-12">
-              <h1>git - find all branches where file was changed</h1>
+              <h1>AWS error - Default subnet in us-east-1f not found</h1>
           </div>
       </div>
       <div class="row">
           <div class="col-md-12">
-              <p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
-<p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git log --all --format<span class="o">=</span>%H FILENAME <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>f<span class="p">;</span> <span class="k">do</span> git branch --contains <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
+              <p>I suddenly started getting the <code>Default subnet in us-east-1f not found</code> error during the ElasticBeanstalk environment update.
+<!-- more --></p>
+<pre><code class="lang-text"><div class="highlight"><pre>Failed to deploy application.
+Updating load balancer named: awseb-e-t-AWSEBLoa-XXXXXXXXXXXXX failed Reason: Default subnet not found in us-east-1f
+Service:AmazonCloudFormation, Message:Stack named &#39;awseb-e-xxxxxxxxxx-stack&#39; aborted operation.
+Current state: &#39;UPDATE_ROLLBACK_IN_PROGRESS&#39;
+Reason: The following resource(s) failed to create: [AWSEBUpdateWaitConditionHandleralanC].
+The following resource(s) failed to update: [AWSEBLoadBalancer].
 </pre></div>
 
 </code></pre>
-<p><!-- more -->
-Manually inspect:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    gitk --all --date-order -- FILENAME
+<p>And the similar one when trying to create the new environment:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>Creating load balancer failed Reason: Default subnet in us-east-1f not found
+Created CloudWatch alarm named: awseb-e-tet63me2mx-stack-AWSEBCWLAllErrorsCountAlarm-3XCPMJ1ZGJ18
+Stack named &#39;awseb-e-tet63me2mx-stack&#39; aborted operation. 
+Current state: &#39;CREATE_FAILED&#39;
+Reason: The following resource(s) failed to create: [AWSEBLoadBalancer].
 </pre></div>
 
 </code></pre>
-<p>Find all changes to FILENAME not merged to master:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git <span class="k">for</span>-each-ref --format<span class="o">=</span><span class="s2">&quot;%(refname:short)&quot;</span> refs/heads <span class="p">|</span> grep -v master <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>br<span class="p">;</span> <span class="k">do</span> git cherry master <span class="nv">$br</span> <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>x h<span class="p">;</span> <span class="k">do</span> <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;`git log -n 1 --format=%H $h -- FILENAME`&quot;</span> <span class="o">=</span> <span class="s2">&quot;$h&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span> <span class="nb">echo</span> <span class="nv">$br</span><span class="p">;</span> <span class="k">fi</span><span class="p">;</span> <span class="k">done</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
-</pre></div>
-
-</code></pre>
+<p>The reason seems to be that new <code>us-east-1f</code> availablity zone was added, but the subnet for it wasn&#39;t configured (not sure why and if it supposed to be configured automatically).</p>
+<p>The solution is to create the subnet manually:</p>
+<ul>
+<li>Open VPC - Subnets</li>
+<li>Click &quot;Create Subnet&quot;</li>
+<li>Select the &quot;Availability Zone&quot; - us-east-1f</li>
+<li>It is neccessary to also specify the &quot;IPv4 CIDR block&quot; - in my case I already had 5 subnets with IP blocks:<ul>
+<li>172.31.0.0/20</li>
+<li>172.31.16.0/20</li>
+<li>172.31.48.0/20</li>
+<li>172.31.32.0/20</li>
+<li>172.31.64.0/20</li>
+</ul>
+</li>
+<li>I specified the next block - 172.31.80.0/20</li>
+</ul>
+<p>ElasticBeanstalk updates started working after that.</p>
 
           </div>
       </div>

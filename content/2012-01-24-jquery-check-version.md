@@ -13,6 +13,7 @@ To check whether jQuery is loaded to the page and verify minimum version:
         throw('jQuery version 1.3.1 or above is required');
     }
 <!-- more -->
+
 Here a regular expression determines a required jQuery version -
 
     /[X-9]\.[Y-9].[Z-9]/
