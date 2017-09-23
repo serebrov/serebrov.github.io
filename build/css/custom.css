@@ -5,6 +5,13 @@ pre {
     border: none;
     line-height: 0;
 }
+code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #333;
+    background-color: #f5f5f5;
+    border-radius: 0;
+}
 code > div.highlight > pre {
     display: block;
     padding: 9.5px;
