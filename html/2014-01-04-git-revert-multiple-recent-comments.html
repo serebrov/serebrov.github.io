@@ -49,8 +49,16 @@
 <p>Where G1-G3 are &#39;good&#39; commits and B1-B3 are &#39;bad&#39; commits and we
 want to revert them.
 <!-- more --></p>
-<p>If changes are not pushed to the server yet then the easy way is
-to reset the state to previous commit with <code>reset</code>:</p>
+<p><a href="files/git-revert/init.sh">Here is the shell script</a> to create the
+revision history like above, you can use it to try and see the effect of different
+commands.</p>
+<h2 id="git-reset">git reset</h2>
+<p>The first method is a simple way to throw away few recent commits,
+it re-writes the commit history, so only use it when your changes
+are not pushed to the server yet (or when you are 100% sure about what
+you are doing).</p>
+<p>The <code>git reset</code> command can be used this way (the <code>--hard</code> flag will
+also clear any pending changes which are not commited yet):</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git reset --hard HEAD~3
 </pre></div>
 
@@ -65,8 +73,20 @@ This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
 </pre></div>
 
 </code></pre>
-<p>But if changes are pushed already then it is better to use <code>revert</code>.
-And here is how to do this for multiple commits:</p>
+<h2 id="git-revert">git revert</h2>
+<p>If your changes are pushed to the remote repository or you want in general to aviod
+changing the commit history, then it is better to use <code>revert</code>.</p>
+<p>The <code>revert</code> command takes SHA1 of one or several commits and
+generates the new change to reverse the effect of these commits.</p>
+<blockquote>
+<p>Note for Mercurial users: in Mercurial, the <code>revert</code> command works differently -
+it takes the revision identifier and reverts the state of the repository to that
+revision. So we can ask Mercurial to <code>revert current state to the state of the revision G3</code>.
+In git, the <code>revert</code> takes one or multiple revision identifiers and reverts
+the effect of the specified revisions. When we are talking to git, we ask it to
+<code>revert the effect of revisions B3, B2, B1</code>.</p>
+</blockquote>
+<p>Here is how we can use <code>git revert</code>:</p>
 <pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD~2^..HEAD
 </pre></div>
 
@@ -100,12 +120,42 @@ Run git diff to check this (output should be empty):</p>
 </pre></div>
 
 </code></pre>
-<p>In this case there is no need to specify HEAD~3 since it is a good commit we do not want to revert.</p>
+<p>In this case there is no need to specify HEAD~3 since it is a good commit we do not want to revert.
+This is very useful if we want to revert some specific commits, for example, revert <code>B3</code> and <code>B1</code>, but keep <code>B2</code>:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git revert --no-commit HEAD HEAD~2
+</pre></div>
+
+</code></pre>
+<h2 id="revert-to-the-specific-revision">Revert to the specific revision</h2>
+<p>The <code>git revert</code> command reverts a range of specified revisions, but sometimes we just
+want to restore the state of some specific revision instead of reverting commits one-by-one.
+This is also how <code>hg revert</code> works in Mercurial.</p>
+<p>This is especially useful if we want to revert past merge point, where it can be quite
+difficult to use <code>git revert</code> because we will also need to specify which parent to
+follow at merge point (you&#39;ll see a <code>Commit XXX is a merge but no -m option was given.</code> message).</p>
+<h3 id="revert-to-the-specific-revision-using-git-reset">Revert to the specific revision using git reset</h3>
+<p>The solution comes from the <a href="https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095">Revert to a commit by a SHA hash in Git?</a> question.</p>
+<p>Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
+The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p>
+<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="o">--</span><span class="nx">hard</span> <span class="mi">0682</span><span class="nx">c06</span>  <span class="err">#</span> <span class="nx">Use</span> <span class="nx">the</span> <span class="nx">SHA1</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">revision</span> <span class="nx">you</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">revert</span> <span class="nx">to</span>
+<span class="nx">HEAD</span> <span class="nx">is</span> <span class="nx">now</span> <span class="nx">at</span> <span class="mi">0682</span><span class="nx">c06</span> <span class="nx">G3</span>
+<span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="o">--</span><span class="nx">soft</span> <span class="nx">HEAD</span><span class="err">@</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>
+<span class="nx">$</span> <span class="nx">git</span> <span class="nx">commit</span> <span class="o">-</span><span class="nx">m</span> <span class="s2">&quot;Reverting to the state of the project at 0682c06&quot;</span>
+</pre></div>
+
+</code></pre><h3 id="revert-to-the-specific-revision-using-git-read-tree">Revert to the specific revision using git read-tree</h3>
+<p>This solution comes from <a href="https://stackoverflow.com/questions/30572775/how-to-do-hg-revert-all-with-git">How to do hg revert --all with git?</a> question:</p>
+<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">read</span><span class="o">-</span><span class="nx">tree</span> <span class="o">-</span><span class="nx">um</span> <span class="err">@</span> <span class="mi">0682</span><span class="nx">c06</span>  <span class="err">#</span> <span class="nx">Use</span> <span class="nx">the</span> <span class="nx">SHA1</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">revision</span> <span class="nx">you</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">revert</span> <span class="nx">to</span>
+</pre></div>
+
+</code></pre><p>The <code>-m</code> option instructs <code>read-tree</code> to merge the specified state and <code>-u</code> will update work tree with the results of the merge.</p>
 <h1 id="links">Links</h1>
 <p><a href="http://stackoverflow.com/questions/1463340/revert-multiple-git-commits">Stackoverflow: Revert multiple git commits</a></p>
 <p><a href="http://stackoverflow.com/questions/4991594/revert-a-range-of-commits-in-git">Stackoverflow: Revert a range of commits in git</a></p>
 <p><a href="http://stackoverflow.com/questions/7251477/git-diff-whats-the-difference-between-having-and-no-dots">Stackoverflow: Git diff .. ? What&#39;s the difference between having .. and no dots</a></p>
 <p><a href="http://stackoverflow.com/questions/2221658/whats-the-difference-between-head-and-head-in-git">What&#39;s the difference between HEAD^ and HEAD~ in Git?</a></p>
+<p><a href="https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095">Stackoverflow: Revert to a commit by a SHA hash in Git?</a></p>
+<p><a href="https://stackoverflow.com/questions/30572775/how-to-do-hg-revert-all-with-git">How to do hg revert --all with git?</a></p>
 
           </div>
       </div>
