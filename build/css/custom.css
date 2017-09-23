@@ -25,6 +25,9 @@ code > div.highlight > pre {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+blockquote {
+    font-size: 15px;
+}
 .more {
     margin: 0 0 20px;
     border-bottom: 1px solid #ccc;
