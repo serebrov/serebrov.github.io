@@ -137,18 +137,20 @@ follow at merge point (you&#39;ll see a <code>Commit XXX is a merge but no -m op
 <p>The solution comes from the <a href="https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095">Revert to a commit by a SHA hash in Git?</a> question.</p>
 <p>Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
 The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p>
-<pre><code><div class="highlight"><pre><span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="o">--</span><span class="nx">hard</span> <span class="mi">0682</span><span class="nx">c06</span>  <span class="err">#</span> <span class="nx">Use</span> <span class="nx">the</span> <span class="nx">SHA1</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">revision</span> <span class="nx">you</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">revert</span> <span class="nx">to</span>
-<span class="nx">HEAD</span> <span class="nx">is</span> <span class="nx">now</span> <span class="nx">at</span> <span class="mi">0682</span><span class="nx">c06</span> <span class="nx">G3</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">reset</span> <span class="o">--</span><span class="nx">soft</span> <span class="nx">HEAD</span><span class="err">@</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>
-<span class="nx">$</span> <span class="nx">git</span> <span class="nx">commit</span> <span class="o">-</span><span class="nx">m</span> <span class="s2">&quot;Reverting to the state of the project at 0682c06&quot;</span>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">$ </span>git reset --hard 0682c06  <span class="c"># Use the SHA1 of the revision you want to revert to</span>
+HEAD is now at 0682c06 G3
+<span class="nv">$ </span>git reset --soft HEAD@<span class="o">{</span>1<span class="o">}</span>
+<span class="nv">$ </span>git commit -m <span class="s2">&quot;Reverting to the state of the project at 0682c06&quot;</span>
 </pre></div>
 
-</code></pre><h3 id="revert-to-the-specific-revision-using-git-read-tree">Revert to the specific revision using git read-tree</h3>
+</code></pre>
+<h3 id="revert-to-the-specific-revision-using-git-read-tree">Revert to the specific revision using git read-tree</h3>
 <p>This solution comes from <a href="https://stackoverflow.com/questions/30572775/how-to-do-hg-revert-all-with-git">How to do hg revert --all with git?</a> question:</p>
-<pre><code><div class="highlight"><pre><span class="nx">git</span> <span class="nx">read</span><span class="o">-</span><span class="nx">tree</span> <span class="o">-</span><span class="nx">um</span> <span class="err">@</span> <span class="mi">0682</span><span class="nx">c06</span>  <span class="err">#</span> <span class="nx">Use</span> <span class="nx">the</span> <span class="nx">SHA1</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">revision</span> <span class="nx">you</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">revert</span> <span class="nx">to</span>
+<pre><code class="lang-bash"><div class="highlight"><pre>git <span class="nb">read</span>-tree -um @ 0682c06  <span class="c"># Use the SHA1 of the revision you want to revert to</span>
 </pre></div>
 
-</code></pre><p>The <code>-m</code> option instructs <code>read-tree</code> to merge the specified state and <code>-u</code> will update work tree with the results of the merge.</p>
+</code></pre>
+<p>The <code>-m</code> option instructs <code>read-tree</code> to merge the specified state and <code>-u</code> will update work tree with the results of the merge.</p>
 <h1 id="links">Links</h1>
 <p><a href="http://stackoverflow.com/questions/1463340/revert-multiple-git-commits">Stackoverflow: Revert multiple git commits</a></p>
 <p><a href="http://stackoverflow.com/questions/4991594/revert-a-range-of-commits-in-git">Stackoverflow: Revert a range of commits in git</a></p>
