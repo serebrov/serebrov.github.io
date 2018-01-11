@@ -1,5 +1,5 @@
 ---
-title: SSH tunnels
+title: SSH Tunnels
 date: 2018-01-11
 tags: ssh, aws
 type: note
