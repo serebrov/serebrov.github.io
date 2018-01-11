@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</loc>
+  <lastmod>2018-01-11T02:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2017-06-28-aws-default-subnet-in-us-east-1f-not-found.html</loc>
   <lastmod>2017-06-29T03:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>

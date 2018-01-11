@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SSH tunnels</title>
+
+    <!-- Bootstrap -->
+    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
+    <link href="/css/all.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="row page-header">
+        <div class="col-md-12">
+          <!--nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav-->
+          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <h1>SSH tunnels</h1>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <p>Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
+<!-- more --></p>
+<h2 id="setup">Setup</h2>
+<p>To make SSH commands shorter and easier to use, edit the <code>~/.ssh/config</code> and add the configuration for the hosts you are going to connect.</p>
+<p>The configuration defines default ssh options, so instead of the command like this <code>ssh ec2-user@ec2-55-222-55-55.compute-1.amazonaws.com -i ~/.ssh/my_key.pem</code>, we can just use <code>ssh my-remote-host</code>.</p>
+<p>An example config:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>Host my-remote-host
+HostName ec2-55-222-55-55.compute-1.amazonaws.com
+StrictHostKeyChecking no
+User ec2-user
+IdentityFile ~/.ssh/my_key.pem
+</pre></div>
+
+</code></pre>
+<h2 id="access-remote-hidden-resource">Access Remote Hidden Resource</h2>
+<p>The SSH command to access the remote hidden resource locally through the intermediate accessible host is <code>ssh -L</code>:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">local_port</span><span class="o">=</span>5532
+
+<span class="nv">accessible_host</span><span class="o">=</span>my-remote-host
+
+<span class="nv">hidden_host</span><span class="o">=</span>hidden_host.amazonaws.com
+<span class="nv">hidden_port</span><span class="o">=</span>5432
+
+ssh <span class="k">${</span><span class="nv">accessible_host</span><span class="k">}</span> -L <span class="k">${</span><span class="nv">local_port</span><span class="k">}</span>:<span class="k">${</span><span class="nv">hidden_host</span><span class="k">}</span>:<span class="k">${</span><span class="nv">hidden_port</span><span class="k">}</span>
+</pre></div>
+
+</code></pre>
+<p>With the command above we connect to the <code>my-remote-host</code> that has access to the <code>hidden_host:hidden_port</code> and make the hidden resource available locally:</p>
+<pre><code class="lang-text"><div class="highlight"><pre>localhost:5532 =====&gt; my-remote-host =====&gt; hidden_host.amazonaws.com:5432
+</pre></div>
+
+</code></pre>
+<h1 id="expose-local-resource-to-the-internet">Expose Local Resource To the Internet</h1>
+<p>The SSH command to expose the local resource through the intermediate host is <code>ssh -R</code>:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre><span class="nv">remote_port</span><span class="o">=</span>8181
+<span class="nv">local_port</span><span class="o">=</span>8888
+
+ssh my-remote-host -R *:<span class="k">${</span><span class="nv">remote_port</span><span class="k">}</span>:localhost:<span class="k">${</span><span class="nv">local_port</span><span class="k">}</span>
+</pre></div>
+
+</code></pre>
+<p>With the command above we connect to the <code>my-remote-host</code> and instruct it to accept connections to the <code>8181</code> port and forward them to the <code>localhost:8888</code>.</p>
+<p>The <code>*:8181</code> that remote host will forward connections to any network interface (by default it will use only 127.0.0.1).</p>
+<pre><code class="lang-text"><div class="highlight"><pre>localhost:8888 &lt;===== my-remote-host &lt;===== my-remote-host:8181
+</pre></div>
+
+</code></pre>
+<p>You also need to make sure that firewall on <code>my-remote-host</code> allows connections to the 8181 port.</p>
+<h2 id="example-access-rds-database-through-the-ec2-instance">Example: Access RDS Database Through the EC2 Instance</h2>
+<p>It is good idea to make RDS databases not available from the Internet, so they can only be accessed from the EC2 instances where applications are running.</p>
+<p>On the other hand, during the development, it is convenient to have the database accessible from your local machine.
+It is easy to do it, running the following command:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>ssh my-aws-host -L 5532:my-rds-host-name.cdiofumqrcpr.us-east-1.rds.amazonaws.com:5432
+</pre></div>
+
+</code></pre>
+<p>Here <code>my-aws-host</code> is the EC2 instance that has DB access and <code>my-rds-host-name.cdiofumqrcpr...:5432</code> is the RDS host name and port.</p>
+<p>After that, you can use the <code>localhost:5532</code> on your local machine to connect to the remote database.</p>
+<h2 id="example-expose-local-server-through-the-ec2-instance">Example: Expose Local Server Through the EC2 Instance</h2>
+<p>Sometimes it can be necessary to make locally running app available through the Internet.
+There are several ways to do that:</p>
+<ul>
+<li>If you have the &quot;real&quot; IP address (you may need to ask your Internet provider to setup a real IP for you), you only need to make sure that your firewall allows connections to the port your app is running on</li>
+<li>Use service like <a href="http://ngrok.com">http://ngrok.com</a> which will do the forwarding from the Internet to your local machine</li>
+<li>Use SSH tunnel to the EC2 instance (or any other machine that&#39;s accessible from the Internet)</li>
+</ul>
+<p>Let&#39;s say there is an app running locally on 8888 port (localhost:8888) and we want to make it available via the EC2 instance <code>ec2-55-222-55-55.compute-1.amazonaws.com:8181</code>.</p>
+<p>To use the SSH tunnel, first, make sure there is a <code>GatewayPorts yes</code> option in the sshd config on the server.
+Ssh to the instance, open the <code>/etc/sshd_config</code>:</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>sudo vim /etc/sshd_config
+</pre></div>
+
+</code></pre>
+<p>Find and change or add <code>GatewayPorts yes</code> option, save the config.
+Restart sshd</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>sudo service sshd restart
+</pre></div>
+
+</code></pre>
+<p>Second, check and change, if necessary, the <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html">security group configuration</a> for the EC2 instance and allow access to the port 8181.</p>
+<p>Now, from your local machine run</p>
+<pre><code class="lang-bash"><div class="highlight"><pre>ssh my-aws-host -R *:8181:localhost:8888
+</pre></div>
+
+</code></pre>
+<p>Now you should be able to access your local app via <code>ec2-55-222-55-55.compute-1.amazonaws.com:8181</code>.</p>
+<h2 id="references">References</h2>
+<p><a href="https://vimeo.com/54505525">The Black Magic Of SSH / SSH Can Do That?</a></p>
+<p><a href="https://stackoverflow.com/q/46956396/4612064">How to make requests from an external server to localhost</a></p>
+<p><a href="https://stackoverflow.com/a/44208214/4612064">Connect to MongoDB on aws Server From Another Server</a></p>
+
+          </div>
+      </div>
+      <div class="row badge-row">
+          <div class="col-md-12">
+<a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'serebrov'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!--script src="/js/bootstrap.min.js"></script-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+
