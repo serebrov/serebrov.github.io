@@ -5,7 +5,7 @@ tags: js
 type: post
 ---
 
-There is no "callback hell" in Javascript, there is a bad programming style.
+There is no "callback hell" in Javascript, it is just a bad programming style.
 The infamous JavaScript "callback hell" can easily be fixed by un-nesting all the callbacks into separate functions.
 <!-- more -->
 
