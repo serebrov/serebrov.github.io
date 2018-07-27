@@ -25,10 +25,10 @@ foo = long_function_name(var_one, var_two,
 I always prefer the first option and the other one is problematic for a few reasons.
 <!-- more -->
 
-For example if you have two blocks with such indentation, the indent will be jumping:
+For example, if you have two blocks with such indentation, the indent will be jumping:
 
 ```python
-# Two functions formatted in such way doesn't look good, indent is jumping
+# Two functions formatted in such way don't look good, indent is jumping
 foo = long_function_name(var_one, var_two,
                          var_three, var_four)
 bar = another_func(var_one, var_two,
@@ -76,4 +76,4 @@ foo = self.long_function_name(
     var_three, var_four)
 ```
 
-Along with more convenience during the development, this formatting also allows to produce better diffs, so it will make code review process easier.
+Along with more convenience during the development, this also results in better diffs, so it will make the code review process easier for a reviewer.
