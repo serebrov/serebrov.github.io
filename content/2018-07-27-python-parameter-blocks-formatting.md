@@ -7,7 +7,7 @@ type: post
 
 There are two ways [recommended in pep-8](https://www.python.org/dev/peps/pep-0008/#indentation) to format the blocks with long parameter lists in Python:
 
-```
+```python
 # Arguments start on the next line
 foo = long_function_name(
     var_one, var_two,
@@ -16,7 +16,7 @@ foo = long_function_name(
 
 Another way is:
 
-```
+```python
 # Arguments start on the same line
 foo = long_function_name(var_one, var_two,
                          var_three, var_four)
@@ -27,7 +27,7 @@ I always prefer the first option and the other one is problematic for a few reas
 
 For example if you have two blocks with such indentation, the indent will be jumping:
 
-```
+```python
 # Two functions formatted in such way doesn't look good, indent is jumping
 foo = long_function_name(var_one, var_two,
                          var_three, var_four)
@@ -37,7 +37,7 @@ bar = another_func(var_one, var_two,
 
 Another reason is that the indentation will be broken if you, for example, rename the function or make it a class method:
 
-```
+```python
 foo = long_function_name(var_one, var_two,
                          var_three, var_four)
 
@@ -53,7 +53,7 @@ Now, besides the rename / refactoring we need to also fix the indentation in fol
 
 While the first way of formatting works good in these cases:
 
-```
+```python
 # Two functions near each other, indentation is not jumping
 foo = long_function_name(
     var_one, var_two,
