@@ -7,58 +7,45 @@
     <title>Yii and jquery.localtime.js - display dates in user local timezone</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>Yii and jquery.localtime.js - display dates in user local timezone</h1>
-          </div>
+      <div class="post-title">
+          <h1>Yii and jquery.localtime.js - display dates in user local timezone</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>With this method we work on the server with UTC timezone dates and convert them
+      <div class="post-body">
+          <p>With this method we work on the server with UTC timezone dates and convert them
 to a user local timezone on client.</p>
 <p><!-- more --></p>
 <h2 id="use-timestamp-type-for-date-datetime-db-fields">Use ‘TIMESTAMP’ type for date/datetime DB fields</h2>
 <h2 id="setup-mysql-and-php-timezone">Setup MySQL and PHP timezone</h2>
 <p>Set UTC timezone for both MySQL and PHP.</p>
 <p>Yii db config (MySQL):</p>
-<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    ‘db’ =&gt; array(</span>
-<span class="x">        &#39;connectionString&#39; =&gt; &#39;...’,</span>
-<span class="x">        &#39;initSQLs&#39;=&gt;&quot;set time_zone=&#39;+00:00’;&quot;,</span>
-<span class="x">    );</span>
-</pre></div>
-
+<pre><code class="lang-php">    ‘db’ =&gt; array(
+        &#39;connectionString&#39; =&gt; &#39;...’,
+        &#39;initSQLs&#39;=&gt;&quot;set time_zone=&#39;+00:00’;&quot;,
+    );
 </code></pre>
 <p>And PHP timezone:</p>
-<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    date_default_timezone_set(‘UTC’);</span>
-</pre></div>
-
+<pre><code class="lang-php">    date_default_timezone_set(‘UTC’);
 </code></pre>
 <h2 id="generate-html-with-utc-dates-in-iso-8601">Generate HTML with UTC dates in ISO 8601</h2>
 <p>See <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">date formats here</a>
@@ -79,18 +66,14 @@ Helper functions to convert dates:</p>
 jquery.localtimex.js code at the end.
 To disable jquery.localtime.js default initialization pass empty format to setFormat()
 method (or remove jQuery.ready block at the end of jquery.localtime.js).</p>
-<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;/js/jquery.localtime-0.5.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;/js/jquery.localtimex.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span><span class="nx">$</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">setFormat</span><span class="p">({});</span> <span class="nt">&lt;/script&gt;</span>
-</pre></div>
-
+<pre><code class="lang-html">    &lt;script type=&quot;text/javascript&quot; src=&quot;/js/jquery.localtime-0.5.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;/js/jquery.localtimex.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;$.localtime.setFormat({}); &lt;/script&gt;
 </code></pre>
 <p>Use localtimex:</p>
-<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.localtime&#39;</span><span class="p">).</span><span class="nx">localtimex</span><span class="p">(</span><span class="s1">&#39;dd MMM yyyy HH:mm:ss&#39;</span><span class="p">);</span>
-    <span class="nt">&lt;/script&gt;</span>
-</pre></div>
-
+<pre><code class="lang-html">    &lt;script type=&quot;text/javascript&quot;&gt;
+        $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);
+    &lt;/script&gt;
 </code></pre>
 <p>By default plugin will localize specified elements and re-localize them in the case of ajax updates.
 Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">description</a>.</p>
@@ -114,91 +97,89 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
  $myDateTimestamp = strtotime($UTCValue);</p>
 </li>
 </ol>
-<pre><code class="lang-js"><div class="highlight"><pre><span class="nx">jquery</span><span class="p">.</span><span class="nx">localtimex</span><span class="p">.</span><span class="nx">js</span>
-<span class="o">-------------------------------------------</span>
-    <span class="cm">/**</span>
-<span class="cm">     * @name jquery.localtimex.js</span>
-<span class="cm">     * @author Boris Serebrov</span>
-<span class="cm">     *</span>
-<span class="cm">     * Depends on: jQuery, jQuery UI datepicker (local date parsing),</span>
-<span class="cm">     * jquery.localtime-0.5.js (http://code.google.com/p/jquery-localtime/)</span>
-<span class="cm">     *</span>
-<span class="cm">     * Usage:</span>
-<span class="cm">     * - do not configure jquery.localtime plugin, instead use this plugin</span>
-<span class="cm">     *   on elements you need localize:</span>
-<span class="cm">     *   $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);</span>
-<span class="cm">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;);</span>
-<span class="cm">     *</span>
-<span class="cm">     * Ajax response handling:</span>
-<span class="cm">     * - by default plugin will localize elements after ajax requests</span>
-<span class="cm">     * - to disable this behavior pass &#39;ajaxLocalize&#39;:false to options</span>
-<span class="cm">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;, {&#39;ajaxLocalize&#39;:false});</span>
-<span class="cm">     *</span>
-<span class="cm">     * Date inputs handling:</span>
-<span class="cm">     * - server put UTC time into input (or leave it empty)</span>
-<span class="cm">     * - UTC value converted to local time, user can modify it in local format</span>
-<span class="cm">     * - on form submit value converted back to UTC and posted to server</span>
-<span class="cm">     *</span>
-<span class="cm">     * jQuery UI datepicker configuration:</span>
-<span class="cm">     * - add &#39;localtimex&#39; plugin to date input</span>
-<span class="cm">     * - set dateFormat of a date picker accordingly to localtime plugin output format</span>
-<span class="cm">     *   - they use different standards for date presentation,</span>
-<span class="cm">     *     so we have to describe the same presentation twice</span>
-<span class="cm">     *   - for example: localtime plugin - &#39;MM/dd/yyyy&#39;, datepicker - &#39;mm/dd/yy&#39;</span>
-<span class="cm">     * - initial input value should be UTC in ISO format or empty</span>
-<span class="cm">     */</span>
-    <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">localtimex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">format</span><span class="p">,</span> <span class="nx">opt</span><span class="p">)</span> <span class="p">{</span>
+<pre><code class="lang-js">jquery.localtimex.js
+-------------------------------------------
+    /**
+     * @name jquery.localtimex.js
+     * @author Boris Serebrov
+     *
+     * Depends on: jQuery, jQuery UI datepicker (local date parsing),
+     * jquery.localtime-0.5.js (http://code.google.com/p/jquery-localtime/)
+     *
+     * Usage:
+     * - do not configure jquery.localtime plugin, instead use this plugin
+     *   on elements you need localize:
+     *   $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);
+     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;);
+     *
+     * Ajax response handling:
+     * - by default plugin will localize elements after ajax requests
+     * - to disable this behavior pass &#39;ajaxLocalize&#39;:false to options
+     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;, {&#39;ajaxLocalize&#39;:false});
+     *
+     * Date inputs handling:
+     * - server put UTC time into input (or leave it empty)
+     * - UTC value converted to local time, user can modify it in local format
+     * - on form submit value converted back to UTC and posted to server
+     *
+     * jQuery UI datepicker configuration:
+     * - add &#39;localtimex&#39; plugin to date input
+     * - set dateFormat of a date picker accordingly to localtime plugin output format
+     *   - they use different standards for date presentation,
+     *     so we have to describe the same presentation twice
+     *   - for example: localtime plugin - &#39;MM/dd/yyyy&#39;, datepicker - &#39;mm/dd/yy&#39;
+     * - initial input value should be UTC in ISO format or empty
+     */
+    (function($) {
+      $.fn.localtimex = function(format, opt) {
 
-        <span class="nx">format</span> <span class="o">=</span> <span class="nx">format</span> <span class="o">||</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">;</span>
-        <span class="nx">opt</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-            <span class="s1">&#39;ajaxLocalize&#39;</span><span class="o">:</span> <span class="kc">true</span>
-        <span class="p">},</span> <span class="nx">opt</span><span class="p">);</span>
+        format = format || &#39;yyyy-MM-dd HH:mm:ss&#39;;
+        opt = $.extend({
+            &#39;ajaxLocalize&#39;: true
+        }, opt);
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">opt</span><span class="p">.</span><span class="nx">ajaxLocalize</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">ajaxComplete</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nx">$</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">selector</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-              <span class="nx">$</span><span class="p">.</span><span class="nx">localtimex</span><span class="p">.</span><span class="nx">localize</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">format</span><span class="p">);</span>
-            <span class="p">});</span>
-          <span class="p">});</span>
-        <span class="p">}</span>
+        if (opt.ajaxLocalize) {
+          var self = this;
+          $(&#39;body&#39;).ajaxComplete(function() {
+            $(self.selector).each(function() {
+              $.localtimex.localize(this, format);
+            });
+          });
+        }
 
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="nx">$</span><span class="p">.</span><span class="nx">localtimex</span><span class="p">.</span><span class="nx">localize</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">format</span><span class="p">);</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">is</span><span class="p">(</span><span class="s2">&quot;:input&quot;</span><span class="p">))</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
-            <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">form</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;submit form-pre-serialize&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-                <span class="kd">var</span> <span class="nx">dt</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">datepicker</span><span class="p">.</span><span class="nx">parseDate</span><span class="p">(</span>
-                  <span class="nx">$</span><span class="p">(</span><span class="nx">self</span><span class="p">).</span><span class="nx">datepicker</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">,</span> <span class="s1">&#39;dateFormat&#39;</span><span class="p">),</span> <span class="nx">$</span><span class="p">(</span><span class="nx">self</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-                <span class="p">);</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">dt</span><span class="p">)</span> <span class="p">{</span>
-                  <span class="nx">$</span><span class="p">(</span><span class="nx">self</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="nx">dt</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">());</span>
-                <span class="p">}</span>
-            <span class="p">});</span>
-          <span class="p">}</span>
-        <span class="p">});</span>
-      <span class="p">};</span>
+        return this.each(function() {
+          $.localtimex.localize(this, format);
+          if ($(this).is(&quot;:input&quot;)) {
+            var self = this;
+            $(this.form).on(&#39;submit form-pre-serialize&#39;, function() {
+                var dt = $.datepicker.parseDate(
+                  $(self).datepicker(&#39;option&#39;, &#39;dateFormat&#39;), $(self).val()
+                );
+                if (dt) {
+                  $(self).val(dt.toISOString());
+                }
+            });
+          }
+        });
+      };
 
-      <span class="nx">$</span><span class="p">.</span><span class="nx">localtimex</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">localize</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">format</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-localized&#39;</span><span class="p">))</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">is</span><span class="p">(</span><span class="s2">&quot;:input&quot;</span><span class="p">))</span> <span class="p">{</span>
-              <span class="kd">var</span> <span class="nx">utcVal</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-              <span class="c1">//input can be empty initially</span>
-              <span class="k">if</span> <span class="p">(</span><span class="nx">utcVal</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
-              <span class="p">}</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-              <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">localtime</span><span class="p">.</span><span class="nx">toLocalTime</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">text</span><span class="p">(),</span> <span class="nx">format</span><span class="p">));</span>
-            <span class="p">}</span>
-          <span class="p">}</span>
-          <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;data-localized&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">};</span>
-    <span class="p">})</span> <span class="p">(</span><span class="nx">jQuery</span><span class="p">);</span>
-</pre></div>
-
+      $.localtimex = {
+        localize: function(element, format) {
+          if (!$(element).attr(&#39;data-localized&#39;)) {
+            if ($(element).is(&quot;:input&quot;)) {
+              var utcVal = $(element).val();
+              //input can be empty initially
+              if (utcVal.length) {
+                $(element).attr(&#39;value&#39;, $.localtime.toLocalTime($(element).val(), format));
+              }
+            } else {
+              $(element).text($.localtime.toLocalTime($(element).text(), format));
+            }
+          }
+          $(element).attr(&#39;data-localized&#39;, true);
+        }
+      };
+    }) (jQuery);
 </code></pre>
 <h2 id="links">Links</h2>
 <p><a href="http://www.yiiframework.com/wiki/197/local-time-zones-and-locales/">Yii wiki: Local time zones and locales</a></p>
@@ -209,17 +190,13 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
 <p><a href="http://www.yiiplayground.cubedwater.com/index.php?r=InternationalizationModule/datetime/userinput">Yii playground: User input advanced example</a></p>
 <p><a href="http://www.yiiplayground.cubedwater.com/index.php?r=InternationalizationModule/datetime/localeManager">Yii playground: LocaleManager application component</a></p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -233,14 +210,10 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

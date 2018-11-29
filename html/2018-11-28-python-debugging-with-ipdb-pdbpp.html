@@ -7,52 +7,41 @@
     <title>Debugging With ipdb and pdbpp</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>Debugging With ipdb and pdbpp</h1>
-          </div>
+      <div class="post-title">
+          <h1>Debugging With ipdb and pdbpp</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>To get a very convenient full-screen console debugger for python, install <code>ipdb</code> and <code>pdbpp</code> packages.</p>
+      <div class="post-body">
+          <p>To get a very convenient full-screen console debugger for python, install <code>ipdb</code> and <code>pdbpp</code> packages.</p>
 <p>Then use <code>__import__(&#39;ipdb&#39;).set_trace()</code> to start the debugger and enter <code>sticky</code> to switch to the full-screen mode.</p>
 <!-- more -->
 
 <p>Both packages can be installed with pip:</p>
-<pre><code><div class="highlight"><pre><span class="nx">virtualenv</span> <span class="o">-</span><span class="nx">p</span> <span class="nx">python3</span> <span class="nx">venv</span>
-<span class="nx">source</span> <span class="nx">venv</span><span class="o">/</span><span class="nx">bin</span><span class="o">/</span><span class="nx">activate</span>
+<pre><code>virtualenv -p python3 venv
+source venv/bin/activate
 
-<span class="nx">pip</span> <span class="nx">install</span> <span class="nx">ipdb</span>
-<span class="nx">pip</span> <span class="nx">install</span> <span class="nx">pdbpp</span>
-</pre></div>
-
+pip install ipdb
+pip install pdbpp
 </code></pre><p>The <code>ipdb</code> package improves the standard (pdb) debugger by adding syntax highlight and code completion.
 And the <code>pdbpp</code> adds the &quot;sticky&quot; mode, so the debugger can be run in a full-screen mode, in terminal:</p>
 <p><img src="/content/2018-11-28-python-degugging.gif" alt="debugger demo"></p>
@@ -60,17 +49,13 @@ And the <code>pdbpp</code> adds the &quot;sticky&quot; mode, so the debugger can
 <p>It works well for command-line scripts and web applications, the only thing you need is to start the application from terminal in a non-daemon mode, so the debugger can break the execution and switch to the interactive mode.</p>
 <p>It also works if the app is started inside the docker container (same here - run in foreground mode, &quot;docker run ...&quot; or &quot;docker-compose run ...&quot; without <code>-d</code> flag).</p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -84,14 +69,10 @@ And the <code>pdbpp</code> adds the &quot;sticky&quot; mode, so the debugger can
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

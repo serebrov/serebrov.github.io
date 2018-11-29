@@ -7,44 +7,33 @@
     <title>AWS PostgreSQL RDS - remaining connection slots are reserved error</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>AWS PostgreSQL RDS - remaining connection slots are reserved error</h1>
-          </div>
+      <div class="post-title">
+          <h1>AWS PostgreSQL RDS - remaining connection slots are reserved error</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>FATAL:  remaining connection slots are reserved <span class="k">for</span> non-replication superuser connections
-</pre></div>
-
+      <div class="post-body">
+          <p>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:</p>
+<pre><code class="lang-bash">FATAL:  remaining connection slots are reserved for non-replication superuser connections
 </code></pre>
 <p>The PostgreSQL server was running on the db.t1.micro RDS instance and the &#39;Current activity&#39; column showed &#39;22 connections&#39; and a red line which should represent a connection limit was far away from the 22 value.</p>
 <!-- more -->
@@ -54,13 +43,11 @@
 <p>And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.
 While actually we already at 100% of connections.</p>
 <p>After some time, when the database load went down, I was able to login with psql to check max_connections parameter:</p>
-<pre><code class="lang-sql"><div class="highlight"><pre><span class="n">template1</span><span class="o">=&gt;</span> <span class="k">show</span> <span class="n">max_connections</span><span class="p">;</span>
-  <span class="n">max_connections</span>
-<span class="c1">-----------------</span>
- <span class="mi">26</span>
-<span class="p">(</span><span class="mi">1</span> <span class="k">row</span><span class="p">)</span>
-</pre></div>
-
+<pre><code class="lang-sql">template1=&gt; show max_connections;
+  max_connections
+-----------------
+ 26
+(1 row)
 </code></pre>
 <p>So we have 26 max connections and, as stated in comments (thanks, Johannes Schickling), there are also 3 connections reserved to superuser.</p>
 <p>That means we used 25 connections (22 + 3 reserved) out of 26.</p>
@@ -76,19 +63,17 @@ The db.t1.micro instance has 1GB memory, and calculation like <code>1024*1024*10
 <p>So I decided to change the instance type to db.t2.small, it costs twice more, but it has 2GB RAM and default max_connections value is 60.</p>
 <p>In my case the higher connection consumption was not something unexpected, the Elastic Beanstalk scaled the application to 6 EC2 instances under load. Each instance runs a flask application with several threads, so they can easily consume around 20 connections.
 To actually make sure that everything is OK with connections handling, run the following query:</p>
-<pre><code class="lang-sql"><div class="highlight"><pre><span class="n">template1</span><span class="o">=&gt;</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">pg_stat_activity</span><span class="p">;</span>
+<pre><code class="lang-sql">template1=&gt; select * from pg_stat_activity;
 
- <span class="n">datid</span> <span class="o">|</span>  <span class="n">datname</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span>    <span class="n">backend_start</span>    <span class="o">|</span> <span class="p">...</span> <span class="o">|</span>     <span class="n">query_start</span>     <span class="o">|</span>    <span class="n">state_change</span>     <span class="o">|</span> <span class="n">waiting</span> <span class="o">|</span> <span class="k">state</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span>  <span class="n">query</span>
-<span class="c1">-------+----------+-----+---------------------+-----+---------------------+---------------------+---------+-------+-----+--------------------------</span>
- <span class="p">...</span>
- <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>    <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">13</span><span class="p">:</span><span class="mi">04</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">13</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">13</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>  <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="k">COMMIT</span>
- <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>    <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">21</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">21</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>  <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="k">ROLLBACK</span>
- <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>    <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">14</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">14</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>  <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="k">COMMIT</span>
- <span class="mi">16395</span> <span class="o">|</span> <span class="n">myapp</span>    <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">16</span><span class="p">:</span><span class="mi">14</span><span class="p">:</span><span class="mi">13</span> <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">18</span> <span class="o">|</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">22</span> <span class="mi">17</span><span class="p">:</span><span class="mi">07</span><span class="p">:</span><span class="mi">18</span> <span class="o">|</span> <span class="n">f</span>       <span class="o">|</span> <span class="n">idle</span>  <span class="o">|</span> <span class="p">...</span> <span class="o">|</span> <span class="k">ROLLBACK</span>
- <span class="p">...</span>
-<span class="p">(</span><span class="mi">16</span> <span class="k">rows</span><span class="p">)</span>
-</pre></div>
-
+ datid |  datname | ... |    backend_start    | ... |     query_start     |    state_change     | waiting | state | ... |  query
+-------+----------+-----+---------------------+-----+---------------------+---------------------+---------+-------+-----+--------------------------
+ ...
+ 16395 | myapp    | ... | 2015-09-22 16:13:04 | ... | 2015-09-22 17:07:13 | 2015-09-22 17:07:13 | f       | idle  | ... | COMMIT
+ 16395 | myapp    | ... | 2015-09-22 16:14:13 | ... | 2015-09-22 17:07:21 | 2015-09-22 17:07:21 | f       | idle  | ... | ROLLBACK
+ 16395 | myapp    | ... | 2015-09-22 16:14:13 | ... | 2015-09-22 17:07:14 | 2015-09-22 17:07:14 | f       | idle  | ... | COMMIT
+ 16395 | myapp    | ... | 2015-09-22 16:14:13 | ... | 2015-09-22 17:07:18 | 2015-09-22 17:07:18 | f       | idle  | ... | ROLLBACK
+ ...
+(16 rows)
 </code></pre>
 <p>Here you can see all the connections, queries and last activity time for each connection, so it should be easy to see if there are any hanging connections.</p>
 <h1 id="links">Links</h1>
@@ -97,17 +82,13 @@ To actually make sure that everything is OK with connections handling, run the f
 <p><a href="http://stackoverflow.com/questions/18291180/flask-unittest-and-sqlalchemy-using-all-connections">Stackoverflow: Flask unittest and sqlalchemy using all connections</a></p>
 <p><a href="http://serverfault.com/questions/577712/postgresql-error-no-more-connections-allowed">Stackoverflow: PostgreSQL ERROR: no more connections allowed</a></p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -121,14 +102,10 @@ To actually make sure that everything is OK with connections handling, run the f
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

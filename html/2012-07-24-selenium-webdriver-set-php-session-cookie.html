@@ -7,63 +7,46 @@
     <title>selenium webdriver - set php session cookie</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>selenium webdriver - set php session cookie</h1>
-          </div>
+      <div class="post-title">
+          <h1>selenium webdriver - set php session cookie</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
+      <div class="post-body">
+          <p>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.</p>
 <p>Fortunately it is easy to do with javascript.</p>
 <p><!-- more -->
 Here is example of a JS code to set the cookie:</p>
-<pre><code><div class="highlight"><pre><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s2">&quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&quot;</span><span class="p">;</span>
-</pre></div>
-
+<pre><code>document.cookie = &quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&quot;;
 </code></pre><p>And here is python code version (assume you have set &#39;cookie&#39; and &#39;domain&#39; variables:</p>
-<pre><code><div class="highlight"><pre><span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="s2">&quot;document.cookie = &#39;PHPSESSID=&quot;</span><span class="o">+</span><span class="nx">cookie</span><span class="o">+</span><span class="s2">&quot;; domain=&quot;</span><span class="o">+</span><span class="nx">domain</span><span class="o">+</span><span class="s2">&quot;; path=/&#39;&quot;</span><span class="p">)</span>
-</pre></div>
-
+<pre><code>webdriver.execute_script(&quot;document.cookie = &#39;PHPSESSID=&quot;+cookie+&quot;; domain=&quot;+domain+&quot;; path=/&#39;&quot;)
 </code></pre>
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -77,14 +60,10 @@ Here is example of a JS code to set the cookie:</p>
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

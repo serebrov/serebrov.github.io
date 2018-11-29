@@ -7,79 +7,66 @@
     <title>yii - catch and log MySQL deadlock errors</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>yii - catch and log MySQL deadlock errors</h1>
-          </div>
+      <div class="post-title">
+          <h1>yii - catch and log MySQL deadlock errors</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>This method allows to log InnoDB monitor output when deadlock error occured.
+      <div class="post-body">
+          <p>This method allows to log InnoDB monitor output when deadlock error occured.
 This way we will have much more useful data to find and fix deadlock.
 <!-- more -->
 Extend error handler class:</p>
-<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    class AppErrorHandler extends CErrorHandler {</span>
-<span class="x">        protected function handleException($exception) {</span>
-<span class="x">            /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:</span>
-<span class="x">            * Serialization failure: 1213 Deadlock found when trying to get lock;</span>
-<span class="x">            * try restarting transaction. The SQL statement executed was:</span>
-<span class="x">            * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1)</span>
-<span class="x">            */</span>
-<span class="x">            //can we check $exception-&gt;getCode() ?</span>
-<span class="x">            if ($exception instanceof CDbException</span>
-<span class="x">                &amp;&amp; strpos($exception-&gt;getMessage(), &#39;Deadlock&#39;) !== false</span>
-<span class="x">            ) {</span>
-<span class="x">                $data = Yii::app()-&gt;db-&gt;createCommand(&#39;SHOW ENGINE INNODB STATUS&#39;)-&gt;query();</span>
-<span class="x">                $info = $data-&gt;read();</span>
-<span class="x">                $info = serialize($info);</span>
-<span class="x">                Yii::log(&#39;Deadlock error, innodb status: &#39; . $info,</span>
-<span class="x">                    CLogger::LEVEL_ERROR,&#39;system.db.CDbCommand&#39;);</span>
-<span class="x">            }</span>
-<span class="x">            return parent::handleException($exception);</span>
-<span class="x">        }</span>
-<span class="x">    }</span>
-</pre></div>
-
+<pre><code class="lang-php">    class AppErrorHandler extends CErrorHandler {
+        protected function handleException($exception) {
+            /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:
+            * Serialization failure: 1213 Deadlock found when trying to get lock;
+            * try restarting transaction. The SQL statement executed was:
+            * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1)
+            */
+            //can we check $exception-&gt;getCode() ?
+            if ($exception instanceof CDbException
+                &amp;&amp; strpos($exception-&gt;getMessage(), &#39;Deadlock&#39;) !== false
+            ) {
+                $data = Yii::app()-&gt;db-&gt;createCommand(&#39;SHOW ENGINE INNODB STATUS&#39;)-&gt;query();
+                $info = $data-&gt;read();
+                $info = serialize($info);
+                Yii::log(&#39;Deadlock error, innodb status: &#39; . $info,
+                    CLogger::LEVEL_ERROR,&#39;system.db.CDbCommand&#39;);
+            }
+            return parent::handleException($exception);
+        }
+    }
 </code></pre>
 <p>Put it in <code>application/protected/components</code> and set in the <code>config/main.php</code>:</p>
-<pre><code class="lang-php"><div class="highlight"><pre><span class="x">    return array(</span>
-<span class="x">        ...</span>
-<span class="x">        &#39;components&#39; =&gt; array(</span>
-<span class="x">            &#39;errorHandler&#39; =&gt; array(</span>
-<span class="x">                &#39;class&#39; =&gt; &#39;AppErrorHandler&#39;,</span>
-<span class="x">            ),</span>
-<span class="x">        ),</span>
-<span class="x">        ...</span>
-<span class="x">    );</span>
-</pre></div>
-
+<pre><code class="lang-php">    return array(
+        ...
+        &#39;components&#39; =&gt; array(
+            &#39;errorHandler&#39; =&gt; array(
+                &#39;class&#39; =&gt; &#39;AppErrorHandler&#39;,
+            ),
+        ),
+        ...
+    );
 </code></pre>
 <h2 id="links">Links</h2>
 <p><a href="http://dev.mysql.com/doc/refman/5.0/en/innodb-lock-modes.html">InnoDB Lock Modes</a></p>
@@ -87,17 +74,13 @@ Extend error handler class:</p>
 <p><a href="http://forums.mysql.com/read.php?97,79242,79242#msg-79242">MySQL Forums :: Transactions :: Deadlock With DELETE/INSERT Queries</a></p>
 <p><a href="http://forums.mysql.com/read.php?22,288541,288782#msg-288782">MySQL Forums :: InnoDB :: Explain deadlock locking the same index</a></p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -111,14 +94,10 @@ Extend error handler class:</p>
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -7,41 +7,32 @@
     <title>Amazon NoSQL Solutions</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>Amazon NoSQL Solutions</h1>
-          </div>
+      <div class="post-title">
+          <h1>Amazon NoSQL Solutions</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>Amazon provides following <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> storage options:</p>
+      <div class="post-body">
+          <p>Amazon provides following <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> storage options:</p>
 <ul>
 <li>[SimpleDB] (<a href="http://aws.amazon.com/simpledb/">http://aws.amazon.com/simpledb/</a>) - Amazon SimpleDB is a highly
 available and flexible non-relational data store that offloads the work of
@@ -57,14 +48,12 @@ up, operate, and scale.</li>
 only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data
 management.  As one of major DynamoDB benefits it is highlighted that it uses
 solid state drives, but this option is also available for other technologies:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Solid</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">at</span> <span class="nx">your</span> <span class="nx">service</span><span class="o">:</span>
-<span class="nx">NoSQL</span> <span class="nx">data</span> <span class="nx">stores</span> <span class="nx">benefit</span> <span class="nx">greatly</span> <span class="nx">from</span> <span class="nx">the</span> <span class="nx">speed</span> <span class="nx">of</span> <span class="nx">solid</span> <span class="nx">state</span> <span class="nx">drives</span><span class="p">.</span>
-<span class="nx">DynamoDB</span> <span class="nx">uses</span> <span class="nx">them</span> <span class="nx">by</span> <span class="k">default</span><span class="p">,</span> <span class="nx">but</span> <span class="k">if</span> <span class="nx">you</span> <span class="nx">are</span> <span class="nx">using</span> <span class="nx">alternatives</span> <span class="nx">from</span> <span class="nx">the</span> <span class="nx">AWS</span>
-<span class="nx">Marketplace</span><span class="p">,</span> <span class="nx">such</span> <span class="nx">as</span> <span class="nx">Cassandra</span> <span class="nx">or</span> <span class="nx">MongoDB</span><span class="p">,</span> <span class="nx">accelerate</span> <span class="nx">your</span> <span class="nx">access</span> <span class="kd">with</span>
-<span class="nx">on</span><span class="o">-</span><span class="nx">demand</span> <span class="nx">access</span> <span class="nx">to</span> <span class="nx">terabytes</span> <span class="nx">of</span> <span class="nx">solid</span> <span class="nx">state</span> <span class="nx">storage</span><span class="p">,</span> <span class="kd">with</span> <span class="nx">the</span> <span class="nx">High</span> <span class="nx">I</span><span class="o">/</span><span class="nx">O</span>
-<span class="nx">instance</span> <span class="kr">class</span><span class="p">.</span> <span class="nx">Learn</span> <span class="nx">more</span> <span class="nx">about</span> <span class="nx">the</span> <span class="nx">options</span> <span class="kd">with</span> <span class="nx">EC2</span> <span class="nx">instance</span> <span class="nx">types</span> <span class="p">(</span><span class="nx">http</span><span class="o">:</span><span class="c1">//aws.amazon.com/ec2/instance-types).</span>
-</pre></div>
-
+<pre><code>Solid state, at your service:
+NoSQL data stores benefit greatly from the speed of solid state drives.
+DynamoDB uses them by default, but if you are using alternatives from the AWS
+Marketplace, such as Cassandra or MongoDB, accelerate your access with
+on-demand access to terabytes of solid state storage, with the High I/O
+instance class. Learn more about the options with EC2 instance types (http://aws.amazon.com/ec2/instance-types).
 </code></pre><p>[Elastic Map Reduce] (<a href="http://aws.amazon.com/elasticmapreduce/">http://aws.amazon.com/elasticmapreduce/</a>) is a computing
 service which can be used in conjunction with storage services to perform
 operations on large datasets (indexing, data mining, log file analysis, etc).
@@ -85,51 +74,45 @@ at the application layer, so delivering a highly-available service on top of a
 cluster of computers, each of which may be prone to failures.</p>
 <p>Q: When would I use Amazon RDS vs. Amazon EC2 Relational Database AMIs vs.
 Amazon SimpleDB vs. Amazon DynamoDB? (<a href="http://aws.amazon.com/rds/faqs/#4">http://aws.amazon.com/rds/faqs/#4</a>)</p>
-<pre><code><div class="highlight"><pre><span class="nx">Amazon</span> <span class="nx">Web</span> <span class="nx">Services</span> <span class="nx">provides</span> <span class="nx">a</span> <span class="nx">number</span> <span class="nx">of</span>
-<span class="nx">database</span> <span class="nx">alternatives</span> <span class="k">for</span> <span class="nx">developers</span><span class="p">.</span> <span class="nx">Amazon</span> <span class="nx">RDS</span> <span class="nx">enables</span> <span class="nx">you</span> <span class="nx">to</span> <span class="nx">run</span> <span class="nx">a</span> <span class="nx">fully</span>
-<span class="nx">featured</span> <span class="nx">relational</span> <span class="nx">database</span> <span class="k">while</span> <span class="nx">offloading</span> <span class="nx">database</span> <span class="nx">administration</span><span class="p">;</span> <span class="nx">Amazon</span>
-<span class="nx">SimpleDB</span> <span class="nx">provides</span> <span class="nx">simple</span> <span class="nx">index</span> <span class="nx">and</span> <span class="nx">query</span> <span class="nx">capabilities</span> <span class="kd">with</span> <span class="nx">seamless</span>
-<span class="nx">scalability</span><span class="p">;</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">fully</span> <span class="nx">managed</span> <span class="nx">NoSQL</span> <span class="nx">database</span> <span class="nx">service</span> <span class="nx">that</span>
-<span class="nx">offers</span> <span class="nx">fast</span> <span class="nx">and</span> <span class="nx">predictable</span> <span class="nx">performance</span> <span class="kd">with</span> <span class="nx">seamless</span> <span class="nx">scalability</span><span class="p">;</span> <span class="nx">and</span> <span class="nx">using</span>
-<span class="nx">one</span> <span class="nx">of</span> <span class="nx">our</span> <span class="nx">many</span> <span class="nx">relational</span> <span class="nx">database</span> <span class="nx">AMIs</span> <span class="nx">on</span> <span class="nx">Amazon</span> <span class="nx">EC2</span> <span class="nx">and</span> <span class="nx">Amazon</span> <span class="nx">EBS</span> <span class="nx">allows</span>
-<span class="nx">you</span> <span class="nx">to</span> <span class="nx">operate</span> <span class="nx">your</span> <span class="nx">own</span> <span class="nx">relational</span> <span class="nx">database</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">cloud</span><span class="p">.</span> <span class="nx">There</span> <span class="nx">are</span> <span class="nx">important</span>
-<span class="nx">differences</span> <span class="nx">between</span> <span class="nx">these</span> <span class="nx">alternatives</span> <span class="nx">that</span> <span class="nx">may</span> <span class="nx">make</span> <span class="nx">one</span> <span class="nx">more</span> <span class="nx">appropriate</span> <span class="k">for</span>
-<span class="nx">your</span> <span class="nx">use</span> <span class="k">case</span><span class="p">.</span> <span class="nx">See</span> <span class="nx">Running</span> <span class="nx">Databases</span> <span class="nx">on</span> <span class="nx">AWS</span> <span class="k">for</span> <span class="nx">guidance</span> <span class="nx">on</span> <span class="nx">which</span> <span class="nx">solution</span> <span class="nx">is</span>
-<span class="nx">best</span> <span class="k">for</span> <span class="nx">you</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Amazon Web Services provides a number of
+database alternatives for developers. Amazon RDS enables you to run a fully
+featured relational database while offloading database administration; Amazon
+SimpleDB provides simple index and query capabilities with seamless
+scalability; Amazon DynamoDB is a fully managed NoSQL database service that
+offers fast and predictable performance with seamless scalability; and using
+one of our many relational database AMIs on Amazon EC2 and Amazon EBS allows
+you to operate your own relational database in the cloud. There are important
+differences between these alternatives that may make one more appropriate for
+your use case. See Running Databases on AWS for guidance on which solution is
+best for you.
 </code></pre><h1 id="amazon-dynamodb">Amazon DynamoDB</h1>
 <h2 id="general-info">General Info</h2>
 <p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStartedDynamoDB.html">Get Started with Amazon DynamoDB</a>:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">automatically</span> <span class="nx">spreads</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">and</span> <span class="nx">traffic</span> <span class="k">for</span> <span class="nx">the</span> <span class="nx">table</span> <span class="nx">over</span> <span class="nx">a</span>
-<span class="nx">sufficient</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">servers</span> <span class="nx">to</span> <span class="nx">handle</span> <span class="nx">the</span> <span class="nx">request</span> <span class="nx">capacity</span> <span class="nx">specified</span> <span class="nx">by</span> <span class="nx">the</span>
-<span class="nx">customer</span> <span class="nx">and</span> <span class="nx">the</span> <span class="nx">amount</span> <span class="nx">of</span> <span class="nx">data</span> <span class="nx">stored</span><span class="p">,</span> <span class="k">while</span> <span class="nx">maintaining</span> <span class="nx">consistent</span> <span class="nx">and</span> <span class="nx">fast</span>
-<span class="nx">performance</span><span class="p">.</span> <span class="nx">All</span> <span class="nx">data</span> <span class="nx">items</span> <span class="nx">are</span> <span class="nx">stored</span> <span class="nx">on</span> <span class="nx">Solid</span> <span class="nx">State</span> <span class="nx">Disks</span> <span class="p">(</span><span class="nx">SSDs</span><span class="p">)</span> <span class="nx">and</span> <span class="nx">are</span>
-<span class="nx">automatically</span> <span class="nx">replicated</span> <span class="nx">across</span> <span class="nx">multiple</span> <span class="nx">Availability</span> <span class="nx">Zones</span> <span class="k">in</span> <span class="nx">a</span> <span class="nx">Region</span> <span class="nx">to</span>
-<span class="nx">provide</span> <span class="nx">built</span><span class="o">-</span><span class="k">in</span> <span class="nx">high</span> <span class="nx">availability</span> <span class="nx">and</span> <span class="nx">data</span> <span class="nx">durability</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Amazon DynamoDB automatically spreads the data and traffic for the table over a
+sufficient number of servers to handle the request capacity specified by the
+customer and the amount of data stored, while maintaining consistent and fast
+performance. All data items are stored on Solid State Disks (SSDs) and are
+automatically replicated across multiple Availability Zones in a Region to
+provide built-in high availability and data durability.
 </code></pre><p>Read / write throughput limits:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Provisioned</span> <span class="nx">Throughput</span> <span class="o">-</span> <span class="nx">When</span> <span class="nx">you</span> <span class="nx">create</span> <span class="nx">or</span> <span class="nx">update</span> <span class="nx">a</span> <span class="nx">table</span><span class="p">,</span> <span class="nx">you</span> <span class="nx">specify</span> <span class="nx">how</span>
-<span class="nx">much</span> <span class="nx">provisioned</span> <span class="nx">throughput</span> <span class="nx">capacity</span> <span class="nx">you</span> <span class="nx">want</span> <span class="nx">to</span> <span class="nx">reserve</span> <span class="k">for</span> <span class="nx">reads</span> <span class="nx">and</span> <span class="nx">writes</span><span class="p">.</span>
-<span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">will</span> <span class="nx">reserve</span> <span class="nx">the</span> <span class="nx">necessary</span> <span class="nx">machine</span> <span class="nx">resources</span> <span class="nx">to</span> <span class="nx">meet</span> <span class="nx">your</span>
-<span class="nx">throughput</span> <span class="nx">needs</span> <span class="k">while</span> <span class="nx">ensuring</span> <span class="nx">consistent</span><span class="p">,</span> <span class="nx">low</span><span class="o">-</span><span class="nx">latency</span> <span class="nx">performance</span><span class="p">.</span>  <span class="nx">If</span> <span class="nx">your</span>
-<span class="nx">application</span> <span class="nx">requirements</span> <span class="nx">change</span><span class="p">,</span> <span class="nx">simply</span> <span class="nx">update</span> <span class="nx">your</span> <span class="nx">table</span> <span class="nx">throughput</span> <span class="nx">capacity</span>
-<span class="nx">using</span> <span class="nx">the</span> <span class="nx">AWS</span> <span class="nx">Management</span> <span class="nx">Console</span> <span class="nx">or</span> <span class="nx">the</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">APIs</span><span class="p">.</span> <span class="nx">You</span> <span class="nx">are</span> <span class="nx">still</span>
-<span class="nx">able</span> <span class="nx">to</span> <span class="nx">achieve</span> <span class="nx">your</span> <span class="nx">prior</span> <span class="nx">throughput</span> <span class="nx">levels</span> <span class="k">while</span> <span class="nx">scaling</span> <span class="nx">is</span> <span class="nx">underway</span><span class="p">.</span>
+<pre><code>Provisioned Throughput - When you create or update a table, you specify how
+much provisioned throughput capacity you want to reserve for reads and writes.
+Amazon DynamoDB will reserve the necessary machine resources to meet your
+throughput needs while ensuring consistent, low-latency performance.  If your
+application requirements change, simply update your table throughput capacity
+using the AWS Management Console or the Amazon DynamoDB APIs. You are still
+able to achieve your prior throughput levels while scaling is underway.
 
-<span class="nx">When</span> <span class="nx">you</span> <span class="nx">create</span> <span class="nx">a</span> <span class="nx">table</span><span class="p">,</span> <span class="nx">you</span> <span class="nx">must</span> <span class="nx">provide</span> <span class="nx">a</span> <span class="nx">table</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">its</span> <span class="nx">primary</span> <span class="nx">key</span> <span class="nx">and</span>
-<span class="nx">your</span> <span class="nx">required</span> <span class="nx">read</span> <span class="nx">and</span> <span class="nx">write</span> <span class="nx">throughput</span> <span class="nx">values</span><span class="p">.</span> <span class="nx">Except</span> <span class="k">for</span> <span class="nx">the</span> <span class="nx">required</span> <span class="nx">primary</span>
-<span class="nx">key</span><span class="p">,</span> <span class="nx">an</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">table</span> <span class="nx">is</span> <span class="nx">schema</span><span class="o">-</span><span class="nx">less</span><span class="p">.</span> <span class="nx">Individual</span> <span class="nx">items</span> <span class="k">in</span> <span class="nx">an</span> <span class="nx">Amazon</span>
-<span class="nx">DynamoDB</span> <span class="nx">table</span> <span class="nx">can</span> <span class="nx">have</span> <span class="nx">any</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">attributes</span><span class="p">,</span> <span class="nx">although</span> <span class="nx">there</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">limit</span> <span class="nx">of</span>
-<span class="mi">64</span> <span class="nx">KB</span> <span class="nx">on</span> <span class="nx">the</span> <span class="nx">item</span> <span class="nx">size</span><span class="p">.</span>  <span class="nx">A</span> <span class="nx">unit</span> <span class="nx">of</span> <span class="nx">read</span> <span class="nx">capacity</span> <span class="nx">represents</span> <span class="nx">one</span> <span class="nx">strongly</span>
-<span class="nx">consistent</span> <span class="nx">read</span> <span class="nx">per</span> <span class="nx">second</span> <span class="p">(</span><span class="nx">or</span> <span class="nx">two</span> <span class="nx">eventually</span> <span class="nx">consistent</span> <span class="nx">reads</span> <span class="nx">per</span> <span class="nx">second</span><span class="p">)</span> <span class="k">for</span>
-<span class="nx">items</span> <span class="nx">as</span> <span class="nx">large</span> <span class="nx">as</span> <span class="mi">4</span> <span class="nx">KB</span><span class="p">.</span> <span class="nx">A</span> <span class="nx">unit</span> <span class="nx">of</span> <span class="nx">write</span> <span class="nx">capacity</span> <span class="nx">represents</span> <span class="nx">one</span> <span class="nx">write</span> <span class="nx">per</span>
-<span class="nx">second</span> <span class="k">for</span> <span class="nx">items</span> <span class="nx">as</span> <span class="nx">large</span> <span class="nx">as</span> <span class="mi">1</span> <span class="nx">KB</span><span class="p">.</span>  <span class="nx">Reads</span> <span class="o">=</span> <span class="nb">Number</span> <span class="nx">of</span> <span class="nx">item</span> <span class="nx">reads</span> <span class="nx">per</span> <span class="nx">second</span> <span class="err">×</span> <span class="mi">4</span>
-<span class="nx">KB</span> <span class="nx">item</span> <span class="nx">size</span> <span class="p">(</span><span class="nx">If</span> <span class="nx">you</span> <span class="nx">use</span> <span class="nx">eventually</span> <span class="nx">consistent</span> <span class="nx">reads</span><span class="p">,</span> <span class="nx">you</span><span class="err">&#39;</span><span class="nx">ll</span> <span class="nx">get</span> <span class="nx">twice</span> <span class="nx">as</span> <span class="nx">many</span>
-<span class="nx">reads</span> <span class="nx">per</span> <span class="nx">second</span><span class="p">.)</span> <span class="nx">Writes</span> <span class="o">=</span> <span class="nb">Number</span> <span class="nx">of</span> <span class="nx">item</span> <span class="nx">writes</span> <span class="nx">per</span> <span class="nx">second</span> <span class="err">×</span> <span class="mi">1</span> <span class="nx">KB</span> <span class="nx">item</span> <span class="nx">size</span><span class="p">.</span>
-</pre></div>
-
+When you create a table, you must provide a table name, its primary key and
+your required read and write throughput values. Except for the required primary
+key, an Amazon DynamoDB table is schema-less. Individual items in an Amazon
+DynamoDB table can have any number of attributes, although there is a limit of
+64 KB on the item size.  A unit of read capacity represents one strongly
+consistent read per second (or two eventually consistent reads per second) for
+items as large as 4 KB. A unit of write capacity represents one write per
+second for items as large as 1 KB.  Reads = Number of item reads per second × 4
+KB item size (If you use eventually consistent reads, you&#39;ll get twice as many
+reads per second.) Writes = Number of item writes per second × 1 KB item size.
 </code></pre><p>Amazon DynamoDB supports the following two types of primary keys:</p>
 <ul>
 <li>Hash Primary Key – The primary key is made of one attribute, a hash
@@ -144,23 +127,19 @@ range attribute. Amazon DynamoDB builds an unordered hash index on the hash
 attribute and a sorted range index on the range attribute.</li>
 </ul>
 <p>Local Secondary Indexes:</p>
-<pre><code><div class="highlight"><pre><span class="nx">When</span> <span class="nx">you</span> <span class="nx">create</span> <span class="nx">a</span> <span class="nx">table</span> <span class="kd">with</span> <span class="nx">a</span> <span class="nx">hash</span><span class="o">-</span><span class="nx">and</span><span class="o">-</span><span class="nx">range</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">you</span>
-<span class="nx">can</span> <span class="nx">optionally</span> <span class="nx">define</span> <span class="nx">one</span> <span class="nx">or</span> <span class="nx">more</span> <span class="nx">local</span> <span class="nx">secondary</span> <span class="nx">indexes</span> <span class="nx">on</span> <span class="nx">that</span> <span class="nx">table</span><span class="p">.</span> <span class="nx">A</span>
-<span class="nx">local</span> <span class="nx">secondary</span> <span class="nx">index</span> <span class="nx">lets</span> <span class="nx">you</span> <span class="nx">query</span> <span class="nx">the</span> <span class="nx">data</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">table</span> <span class="nx">using</span> <span class="nx">an</span> <span class="nx">alternate</span>
-<span class="nx">range</span> <span class="nx">key</span><span class="p">,</span> <span class="k">in</span> <span class="nx">addition</span> <span class="nx">to</span> <span class="nx">queries</span> <span class="nx">against</span> <span class="nx">the</span> <span class="nx">primary</span> <span class="nx">key</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>When you create a table with a hash-and-range key, you
+can optionally define one or more local secondary indexes on that table. A
+local secondary index lets you query the data in the table using an alternate
+range key, in addition to queries against the primary key.
 </code></pre><p>Amazon DynamoDB Data Types Amazon DynamoDB supports the following data types:</p>
 <ul>
 <li>Scalar data types - Number, String, and Binary.</li>
 <li>Multi-valued types - String Set, Number Set, and Binary Set.</li>
 </ul>
 <p>API / SDK:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">web</span> <span class="nx">service</span> <span class="nx">that</span> <span class="nx">uses</span> <span class="nx">HTTP</span> <span class="nx">and</span> <span class="nx">HTTPS</span> <span class="nx">as</span> <span class="nx">a</span> <span class="nx">transport</span> <span class="nx">and</span>
-<span class="nx">JavaScript</span> <span class="nb">Object</span> <span class="nx">Notation</span> <span class="p">(</span><span class="nx">JSON</span><span class="p">)</span> <span class="nx">as</span> <span class="nx">a</span> <span class="nx">message</span> <span class="nx">serialization</span> <span class="nx">format</span><span class="p">.</span> <span class="nx">Your</span>
-<span class="nx">application</span> <span class="nx">code</span> <span class="nx">can</span> <span class="nx">make</span> <span class="nx">requests</span> <span class="nx">directly</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">web</span> <span class="nx">service</span>
-</pre></div>
-
+<pre><code>Amazon DynamoDB is a web service that uses HTTP and HTTPS as a transport and
+JavaScript Object Notation (JSON) as a message serialization format. Your
+application code can make requests directly to the Amazon DynamoDB web service
 </code></pre><p>  API Reference
   (<a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html</a>).
   There is also PHP library as a part of Amazon PHP SDK
@@ -204,64 +183,56 @@ provisioned throughput and make table operations slower.</p>
 <p>For tables with local secondary indexes there is size limit of 10GB for data
 with the same hash key
 (<a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html">http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html</a>).</p>
-<pre><code><div class="highlight"><pre><span class="nx">The</span> <span class="nx">maximum</span> <span class="nx">size</span> <span class="nx">of</span> <span class="nx">any</span> <span class="nx">item</span> <span class="nx">collection</span> <span class="nx">is</span> <span class="mi">10</span> <span class="nx">GB</span><span class="p">.</span> <span class="nx">This</span> <span class="nx">limit</span> <span class="nx">does</span> <span class="nx">not</span> <span class="nx">apply</span> <span class="nx">to</span>
-<span class="nx">tables</span> <span class="nx">without</span> <span class="nx">local</span> <span class="nx">secondary</span> <span class="nx">indexes</span><span class="p">;</span> <span class="nx">only</span> <span class="nx">tables</span> <span class="nx">that</span> <span class="nx">have</span> <span class="nx">one</span> <span class="nx">or</span> <span class="nx">more</span> <span class="nx">local</span>
-<span class="nx">secondary</span> <span class="nx">indexes</span> <span class="nx">are</span> <span class="nx">affected</span><span class="p">.</span>
-<span class="nx">We</span> <span class="nx">recommend</span> <span class="nx">as</span> <span class="nx">a</span> <span class="nx">best</span> <span class="nx">practice</span> <span class="nx">that</span> <span class="nx">you</span> <span class="nx">instrument</span> <span class="nx">your</span> <span class="nx">application</span> <span class="nx">to</span> <span class="nx">monitor</span>
-<span class="nx">the</span> <span class="nx">sizes</span> <span class="nx">of</span> <span class="nx">your</span> <span class="nx">item</span> <span class="nx">collections</span><span class="p">.</span> <span class="nx">One</span> <span class="nx">way</span> <span class="nx">to</span> <span class="k">do</span> <span class="nx">so</span> <span class="nx">is</span> <span class="nx">to</span> <span class="nx">set</span> <span class="nx">the</span>
-<span class="nx">ReturnItemCollectionMetrics</span> <span class="nx">parameter</span> <span class="nx">to</span> <span class="nx">SIZE</span> <span class="nx">whenever</span> <span class="nx">you</span> <span class="nx">use</span> <span class="nx">BatchWriteItem</span><span class="p">,</span>
-<span class="nx">DeleteItem</span><span class="p">,</span> <span class="nx">PutItem</span> <span class="nx">or</span> <span class="nx">UpdateItem</span><span class="p">.</span> <span class="nx">Your</span> <span class="nx">application</span> <span class="nx">should</span> <span class="nx">examine</span> <span class="nx">the</span>
-<span class="nx">ReturnItemCollectionMetrics</span> <span class="nx">object</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">output</span> <span class="nx">and</span> <span class="nx">log</span> <span class="nx">an</span> <span class="nx">error</span> <span class="nx">message</span>
-<span class="nx">whenever</span> <span class="nx">an</span> <span class="nx">item</span> <span class="nx">collection</span> <span class="nx">exceeds</span> <span class="nx">a</span> <span class="nx">user</span><span class="o">-</span><span class="nx">defined</span> <span class="nx">limit</span> <span class="p">(</span><span class="mi">8</span> <span class="nx">GB</span><span class="p">,</span> <span class="k">for</span> <span class="nx">example</span><span class="p">).</span>
-<span class="nx">Setting</span> <span class="nx">a</span> <span class="nx">limit</span> <span class="nx">that</span> <span class="nx">is</span> <span class="nx">less</span> <span class="nx">than</span> <span class="mi">10</span> <span class="nx">GB</span> <span class="nx">would</span> <span class="nx">provide</span> <span class="nx">an</span> <span class="nx">early</span> <span class="nx">warning</span> <span class="nx">system</span>
-<span class="nx">so</span> <span class="nx">you</span> <span class="nx">know</span> <span class="nx">that</span> <span class="nx">an</span> <span class="nx">item</span> <span class="nx">collection</span> <span class="nx">is</span> <span class="nx">approaching</span> <span class="nx">the</span> <span class="nx">limit</span> <span class="k">in</span> <span class="nx">time</span> <span class="nx">to</span> <span class="k">do</span>
-<span class="nx">something</span> <span class="nx">about</span> <span class="nx">it</span><span class="p">.</span>
+<pre><code>The maximum size of any item collection is 10 GB. This limit does not apply to
+tables without local secondary indexes; only tables that have one or more local
+secondary indexes are affected.
+We recommend as a best practice that you instrument your application to monitor
+the sizes of your item collections. One way to do so is to set the
+ReturnItemCollectionMetrics parameter to SIZE whenever you use BatchWriteItem,
+DeleteItem, PutItem or UpdateItem. Your application should examine the
+ReturnItemCollectionMetrics object in the output and log an error message
+whenever an item collection exceeds a user-defined limit (8 GB, for example).
+Setting a limit that is less than 10 GB would provide an early warning system
+so you know that an item collection is approaching the limit in time to do
+something about it.
 
-<span class="nx">Item</span> <span class="nx">collection</span> <span class="o">-</span> <span class="nx">is</span> <span class="nx">any</span> <span class="nx">group</span> <span class="nx">of</span> <span class="nx">items</span> <span class="nx">that</span> <span class="nx">have</span> <span class="nx">the</span> <span class="nx">same</span> <span class="nx">hash</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">across</span> <span class="nx">a</span>
-<span class="nx">table</span> <span class="nx">and</span> <span class="nx">all</span> <span class="nx">of</span> <span class="nx">its</span> <span class="nx">local</span> <span class="nx">secondary</span> <span class="nx">indexes</span><span class="p">.</span> <span class="nx">For</span> <span class="nx">instance</span><span class="p">,</span> <span class="nx">consider</span> <span class="nx">an</span>
-<span class="nx">e</span><span class="o">-</span><span class="nx">commerce</span> <span class="nx">application</span> <span class="nx">that</span> <span class="nx">stores</span> <span class="nx">customer</span> <span class="nx">order</span> <span class="nx">data</span> <span class="k">in</span> <span class="nx">a</span> <span class="nx">DynamoDB</span> <span class="nx">table</span> <span class="kd">with</span>
-<span class="nx">hash</span><span class="o">-</span><span class="nx">range</span> <span class="nx">schema</span> <span class="nx">of</span> <span class="nx">customer</span> <span class="nx">id</span><span class="o">-</span><span class="nx">order</span> <span class="nx">timestamp</span><span class="p">.</span> <span class="nx">Without</span> <span class="nx">LSI</span><span class="p">,</span> <span class="nx">to</span> <span class="nx">find</span> <span class="nx">an</span>
-<span class="nx">answer</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">question</span> <span class="err">“</span><span class="nx">Display</span> <span class="nx">all</span> <span class="nx">orders</span> <span class="nx">made</span> <span class="nx">by</span> <span class="nx">Customer</span> <span class="nx">X</span> <span class="kd">with</span> <span class="nx">shipping</span>
-<span class="nx">date</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">past</span> <span class="mi">30</span> <span class="nx">days</span><span class="p">,</span> <span class="nx">sorted</span> <span class="nx">by</span> <span class="nx">shipping</span> <span class="nx">date</span><span class="err">”</span><span class="p">,</span> <span class="nx">you</span> <span class="nx">had</span> <span class="nx">to</span> <span class="nx">use</span> <span class="nx">the</span> <span class="nx">Query</span>
-<span class="nx">API</span> <span class="nx">to</span> <span class="nx">retrieve</span> <span class="nx">all</span> <span class="nx">the</span> <span class="nx">objects</span> <span class="nx">under</span> <span class="nx">the</span> <span class="nx">hash</span> <span class="nx">key</span> <span class="err">“</span><span class="nx">X</span><span class="err">”</span><span class="p">,</span> <span class="nx">sort</span> <span class="nx">the</span> <span class="nx">results</span> <span class="nx">by</span>
-<span class="nx">shipment</span> <span class="nx">date</span> <span class="nx">and</span> <span class="nx">then</span> <span class="nx">filter</span> <span class="nx">out</span> <span class="nx">older</span> <span class="nx">records</span><span class="p">.</span>
-</pre></div>
-
+Item collection - is any group of items that have the same hash key, across a
+table and all of its local secondary indexes. For instance, consider an
+e-commerce application that stores customer order data in a DynamoDB table with
+hash-range schema of customer id-order timestamp. Without LSI, to find an
+answer to the question “Display all orders made by Customer X with shipping
+date in the past 30 days, sorted by shipping date”, you had to use the Query
+API to retrieve all the objects under the hash key “X”, sort the results by
+shipment date and then filter out older records.
 </code></pre><p>It is not possible to add secondary indexes into existing table.</p>
 <p>Existing indexes also can not be changed or deleted.</p>
 <p>Query results sorting:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Query</span> <span class="nx">results</span> <span class="nx">are</span> <span class="nx">always</span> <span class="nx">sorted</span> <span class="nx">by</span> <span class="nx">the</span> <span class="nx">range</span> <span class="nx">key</span><span class="p">.</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">type</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">range</span>
-<span class="nx">key</span> <span class="nx">is</span> <span class="nb">Number</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">results</span> <span class="nx">are</span> <span class="nx">returned</span> <span class="k">in</span> <span class="nx">numeric</span> <span class="nx">order</span><span class="p">;</span> <span class="nx">otherwise</span><span class="p">,</span> <span class="nx">the</span>
-<span class="nx">results</span> <span class="nx">are</span> <span class="nx">returned</span> <span class="k">in</span> <span class="nx">order</span> <span class="nx">of</span> <span class="nx">ASCII</span> <span class="nx">character</span> <span class="nx">code</span> <span class="nx">values</span><span class="p">.</span> <span class="nx">By</span> <span class="k">default</span><span class="p">,</span> <span class="nx">the</span>
-<span class="nx">sort</span> <span class="nx">order</span> <span class="nx">is</span> <span class="nx">ascending</span><span class="p">.</span> <span class="nx">To</span> <span class="nx">reverse</span> <span class="nx">the</span> <span class="nx">order</span> <span class="nx">use</span> <span class="nx">the</span> <span class="nx">ScanIndexForward</span>
-<span class="nx">parameter</span> <span class="nx">set</span> <span class="nx">to</span> <span class="kc">false</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Query results are always sorted by the range key. If the data type of the range
+key is Number, the results are returned in numeric order; otherwise, the
+results are returned in order of ASCII character code values. By default, the
+sort order is ascending. To reverse the order use the ScanIndexForward
+parameter set to false.
 </code></pre><p>Get records count:</p>
-<pre><code><div class="highlight"><pre><span class="k">in</span> <span class="nx">a</span> <span class="nx">request</span><span class="p">,</span> <span class="nx">set</span> <span class="nx">the</span> <span class="nx">Count</span> <span class="nx">parameter</span> <span class="nx">to</span> <span class="kc">true</span> <span class="k">if</span> <span class="nx">you</span> <span class="nx">want</span>
-<span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">to</span> <span class="nx">provide</span> <span class="nx">the</span> <span class="nx">total</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">items</span> <span class="nx">that</span> <span class="nx">match</span> <span class="nx">the</span> <span class="nx">scan</span> <span class="nx">filter</span>
-<span class="nx">or</span> <span class="nx">query</span> <span class="nx">condition</span><span class="p">,</span> <span class="nx">instead</span> <span class="nx">of</span> <span class="nx">a</span> <span class="nx">list</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">matching</span> <span class="nx">items</span><span class="p">.</span> <span class="nx">In</span> <span class="nx">a</span> <span class="nx">response</span><span class="p">,</span>
-<span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">returns</span> <span class="nx">a</span> <span class="nx">Count</span> <span class="nx">value</span> <span class="k">for</span> <span class="nx">the</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">matching</span> <span class="nx">items</span> <span class="k">in</span> <span class="nx">a</span>
-<span class="nx">request</span><span class="p">.</span> <span class="nx">If</span> <span class="nx">the</span> <span class="nx">matching</span> <span class="nx">items</span> <span class="k">for</span> <span class="nx">a</span> <span class="nx">scan</span> <span class="nx">filter</span> <span class="nx">or</span> <span class="nx">query</span> <span class="nx">condition</span> <span class="nx">is</span> <span class="nx">over</span> <span class="mi">1</span>
-<span class="nx">MB</span><span class="p">,</span> <span class="nx">Count</span> <span class="nx">contains</span> <span class="nx">a</span> <span class="nx">partial</span> <span class="nx">count</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">total</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">items</span> <span class="nx">that</span> <span class="nx">match</span> <span class="nx">the</span>
-<span class="nx">request</span><span class="p">.</span> <span class="nx">To</span> <span class="nx">get</span> <span class="nx">the</span> <span class="nx">full</span> <span class="nx">count</span> <span class="nx">of</span> <span class="nx">items</span> <span class="nx">that</span> <span class="nx">match</span> <span class="nx">a</span> <span class="nx">request</span><span class="p">,</span> <span class="nx">use</span> <span class="nx">the</span>
-<span class="nx">LastEvaluatedKey</span> <span class="k">in</span> <span class="nx">a</span> <span class="nx">subsequent</span> <span class="nx">request</span><span class="p">.</span> <span class="nx">Repeat</span> <span class="nx">the</span> <span class="nx">request</span> <span class="nx">until</span> <span class="nx">Amazon</span>
-<span class="nx">DynamoDB</span> <span class="nx">no</span> <span class="nx">longer</span> <span class="nx">returns</span> <span class="nx">a</span> <span class="nx">LastEvaluatedKey</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>in a request, set the Count parameter to true if you want
+Amazon DynamoDB to provide the total number of items that match the scan filter
+or query condition, instead of a list of the matching items. In a response,
+Amazon DynamoDB returns a Count value for the number of matching items in a
+request. If the matching items for a scan filter or query condition is over 1
+MB, Count contains a partial count of the total number of items that match the
+request. To get the full count of items that match a request, use the
+LastEvaluatedKey in a subsequent request. Repeat the request until Amazon
+DynamoDB no longer returns a LastEvaluatedKey.
 </code></pre><p>Single operation size limit:</p>
-<pre><code><div class="highlight"><pre><span class="nx">A</span> <span class="nx">single</span> <span class="nx">operation</span> <span class="nx">can</span> <span class="nx">retrieve</span> <span class="nx">up</span> <span class="nx">to</span> <span class="mi">1</span> <span class="nx">MB</span> <span class="nx">of</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">which</span> <span class="nx">can</span> <span class="nx">comprise</span>
-<span class="nx">as</span> <span class="nx">many</span> <span class="nx">as</span> <span class="mi">100</span> <span class="nx">items</span><span class="p">.</span> <span class="nx">BatchGetItem</span> <span class="nx">will</span> <span class="k">return</span> <span class="nx">a</span> <span class="nx">partial</span> <span class="nx">result</span> <span class="k">if</span> <span class="nx">the</span> <span class="nx">response</span>
-<span class="nx">size</span> <span class="nx">limit</span> <span class="nx">is</span> <span class="nx">exceeded</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">table</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">provisioned</span> <span class="nx">throughput</span> <span class="nx">is</span> <span class="nx">exceeded</span><span class="p">,</span> <span class="nx">or</span> <span class="nx">an</span>
-<span class="nx">internal</span> <span class="nx">processing</span> <span class="nx">failure</span> <span class="nx">occurs</span><span class="p">.</span> <span class="nx">If</span> <span class="nx">a</span> <span class="nx">partial</span> <span class="nx">result</span> <span class="nx">is</span> <span class="nx">returned</span><span class="p">,</span> <span class="nx">the</span>
-<span class="nx">operation</span> <span class="nx">returns</span> <span class="nx">a</span> <span class="nx">value</span> <span class="k">for</span> <span class="nx">UnprocessedKeys</span><span class="p">.</span> <span class="nx">You</span> <span class="nx">can</span> <span class="nx">use</span> <span class="k">this</span> <span class="nx">value</span> <span class="nx">to</span> <span class="nx">retry</span>
-<span class="nx">the</span> <span class="nx">operation</span> <span class="nx">starting</span> <span class="kd">with</span> <span class="nx">the</span> <span class="nx">next</span> <span class="nx">item</span> <span class="nx">to</span> <span class="nx">get</span><span class="p">.</span>  <span class="nx">For</span> <span class="nx">example</span><span class="p">,</span> <span class="k">if</span> <span class="nx">you</span> <span class="nx">ask</span> <span class="nx">to</span>
-<span class="nx">retrieve</span> <span class="mi">100</span> <span class="nx">items</span><span class="p">,</span> <span class="nx">but</span> <span class="nx">each</span> <span class="nx">individual</span> <span class="nx">item</span> <span class="nx">is</span> <span class="mi">50</span> <span class="nx">KB</span> <span class="k">in</span> <span class="nx">size</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">system</span>
-<span class="nx">returns</span> <span class="mi">20</span> <span class="nx">items</span> <span class="p">(</span><span class="mi">1</span> <span class="nx">MB</span><span class="p">)</span> <span class="nx">and</span> <span class="nx">an</span> <span class="nx">appropriate</span> <span class="nx">UnprocessedKeys</span> <span class="nx">value</span> <span class="nx">so</span> <span class="nx">you</span> <span class="nx">can</span> <span class="nx">get</span>
-<span class="nx">the</span> <span class="nx">next</span> <span class="nx">page</span> <span class="nx">of</span> <span class="nx">results</span><span class="p">.</span> <span class="nx">If</span> <span class="nx">desired</span><span class="p">,</span> <span class="nx">your</span> <span class="nx">application</span> <span class="nx">can</span> <span class="nx">include</span> <span class="nx">its</span> <span class="nx">own</span>
-<span class="nx">logic</span> <span class="nx">to</span> <span class="nx">assemble</span> <span class="nx">the</span> <span class="nx">pages</span> <span class="nx">of</span> <span class="nx">results</span> <span class="nx">into</span> <span class="nx">one</span> <span class="nx">dataset</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>A single operation can retrieve up to 1 MB of data, which can comprise
+as many as 100 items. BatchGetItem will return a partial result if the response
+size limit is exceeded, the table&#39;s provisioned throughput is exceeded, or an
+internal processing failure occurs. If a partial result is returned, the
+operation returns a value for UnprocessedKeys. You can use this value to retry
+the operation starting with the next item to get.  For example, if you ask to
+retrieve 100 items, but each individual item is 50 KB in size, the system
+returns 20 items (1 MB) and an appropriate UnprocessedKeys value so you can get
+the next page of results. If desired, your application can include its own
+logic to assemble the pages of results into one dataset.
 </code></pre><p>Export - data export can be implemented as off-line operation using Elastic Map
 Reduce. See <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EMRforDynamoDB.html">Elastic Map Reduce use cases</a>:</p>
 <ul>
@@ -272,18 +243,16 @@ Reduce. See <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerg
 <li>Loading Amazon DynamoDB data into the Hadoop Distributed File System (HDFS) and using it as input into an Amazon EMR job flow.</li>
 </ul>
 <p>To perform advanced queries on data it is also possible to <a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/RedshiftforDynamoDB.html">copy data to Amazon Redshift</a>:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Amazon</span> <span class="nx">Redshift</span> <span class="nx">complements</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="kd">with</span> <span class="nx">advanced</span> <span class="nx">business</span> <span class="nx">intelligence</span>
-<span class="nx">capabilities</span> <span class="nx">and</span> <span class="nx">a</span> <span class="nx">powerful</span> <span class="nx">SQL</span><span class="o">-</span><span class="nx">based</span> <span class="kr">interface</span><span class="p">.</span> <span class="nx">When</span> <span class="nx">you</span> <span class="nx">copy</span> <span class="nx">data</span> <span class="nx">from</span> <span class="nx">an</span>
-<span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">table</span> <span class="nx">into</span> <span class="nx">Amazon</span> <span class="nx">Redshift</span><span class="p">,</span> <span class="nx">you</span> <span class="nx">can</span> <span class="nx">perform</span> <span class="nx">complex</span> <span class="nx">data</span>
-<span class="nx">analysis</span> <span class="nx">queries</span> <span class="nx">on</span> <span class="nx">that</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">including</span> <span class="nx">joins</span> <span class="kd">with</span> <span class="nx">other</span> <span class="nx">tables</span> <span class="k">in</span> <span class="nx">your</span> <span class="nx">Amazon</span>
-<span class="nx">Redshift</span> <span class="nx">cluster</span><span class="p">.</span>
-<span class="nx">In</span> <span class="nx">terms</span> <span class="nx">of</span> <span class="nx">provisioned</span> <span class="nx">throughput</span><span class="p">,</span> <span class="nx">a</span> <span class="nx">copy</span> <span class="nx">operation</span> <span class="nx">from</span> <span class="nx">an</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span>
-<span class="nx">table</span> <span class="nx">counts</span> <span class="nx">against</span> <span class="nx">that</span> <span class="nx">table</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">read</span> <span class="nx">capacity</span><span class="p">.</span> <span class="nx">After</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">is</span> <span class="nx">copied</span><span class="p">,</span> <span class="nx">your</span>
-<span class="nx">SQL</span> <span class="nx">queries</span> <span class="k">in</span> <span class="nx">Amazon</span> <span class="nx">Redshift</span> <span class="k">do</span> <span class="nx">not</span> <span class="nx">affect</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="k">in</span> <span class="nx">any</span> <span class="nx">way</span><span class="p">.</span> <span class="nx">This</span>
-<span class="nx">is</span> <span class="nx">because</span> <span class="nx">your</span> <span class="nx">queries</span> <span class="nx">act</span> <span class="nx">upon</span> <span class="nx">a</span> <span class="nx">copy</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">from</span> <span class="nx">DynamoDB</span><span class="p">,</span> <span class="nx">rather</span> <span class="nx">than</span>
-<span class="nx">upon</span> <span class="nx">DynamoDB</span> <span class="nx">itself</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Amazon Redshift complements Amazon DynamoDB with advanced business intelligence
+capabilities and a powerful SQL-based interface. When you copy data from an
+Amazon DynamoDB table into Amazon Redshift, you can perform complex data
+analysis queries on that data, including joins with other tables in your Amazon
+Redshift cluster.
+In terms of provisioned throughput, a copy operation from an Amazon DynamoDB
+table counts against that table&#39;s read capacity. After the data is copied, your
+SQL queries in Amazon Redshift do not affect Amazon DynamoDB in any way. This
+is because your queries act upon a copy of the data from DynamoDB, rather than
+upon DynamoDB itself.
 </code></pre><h2 id="cost">Cost</h2>
 <p>Dynamo db <a href="http://aws.amazon.com/dynamodb/pricing/">pricing page</a> and <a href="http://calculator.s3.amazonaws.com/calc5.html#s=DYNAMODB">price calculator</a>.</p>
 <p>Assumptions (having events table described above):</p>
@@ -343,12 +312,10 @@ case, so we decided not to use DynamoDB at all for storing events) and build cac
 <p><a href="https://github.com/aws/aws-sdk-php">PHP SDK</a> and <a href="http://docs.aws.amazon.com/AmazonSimpleDB/2009-04-15/DeveloperGuide/SDB_API.html">HTTP API</a>.</p>
 <h2 id="features">Features</h2>
 <p><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/UsingSelect.html">Complex Queries</a></p>
-<pre><code><div class="highlight"><pre><span class="nx">One</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">main</span> <span class="nx">uses</span> <span class="k">for</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">involves</span> <span class="nx">making</span> <span class="nx">complex</span> <span class="nx">queries</span>
-<span class="nx">against</span> <span class="nx">your</span> <span class="nx">data</span> <span class="nx">set</span><span class="p">,</span> <span class="nx">so</span> <span class="nx">you</span> <span class="nx">can</span> <span class="nx">get</span> <span class="nx">exactly</span> <span class="nx">the</span> <span class="nx">data</span> <span class="nx">you</span> <span class="nx">need</span><span class="p">.</span> <span class="nx">For</span> <span class="nx">more</span>
-<span class="nx">information</span><span class="p">,</span> <span class="nx">refer</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">Select</span> <span class="nx">section</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">Developer</span>
-<span class="nx">Guide</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>One of the main uses for Amazon SimpleDB involves making complex queries
+against your data set, so you can get exactly the data you need. For more
+information, refer to the Select section of the Amazon SimpleDB Developer
+Guide.
 </code></pre><p>Select operator supports:</p>
 <ul>
 <li>where (comparison operators, including like), sort and limit.</li>
@@ -356,17 +323,13 @@ case, so we decided not to use DynamoDB at all for storing events) and build cac
 <li>max / min values can be selected using ordering by value and limit 1.</li>
 </ul>
 <p>Data Storage and Performance</p>
-<pre><code><div class="highlight"><pre><span class="nx">For</span> <span class="nx">information</span> <span class="nx">on</span> <span class="nx">how</span> <span class="nx">quickly</span> <span class="nx">stored</span> <span class="nx">data</span> <span class="nx">is</span> <span class="nx">recorded</span> <span class="nx">to</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span><span class="p">,</span>
-<span class="nx">refer</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">Consistency</span> <span class="nx">section</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">Developer</span> <span class="nx">Guide</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>For information on how quickly stored data is recorded to Amazon SimpleDB,
+refer to the Consistency section of the Amazon SimpleDB Developer Guide.
 </code></pre><p><a href="http://docs.aws.amazon.com/AmazonSimpleDB/latest/DeveloperGuide/SDBLimits.html">Limits and Restrictions</a></p>
-<pre><code><div class="highlight"><pre><span class="nx">During</span> <span class="nx">development</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">is</span> <span class="nx">important</span> <span class="nx">to</span> <span class="nx">understand</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">limits</span>
-<span class="nx">when</span> <span class="nx">storing</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">the</span> <span class="nx">amount</span> <span class="nx">of</span> <span class="nx">data</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">can</span> <span class="k">return</span> <span class="nx">from</span> <span class="nx">a</span>
-<span class="nx">query</span><span class="p">,</span> <span class="nx">and</span> <span class="nx">what</span> <span class="nx">to</span> <span class="k">do</span> <span class="k">if</span> <span class="nx">the</span> <span class="nx">limits</span> <span class="nx">are</span> <span class="nx">exceeded</span><span class="p">.</span> <span class="nx">For</span> <span class="nx">more</span> <span class="nx">information</span><span class="p">,</span> <span class="nx">refer</span>
-<span class="nx">to</span> <span class="nx">the</span> <span class="nx">Limits</span> <span class="nx">section</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">Developer</span> <span class="nx">Guide</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>During development, it is important to understand Amazon SimpleDB&#39;s limits
+when storing data, the amount of data Amazon SimpleDB can return from a
+query, and what to do if the limits are exceeded. For more information, refer
+to the Limits section of the Amazon SimpleDB Developer Guide.
 </code></pre><p>Limits:</p>
 <ul>
 <li>Currently, you can store up to 10 GB per domain and you can create up to 250 domains.</li>
@@ -426,23 +389,21 @@ then less items will be returned.</li>
 <h1 id="amazon-simpledb-vs-dynamodb">Amazon SimpleDB vs DynamoDB</h1>
 <p>Q: How does Amazon DynamoDB differ from Amazon SimpleDB? Which should I use?
 (<a href="http://aws.amazon.com/dynamodb/faqs/#How_does_Amazon_DynamoDB_differ_from_Amazon_SimpleDB_Which_should_I_use">http://aws.amazon.com/dynamodb/faqs/#How_does_Amazon_DynamoDB_differ_from_Amazon_SimpleDB_Which_should_I_use</a>)</p>
-<pre><code><div class="highlight"><pre><span class="nx">Both</span> <span class="nx">services</span> <span class="nx">are</span> <span class="nx">non</span><span class="o">-</span><span class="nx">relational</span> <span class="nx">databases</span> <span class="nx">that</span> <span class="nx">remove</span> <span class="nx">the</span> <span class="nx">work</span> <span class="nx">of</span> <span class="nx">database</span>
-<span class="nx">administration</span><span class="p">.</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">focuses</span> <span class="nx">on</span> <span class="nx">providing</span> <span class="nx">seamless</span> <span class="nx">scalability</span> <span class="nx">and</span>
-<span class="nx">fast</span><span class="p">,</span> <span class="nx">predictable</span> <span class="nx">performance</span><span class="p">.</span> <span class="nx">It</span> <span class="nx">runs</span> <span class="nx">on</span> <span class="nx">solid</span> <span class="nx">state</span> <span class="nx">disks</span> <span class="p">(</span><span class="nx">SSDs</span><span class="p">)</span> <span class="k">for</span>
-<span class="nx">low</span><span class="o">-</span><span class="nx">latency</span> <span class="nx">response</span> <span class="nx">times</span><span class="p">,</span> <span class="nx">and</span> <span class="nx">there</span> <span class="nx">are</span> <span class="nx">no</span> <span class="nx">limits</span> <span class="nx">on</span> <span class="nx">the</span> <span class="nx">request</span> <span class="nx">capacity</span> <span class="nx">or</span>
-<span class="nx">storage</span> <span class="nx">size</span> <span class="k">for</span> <span class="nx">a</span> <span class="nx">given</span> <span class="nx">table</span><span class="p">.</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">because</span> <span class="nx">Amazon</span> <span class="nx">DynamoDB</span> <span class="nx">automatically</span>
-<span class="nx">partitions</span> <span class="nx">your</span> <span class="nx">data</span> <span class="nx">and</span> <span class="nx">workload</span> <span class="nx">over</span> <span class="nx">a</span> <span class="nx">sufficient</span> <span class="nx">number</span> <span class="nx">of</span> <span class="nx">servers</span> <span class="nx">to</span> <span class="nx">meet</span>
-<span class="nx">the</span> <span class="nx">scale</span> <span class="nx">requirements</span> <span class="nx">you</span> <span class="nx">provide</span><span class="p">.</span>
-<span class="nx">In</span> <span class="nx">contrast</span><span class="p">,</span> <span class="nx">a</span> <span class="nx">table</span> <span class="k">in</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">has</span> <span class="nx">a</span> <span class="nx">strict</span> <span class="nx">storage</span> <span class="nx">limitation</span> <span class="nx">of</span> <span class="mi">10</span>
-<span class="nx">GB</span> <span class="nx">and</span> <span class="nx">is</span> <span class="nx">limited</span> <span class="k">in</span> <span class="nx">the</span> <span class="nx">request</span> <span class="nx">capacity</span> <span class="nx">it</span> <span class="nx">can</span> <span class="nx">achieve</span> <span class="p">(</span><span class="nx">typically</span> <span class="nx">under</span> <span class="mi">25</span>
-<span class="nx">writes</span><span class="o">/</span><span class="nx">second</span><span class="p">);</span> <span class="nx">it</span> <span class="nx">is</span> <span class="nx">up</span> <span class="nx">to</span> <span class="nx">you</span> <span class="nx">to</span> <span class="nx">manage</span> <span class="nx">the</span> <span class="nx">partitioning</span> <span class="nx">and</span> <span class="nx">re</span><span class="o">-</span><span class="nx">partitioning</span>
-<span class="nx">of</span> <span class="nx">your</span> <span class="nx">data</span> <span class="nx">over</span> <span class="nx">additional</span> <span class="nx">SimpleDB</span> <span class="nx">tables</span> <span class="k">if</span> <span class="nx">you</span> <span class="nx">need</span> <span class="nx">additional</span> <span class="nx">scale</span><span class="p">.</span>
-<span class="nx">While</span> <span class="nx">SimpleDB</span> <span class="nx">has</span> <span class="nx">scaling</span> <span class="nx">limitations</span><span class="p">,</span> <span class="nx">it</span> <span class="nx">may</span> <span class="nx">be</span> <span class="nx">a</span> <span class="nx">good</span> <span class="nx">fit</span> <span class="k">for</span> <span class="nx">smaller</span>
-<span class="nx">workloads</span> <span class="nx">that</span> <span class="nx">require</span> <span class="nx">query</span> <span class="nx">flexibility</span><span class="p">.</span> <span class="nx">Amazon</span> <span class="nx">SimpleDB</span> <span class="nx">automatically</span> <span class="nx">indexes</span>
-<span class="nx">all</span> <span class="nx">item</span> <span class="nx">attributes</span> <span class="nx">and</span> <span class="nx">thus</span> <span class="nx">supports</span> <span class="nx">query</span> <span class="nx">flexibility</span> <span class="nx">at</span> <span class="nx">the</span> <span class="nx">cost</span> <span class="nx">of</span>
-<span class="nx">performance</span> <span class="nx">and</span> <span class="nx">scale</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Both services are non-relational databases that remove the work of database
+administration. Amazon DynamoDB focuses on providing seamless scalability and
+fast, predictable performance. It runs on solid state disks (SSDs) for
+low-latency response times, and there are no limits on the request capacity or
+storage size for a given table. This is because Amazon DynamoDB automatically
+partitions your data and workload over a sufficient number of servers to meet
+the scale requirements you provide.
+In contrast, a table in Amazon SimpleDB has a strict storage limitation of 10
+GB and is limited in the request capacity it can achieve (typically under 25
+writes/second); it is up to you to manage the partitioning and re-partitioning
+of your data over additional SimpleDB tables if you need additional scale.
+While SimpleDB has scaling limitations, it may be a good fit for smaller
+workloads that require query flexibility. Amazon SimpleDB automatically indexes
+all item attributes and thus supports query flexibility at the cost of
+performance and scale.
 </code></pre><p>Note: in the DynamoDB there is also 10GB limitation for item collections (items
 with the same hash key) if we use secondary indexes.</p>
 <p>For events storage we have:</p>
@@ -479,17 +440,13 @@ with the same hash key) if we use secondary indexes.</p>
 <p><a href="http://www.mysqlperformanceblog.com/2011/02/28/is-voltdb-really-as-scalable-as-they-claim/">Is VoltDB really as scalable as they claim?</a>.</p>
 <p><a href="http://highscalability.com/blog/2010/6/28/voltdb-decapitates-six-sql-urban-myths-and-delivers-internet.html">VoltDB Decapitates Six SQL Urban Myths And Delivers Internet Scale OLTP In The Process</a>.</p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -503,14 +460,10 @@ with the same hash key) if we use secondary indexes.</p>
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

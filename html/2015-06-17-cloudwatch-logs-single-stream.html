@@ -7,176 +7,157 @@
     <title>CloudWatch Logs - how to log data from multiple instances to the single stream</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>CloudWatch Logs - how to log data from multiple instances to the single stream</h1>
-          </div>
+      <div class="post-title">
+          <h1>CloudWatch Logs - how to log data from multiple instances to the single stream</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p><a href="/html/2015-05-20-cloudwatch-setup.html">After using CloudWatch Logs for some time</a> I found that it is very inconvenient to have one stream per instance.
+      <div class="post-body">
+          <p><a href="/html/2015-05-20-cloudwatch-setup.html">After using CloudWatch Logs for some time</a> I found that it is very inconvenient to have one stream per instance.
 The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.</p>
 <p>A more convenient alternative is to use one stream like <code>error_log</code> for all instances.
 <!-- more --></p>
 <p><strong>Update</strong>: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.</p>
 <p>To use the single stream, we can just set a static string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
-<pre><code class="lang-yaml"><div class="highlight"><pre>  <span class="l-Scalar-Plain">AWSEBAutoScalingGroup</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">Metadata</span><span class="p-Indicator">:</span>
-      <span class="s">&quot;AWS::CloudFormation::Init&quot;</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">CWLogsAgentConfigSetup</span><span class="p-Indicator">:</span>
-          <span class="l-Scalar-Plain">files</span><span class="p-Indicator">:</span>
-            <span class="s">&quot;/tmp/cwlogs/conf.d/apache-error.conf&quot;</span><span class="p-Indicator">:</span>
-              <span class="l-Scalar-Plain">content</span> <span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
-                <span class="no">[apache-error_log]</span>
-                <span class="no">file = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;LogFile&quot;]}`</span>
-                <span class="no">log_group_name = `{ &quot;Ref&quot; : &quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&quot; }`</span>
-                <span class="no">log_stream_name = error_log</span>
-                <span class="no">datetime_format = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;TimestampFormat&quot;]}`</span>
-              <span class="l-Scalar-Plain">mode</span>  <span class="p-Indicator">:</span> <span class="s">&quot;000400&quot;</span>
-              <span class="l-Scalar-Plain">owner</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
-              <span class="l-Scalar-Plain">group</span> <span class="p-Indicator">:</span> <span class="l-Scalar-Plain">root</span>
-</pre></div>
-
+<pre><code class="lang-yaml">
+  AWSEBAutoScalingGroup:
+    Metadata:
+      &quot;AWS::CloudFormation::Init&quot;:
+        CWLogsAgentConfigSetup:
+          files:
+            &quot;/tmp/cwlogs/conf.d/apache-error.conf&quot;:
+              content : |
+                [apache-error_log]
+                file = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;LogFile&quot;]}`
+                log_group_name = `{ &quot;Ref&quot; : &quot;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&quot; }`
+                log_stream_name = error_log
+                datetime_format = `{&quot;Fn::FindInMap&quot;:[&quot;CWLogs&quot;, &quot;WebErrorLogGroup&quot;, &quot;TimestampFormat&quot;]}`
+              mode  : &quot;000400&quot;
+              owner : root
+              group : root
 </code></pre>
 <p>Now we need to make sure our log records contain instance id or IP address, so we can understand which instance generated each log record.</p>
 <p>Fortunately, python application logs in the apache&#39;s error_log already have IP address, so nothing to do here. The log looks like this:</p>
-<pre><code class="lang-text"><div class="highlight"><pre>[Wed Jun 17 16:02:46.944612 2015] [:error] [pid 20405] [remote 172.31.11.92:0] mod_wsgi (pid=20405): Exception occurred processing WSGI script &#39;/opt/python/current/app/application.py&#39;.
+<pre><code class="lang-text">[Wed Jun 17 16:02:46.944612 2015] [:error] [pid 20405] [remote 172.31.11.92:0] mod_wsgi (pid=20405): Exception occurred processing WSGI script &#39;/opt/python/current/app/application.py&#39;.
 [Wed Jun 17 16:02:46.944686 2015] [:error] [pid 20405] [remote 172.31.11.92:0] Traceback (most recent call last):
 [Wed Jun 17 16:02:46.944711 2015] [:error] [pid 20405] [remote 172.31.11.92:0] File &quot;/opt/python/run/venv/lib/python2.7/site-packages/flask/app.py&quot;, line 1701, in __call__
 ...
-</pre></div>
-
 </code></pre>
 <p>Here <code>[remote 172.31.11.92:0]</code> is a private instance IP.</p>
 <p>For custom logs generated by application it is better to use python&#39;s <code>logging</code> module where we can set a custom format and include instance id.</p>
 <p>Here is an example of how to get EC2 instance id or IP or any other metadata using boto:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">boto.utils</span> <span class="kn">import</span> <span class="n">get_instance_metadata</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span> <span class="n">get_instance_metadata</span><span class="p">()</span>
-<span class="p">{</span>
-  <span class="s">&#39;ami-manifest-path&#39;</span><span class="p">:</span> <span class="s">&#39;(unknown)&#39;</span><span class="p">,</span>
-  <span class="s">&#39;instance-type&#39;</span><span class="p">:</span> <span class="s">&#39;t2.small&#39;</span><span class="p">,</span>
-  <span class="s">&#39;instance-id&#39;</span><span class="p">:</span> <span class="s">&#39;i-977a265c&#39;</span><span class="p">,</span>
-  <span class="s">&#39;iam&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s">&#39;local-hostname&#39;</span><span class="p">:</span>
-  <span class="s">&#39;ip-172-32-22-111.ap-southeast-1.compute.internal&#39;</span><span class="p">,</span>
-  <span class="s">&#39;network&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span> <span class="p">},</span>
-  <span class="s">&#39;hostname&#39;</span><span class="p">:</span> <span class="s">&#39;ip-172-32-22-111.ap-southeast-1.compute.internal&#39;</span><span class="p">,</span>
-  <span class="s">&#39;ami-id&#39;</span><span class="p">:</span> <span class="s">&#39;ami-44d4e414&#39;</span><span class="p">,</span>
-  <span class="s">&#39;instance-action&#39;</span><span class="p">:</span> <span class="s">&#39;none&#39;</span><span class="p">,</span>
-  <span class="s">&#39;profile&#39;</span><span class="p">:</span> <span class="s">&#39;default-hvm&#39;</span><span class="p">,</span>
-  <span class="s">&#39;reservation-id&#39;</span><span class="p">:</span> <span class="s">&#39;r-fde77b77&#39;</span><span class="p">,</span>
-  <span class="s">&#39;security-groups&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;ci-servers&#39;</span><span class="p">,</span> <span class="s">&#39;awseb-e-3uijdzdiad-stack-AWSEBSecurityGroup-1R39VECLNK1YK&#39;</span><span class="p">],</span>
-  <span class="s">&#39;metrics&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;vhostmd&#39;</span><span class="p">:</span> <span class="s">&#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#39;</span><span class="p">},</span>
-  <span class="s">&#39;mac&#39;</span><span class="p">:</span> <span class="s">&#39;06:2d:22:2b:22:22&#39;</span><span class="p">,</span>
-  <span class="s">&#39;public-ipv4&#39;</span><span class="p">:</span> <span class="s">&#39;52.77.99.111&#39;</span><span class="p">,</span>
-  <span class="s">&#39;services&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;domain&#39;</span><span class="p">:</span> <span class="s">&#39;amazonaws.com&#39;</span><span class="p">},</span>
-  <span class="s">&#39;local-ipv4&#39;</span><span class="p">:</span> <span class="s">&#39;172.32.22.111&#39;</span><span class="p">,</span>
-  <span class="s">&#39;placement&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;availability-zone&#39;</span><span class="p">:</span> <span class="s">&#39;ap-southeast-1b&#39;</span><span class="p">},</span>
-  <span class="s">&#39;ami-launch-index&#39;</span><span class="p">:</span> <span class="s">&#39;0&#39;</span><span class="p">,</span>
-  <span class="s">&#39;public-hostname&#39;</span><span class="p">:</span> <span class="s">&#39;ec2-52-77-99-111.ap-southeast-1.compute.amazonaws.com&#39;</span><span class="p">,</span> <span class="s">&#39;public-keys&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
-  <span class="s">&#39;block-device-mapping&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;ami&#39;</span><span class="p">:</span> <span class="s">&#39;/dev/xvda&#39;</span><span class="p">,</span> <span class="s">&#39;root&#39;</span><span class="p">:</span> <span class="s">&#39;/dev/xvda&#39;</span><span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-
+<pre><code class="lang-python">&gt;&gt;&gt; from boto.utils import get_instance_metadata
+&gt;&gt;&gt; print get_instance_metadata()
+{
+  &#39;ami-manifest-path&#39;: &#39;(unknown)&#39;,
+  &#39;instance-type&#39;: &#39;t2.small&#39;,
+  &#39;instance-id&#39;: &#39;i-977a265c&#39;,
+  &#39;iam&#39;: {...}, &#39;local-hostname&#39;:
+  &#39;ip-172-32-22-111.ap-southeast-1.compute.internal&#39;,
+  &#39;network&#39;: {... },
+  &#39;hostname&#39;: &#39;ip-172-32-22-111.ap-southeast-1.compute.internal&#39;,
+  &#39;ami-id&#39;: &#39;ami-44d4e414&#39;,
+  &#39;instance-action&#39;: &#39;none&#39;,
+  &#39;profile&#39;: &#39;default-hvm&#39;,
+  &#39;reservation-id&#39;: &#39;r-fde77b77&#39;,
+  &#39;security-groups&#39;: [&#39;ci-servers&#39;, &#39;awseb-e-3uijdzdiad-stack-AWSEBSecurityGroup-1R39VECLNK1YK&#39;],
+  &#39;metrics&#39;: {&#39;vhostmd&#39;: &#39;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#39;},
+  &#39;mac&#39;: &#39;06:2d:22:2b:22:22&#39;,
+  &#39;public-ipv4&#39;: &#39;52.77.99.111&#39;,
+  &#39;services&#39;: {&#39;domain&#39;: &#39;amazonaws.com&#39;},
+  &#39;local-ipv4&#39;: &#39;172.32.22.111&#39;,
+  &#39;placement&#39;: {&#39;availability-zone&#39;: &#39;ap-southeast-1b&#39;},
+  &#39;ami-launch-index&#39;: &#39;0&#39;,
+  &#39;public-hostname&#39;: &#39;ec2-52-77-99-111.ap-southeast-1.compute.amazonaws.com&#39;, &#39;public-keys&#39;: {...},
+  &#39;block-device-mapping&#39;: {&#39;ami&#39;: &#39;/dev/xvda&#39;, &#39;root&#39;: &#39;/dev/xvda&#39;}
+}
 </code></pre>
 <p>And now here is how you can setup a logger to have instance id for log records:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">boto.utils</span> <span class="kn">import</span> <span class="n">get_instance_metadata</span>
+<pre><code class="lang-python">
+import logging
+from boto.utils import get_instance_metadata
 
-<span class="c"># Logging configuration</span>
-<span class="c"># Note: - `with_time` formatter contains non-standard [%(hostname)s] parameter</span>
-<span class="n">LOGGING_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s">&#39;disable_existing_loggers&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-    <span class="s">&#39;formatters&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s">&#39;with_time&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s">&#39;format&#39;</span><span class="p">:</span> <span class="s">&#39;[</span><span class="si">%(asctime)s</span><span class="s">] [</span><span class="si">%(levelname)s</span><span class="s">] [</span><span class="si">%(hostname)s</span><span class="s">] -- </span><span class="si">%(message)s</span><span class="s">&#39;</span><span class="p">,</span>
-            <span class="s">&#39;datefmt&#39;</span><span class="p">:</span> <span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M:%S&#39;</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s">&#39;sys_info&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;logging.handlers.RotatingFileHandler&#39;</span><span class="p">,</span>
-            <span class="s">&#39;filename&#39;</span><span class="p">:</span> <span class="s">&#39;log/sysinfo.log&#39;</span><span class="p">,</span>
-            <span class="s">&#39;formatter&#39;</span><span class="p">:</span> <span class="s">&#39;with_time&#39;</span>
-        <span class="p">},</span>
-        <span class="s">&#39;console&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s">&#39;class&#39;</span><span class="p">:</span> <span class="s">&#39;logging.StreamHandler&#39;</span><span class="p">,</span>
-            <span class="s">&#39;formatter&#39;</span><span class="p">:</span> <span class="s">&#39;with_time&#39;</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s">&#39;sys_info&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s">&#39;level&#39;</span><span class="p">:</span> <span class="s">&#39;INFO&#39;</span><span class="p">,</span>
-            <span class="s">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;sys_info&#39;</span><span class="p">]</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="c"># Use `APP_ENV` environment variable or `development` by default</span>
-<span class="c"># We assume that `development` is local and all other enviroments are</span>
-<span class="c"># on Amazon EC2 instances</span>
-<span class="n">APP_ENV</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;APP_ENV&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s">&#39;APP_ENV&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="k">else</span> <span class="s">&#39;development&#39;</span>
+# Logging configuration
+# Note: - `with_time` formatter contains non-standard [%(hostname)s] parameter
+LOGGING_CONFIG = {
+    &#39;version&#39;: 1,
+    &#39;disable_existing_loggers&#39;: False,
+    &#39;formatters&#39;: {
+        &#39;with_time&#39;: {
+            &#39;format&#39;: &#39;[%(asctime)s] [%(levelname)s] [%(hostname)s] -- %(message)s&#39;,
+            &#39;datefmt&#39;: &#39;%Y-%m-%d %H:%M:%S&#39;
+        }
+    },
+    &#39;handlers&#39;: {
+        &#39;sys_info&#39;: {
+            &#39;class&#39;: &#39;logging.handlers.RotatingFileHandler&#39;,
+            &#39;filename&#39;: &#39;log/sysinfo.log&#39;,
+            &#39;formatter&#39;: &#39;with_time&#39;
+        },
+        &#39;console&#39;: {
+            &#39;class&#39;: &#39;logging.StreamHandler&#39;,
+            &#39;formatter&#39;: &#39;with_time&#39;
+        }
+    },
+    &#39;loggers&#39;: {
+        &#39;sys_info&#39;: {
+            &#39;level&#39;: &#39;INFO&#39;,
+            &#39;handlers&#39;: [&#39;sys_info&#39;]
+        }
+    }
+}
+# Use `APP_ENV` environment variable or `development` by default
+# We assume that `development` is local and all other enviroments are
+# on Amazon EC2 instances
+APP_ENV = os.environ[&#39;APP_ENV&#39;] if &#39;APP_ENV&#39; in os.environ else &#39;development&#39;
 
-<span class="c"># A log filter class to add custom `hostname` property to log records</span>
-<span class="k">class</span> <span class="nc">LogHostnameFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">APP_ENV</span> <span class="o">!=</span> <span class="s">&#39;development&#39;</span><span class="p">:</span>
-            <span class="n">meta</span> <span class="o">=</span> <span class="n">get_instance_metadata</span><span class="p">()</span>
-            <span class="n">record</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s">&#39;instance-id&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">record</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="s">&#39;localhost&#39;</span>
-        <span class="k">return</span> <span class="bp">True</span>
+# A log filter class to add custom `hostname` property to log records
+class LogHostnameFilter(logging.Filter):
+    def filter(self, record):
+        if APP_ENV != &#39;development&#39;:
+            meta = get_instance_metadata()
+            record.hostname = meta[&#39;instance-id&#39;]
+        else:
+            record.hostname = &#39;localhost&#39;
+        return True
 
-<span class="c"># Create and configure logger</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">LOGGING_CONFIG</span><span class="p">)</span>
-<span class="n">sys_info_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;sys_info&#39;</span><span class="p">)</span>
-<span class="n">sys_info_logger</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">LogHostnameFilter</span><span class="p">())</span>
+# Create and configure logger
+logging.config.dictConfig(LOGGING_CONFIG)
+sys_info_logger = logging.getLogger(&#39;sys_info&#39;)
+sys_info_logger.addFilter(LogHostnameFilter())
 
-<span class="c"># Usage example:</span>
-<span class="n">sys_info_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&#39;Access token denied: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">access_token</span><span class="p">)</span>
-</pre></div>
-
+# Usage example:
+sys_info_logger.info(&#39;Access token denied: %s&#39; % access_token)
 </code></pre>
 <h2 id="links">Links</h2>
 <p><a href="/html/2015-05-20-cloudwatch-setup.html">Elastic Beanstalk - how to setup CloudWatch Logs</a></p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -190,14 +171,10 @@ The Logs UI is really complex to use - I need to remember instance names, open t
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -7,82 +7,63 @@
     <title>selenium - problem with loading x_ignore_nofocus.so</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>selenium - problem with loading x_ignore_nofocus.so</h1>
-          </div>
+      <div class="post-title">
+          <h1>selenium - problem with loading x_ignore_nofocus.so</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>Problem: selenium fails to start Firefox with following error:</p>
-<pre><code><div class="highlight"><pre><span class="s1">&#39;The browser appears to have exited before we could connect.</span>
-<span class="s1">The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror</span>
-<span class="s1">says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;</span>
-</pre></div>
-
+      <div class="post-body">
+          <p>Problem: selenium fails to start Firefox with following error:</p>
+<pre><code>&#39;The browser appears to have exited before we could connect.
+The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror
+says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;
 </code></pre><p>In my case it was reproduced on the 64 bit machine with <a href="http://aws.amazon.com/amazon-linux-ami/">Amazon Linux AMI</a>.
 The problem itself is known and there is <a href="http://code.google.com/p/selenium/issues/detail?id=2852">an issue in selenium tracker</a>.</p>
 <p><!-- more -->
 It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
 In my system there are following versions of <code>libX11</code>:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>find / <span class="p">|</span> grep libX11.so.6
-    /usr/lib64/libX11.so.6       &lt;-- symbolic link to <span class="sb">`</span>libX11.so.6.3.0<span class="s1">&#39;</span>
-<span class="s1">    /usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped</span>
-<span class="s1">    /usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;</span>
-    /usr/lib/libX11.so.6.3.0    &lt;-- ELF 32-bit LSB shared object, Intel 80386, version <span class="m">1</span> <span class="o">(</span>SYSV<span class="o">)</span>, dynamically linked, stripped
-</pre></div>
-
+<pre><code class="lang-bash">    $ find / | grep libX11.so.6
+    /usr/lib64/libX11.so.6       &lt;-- symbolic link to `libX11.so.6.3.0&#39;
+    /usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped
+    /usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;
+    /usr/lib/libX11.so.6.3.0    &lt;-- ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked, stripped
 </code></pre>
 <p>At the right side (after &quot;&lt;--&quot;) is an output of <code>file /usr/libX/libX11.so.6xxx</code>.</p>
 <h2 id="solution">Solution</h2>
 <p>Change symbolic link <code>/usr/lib/libX11.so.6</code> to point to the 64-bit version <code>/usr/lib64/libX11.so.6.3.0</code>:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>mv /usr/lib/libX11.so.6 /usr/lib/libX11.so.6.bak
-    <span class="nv">$ </span>ln -s /usr/lib64/libX11.so.6.3.0 /usr/lib/libX11.so.6
-</pre></div>
-
+<pre><code class="lang-bash">    $ mv /usr/lib/libX11.so.6 /usr/lib/libX11.so.6.bak
+    $ ln -s /usr/lib64/libX11.so.6.3.0 /usr/lib/libX11.so.6
 </code></pre>
 <p>After that selenium started to work.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://code.google.com/p/selenium/issues/detail?id=2852">bug report</a>.</p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -96,14 +77,10 @@ In my system there are following versions of <code>libX11</code>:</p>
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

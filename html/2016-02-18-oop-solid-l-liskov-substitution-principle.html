@@ -7,46 +7,35 @@
     <title>OOP SOLID Principles &quot;L&quot; - Liskov Substitution Principle</title>
 
     <!-- Bootstrap -->
-    <!-- <link href="/css/bootstrap.min.css" rel="stylesheet"> -->
-    <!-- <link href="/css/pygments.css" rel="stylesheet"> -->
-    <link href="/css/all.css" rel="stylesheet">
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="container">
-      <div class="row page-header">
-        <div class="col-md-12">
-          <!--nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav-->
-          <h3 class="text-muted"><a href="/">vim, git, aws and other three-letter words</a></h3>
-        </div>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <h1>OOP SOLID Principles &quot;L&quot; - Liskov Substitution Principle</h1>
-          </div>
+      <div class="post-title">
+          <h1>OOP SOLID Principles &quot;L&quot; - Liskov Substitution Principle</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              <p>According to the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia</a> the Liskov Substitution Principle (LSP) is defined as:</p>
-<pre><code><div class="highlight"><pre><span class="nx">Subtype</span> <span class="nx">Requirement</span><span class="o">:</span>
-<span class="nx">Let</span> <span class="nx">f</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="nx">be</span> <span class="nx">a</span> <span class="nx">property</span> <span class="nx">provable</span> <span class="nx">about</span> <span class="nx">objects</span> <span class="nx">x</span> <span class="nx">of</span> <span class="nx">type</span> <span class="nx">T</span><span class="p">.</span>
-<span class="nx">Then</span> <span class="nx">f</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span> <span class="nx">should</span> <span class="nx">be</span> <span class="kc">true</span> <span class="k">for</span> <span class="nx">objects</span> <span class="nx">y</span> <span class="nx">of</span> <span class="nx">type</span> <span class="nx">S</span> <span class="nx">where</span> <span class="nx">S</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">subtype</span> <span class="nx">of</span> <span class="nx">T</span><span class="p">.</span>
-</pre></div>
-
+      <div class="post-body">
+          <p>According to the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia</a> the Liskov Substitution Principle (LSP) is defined as:</p>
+<pre><code>Subtype Requirement:
+Let f(x) be a property provable about objects x of type T.
+Then f(y) should be true for objects y of type S where S is a subtype of T.
 </code></pre><p>The basic idea - if you have an object of type <code>T</code> then you can also use objects of its subclasses instead of it.</p>
 <p>Or, in other words: the subclass should behave the same way as the base class. It can add some new features on top of the base class (that&#39;s the purpose of inheritance, right?), but it can not break expectations about the base class behavior.</p>
 <!-- more -->
@@ -65,7 +54,7 @@
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
 <p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
 <p>Let&#39;s imagine we have following class hierarchy:</p>
-<pre><code class="lang-text"><div class="highlight"><pre>   .------------.          .------------.          .-------------.
+<pre><code class="lang-text">   .------------.          .------------.          .-------------.
    | LiveBeing  |          |   Animal   |&lt;|--------|     Cat     |
    |------------|&lt;|--------|------------|          |-------------|
    | + breeze() |          | + eat()    |&lt;|---.    | + mew()     |
@@ -76,8 +65,6 @@
                                               &#39;-----|------------|
                                                     | + bark()   |
                                                     &#39;------------&#39;
-</pre></div>
-
 </code></pre>
 <p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>.</p>
 <p>I will use this hierarchy to explain the signature rules.</p>
@@ -86,29 +73,28 @@
 <p>Of course, it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
 <p>This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="n">Animal</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="k">return</span> <span class="n">new</span> <span class="n">Animal</span><span class="p">()</span>
+<pre><code class="lang-python">
+class Owner
+  Animal findPet()
+      return new Animal()
 
-<span class="k">class</span> <span class="nc">CatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="n">Cat</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="c"># Covariance - subclass returns more specific type</span>
-      <span class="k">return</span> <span class="n">new</span> <span class="n">Cat</span><span class="p">()</span>
+class CatOwner extends Owner
+  Cat findPet()
+      # Covariance - subclass returns more specific type
+      return new Cat()
 
-<span class="k">class</span> <span class="nc">BadOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="n">LiveBeing</span> <span class="n">findPet</span><span class="p">()</span>
-      <span class="c"># Contravariance - breaks the rule and returns more generic type</span>
-      <span class="k">return</span> <span class="n">new</span> <span class="n">LiveBeing</span><span class="p">()</span>
+class BadOwner extends Owner
+  LiveBeing findPet()
+      # Contravariance - breaks the rule and returns more generic type
+      return new LiveBeing()
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-    <span class="c"># OK for Owner, we can put an Animal object into the `animal` variable.</span>
-    <span class="c"># OK for CatOwner, we can put a Cat object into the `animal` variable.</span>
-    <span class="c"># Problem for a BadOwner object, a LiveBeing object can not use be used</span>
-    <span class="c"># the same way as Animal object.</span>
-    <span class="n">Animal</span> <span class="n">animal</span> <span class="o">=</span> <span class="n">owner</span><span class="o">-&gt;</span><span class="n">findPet</span><span class="p">();</span>
-    <span class="n">amimal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">();</span>
-</pre></div>
-
+function doAction(Owner owner)
+    # OK for Owner, we can put an Animal object into the `animal` variable.
+    # OK for CatOwner, we can put a Cat object into the `animal` variable.
+    # Problem for a BadOwner object, a LiveBeing object can not use be used
+    # the same way as Animal object.
+    Animal animal = owner-&gt;findPet();
+    amimal-&gt;eat();
 </code></pre>
 <p>The <code>doAction</code> function demonstrates a possible use case.
 It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>Animal</code> and <code>Cat</code> should behave the same.</p>
@@ -116,75 +102,69 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <p>For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&#39;t have such a method).</p>
 <h2 id="contravariance-child-parent-of-method-arguments-in-the-subtype">Contravariance (Child -&gt; Parent -&gt; ...) of method arguments in the subtype</h2>
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
-    <span class="o">...</span>
+<pre><code class="lang-python">class Owner
+  void feed(Animal animal)
+    ...
 
-<span class="k">class</span> <span class="nc">GoodOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="c"># Contravariance - subclass accepts more generic type</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
-    <span class="o">...</span>
+class GoodOwner extends Owner
+  # Contravariance - subclass accepts more generic type
+  void feed(LiveBeing being)
+    ...
 
-<span class="k">class</span> <span class="nc">BadCatOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Cat</span> <span class="n">cat</span><span class="p">)</span>
-    <span class="o">...</span>
+class BadCatOwner extends Owner
+  void feed(Cat cat)
+    ...
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-  <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">)</span> <span class="c"># OK for Owner, he accepts any Animal, including the Dog</span>
-                       <span class="c"># OK for GoodOwner, he accepts any LiveBeing, including the Dog</span>
-                       <span class="c"># Problem for CatOwner, he doesn&#39;t expect the Dog</span>
-</pre></div>
-
+function doAction(Owner owner)
+  owner-&gt;feed(new Dog) # OK for Owner, he accepts any Animal, including the Dog
+                       # OK for GoodOwner, he accepts any LiveBeing, including the Dog
+                       # Problem for CatOwner, he doesn&#39;t expect the Dog
 </code></pre>
 <p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.</p>
 <p>But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
 <p>Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">)</span>
-    <span class="n">animal</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
+<pre><code class="lang-python">class Owner
+  void feed(Animal animal)
+    animal-&gt;eat(this-&gt;findFood());
 
-<span class="k">class</span> <span class="nc">GoodOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">LiveBeing</span> <span class="n">being</span><span class="p">)</span>
-    <span class="c"># Problem: LiveBeing doesn&#39;t have the `eat` method</span>
-    <span class="n">being</span><span class="o">-&gt;</span><span class="n">eat</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">findFood</span><span class="p">());</span>
-</pre></div>
-
+class GoodOwner extends Owner
+  void feed(LiveBeing being)
+    # Problem: LiveBeing doesn&#39;t have the `eat` method
+    being-&gt;eat(this-&gt;findFood());
 </code></pre>
 <p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.</p>
 <p>And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
 <p>By the way, if the method doesn&#39;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
 <p>No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BadFoodException</span>
+<pre><code class="lang-python">class BadFoodException
 
-<span class="k">class</span> <span class="nc">BadCatFoodException</span> <span class="n">extends</span> <span class="n">BadFoodException</span>
+class BadCatFoodException extends BadFoodException
 
-<span class="k">class</span> <span class="nc">LowQualityFoodException</span>
+class LowQualityFoodException
 
 
-<span class="k">class</span> <span class="nc">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">isGoodFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
-      <span class="n">throw</span> <span class="n">BadFoodException</span><span class="p">()</span>
-    <span class="o">...</span>
+class Owner
+  void feed(Animal animal, Food food)
+    if (not this-&gt;isGoodFood(food))
+      throw BadFoodException()
+    ...
 
-<span class="k">class</span> <span class="nc">BadOwner</span> <span class="n">extends</span> <span class="n">Owner</span>
-  <span class="n">void</span> <span class="n">feed</span><span class="p">(</span><span class="n">Animal</span> <span class="n">animal</span><span class="p">,</span> <span class="n">Food</span> <span class="n">food</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">this</span><span class="o">-&gt;</span><span class="n">isHighQualityFood</span><span class="p">(</span><span class="n">food</span><span class="p">))</span>
-      <span class="n">throw</span> <span class="n">LowQualityFoodException</span><span class="p">()</span>
-    <span class="o">...</span>
+class BadOwner extends Owner
+  void feed(Animal animal, Food food)
+    if (not this-&gt;isHighQualityFood(food))
+      throw LowQualityFoodException()
+    ...
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">Owner</span> <span class="n">owner</span><span class="p">)</span>
-  <span class="k">try</span>
-    <span class="n">owner</span><span class="o">-&gt;</span><span class="n">feed</span><span class="p">(</span><span class="n">new</span> <span class="n">Dog</span><span class="p">,</span> <span class="n">new</span> <span class="n">SomeFood</span><span class="p">)</span>
-  <span class="n">catch</span> <span class="p">(</span><span class="n">BadFoodException</span> <span class="n">error</span><span class="p">)</span>
-    <span class="c"># OK for Owner, it can raise BadFoodException</span>
-    <span class="c"># OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)</span>
-    <span class="c"># Problem for BadOwner, it can raise LowQualityFoodException and it will not be</span>
-    <span class="c"># caught here</span>
-    <span class="o">...</span>
-</pre></div>
-
+function doAction(Owner owner)
+  try
+    owner-&gt;feed(new Dog, new SomeFood)
+  catch (BadFoodException error)
+    # OK for Owner, it can raise BadFoodException
+    # OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)
+    # Problem for BadOwner, it can raise LowQualityFoodException and it will not be
+    # caught here
+    ...
 </code></pre>
 <p>If we don&#39;t follow the rule about exception types, the client code written for the base class <code>Owner</code> will fail for the subclass <code>BadOwner</code> and this way we violate the <code>LSP</code>.</p>
 <h1 id="inheritance-requirements">Inheritance requirements</h1>
@@ -198,24 +178,22 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <p>In most cases preconditions are expectations about method input arguments, also an object&#39;s internal state can be a part of the precondition.</p>
 <p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts a wider range of arguments).</p>
 <p>The same logic applies not only to the types of arguments but to the other kind of expectations as well, such as a range of the integer argument:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
-  <span class="n">void</span> <span class="n">setHour</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">)</span>
-    <span class="c"># hour should be between 0 and 23</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">hour</span> <span class="ow">and</span> <span class="n">hour</span> <span class="o">&lt;=</span><span class="mi">23</span><span class="p">)</span>
-    <span class="o">...</span>
+<pre><code class="lang-python">class The24Hours
+  void setHour(int hour)
+    # hour should be between 0 and 23
+    assert (0 &lt;= hour and hour &lt;=23)
+    ...
 
-<span class="k">class</span> <span class="nc">TheDay</span> <span class="n">extends</span> <span class="n">The24Hours</span>
-  <span class="n">void</span> <span class="n">setHour</span> <span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">)</span>
-    <span class="c"># breaks the rule and strengthens the precondition</span>
-    <span class="c"># day hour should be between 8 and 16</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="mi">8</span> <span class="o">&lt;=</span> <span class="n">hour</span> <span class="ow">and</span> <span class="n">hour</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">)</span>
-   <span class="o">...</span>
+class TheDay extends The24Hours
+  void setHour (int hour)
+    # breaks the rule and strengthens the precondition
+    # day hour should be between 8 and 16
+    assert (8 &lt;= hour and hour &lt;= 16)
+   ...
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
-  <span class="n">hours</span><span class="o">-&gt;</span><span class="n">setHour</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c"># OK for `The24Hours` object</span>
-                     <span class="c"># Problem for `TheDay` - it will raise an error</span>
-</pre></div>
-
+function doAction(The24Hours hours)
+  hours-&gt;setHour(3); # OK for `The24Hours` object
+                     # Problem for `TheDay` - it will raise an error
 </code></pre>
 <p>So the stronger precondition in the child class broke the client code which worked for the parent class.</p>
 <p>At the same time, if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
@@ -223,88 +201,78 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <p>Postconditions are usually expectations related to the method return value.</p>
 <p>Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
 <p>An example of postcondition rule violation:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
-  <span class="n">number</span> <span class="n">setHour</span><span class="p">(</span><span class="n">number</span> <span class="n">hour</span><span class="p">)</span>
-    <span class="o">...</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="n">integer</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
+<pre><code class="lang-python">class The24Hours
+  number setHour(number hour)
+    ...
+    assert (this.hour is integer)
+    return this.hour
 
-<span class="k">class</span> <span class="nc">TheTime</span> <span class="n">extends</span> <span class="n">The24Hours</span>
-  <span class="n">number</span> <span class="n">setHour</span><span class="p">(</span><span class="n">number</span> <span class="n">hour</span><span class="p">,</span> <span class="n">number</span> <span class="n">hourFraction</span><span class="p">)</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="o">=</span> <span class="n">hour</span> <span class="o">+</span> <span class="n">hourFraction</span> <span class="o">/</span> <span class="mi">100</span>
-    <span class="c"># the postcondition is weaker (float is a wider area than integer)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
+class TheTime extends The24Hours
+  number setHour(number hour, number hourFraction)
+    this.hour = hour + hourFraction / 100
+    # the postcondition is weaker (float is a wider area than integer)
+    assert (this.hour is float)
+    return this.hour
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
-  <span class="nb">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">hours</span><span class="o">-&gt;</span><span class="n">setHour</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c"># OK for The24Hours</span>
-                                  <span class="c"># Problem for TheTime, it returns float</span>
-</pre></div>
-
+function doAction(The24Hours hours)
+  int result = hours-&gt;setHour(3); # OK for The24Hours
+                                  # Problem for TheTime, it returns float
 </code></pre>
 <p>So again, due to <code>LSP</code> violation, we can not use the child class instead of the parent.</p>
 <h2 id="invariants-of-the-parent-type-must-be-preserved-in-a-subtype">Invariants of the parent type must be preserved in a subtype</h2>
 <p>Invariant is something that is not changed during the method execution. It can be the whole or part of the object internal state:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">The24Hours</span>
-  <span class="c"># invariant: this.hour is not changed</span>
-  <span class="n">number</span> <span class="n">getHour</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
+<pre><code class="lang-python">class The24Hours
+  # invariant: this.hour is not changed
+  number getHour()
+    return this.hour
 
-<span class="k">class</span> <span class="nc">TheCounter</span> <span class="n">extends</span> <span class="n">The24Hours</span>
-  <span class="c"># invariant violation: this.hour is changed</span>
-  <span class="n">number</span> <span class="n">getHour</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">this</span><span class="o">.</span><span class="n">hour</span>
-    <span class="n">this</span><span class="o">.</span><span class="n">hour</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">result</span>
+class TheCounter extends The24Hours
+  # invariant violation: this.hour is changed
+  number getHour()
+    result = this.hour
+    this.hour += 1
+    return result
 
-<span class="n">function</span> <span class="n">doAction</span><span class="p">(</span><span class="n">The24Hours</span> <span class="n">hours</span><span class="p">)</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">hours</span><span class="o">-&gt;</span><span class="n">getHour</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">)</span>
-     <span class="c"># OK for The24Hours</span>
-     <span class="c"># Problem for TheTime, now getHour() can return value &gt; 12</span>
-     <span class="k">print</span> <span class="s">&#39;First half of the day&#39;</span><span class="p">,</span> <span class="n">hours</span><span class="o">-&gt;</span><span class="n">getHour</span><span class="p">()</span>
-</pre></div>
-
+function doAction(The24Hours hours)
+  if (hours-&gt;getHour() &lt;= 12)
+     # OK for The24Hours
+     # Problem for TheTime, now getHour() can return value &gt; 12
+     print &#39;First half of the day&#39;, hours-&gt;getHour()
 </code></pre>
 <h2 id="history-constraint-the-history-rule-">History constraint (the &quot;history rule&quot;)</h2>
 <p>The subtypes should not introduce new methods that will allow modifying the object state in a way that is not possible for the parent class.</p>
 <p>The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
 <p>For example:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Time</span>
-  <span class="c"># it is immutable, once time is set, there is no way to change it</span>
-  <span class="n">constructor</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">int</span> <span class="n">minute</span><span class="p">)</span>
-  <span class="n">getTime</span><span class="p">()</span>
+<pre><code class="lang-python">class Time
+  # it is immutable, once time is set, there is no way to change it
+  constructor(int hour, int minute)
+  getTime()
 
-<span class="k">class</span> <span class="nc">FlexibleTime</span> <span class="n">extends</span> <span class="n">Time</span>
-  <span class="c"># violates the &quot;history&quot; rule</span>
-  <span class="c"># it allows changing the object state</span>
-  <span class="c"># but the clients who use Time can be broken due to this</span>
-  <span class="n">setTime</span><span class="p">(</span><span class="nb">int</span> <span class="n">hour</span><span class="p">,</span> <span class="nb">int</span> <span class="n">minute</span><span class="p">)</span>
+class FlexibleTime extends Time
+  # violates the &quot;history&quot; rule
+  # it allows changing the object state
+  # but the clients who use Time can be broken due to this
+  setTime(int hour, int minute)
 
-<span class="n">doAction</span><span class="p">(</span><span class="n">Time</span> <span class="n">time</span><span class="p">)</span>
-  <span class="k">print</span> <span class="s">&#39;Now it is: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">-&gt;</span><span class="n">getTime</span><span class="p">()</span>
-  <span class="n">doOtherAction</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-  <span class="c"># OK for Time, it can not be changed, so value is the same</span>
-  <span class="c"># Problem for FlexibleTime, the `doOtherAction` could change it</span>
-  <span class="k">print</span> <span class="s">&#39;Now it is still: &#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">-&gt;</span><span class="n">getTime</span><span class="p">()</span>
-</pre></div>
-
+doAction(Time time)
+  print &#39;Now it is: &#39;, time-&gt;getTime()
+  doOtherAction(time)
+  # OK for Time, it can not be changed, so value is the same
+  # Problem for FlexibleTime, the `doOtherAction` could change it
+  print &#39;Now it is still: &#39;, time-&gt;getTime()
 </code></pre>
 <h1 id="links">Links</h1>
 <p><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia:Liskov substitution principle</a></p>
 <p><a href="http://www.engr.mun.ca/~theo/Courses/sd/5895-downloads/sd-principles-3.ppt.pdf">Agile Design Principles: The Liskov Substitution Principle</a></p>
 <p><a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages">Wikipedia: Covariance and contravariance</a></p>
 
-          </div>
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
+      <div>
 <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
-          </div>
       </div>
-      <div class="row">
-          <div class="col-md-12">
+      <div>
 <div id="disqus_thread"></div>
     <script type="text/javascript">
         /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
@@ -318,14 +286,10 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </div>
       </div>
     </div>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <!--script src="/js/bootstrap.min.js"></script-->
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
