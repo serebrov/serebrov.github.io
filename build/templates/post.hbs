@@ -1,26 +1,18 @@
-{{#extend "bootstrap"}}
+{{#extend "layout"}}
   {{#content "body"}}
-      <div class="row">
-          <div class="col-md-12">
-              <h1>{{ title }}</h1>
-          </div>
+      <div class="post-title">
+          <h1>{{ title }}</h1>
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              {{ body }}
-          </div>
+      <div class="post-body">
+          {{ body }}
       </div>
-      <div class="row badge-row">
-          <div class="col-md-12">
-              {{#embed "so"}}
-              {{/embed}}
-          </div>
+      <div>
+          {{#embed "so"}}
+          {{/embed}}
       </div>
-      <div class="row">
-          <div class="col-md-12">
-              {{#embed "disqus"}}
-              {{/embed}}
-          </div>
+      <div>
+          {{#embed "disqus"}}
+          {{/embed}}
       </div>
   {{/content}}
 {{/extend}}
