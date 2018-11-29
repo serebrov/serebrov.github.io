@@ -5,7 +5,7 @@ NOTES_HTML := $(sort $(NOTES_HTML))
 NOTES_META := $(NOTES_HTML:.html=.json)
 
 .DEFAULT: all
-all: $(NOTES_HTML) $(NOTES_META) $(DEST)/css/all.css $(WWW_BS_FONTS) $(DEST)/index.html $(DEST)/sitemap.xml
+all: $(NOTES_HTML) $(NOTES_META) $(WWW_BS_FONTS) $(DEST)/index.html $(DEST)/sitemap.xml
 
 #Order only dependency on dir (dir only will be created if it does not exist)
 $(DEST)/html/%.html: content/%.md build/templates/layout.hbs build/templates/post.hbs build/scripts/handlebars | $(DEST)/html
