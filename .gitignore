@@ -2,3 +2,5 @@ node_modules
 *.tags
 html/files/git-revert/repository
 .mypy_cache
+Session.vim
+venv
