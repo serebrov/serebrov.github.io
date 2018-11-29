@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2018-11-28-python-debugging-with-ipdb-pdbpp.html</loc>
+  <lastmod>2018-11-28T02:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2018-07-27-python-parameter-blocks-formatting.html</loc>
   <lastmod>2018-07-27T03:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
