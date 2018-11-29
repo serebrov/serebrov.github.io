@@ -18,7 +18,7 @@ Launch it (-sharedDb allows us to connect to the same database with other tools)
 By default it will be running on the port 8000 and will create the db file in the same directory where it was launched.
 <!-- more -->
 
-Without the `-sharedDB` parameter the DB file name depends on connection parameters, the name is {aws_access_key_id}_{region_name}.db.
+Without the `-sharedDB` parameter the DB file name depends on connection parameters, the name is `{aws_access_key_id}_{region_name}.db`.
 So different clients can use different databases.
 
 There is also an `-inMemory` parameter to keep data in memory:
