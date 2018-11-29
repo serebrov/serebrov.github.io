@@ -87,3 +87,6 @@ label {
 .pull-right {
   float: right;
 }
+.post-preview h2 {
+  font-size: 1.5em;
+}

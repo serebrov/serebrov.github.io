@@ -2,7 +2,7 @@
   {{#content "body"}}
 
     {{#each paginate.files}}
-    <div>
+    <div class="post-preview">
       <small class="pull-right">{{formatDate this.date "%Y-%m-%d"}}</small>
       <h2><a class="title" href="{{relative ../path this.path}}">{{ this.title }}</a></h2>
       <div>{{ this.intro }}</div>
