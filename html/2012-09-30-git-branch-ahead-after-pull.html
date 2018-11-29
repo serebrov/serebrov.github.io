@@ -45,8 +45,8 @@
 </ul>
 <p>The reason is because during “pull origin master” reference to the remote
 origin/master is not changed (still points to older version).</p>
-<p><!-- more -->
-To check this:</p>
+<!-- more -->
+<p>To check this:</p>
 <pre><code>git diff origin/master
 </code></pre><p>It will show the difference - it should be the last master change.</p>
 <p>To fix this exacute:</p>

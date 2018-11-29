@@ -36,8 +36,8 @@
       <div class="post-body">
           <p>Error when trying to access phpmyadmin (in Chrome):</p>
 <pre><code>Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.
-</code></pre><p><!-- more -->
-The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:</p>
+</code></pre><!-- more -->
+<p>The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:</p>
 <pre><code>php_flag eaccelerator.enable 0
 </code></pre>
       </div>

@@ -36,7 +36,7 @@
       <div class="post-body">
           <h2 id="problem">Problem</h2>
 <p>Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.</p>
-<p><!-- more --></p>
+<!-- more -->
 <h2 id="solution">Solution</h2>
 <p>For now I fixed this by commenting out local file upload (three first lines):</p>
 <pre><code class="lang-python">    def send_keys(self, *value):

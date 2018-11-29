@@ -274,6 +274,7 @@ If we have log data like this:</p>
                 - options
                 - EBSNSTopicArn
             - { &quot;Ref&quot; : &quot;AWS::NoValue&quot; }
+
 </code></pre>
 <p>More information about <code>Resources</code> section:</p>
 <ul>
@@ -367,6 +368,8 @@ Resources :
                 - options
                 - EBSNSTopicArn
             - { &quot;Ref&quot; : &quot;AWS::NoValue&quot; }
+
+
 </code></pre>
 <p>Note that metrics and alarms are optional and log data will be sent to CloudWatch Logs even if there are no metrics/alarms.
 But in this case, it will be necessary to review logs manually and setup metrics and alarms later if needed.</p>

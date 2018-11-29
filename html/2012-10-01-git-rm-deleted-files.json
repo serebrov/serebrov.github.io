@@ -1,1 +1,1 @@
-{"title":"git - git rm already deleted files","date":"2012-04-03T00:00:00.000Z","tags":"git","type":"note","intro":"<pre><code class=\"lang-bash\"><div class=\"highlight\"><pre>    git add -u\n</pre></div>\n\n</code></pre>\n"}
+{"title":"git - git rm already deleted files","date":"2012-04-03T00:00:00.000Z","tags":"git","type":"note","intro":"<pre><code class=\"lang-bash\">    git add -u\n</code></pre>\n"}

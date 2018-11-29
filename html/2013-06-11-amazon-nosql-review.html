@@ -44,7 +44,7 @@ services requests and Amazon SimpleDB does the rest.</li>
 fully-managed, high performance, NoSQL database service that is easy to set
 up, operate, and scale.</li>
 </ul>
-<p><!-- more --></p>
+<!-- more -->
 <h2 id="amazon-s-review-of-big-data-solutions">Amazon&#39;s review of big data solutions</h2>
 <p>Amazon&#39;s review <a href="http://aws.amazon.com/big-data/">Big Data on AWS</a> mentions
 only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data
@@ -143,9 +143,9 @@ range key, in addition to queries against the primary key.
 JavaScript Object Notation (JSON) as a message serialization format. Your
 application code can make requests directly to the Amazon DynamoDB web service
 </code></pre><p>  API Reference
-  (<a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html</a>).
+  (<a href="http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html)">http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/Welcome.html)</a>.
   There is also PHP library as a part of Amazon PHP SDK
-  (<a href="https://github.com/aws/aws-sdk-php">https://github.com/aws/aws-sdk-php</a>).</p>
+  (<a href="https://github.com/aws/aws-sdk-php)">https://github.com/aws/aws-sdk-php)</a>.</p>
 <h2 id="dynamodb-as-events-storage-and-limitations">DynamoDB as events storage and limitations</h2>
 <p>For example, we have a table to store events data with following fields:</p>
 <ul>
@@ -184,7 +184,7 @@ having many indexes is not recommended because they consume storage and
 provisioned throughput and make table operations slower.</p>
 <p>For tables with local secondary indexes there is size limit of 10GB for data
 with the same hash key
-(<a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html">http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html</a>).</p>
+(<a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html)">http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html)</a>.</p>
 <pre><code>The maximum size of any item collection is 10 GB. This limit does not apply to
 tables without local secondary indexes; only tables that have one or more local
 secondary indexes are affected.
@@ -375,7 +375,7 @@ then less items will be returned.</li>
 <li>Export - no (we can not get more then 1MB via single request)</li>
 </ul>
 <h2 id="cost">Cost</h2>
-<p>Cost calculator for SimpleDB (<a href="http://calculator.s3.amazonaws.com/calc5.html#s=SIMPLEDB">http://calculator.s3.amazonaws.com/calc5.html#s=SIMPLEDB</a>).</p>
+<p>Cost calculator for SimpleDB (<a href="http://calculator.s3.amazonaws.com/calc5.html#s=SIMPLEDB)">http://calculator.s3.amazonaws.com/calc5.html#s=SIMPLEDB)</a>.</p>
 <p>If we have the same assumtions as for DynamoDB (see above) then we have:</p>
 <ul>
 <li>Number of Items - 30000000 (per month)</li>

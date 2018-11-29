@@ -37,8 +37,8 @@
           <p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
 screen when you exit from less.
 This is not convenient in many cases so here is how to fix this.</p>
-<p><!-- more -->
-Just for git commands:</p>
+<!-- more -->
+<p>Just for git commands:</p>
 <pre><code>git config --global --replace-all core.pager &quot;less -iXFR&quot;
 </code></pre><p>For less globally (including git) - add to .bashrc / .zshrc / etc:</p>
 <pre><code>export LESS=-iXFR

@@ -43,19 +43,15 @@
       <small class="pull-right">2018-07-27</small>
       <h2><a class="title" href="html/2018-07-27-python-parameter-blocks-formatting.html">Formatting Parameter Blocks in Python</a></h2>
       <div><p>There are two ways <a href="https://www.python.org/dev/peps/pep-0008/#indentation">recommended in pep-8</a> to format the blocks with long parameter lists in Python:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="c"># Arguments start on the next line</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span>
-    <span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-    <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
-</pre></div>
-
+<pre><code class="lang-python"># Arguments start on the next line
+foo = long_function_name(
+    var_one, var_two,
+    var_three, var_four)
 </code></pre>
 <p>Another way is:</p>
-<pre><code class="lang-python"><div class="highlight"><pre><span class="c"># Arguments start on the same line</span>
-<span class="n">foo</span> <span class="o">=</span> <span class="n">long_function_name</span><span class="p">(</span><span class="n">var_one</span><span class="p">,</span> <span class="n">var_two</span><span class="p">,</span>
-                         <span class="n">var_three</span><span class="p">,</span> <span class="n">var_four</span><span class="p">)</span>
-</pre></div>
-
+<pre><code class="lang-python"># Arguments start on the same line
+foo = long_function_name(var_one, var_two,
+                         var_three, var_four)
 </code></pre>
 <p>I always prefer the first option and the other one is problematic for a few reasons.</p>
 </div>
@@ -133,9 +129,7 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
       <small class="pull-right">2015-09-22</small>
       <h2><a class="title" href="html/2015-09-22-aws-postgresql-max-connections.html">AWS PostgreSQL RDS - remaining connection slots are reserved error</a></h2>
       <div><p>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>FATAL:  remaining connection slots are reserved <span class="k">for</span> non-replication superuser connections
-</pre></div>
-
+<pre><code class="lang-bash">FATAL:  remaining connection slots are reserved for non-replication superuser connections
 </code></pre>
 <p>The PostgreSQL server was running on the db.t1.micro RDS instance and the &#39;Current activity&#39; column showed &#39;22 connections&#39; and a red line which should represent a connection limit was far away from the 22 value.</p>
 </div>
@@ -190,9 +184,7 @@ The application is running under Apache web server.</p>
       <div><h3 id="setup">Setup</h3>
 <p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html">Download</a> and extract dynamodb local to some folder.</p>
 <p>Launch it (-sharedDb allows us to connect to the same database with other tools):</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>java -Djava.library.path<span class="o">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
-</pre></div>
-
+<pre><code class="lang-bash">    $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 </code></pre>
 <p>By default it will be running on the port 8000 and will create the db file in the same directory where it was launched.</p>
 </div>
@@ -257,9 +249,7 @@ in the OpsWorks <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/ge
       <small class="pull-right">2014-01-04</small>
       <h2><a class="title" href="html/2014-01-04-git-revert-multiple-recent-comments.html">Git - how to revert multiple recent commits</a></h2>
       <div><p>Let&#39;s assume we have a history like this:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>G1 - G2 - G3 - B1 - B2 - B3
-</pre></div>
-
+<pre><code class="lang-bash">G1 - G2 - G3 - B1 - B2 - B3
 </code></pre>
 <p>Where G1-G3 are &#39;good&#39; commits and B1-B3 are &#39;bad&#39; commits and we
 want to revert them.</p>
@@ -355,12 +345,10 @@ up, operate, and scale.</li>
       <small class="pull-right">2013-05-24</small>
       <h2><a class="title" href="html/2013-05-24-angular-seo.html">Angular.js and SEO - pre-render content on the server</a></h2>
       <div><p>With angular.js you have an HTML which looks like this:</p>
-<pre><code class="lang-html"><div class="highlight"><pre>    <span class="nt">&lt;span&gt;</span>{{variableValue}}<span class="nt">&lt;/span&gt;</span>
-    <span class="nt">&lt;ul&gt;</span>
-        <span class="nt">&lt;li</span> <span class="na">ng-repeat=</span><span class="s">&quot;item in items&quot;</span> <span class="na">ng-bind=</span><span class="s">&quot;item.name&quot;</span><span class="nt">&gt;&lt;/li&gt;</span>
-    <span class="nt">&lt;/ul&gt;</span>
-</pre></div>
-
+<pre><code class="lang-html">    &lt;span&gt;{{variableValue}}&lt;/span&gt;
+    &lt;ul&gt;
+        &lt;li ng-repeat=&quot;item in items&quot; ng-bind=&quot;item.name&quot;&gt;&lt;/li&gt;
+    &lt;/ul&gt;
 </code></pre>
 <p>The simple way to make this content SEO-friendly is to pre-render data on the server and then allow angular to do it&#39;s job on the client.</p>
 </div>
@@ -380,10 +368,8 @@ So if you do a POST request to a PHP code then the <code>$_POST</code> superglob
       <h2><a class="title" href="html/2013-03-23-php-utf-8-strings.html">PHP - utf-8 strings handling</a></h2>
       <div><p>Enable mbstring <a href="http://www.php.net/manual/en/mbstring.overload.php">function overloading mode</a> and set default
 encoding for string functions to utf-8 in php.ini:</p>
-<pre><code><div class="highlight"><pre><span class="nx">mbstring</span><span class="p">.</span><span class="nx">internal_encoding</span> <span class="o">=</span> <span class="nx">UTF</span><span class="o">-</span><span class="mi">8</span>
-<span class="nx">mbstring</span><span class="p">.</span><span class="nx">func_overload</span> <span class="o">=</span> <span class="mi">7</span>
-</pre></div>
-
+<pre><code>mbstring.internal_encoding = UTF-8
+mbstring.func_overload = 7
 </code></pre></div>
       <a class="more" href="html/2013-03-23-php-utf-8-strings.html">Read more »</a>
     </div>
@@ -440,18 +426,14 @@ Descriptions are original texts from extension pages.</p>
       <small class="pull-right">2012-04-03</small>
       <h2><a class="title" href="html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html">phpmyadmin and eaccelerator problem</a></h2>
       <div><p>Error when trying to access phpmyadmin (in Chrome):</p>
-<pre><code><div class="highlight"><pre><span class="nb">Error</span> <span class="mi">324</span> <span class="p">(</span><span class="nx">net</span><span class="o">::</span><span class="nx">ERR_EMPTY_RESPONSE</span><span class="p">)</span><span class="o">:</span> <span class="nx">The</span> <span class="nx">server</span> <span class="nx">closed</span> <span class="nx">the</span> <span class="nx">connection</span> <span class="nx">without</span> <span class="nx">sending</span> <span class="nx">any</span> <span class="nx">data</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.
 </code></pre></div>
       <a class="more" href="html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html">Read more »</a>
     </div>
     <div class="post-preview">
       <small class="pull-right">2012-04-03</small>
       <h2><a class="title" href="html/2012-10-01-git-rm-deleted-files.html">git - git rm already deleted files</a></h2>
-      <div><pre><code class="lang-bash"><div class="highlight"><pre>    git add -u
-</pre></div>
-
+      <div><pre><code class="lang-bash">    git add -u
 </code></pre>
 </div>
       <a class="more" href="html/2012-10-01-git-rm-deleted-files.html">Read more »</a>
@@ -466,17 +448,13 @@ Descriptions are original texts from extension pages.</p>
       <small class="pull-right">2012-10-01</small>
       <h2><a class="title" href="html/2012-10-01-git-diff-and-log.html">git - view changes - diff and log</a></h2>
       <div><h2 id="diff-staged-changes">Diff staged changes</h2>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git diff --cached
-    <span class="c"># or</span>
+<pre><code class="lang-bash">    git diff --cached
+    # or
     git diff --staged
-</pre></div>
-
 </code></pre>
 <h2 id="diff-pulled-changes">Diff pulled changes</h2>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git pull origin
-    git diff @<span class="o">{</span>1<span class="o">}</span>..
-</pre></div>
-
+<pre><code class="lang-bash">    git pull origin
+    git diff @{1}..
 </code></pre>
 </div>
       <a class="more" href="html/2012-10-01-git-diff-and-log.html">Read more »</a>
@@ -503,9 +481,7 @@ origin/master is not changed (still points to older version).</p>
       <h2><a class="title" href="html/2012-09-30-git-all-branches-with-file.html">git - find all branches where file was changed</a></h2>
       <div><p><a href="http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file">Solution from stackoverflow</a>.</p>
 <p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git log --all --format<span class="o">=</span>%H FILENAME <span class="p">|</span> <span class="k">while</span> <span class="nb">read </span>f<span class="p">;</span> <span class="k">do</span> git branch --contains <span class="nv">$f</span><span class="p">;</span> <span class="k">done</span> <span class="p">|</span> sort -u
-</pre></div>
-
+<pre><code class="lang-bash">    git log --all --format=%H FILENAME | while read f; do git branch --contains $f; done | sort -u
 </code></pre>
 </div>
       <a class="more" href="html/2012-09-30-git-all-branches-with-file.html">Read more »</a>
@@ -549,14 +525,12 @@ Also there are some examples of custom-maid deadlocks.</p>
       <small class="pull-right">2012-09-13</small>
       <h2><a class="title" href="html/2012-09-13-yii-url-rules-optional-parameters.html">Yii url rules - optional parameters</a></h2>
       <div><p>Assume we have an action &quot;articles/get&quot; which accepts optional parameters and we want to setup following URLs:</p>
-<pre><code><div class="highlight"><pre><span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span>
-<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
-<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">99</span>
-<span class="nx">articles</span><span class="o">/</span><span class="p">[</span><span class="nx">article</span> <span class="nx">id</span> <span class="nx">or</span> <span class="nx">name</span><span class="p">]</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="mi">98</span><span class="o">/</span><span class="nx">draft</span>
-<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span>
-<span class="nx">articles</span><span class="o">/</span><span class="nx">revisions</span><span class="o">/</span><span class="p">[</span><span class="nx">revision</span> <span class="nx">id</span><span class="p">]</span><span class="o">/</span><span class="nx">draft</span>
-</pre></div>
-
+<pre><code>articles/[article id or name]
+articles/[article id or name]/draft
+articles/[article id or name]/revisions/99
+articles/[article id or name]/revisions/98/draft
+articles/revisions/[revision id]
+articles/revisions/[revision id]/draft
 </code></pre></div>
       <a class="more" href="html/2012-09-13-yii-url-rules-optional-parameters.html">Read more »</a>
     </div>
@@ -588,11 +562,9 @@ Also there are some examples of custom-maid deadlocks.</p>
       <small class="pull-right">2012-07-24</small>
       <h2><a class="title" href="html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html">selenium webdriver - trigger event on element via jQuery</a></h2>
       <div><p>The &#39;executeScript&#39; method of the webdriver receives additional &#39;arguments&#39; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):</p>
-<pre><code><div class="highlight"><pre><span class="nx">event</span> <span class="o">=</span> <span class="s1">&#39;click&#39;</span> <span class="err">#</span><span class="nx">or</span> <span class="s1">&#39;hover&#39;</span> <span class="nx">or</span> <span class="nx">any</span> <span class="nx">other</span>
-<span class="nx">script</span> <span class="o">=</span> <span class="s2">&quot;$(arguments[0]).trigger(&#39;&quot;</span><span class="o">+</span><span class="nx">event</span><span class="o">+</span><span class="s2">&quot;&#39;)&quot;</span>
-<span class="nx">webdriver</span><span class="p">.</span><span class="nx">execute_script</span><span class="p">(</span><span class="nx">script</span><span class="p">,</span> <span class="nx">web_element</span><span class="p">)</span>
-</pre></div>
-
+<pre><code>event = &#39;click&#39; #or &#39;hover&#39; or any other
+script = &quot;$(arguments[0]).trigger(&#39;&quot;+event+&quot;&#39;)&quot;
+webdriver.execute_script(script, web_element)
 </code></pre></div>
       <a class="more" href="html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html">Read more »</a>
     </div>
@@ -617,10 +589,8 @@ Also there are some examples of custom-maid deadlocks.</p>
       <small class="pull-right">2012-04-24</small>
       <h2><a class="title" href="html/2012-04-24-git-fugitive-to-resolve-conflicts.html">git - use vim with fugitive to resolve merge conflicts</a></h2>
       <div><p>To use fugitive as you mergetool you can use the following.</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    git config --global mergetool.fugitive.cmd <span class="s1">&#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;</span>
+<pre><code class="lang-bash">    git config --global mergetool.fugitive.cmd &#39;vim -f -c &quot;Gdiff&quot; &quot;$MERGED&quot;&#39;
     git config --global merge.tool fugitive
-</pre></div>
-
 </code></pre>
 </div>
       <a class="more" href="html/2012-04-24-git-fugitive-to-resolve-conflicts.html">Read more »</a>
@@ -629,13 +599,11 @@ Also there are some examples of custom-maid deadlocks.</p>
       <small class="pull-right">2012-04-03</small>
       <h2><a class="title" href="html/2012-04-03-vim-replace-word-with-yanked-text.html">vim - replace a word with yanked text</a></h2>
       <div><p>Copy a word and paste it over other words:</p>
-<pre><code class="lang-vim"><div class="highlight"><pre>    yiw     <span class="k">yank</span> inner word <span class="p">(</span>copy word under cursor<span class="p">,</span> say <span class="s2">&quot;first&quot;</span><span class="p">)</span>.
-    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;second&quot;</span><span class="p">)</span>.
-    viwp     select <span class="s2">&quot;second&quot;</span><span class="p">,</span> then replace it with <span class="s2">&quot;first&quot;</span>.
-    ...     Move the cursor <span class="k">to</span> another word <span class="p">(</span>say <span class="s2">&quot;third&quot;</span><span class="p">)</span>.
-    viw<span class="s2">&quot;0p     select &quot;</span>third<span class="s2">&quot;, then replace it with &quot;</span><span class="k">first</span>&quot;.
-</pre></div>
-
+<pre><code class="lang-vim">    yiw     yank inner word (copy word under cursor, say &quot;first&quot;).
+    ...     Move the cursor to another word (say &quot;second&quot;).
+    viwp     select &quot;second&quot;, then replace it with &quot;first&quot;.
+    ...     Move the cursor to another word (say &quot;third&quot;).
+    viw&quot;0p     select &quot;third&quot;, then replace it with &quot;first&quot;.
 </code></pre>
 </div>
       <a class="more" href="html/2012-04-03-vim-replace-word-with-yanked-text.html">Read more »</a>
@@ -643,16 +611,14 @@ Also there are some examples of custom-maid deadlocks.</p>
     <div class="post-preview">
       <small class="pull-right">2012-04-03</small>
       <h2><a class="title" href="html/2012-04-03-git-rename-branch.html">git - rename branch (local and remote)</a></h2>
-      <div><pre><code class="lang-bash"><div class="highlight"><pre>    <span class="c">#rename local branch</span>
+      <div><pre><code class="lang-bash">    #rename local branch
     git branch -m old-branch-name new-branch-name
 
-    <span class="c">#delete remote branch with old name</span>
+    #delete remote branch with old name
     git push origin :old-branch-name
 
-    <span class="c"># create remote renamed branch</span>
+    # create remote renamed branch
     git push origin new-branch-name
-</pre></div>
-
 </code></pre>
 </div>
       <a class="more" href="html/2012-04-03-git-rename-branch.html">Read more »</a>
@@ -675,12 +641,10 @@ This way we will have much more useful data to find and fix deadlock.</p>
       <small class="pull-right">2012-02-28</small>
       <h2><a class="title" href="html/2012-02-28-git-default-color-diff.html">git - colored diff, branch, etc by default</a></h2>
       <div><p>See color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config</a> docs:</p>
-<pre><code class="lang-bash"><div class="highlight"><pre>    <span class="nv">$ </span>git config color.branch auto
-    <span class="nv">$ </span>git config color.diff auto
-    <span class="nv">$ </span>git config color.interactive auto
-    <span class="nv">$ </span>git config color.status auto
-</pre></div>
-
+<pre><code class="lang-bash">    $ git config color.branch auto
+    $ git config color.diff auto
+    $ git config color.interactive auto
+    $ git config color.status auto
 </code></pre>
 </div>
       <a class="more" href="html/2012-02-28-git-default-color-diff.html">Read more »</a>
@@ -705,11 +669,9 @@ This can be done using xvfb (X virtual framebuffer).</p>
       <small class="pull-right">2012-02-20</small>
       <h2><a class="title" href="html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html">selenium - problem with loading x_ignore_nofocus.so</a></h2>
       <div><p>Problem: selenium fails to start Firefox with following error:</p>
-<pre><code><div class="highlight"><pre><span class="s1">&#39;The browser appears to have exited before we could connect.</span>
-<span class="s1">The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror</span>
-<span class="s1">says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;</span>
-</pre></div>
-
+<pre><code>&#39;The browser appears to have exited before we could connect.
+The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror
+says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;
 </code></pre><p>In my case it was reproduced on the 64 bit machine with <a href="http://aws.amazon.com/amazon-linux-ami/">Amazon Linux AMI</a>.
 The problem itself is known and there is <a href="http://code.google.com/p/selenium/issues/detail?id=2852">an issue in selenium tracker</a>.</p>
 </div>
@@ -719,10 +681,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
       <small class="pull-right">2012-02-13</small>
       <h2><a class="title" href="html/2012-02-13-git-branches-have-diverged.html">Git - Your branch and &#x27;origin/xxx&#x27; have diverged</a></h2>
       <div><p>Git error (not after rebase, see below):</p>
-<pre><code><div class="highlight"><pre><span class="nx">Your</span> <span class="nx">branch</span> <span class="nx">and</span> <span class="s1">&#39;origin/xxx&#39;</span> <span class="nx">have</span> <span class="nx">diverged</span><span class="p">,</span>
-<span class="nx">and</span> <span class="nx">have</span> <span class="mi">1</span> <span class="nx">and</span> <span class="mi">1</span> <span class="nx">different</span> <span class="nx">commit</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="nx">each</span><span class="p">,</span> <span class="nx">respectively</span><span class="p">.</span>
-</pre></div>
-
+<pre><code>Your branch and &#39;origin/xxx&#39; have diverged,
+and have 1 and 1 different commit(s) each, respectively.
 </code></pre><p>Error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch)</p>
 </div>
       <a class="more" href="html/2012-02-13-git-branches-have-diverged.html">Read more »</a>
@@ -730,10 +690,8 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
     <div class="post-preview">
       <small class="pull-right">2012-02-01</small>
       <h2><a class="title" href="html/2012-02-10-git-checkout-and-track-remote-branch.html">git - checkout and track remote branch</a></h2>
-      <div><pre><code class="lang-bash"><div class="highlight"><pre><span class="c">#creates and checks out &quot;feature&quot; branch that tracks &quot;origin/feature&quot;</span>
-<span class="nv">$ </span>git checkout -t origin/feature
-</pre></div>
-
+      <div><pre><code class="lang-bash">#creates and checks out &quot;feature&quot; branch that tracks &quot;origin/feature&quot;
+$ git checkout -t origin/feature
 </code></pre>
 </div>
       <a class="more" href="html/2012-02-10-git-checkout-and-track-remote-branch.html">Read more »</a>
@@ -755,13 +713,11 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
       <small class="pull-right">2012-01-24</small>
       <h2><a class="title" href="html/2012-01-24-jquery-check-version.html">jQuery - check minimal required version</a></h2>
       <div><p>To check whether jQuery is loaded to the page and verify minimum version:</p>
-<pre><code><div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">jQuery</span> <span class="o">==</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">||</span>
-<span class="o">!</span><span class="sr">/[1-9]\.[3-9].[1-9]/</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">jquery</span><span class="p">)</span>
-<span class="p">)</span> <span class="p">{</span>
-    <span class="k">throw</span><span class="p">(</span><span class="s1">&#39;jQuery version 1.3.1 or above is required&#39;</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-
+<pre><code>if (typeof jQuery == &#39;undefined&#39; ||
+!/[1-9]\.[3-9].[1-9]/.test($.fn.jquery)
+) {
+    throw(&#39;jQuery version 1.3.1 or above is required&#39;);
+}
 </code></pre></div>
       <a class="more" href="html/2012-01-24-jquery-check-version.html">Read more »</a>
     </div>

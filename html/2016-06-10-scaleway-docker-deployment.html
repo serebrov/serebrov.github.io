@@ -383,6 +383,7 @@ docker_rm_app_image $APP_NAME
 docker build -t $CONTAINER_NAME .
 docker run -d --restart always --net=host -p 80:80 -p 443:443 -v /dev/log:/dev/log --name $APP_NAME $CONTAINER_NAME
 popd
+
 </code></pre>
 <p>The HAProxy container is launched with <code>--net=host</code> option, so it can directly access all the ports exposed by other containers.</p>
 <p>The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.

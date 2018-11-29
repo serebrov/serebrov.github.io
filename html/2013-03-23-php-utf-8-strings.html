@@ -38,8 +38,8 @@
 encoding for string functions to utf-8 in php.ini:</p>
 <pre><code>mbstring.internal_encoding = UTF-8
 mbstring.func_overload = 7
-</code></pre><p><!-- more -->
-These settings allow us to use &quot;usual&quot; php string functions like substr() for utf-8 strings.
+</code></pre><!-- more -->
+<p>These settings allow us to use &quot;usual&quot; php string functions like substr() for utf-8 strings.
 It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).</p>
 <p>Default encoding can also be set using <a href="http://php.net/manual/en/function.mb-internal-encoding.php">mb_internal_encoding function</a>:</p>
 <pre><code>mb_internal_encoding(&#39;UTF-8&#39;);

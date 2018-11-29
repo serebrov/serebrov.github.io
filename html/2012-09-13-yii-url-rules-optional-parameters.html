@@ -41,8 +41,8 @@ articles/[article id or name]/revisions/99
 articles/[article id or name]/revisions/98/draft
 articles/revisions/[revision id]
 articles/revisions/[revision id]/draft
-</code></pre><p><!-- more -->
-We have a list of articles and each article has several revisions. Also each revision can have draft and published version.</p>
+</code></pre><!-- more -->
+<p>We have a list of articles and each article has several revisions. Also each revision can have draft and published version.</p>
 <p>In the code we have a single &#39;article/get&#39; action which allows us to get specific article (last revision) by name (&#39;GET articles/my-article&#39;) or id (&#39;GET articles/33&#39;).</p>
 <p>Using additional parameters we can get last revision draft (&#39;GET articles/33/draft&#39;), get specific revision (&#39;GET articles/33/revisions/99&#39;) or get article using revision ID only (&#39;GET articles/revisions/99&#39;).</p>
 <p>Now we can setup URL rules for these routes like this:</p>

@@ -40,8 +40,8 @@ The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror
 says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;
 </code></pre><p>In my case it was reproduced on the 64 bit machine with <a href="http://aws.amazon.com/amazon-linux-ami/">Amazon Linux AMI</a>.
 The problem itself is known and there is <a href="http://code.google.com/p/selenium/issues/detail?id=2852">an issue in selenium tracker</a>.</p>
-<p><!-- more -->
-It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
+<!-- more -->
+<p>It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
 In my system there are following versions of <code>libX11</code>:</p>
 <pre><code class="lang-bash">    $ find / | grep libX11.so.6
     /usr/lib64/libX11.so.6       &lt;-- symbolic link to `libX11.so.6.3.0&#39;

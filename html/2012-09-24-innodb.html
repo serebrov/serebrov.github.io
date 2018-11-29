@@ -37,8 +37,8 @@
           <p>Below are some notes regarding the innodb transactions and locks.
 Most of them are just a copy-paste from <a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html">innodb docs</a> with my notes.
 Also there are some examples of custom-maid deadlocks.</p>
-<p><!-- more -->
-In the examples of MySQL operations different sessions are marked as (1) and (2), for example:</p>
+<!-- more -->
+<p>In the examples of MySQL operations different sessions are marked as (1) and (2), for example:</p>
 <ul>
 <li><code>create table child (id int(11) NOT NULL) ENGINE=InnoDB;</code><ul>
 <li>common operation, do it from any session</li>
@@ -60,7 +60,7 @@ Its output can be improved by creating <a href="http://dev.mysql.com/doc/refman/
 <li><code>CREATE TABLE innodb_monitor(a int) ENGINE=INNODB;</code></li>
 <li><code>CREATE TABLE innodb_lock_monitor(a int) ENGINE=INNODB;</code></li>
 </ul>
-<h2 id="-transaction-isolation-levels-http-dev-mysql-com-doc-refman-5-5-en-set-transaction-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/set-transaction.html">transaction isolation levels</a></h2>
+<h2 id="transaction-isolation-levels"><a href="http://dev.mysql.com/doc/refman/5.5/en/set-transaction.html">transaction isolation levels</a></h2>
 <ul>
 <li>REPEATABLE READ (default)<ul>
 <li>in transaction sequential selects will get the same data</li>
@@ -80,7 +80,7 @@ Its output can be improved by creating <a href="http://dev.mysql.com/doc/refman/
 </ul>
 </li>
 </ul>
-<h2 id="-lock-modes-http-dev-mysql-com-doc-refman-5-5-en-innodb-lock-modes-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-lock-modes.html">lock modes</a></h2>
+<h2 id="lock-modes"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-lock-modes.html">lock modes</a></h2>
 <ul>
 <li>S (shared)<ul>
 <li>row level, others can get S, IS (select data, but not modify it)</li>
@@ -107,7 +107,7 @@ Especially following statement was very unclear:</p>
     &quot;SELECT ... FOR UPDATE locks the rows and any associated index entries, the same as if you issued an UPDATE statement for those rows. ... (X-lock)&quot;</p>
 <p>Actually it seems that innodb set both IS and S (or IX and X) where IS is set on the table and S is set on the row, see
 <a href="http://en.wikipedia.org/wiki/Multiple_granularity_locking">wikipedia</a> and <a href="http://www.mysqlperformanceblog.com/2010/06/08/table-locks-in-show-innodb-status/">blog post</a>.</p>
-<h2 id="-select-for-update-and-select-lock-in-share-mode-locking-reads-usage-examples-http-dev-mysql-com-doc-refman-5-5-en-innodb-locking-reads-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locking-reads.html"><code>SELECT ... FOR UPDATE</code> and <code>SELECT ... LOCK IN SHARE MODE</code> Locking Reads - Usage Examples</a></h2>
+<h2 id="select-for-update-and-select-lock-in-share-mode-locking-reads-usage-examples"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locking-reads.html"><code>SELECT ... FOR UPDATE</code> and <code>SELECT ... LOCK IN SHARE MODE</code> Locking Reads - Usage Examples</a></h2>
 <p>Example 1. Insert a new row into a table child, and make sure that the child row has a parent row in table parent:</p>
 <ul>
 <li><code>SELECT * FROM parent WHERE NAME = &#39;Jones&#39; LOCK IN SHARE MODE;</code></li>
@@ -143,7 +143,7 @@ Especially following statement was very unclear:</p>
 </ul>
 </li>
 </ul>
-<h2 id="-record-gap-and-next-key-locks-http-dev-mysql-com-doc-refman-5-5-en-innodb-record-level-locks-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-record-level-locks.html">Record, Gap, and Next-Key Locks</a></h2>
+<h2 id="record-gap-and-next-key-locks"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-record-level-locks.html">Record, Gap, and Next-Key Locks</a></h2>
 <ul>
 <li>Record lock<ul>
 <li>This is a lock on an index record.</li>
@@ -203,7 +203,7 @@ Especially following statement was very unclear:</p>
 </ul>
 </li>
 </ul>
-<h2 id="-locks-and-statements-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Locks and statements</a></h2>
+<h2 id="locks-and-statements"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Locks and statements</a></h2>
 <ul>
 <li>A locking read (<code>SELECT ... FOR UPDATE</code> and <code>SELECT ... LOCK IN SHARE MODE</code>), an <code>UPDATE</code>, or a <code>DELETE</code><ul>
 <li>next-key locks (index record + gap before, take into account there is &quot;supremum&quot; record)<ul>
@@ -277,9 +277,7 @@ Especially following statement was very unclear:</p>
 </ul>
 </li>
 <li>both inserted into the same gap whithout waiting</li>
-</ul>
-<hr>
-<ul>
+<li>--</li>
 <li>(1) <code>start transaction;</code></li>
 <li>(1) <code>delete from child where id &gt; 100;</code><ul>
 <li>X `lock on gap 90-100 (gap before 100), 100, gap 100-supremum (&quot;supremum&quot; &gt; 100 and fits to condition in &#39;where&#39;)</li>
@@ -334,7 +332,7 @@ Especially following statement was very unclear:</p>
 </ul>
 </li>
 </ul>
-<h2 id="-deadlock-detection-and-rollback-http-dev-mysql-com-doc-refman-5-5-en-innodb-deadlock-detection-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlock-detection.html">Deadlock Detection and Rollback</a></h2>
+<h2 id="deadlock-detection-and-rollback"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlock-detection.html">Deadlock Detection and Rollback</a></h2>
 <ul>
 <li>InnoDB automatically detects transaction deadlocks and rolls back a transaction or transactions to break the deadlock.<ul>
 <li>InnoDB tries to pick small transactions to roll back, where the size of a transaction is determined by the number of rows inserted, updated, or deleted.</li>
@@ -349,7 +347,7 @@ Especially following statement was very unclear:</p>
 </li>
 <li>If a <code>SELECT</code> calls a stored function in a transaction, and a statement within the function fails, that statement rolls back. Furthermore, if <code>ROLLBACK</code> is executed after that, the entire transaction rolls back.</li>
 </ul>
-<h2 id="-how-to-cope-with-deadlocks-http-dev-mysql-com-doc-refman-5-5-en-innodb-deadlocks-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlocks.html">How to Cope with Deadlocks</a></h2>
+<h2 id="how-to-cope-with-deadlocks"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-deadlocks.html">How to Cope with Deadlocks</a></h2>
 <ul>
 <li>InnoDB uses automatic row-level locking.<ul>
 <li>You can get deadlocks even in the case of transactions that just insert or delete a single row. That is because these operations are not really “atomic”; they automatically set locks on the (possibly several) index records of the row inserted or deleted.</li>
@@ -398,7 +396,7 @@ Especially following statement was very unclear:</p>
 </li>
 </ul>
 <h2 id="deadlock-examples">Deadlock examples</h2>
-<h3 id="-example-1-deadlock-on-insert-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 1 (deadlock on insert)</a>:</h3>
+<h3 id="example-1-deadlock-on-insert-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 1 (deadlock on insert)</a>:</h3>
 <ul>
 <li><code>create table t1 (i int, primary key (i)) engine = InnoDB;</code></li>
 <li>(1) <code>start transaction;</code></li>
@@ -419,7 +417,7 @@ Especially following statement was very unclear:</p>
 <li>(1) <code>rollback;</code></li>
 <li>(2) &amp; (3) - deadlock - both hold S-lock and can not get X-lock</li>
 </ul>
-<h3 id="-example-2-deadlock-on-delete-insert-http-dev-mysql-com-doc-refman-5-5-en-innodb-locks-set-html-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 2 (deadlock on delete / insert)</a>:</h3>
+<h3 id="example-2-deadlock-on-delete-insert-"><a href="http://dev.mysql.com/doc/refman/5.5/en/innodb-locks-set.html">Example 2 (deadlock on delete / insert)</a>:</h3>
 <ul>
 <li><code>create table t1 (i int, primary key (i)) engine = InnoDB;</code></li>
 <li>(1) <code>start transaction;</code></li>
@@ -531,7 +529,7 @@ Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0
 1: len 8; hex 8000000000000005; asc         ;;
 
 *** WE ROLL BACK TRANSACTION (2)
-</code></pre><h3 id="-example-4-deadlock-on-access-in-different-order-http-www-xaprb-com-blog-2006-08-03-a-little-known-way-to-cause-a-database-deadlock-"><a href="http://www.xaprb.com/blog/2006/08/03/a-little-known-way-to-cause-a-database-deadlock/">Example 4 (deadlock on access in different order)</a>:</h3>
+</code></pre><h3 id="example-4-deadlock-on-access-in-different-order-"><a href="http://www.xaprb.com/blog/2006/08/03/a-little-known-way-to-cause-a-database-deadlock/">Example 4 (deadlock on access in different order)</a>:</h3>
 <ul>
 <li><code>CREATE TABLE ... SELECT</code> conflicts with <code>INSERT</code> and causes a deadlock because of opposite order of data</li>
 <li>(1) <code>INSERT</code> a record at the end, got X-lock</li>
@@ -655,7 +653,7 @@ Possible solution can be first insert new records and only then do delete:</p>
 <li>(1) <code>commit;</code></li>
 <li>(2) <code>commit;</code></li>
 </ul>
-<h3 id="-example-6-deadlock-in-empty-table-http-forums-mysql-com-read-php-22-10506-10506-msg-10506-"><a href="http://forums.mysql.com/read.php?22,10506,10506#msg-10506">Example 6 (deadlock in empty table)</a>:</h3>
+<h3 id="example-6-deadlock-in-empty-table-"><a href="http://forums.mysql.com/read.php?22,10506,10506#msg-10506">Example 6 (deadlock in empty table)</a>:</h3>
 <p>See <a href="http://forums.mysql.com/read.php?22,10506,10506#msg-10506">initial post</a> and <a href="http://forums.mysql.com/read.php?22,10506,11347#msg-11347">explanation</a>.</p>
 <ul>
 <li><code>create table T (C int not null primary key) engine=InnoDB;</code></li>

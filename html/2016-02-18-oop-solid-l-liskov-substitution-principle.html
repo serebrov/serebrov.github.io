@@ -41,7 +41,6 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
 </code></pre><p>The basic idea - if you have an object of type <code>T</code> then you can also use objects of its subclasses instead of it.</p>
 <p>Or, in other words: the subclass should behave the same way as the base class. It can add some new features on top of the base class (that&#39;s the purpose of inheritance, right?), but it can not break expectations about the base class behavior.</p>
 <!-- more -->
-
 <p>The expectations about the base class can include:</p>
 <ul>
 <li>input parameters for class methods</li>
@@ -133,6 +132,7 @@ class GoodOwner extends Owner
   void feed(LiveBeing being)
     # Problem: LiveBeing doesn&#39;t have the `eat` method
     being-&gt;eat(this-&gt;findFood());
+
 </code></pre>
 <p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method because <code>LiveBeing</code> doesn&#39;t have the <code>eat</code> method.</p>
 <p>And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
@@ -167,6 +167,7 @@ function doAction(Owner owner)
     # Problem for BadOwner, it can raise LowQualityFoodException and it will not be
     # caught here
     ...
+
 </code></pre>
 <p>If we don&#39;t follow the rule about exception types, the client code written for the base class <code>Owner</code> will fail for the subclass <code>BadOwner</code> and this way we violate the <code>LSP</code>.</p>
 <h1 id="inheritance-requirements">Inheritance requirements</h1>
@@ -262,6 +263,7 @@ doAction(Time time)
   # OK for Time, it can not be changed, so value is the same
   # Problem for FlexibleTime, the `doOtherAction` could change it
   print &#39;Now it is still: &#39;, time-&gt;getTime()
+
 </code></pre>
 <h1 id="links">Links</h1>
 <p><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia:Liskov substitution principle</a></p>

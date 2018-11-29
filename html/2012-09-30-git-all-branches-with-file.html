@@ -38,8 +38,8 @@
 <p>Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):</p>
 <pre><code class="lang-bash">    git log --all --format=%H FILENAME | while read f; do git branch --contains $f; done | sort -u
 </code></pre>
-<p><!-- more -->
-Manually inspect:</p>
+<!-- more -->
+<p>Manually inspect:</p>
 <pre><code class="lang-bash">    gitk --all --date-order -- FILENAME
 </code></pre>
 <p>Find all changes to FILENAME not merged to master:</p>

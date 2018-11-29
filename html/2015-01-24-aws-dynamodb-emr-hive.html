@@ -42,7 +42,6 @@
 <li>Run it from Hue web-interface (see below)</li>
 </ul>
 <!-- more -->
-
 <h3 id="connect-to-hue">Connect to Hue</h3>
 <p>Hue is a Hadoop <a href="http://gethue.com/">web interface</a>. It is automatically installed when EMR cluster is launched.
 The recommended way to connect to Hue is via <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/gsg-hue.html">ssh tunnel</a>, <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/accessing-hue.html">see also</a>.</p>
@@ -84,6 +83,7 @@ ROW FORMAT DELIMITED FIELDS TERMINATED BY &#39;,&#39;
 LOCATION &#39;s3://my-bucket-name/2015-01-24-dynamo-table-data/&#39;;
 
 INSERT OVERWRITE TABLE s3_table SELECT * FROM dynamo_table;
+
 </code></pre>
 <h3 id="hive-timestamp-to-date-conversions">Hive - timestamp to date conversions</h3>
 <p>Examples of some queries to convert the timestamp to date string:</p>

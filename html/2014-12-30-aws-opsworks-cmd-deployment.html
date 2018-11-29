@@ -40,8 +40,8 @@ Script performs following steps</p>
 <li>Execute &#39;update_custom_cookbooks&#39; deployment command and wait for successful completion (or stop with an error)</li>
 <li>Execute &#39;deploy&#39; command and wait for completion</li>
 </ul>
-<p><!-- more -->
-At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</p>
+<!-- more -->
+<p>At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</p>
 <pre><code class="lang-python">#!/usr/bin/python
 
 import boto.opsworks
@@ -88,6 +88,7 @@ wait_for_deployment(result[&#39;DeploymentId&#39;])
 result = opsworks.create_deployment(stack_id, {&quot;Name&quot;:&quot;deploy&quot;}, app_id)
 print(&#39;Deploy %s&#39; % result)
 wait_for_deployment(result[&#39;DeploymentId&#39;])
+
 </code></pre>
 <p>The script launches deployment command and then polls its status every three seconds until it completes or fails.
 Results look like this:</p>

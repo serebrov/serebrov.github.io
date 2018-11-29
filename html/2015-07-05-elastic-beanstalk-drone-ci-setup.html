@@ -110,6 +110,7 @@ services:
     docker:
       enabled: true
       ensureRunning: true
+
 </code></pre>
 <p>It will install packages I need (including docker) and run the <code>deploy.sh</code> script which does the Drone installation:</p>
 <pre><code class="lang-sh">
@@ -148,6 +149,7 @@ else
     copy_ext $SCRIPT_PATH/files/drone.toml /etc/drone/drone.toml 0755 root root
     start droned
 fi
+
 </code></pre>
 <p>This script uses <code>utils.sh</code>, you can find it <a href="/html/2015-04-02-elastic-beanstalk-python.html">here</a>.</p>
 <p>There are two more configuration files used in the setup process.</p>
@@ -215,6 +217,7 @@ pre-stop script
     rm /var/run/droned.pid
     echo &quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping&quot; &gt;&gt; /var/log/droned.log
 end script
+
 </code></pre>
 <p>Drone parameters can be changed via environment variables in the upstart script or you can attach these environment variables to the instance in the Elastic Beanstalk configuration (in the AWS UI).
 Or you can use a special <code>drone.toml</code> configuration file:</p>

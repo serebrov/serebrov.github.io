@@ -35,8 +35,8 @@
       </div>
       <div class="post-body">
           <p>Problem: after setting the boolean flags for Firefox profile the webdriver fails with &quot;Can&#39;t load the profile&quot; error.</p>
-<p><!-- more -->
-I tried to disable native events for Firefox webdriver in a following way:</p>
+<!-- more -->
+<p>I tried to disable native events for Firefox webdriver in a following way:</p>
 <pre><code class="lang-python">    ffp = webdriver.firefox.firefox_profile.FirefoxProfile(path)
     if (Config.ff_native_events_enabled == False):
         ffp.native_events_enabled = False
