@@ -894,12 +894,11 @@ th {
   box-sizing: border-box;
 }
 html {
-  font-size: 10px;
+  font-size: 15px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15px;
   line-height: 1.4;
   color: #222222;
   background-color: #ffffff;
@@ -1078,27 +1077,27 @@ h6 .small,
 }
 h1,
 .h1 {
-  font-size: 39px;
+  font-size: 2.6rem;
 }
 h2,
 .h2 {
-  font-size: 32px;
+  font-size: 2.1rem;
 }
 h3,
 .h3 {
-  font-size: 26px;
+  font-size: 1.7rem;
 }
 h4,
 .h4 {
-  font-size: 19px;
+  font-size: 1.3rem;
 }
 h5,
 .h5 {
-  font-size: 15px;
+  font-size: 1rem;
 }
 h6,
 .h6 {
-  font-size: 13px;
+  font-size: 0.9rem;
 }
 p {
   margin: 0 0 10.5px;
@@ -1281,7 +1280,7 @@ abbr[data-original-title] {
 blockquote {
   padding: 10.5px 21px;
   margin: 0 0 21px;
-  font-size: 18.75px;
+  font-size: 1.25em;
   border-left: 5px solid #dddddd;
 }
 blockquote p:last-child,
@@ -1364,7 +1363,7 @@ pre {
   display: block;
   padding: 10px;
   margin: 0 0 10.5px;
-  font-size: 14px;
+  font-size: 0.9em;
   line-height: 1.4;
   word-break: break-all;
   word-wrap: break-word;
@@ -2303,7 +2302,7 @@ legend {
   width: 100%;
   padding: 0;
   margin-bottom: 21px;
-  font-size: 22.5px;
+  font-size: 1.5em;
   line-height: inherit;
   color: #333333;
   border: 0;
