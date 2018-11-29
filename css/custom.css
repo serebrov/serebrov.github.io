@@ -11,6 +11,10 @@ blockquote {
     display: block;
 }
 
+a.title {
+  color: #1f1f1f;
+}
+
 a.selected {
   background-color:#1F75CC;
   color:white;
