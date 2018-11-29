@@ -26,6 +26,9 @@ registerPatials.register(tplPath)
   var buffer = fs.readFileSync(optimist.argv._[0]);
   var parsed = front(buffer.toString());
   var meta = parsed.attributes;
+  // Add post path to the template variables.
+  meta.path = optimist.argv._[0];
+  meta.path = meta.path.replace("content/", "html/").replace(".md", ".html");
   return markdown(parsed.body)
   .then(function(md) {
     meta.body = new Handlebars.SafeString(md);

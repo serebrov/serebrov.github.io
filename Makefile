@@ -8,7 +8,7 @@ NOTES_META := $(NOTES_HTML:.html=.json)
 all: $(NOTES_HTML) $(NOTES_META) $(WWW_BS_FONTS) $(DEST)/index.html $(DEST)/sitemap.xml
 
 #Order only dependency on dir (dir only will be created if it does not exist)
-$(DEST)/html/%.html: content/%.md build/templates/layout.hbs build/templates/post.hbs build/scripts/handlebars | $(DEST)/html
+$(DEST)/html/%.html: content/%.md build/templates/layout.hbs build/templates/post.hbs build/templates/disqus.hbs build/scripts/handlebars | $(DEST)/html
 	mkdir -p $(@D)
 	build/scripts/handlebars $< > $@
 
