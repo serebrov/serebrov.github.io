@@ -472,10 +472,9 @@ And the note in the Scaleway UI states &quot;We&#39;re currently scaling up our 
 </ul>
 <p>And since all application containers map their files folders under host&#39;s <code>/var/web</code>, I simply sync this folder to my S3 bucket.</p>
 <h2 id="conclusion">Conclusion</h2>
-<p>As we can see, Docker can be successfully used not only to isolate application dependencies, but, thanks to Docker Machine, also to deploy and update applications on the remote server.
-Using the approach above, it is possible also provide both ease of development (in local environment source files are mapped from the host machine and can be edited outside of the container) and avoid using private images (for production source files are copied into the container).</p>
-<p>This post turned to be quite long and there is a lot of source code, both for shell scripts and configs.
-I am thinking on putting the whole thing to github as a sample setup project, please let me know in comments if that would be useful.</p>
+<p>As we can see, Docker can be successfully used not only to isolate application dependencies, but, along with Docker Machine, also to deploy and update applications on the remote server.</p>
+<p>I don&#39;t recommend using the approach above for serious production setups, but it can be useful for small / personal projects.</p>
+<p>Update: now it could be easier to use <a href="https://docs.docker.com/engine/swarm/">docker swarm mode</a> to build the system like described above.</p>
 <div class="popup">
     <div class="close">close</div>
     <div class="download"><a href="">Download (<span class="name"></span>)</a></div>

@@ -517,11 +517,11 @@ And since all application containers map their files folders under host's `/var/
 
 ## Conclusion
 
-As we can see, Docker can be successfully used not only to isolate application dependencies, but, thanks to Docker Machine, also to deploy and update applications on the remote server.
-Using the approach above, it is possible also provide both ease of development (in local environment source files are mapped from the host machine and can be edited outside of the container) and avoid using private images (for production source files are copied into the container).
+As we can see, Docker can be successfully used not only to isolate application dependencies, but, along with Docker Machine, also to deploy and update applications on the remote server.
 
-This post turned to be quite long and there is a lot of source code, both for shell scripts and configs.
-I am thinking on putting the whole thing to github as a sample setup project, please let me know in comments if that would be useful.
+I don't recommend using the approach above for serious production setups, but it can be useful for small / personal projects.
+
+Update: now it could be easier to use [docker swarm mode](https://docs.docker.com/engine/swarm/) to build the system like described above.
 
 <div class="popup">
     <div class="close">close</div>
