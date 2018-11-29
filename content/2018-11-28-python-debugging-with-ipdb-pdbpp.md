@@ -1,5 +1,5 @@
 ---
-title: Debugging With ipdb and pdbpp
+title: Debugging Python With ipdb and pdbpp
 date: 2018-11-28
 tags: python
 type: note
