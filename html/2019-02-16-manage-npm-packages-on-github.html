@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Managing NPM packages on github</title>
+
+    <!-- Bootstrap -->
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight,
+                  Keep Markup, Normalize Whitespace
+    -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
+      </div>
+      <div class="post-title">
+          <h1>Managing NPM packages on github</h1>
+      </div>
+      <div class="post-body">
+          <p>Sometimes it is simpler to keep the package on github, for example, if you have a fork of a published package with some private changes.
+So you can avoid cluttering npm registry with similar packages, creating confusing for other people.</p>
+<p>NPM <a href="https://docs.npmjs.com/cli/install">supports</a> installing dependencies from github, but it is also good to have versioning for your package so you can use it exactly as other packages, develop it independently and upgrade the dependency for the main project in a controlled way.</p>
+<!-- more -->
+<h2 id="preparation">Preparation</h2>
+<p>Add build branch to keep the last published version of the package:</p>
+<pre><code class="lang-bash">git checkout -b build
+git push -u origin HEAD
+</code></pre>
+<p>The build branch can include some files that are normally excluded from git control, for example, results of the webpack build.</p>
+<h2 id="workflow">Workflow</h2>
+<p>The workflow I use is this:</p>
+<ul>
+<li>Do the changes as usually, create branches / Pull Requests, merge them to master</li>
+<li>Prepare release:<ul>
+<li>Checkout build branch: <code>git checkout build</code></li>
+<li>Merge master into it <code>git merge master</code></li>
+<li>Run commands to generate build (if any), like <code>npm run build</code></li>
+<li>Add build files to git: <code>git add buiid/.</code> and <code>git commit -m &quot;Rebuild&quot;</code></li>
+</ul>
+</li>
+<li>Push changes: <code>git push origin HEAD</code></li>
+<li>Tag the new release <code>git tag 3.1.1 -a</code>, the <code>-a</code> flag means annotated tag, git will also ask for description<ul>
+<li>Add the list of changes to annotation (I mostly use titles of pull requests along with PR id, like &quot;Fix search, #19&quot;, the PR id will turn into a link in github UI</li>
+</ul>
+</li>
+<li>Push the tags: <code>git push origin --tags</code></li>
+</ul>
+<p>Note: don&#39;t forget about <a href="https://docs.npmjs.com/about-semantic-versioning">semver</a>, basically: increase last number for fixes, second for new features, first for breaking changes.</p>
+<p>Now, the new release will appear on github under &quot;releases&quot;, for example <a href="https://github.com/serebrov/emoji-mart-vue/releases">https://github.com/serebrov/emoji-mart-vue/releases</a>.</p>
+<h2 id="use-the-package">Use the Package</h2>
+<p>Include package from github, in <code>package.json</code>:</p>
+<pre><code>  &quot;dependencies&quot;: {
+    &quot;emoji-mart-vue&quot;: &quot;github:serebrov/emoji-mart-vue#3.1.1&quot;,
+  }
+</code></pre><p>Note that we specify the tag (<code>#3.1.1</code> in the example above), so we can work on the package and release new versions (create new tags) and update the package version used by the main project when we want / need that.</p>
+
+      </div>
+      <div>
+<a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+      </div>
+      <div>
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = 'http://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html';  // Replace PAGE_URL with your page's canonical URL variable
+// this.page.identifier = 'html/2019-02-16-manage-npm-packages-on-github.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://serebrov.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+
