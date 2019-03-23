@@ -50,7 +50,7 @@ are not pushed to the server yet (or when you are 100% sure about what
 you are doing).</p>
 <p>The <code>git reset</code> command can be used this way (the <code>--hard</code> flag will
 also clear any pending changes which are not commited yet):</p>
-<pre><code class="lang-bash">$ git reset --hard HEAD~3
+<pre><code class="lang-bash">$ git reset --hard HEAD~3  # Careful, will remove not-commited changes
 </code></pre>
 <p>Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B1</code> is <code>HEAD~2</code>.
 This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
@@ -112,7 +112,8 @@ follow at merge point (you&#39;ll see a <code>Commit XXX is a merge but no -m op
 <p>The solution comes from the <a href="https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095">Revert to a commit by a SHA hash in Git?</a> question.</p>
 <p>Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
 The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p>
-<pre><code class="lang-bash">$ git reset --hard 0682c06  # Use the SHA1 of the revision you want to revert to
+<pre><code class="lang-bash"># Careful, reset --hard will remove non-commited changes
+$ git reset --hard 0682c06  # Use the SHA1 of the revision you want to revert to
 HEAD is now at 0682c06 G3
 $ git reset --soft HEAD@{1}
 $ git commit -m &quot;Reverting to the state of the project at 0682c06&quot;
