@@ -30,7 +30,7 @@ The `git reset` command can be used this way (the `--hard` flag will
 also clear any pending changes which are not commited yet):
 
 ```bash
-$ git reset --hard HEAD~3
+$ git reset --hard HEAD~3  # Careful, will remove not-commited changes
 ```
 
 Here we can refer to `B3` as `HEAD`, `B2` is `HEAD~1`, `B1` is `HEAD~2`.
@@ -126,6 +126,7 @@ Here we first hard reset the state of the repository to some previous revision a
 The soft reset will keep file modifications, so it will bring old state back on top of the current state:
 
 ```bash
+# Careful, reset --hard will remove non-commited changes
 $ git reset --hard 0682c06  # Use the SHA1 of the revision you want to revert to
 HEAD is now at 0682c06 G3
 $ git reset --soft HEAD@{1}
