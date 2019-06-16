@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Git Hook to Add Issue Number to Commit Message</title>
+
+    <!-- Bootstrap -->
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight,
+                  Keep Markup, Normalize Whitespace
+    -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
+      </div>
+      <div class="post-title">
+          <h1>Git Hook to Add Issue Number to Commit Message</h1>
+      </div>
+      <div class="post-body">
+          <p>When using project management system (Jira, Redmine, Github issues, etc) it is useful to add the issue number into commit message that makes is easier to understand which issue the commit belongs to and often allows the project management system to display related commits.</p>
+<p>For same reasons, it is also useful to include the issue number into branch name, such as <code>123-branch-description</code> or <code>feature/PROJECT-123-branch-description</code>.</p>
+<!-- more -->
+<p>The process of adding the issue number into commit message can be automated with git <code>prepare-commit-msg</code> hook (shell script).</p>
+<p>Below are few examples of hook scripts.</p>
+<h2 id="branch-named-as-123-branch-description">Branch Named as <code>123-branch-description</code></h2>
+<p>In the simplest case we have branches named as <code>123-branch-description</code>, where <code>123</code> is the issue id:</p>
+<pre><code>#!/bin/bash
+
+# This hook works for branches named such as &quot;123-description&quot; and will add &quot;[#123]&quot; to the commit message.
+
+# get current branch
+branchName=`git rev-parse --abbrev-ref HEAD`
+
+# search issue id in the branch name, such a &quot;123-description&quot; or &quot;XXX-123-description&quot;
+issueId=$(echo $branchName | sed -nr &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
+
+# only prepare commit message if pattern matched and issue id was found
+if [[ ! -z $issueId ]]; then
+ # $1 is the name of the file containing the commit message
+ # sed -i.bak -e &quot;1s/^/\n\n[$issueId]\n/&quot; $1
+ echo -e &quot;[#$issueId] &quot;&quot;$(cat $1)&quot; &gt; &quot;$1&quot;
+ # echo -e &quot;[$issueId]\n&quot;&quot;$(cat $1)&quot; &gt; &quot;$1&quot;
+ # sed -i.bak -e &quot;1s/^/$TRIMMED /&quot; $1
+fi
+</code></pre><h2 id="branch-named-as-feature-project-123-branch-description">Branch Named as <code>feature/PROJECT-123-branch-description</code></h2>
+<p>This version is useful for gitflow and Jira (where we should use PROJECT-123 format to display commits in the issue):</p>
+<pre><code>#!/bin/bash
+
+# This hook works for branches named such as &quot;feature/ABC-123-description&quot; and will add &quot;[ABC-123]&quot; to the commit message.
+
+# get current branch
+branchName=`git rev-parse --abbrev-ref HEAD`
+
+# search jira issue id in a pattern such a &quot;feature/ABC-123-description&quot;
+jiraId=$(echo $branchName | sed -nr &#39;s,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p&#39;)
+
+# only prepare commit message if pattern matched and jiraId was found
+if [[ ! -z $jiraId ]]; then
+ # $1 is the name of the file containing the commit message
+ # sed -i.bak -e &quot;1s/^/\n\n[$jiraId]\n/&quot; $1
+ echo -e &quot;[$jiraId] &quot;&quot;$(cat $1)&quot; &gt; &quot;$1&quot;
+ # echo -e &quot;[$jiraId]\n&quot;&quot;$(cat $1)&quot; &gt; &quot;$1&quot;
+ # sed -i.bak -e &quot;1s/^/$TRIMMED /&quot; $1
+fi
+</code></pre><h2 id="cross-repository-version">Cross-Repository Version</h2>
+<p>This is useful when project uses multiple repositories on GitHub and issues tracked in one of the project (or there is a separate project for issues).</p>
+<p>In this case, we aslo need to add full repository name to the commit message.</p>
+<p>The hook below puts short issue number at the beginning of the commit message and adds full issue id (<code>organization/repository/#issueId</code>) at the end.</p>
+<pre><code>#!/bin/bash
+
+# This hook works for branches named such as &quot;123-description&quot; and will add &quot;[#123]&quot; to the commit message.
+
+# get current branch
+branchName=`git rev-parse --abbrev-ref HEAD`
+
+# search issue id in the branch name, such a &quot;123-description&quot; or &quot;XXX-123-description&quot;
+issueId=$(echo $branchName | sed -nr &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
+
+# only prepare commit message if pattern matched and issue id was found
+if [[ ! -z $issueId ]]; then
+ # $1 is the name of the file containing the commit message
+ # We prepend issue number in the beginning (so we can easily see it in history)
+ # And also we append the full issue id (with organization/repository#) prefix,
+ # so this commit hook works for other repositories (frontend) too.
+ echo -e &quot;[#$issueId] &quot;&quot;$(cat $1)&quot;&quot;\n[organization/repository#$issueId]&quot; &gt; &quot;$1&quot;
+ # sed -i.bak -e &quot;1s/^/\n\n[$issueId]\n/&quot; $1
+ # echo -e &quot;[$issueId]\n&quot;&quot;$(cat $1)&quot; &gt; &quot;$1&quot;
+ # sed -i.bak -e &quot;1s/^/$TRIMMED /&quot; $1
+fi
+</code></pre><h2 id="installing-the-hook">Installing the Hook</h2>
+<ul>
+<li>Create the <code>.git/hooks/prepare-commit-msg</code> script</li>
+<li>Copy the content from the snippet above</li>
+<li>Make the file executable <code>chmod +x .git/hooks/prepare-commit-msg</code></li>
+<li>Try to commit something, check that the issue number is automatically added</li>
+</ul>
+<p>Note: when you do the <code>commit --amend</code>, the issue number will be added for the second time - you need to remove it manually.</p>
+
+      </div>
+      <div>
+<a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+      </div>
+      <div>
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = 'http://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html';  // Replace PAGE_URL with your page's canonical URL variable
+// this.page.identifier = 'html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://serebrov.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+

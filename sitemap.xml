@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</loc>
+  <lastmod>2019-06-16T03:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</loc>
   <lastmod>2019-02-16T02:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
