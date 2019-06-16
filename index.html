@@ -33,6 +33,19 @@
 
     <div class="post-preview">
       <small class="pull-right">2019-06-16</small>
+      <h2><a class="title" href="html/2019-06-16-multi-origin-cloudfront-setup.html">CloudFront Setup to Route Requests to Services Based on Request Path</a></h2>
+      <div><p>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.</p>
+<p>For example:</p>
+<ul>
+<li><a href="http://www.myapp.com">www.myapp.com</a> -&gt; unbounce.com (landing pages)</li>
+<li><a href="http://www.myapp.com/app">www.myapp.com/app</a> -&gt; single page app hosted on S3</li>
+<li><a href="http://www.myapp.com/blog">www.myapp.com/blog</a> -&gt; wordpress blog</li>
+</ul>
+</div>
+      <a class="more" href="html/2019-06-16-multi-origin-cloudfront-setup.html">Read more »</a>
+    </div>
+    <div class="post-preview">
+      <small class="pull-right">2019-06-16</small>
       <h2><a class="title" href="html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html">Git Hook to Add Issue Number to Commit Message</a></h2>
       <div><p>When using project management system (Jira, Redmine, Github issues, etc) it is useful to add the issue number into commit message that makes is easier to understand which issue the commit belongs to and often allows the project management system to display related commits.</p>
 <p>For same reasons, it is also useful to include the issue number into branch name, such as <code>123-branch-description</code> or <code>feature/PROJECT-123-branch-description</code>.</p>

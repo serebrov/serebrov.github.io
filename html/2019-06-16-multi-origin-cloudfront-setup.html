@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CloudFront Setup to Route Requests to Services Based on Request Path</title>
+
+    <!-- Bootstrap -->
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight,
+                  Keep Markup, Normalize Whitespace
+    -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
+      </div>
+      <div class="post-title">
+          <h1>CloudFront Setup to Route Requests to Services Based on Request Path</h1>
+      </div>
+      <div class="post-body">
+          <p>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.</p>
+<p>For example:</p>
+<ul>
+<li><a href="http://www.myapp.com">www.myapp.com</a> -&gt; unbounce.com (landing pages)</li>
+<li><a href="http://www.myapp.com/app">www.myapp.com/app</a> -&gt; single page app hosted on S3</li>
+<li><a href="http://www.myapp.com/blog">www.myapp.com/blog</a> -&gt; wordpress blog</li>
+</ul>
+<!-- more -->
+<h1 id="cloudfront-setup-structure">CloudFront Setup Structure</h1>
+<p>CloudFront <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html">distribution</a> can have one or more origins (sources to serve the data from) and one or more behaviors (rules defining how to cache the data based on the request path).</p>
+<p>For example, we can have a distribution for a single-page app hosted on S3 (origin is S3 bucket) with one behavior defining caching rules.</p>
+<p>Or we can have a distribution for a <a href="https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/">wordpress site</a> with one origin (wordpress server) and several behaviors defining caching rules for static and dynamic content.</p>
+<p>The distribution has a unique default domain name (such as <code>d111111abcdef8.cloudfront.net</code>) and can also be assigned a custom domain name (such as <code>media.myapp.com</code>).</p>
+<p>In a simple case that is enough: if we have multiple services (single-page app and wordpress blog), we can create separate distributions for them and use different sub-domains to route the requests (<code>app.myapp.com</code> and <code>blog.myapp.com</code>).</p>
+<p>But it is also possible to merge different services under the same distribution and same domain name (<code>myapp.com/app</code> and <code>myapp.com/blog</code>) - this is the <code>multi-origin setup</code> described below.</p>
+<h1 id="multi-origin-cloudfront-setup">Multi-Origin CloudFront Setup</h1>
+<p>If we want to have a single domain name used for all services (frontend app, landing pages, wordpress blog, etc), we can achieve that with CloudFront by having multiple origins for each service (and multiple behaviors to specify which request paths should be forwarded to these origins).</p>
+<p>The example setup for this post includes following origins:</p>
+<ul>
+<li><code>www.myapp.com</code> -&gt; unbounce.com, landing pages</li>
+<li><code>www.myapp.com/app</code> -&gt; single-page application, S3 bucket</li>
+<li><code>www.myapp.com/blog</code> -&gt; wordpress running on ElasticBeanstalk (origin points to Elastic Load Balancer)</li>
+</ul>
+<p>As mentioned, CloudFront is able to route requests based on request path (this is defined in behaviors).</p>
+<p>But there is also a bunch of additional problems to be solved with lambda@edge functions, such as:</p>
+<ul>
+<li>configure single-page application and wordpress to be run from the subfolders</li>
+<li>handle requests without the trailing slash (<code>www.myapp.com/app</code> vs <code>www.myapp.com/app/</code>
+= handle default <code>index.html</code> object for a sub-folder on S3.</li>
+</ul>
+<p>The solutions for these problems are described below, in the following sections of this post.</p>
+<p>For this setup, we have the following origins:</p>
+<ul>
+<li>0: app*, origin: S3-app.myapp.com</li>
+<li>1: blog/wp-login.php, origin: wordpress-elb</li>
+<li>2: blog/wp-admin/*, origin: wordpress-elb</li>
+<li>3: blog/wp-includes/*, origin: S3-wordpress.myapp.com</li>
+<li>4: blog/wp-content/*, origin: S3-wordpress.myapp.com</li>
+<li>5: blog*, origin: wordpress-elb</li>
+<li>6: Default (*), origin: unbounce-<a href="http://www.myapp.com">www.myapp.com</a></li>
+</ul>
+<p>The <code>app*</code> behavior serves the single-page application from the S3 origin.
+The app is accessible from the sub-path (<code>myapp.com/app</code>) and should be placed in the sub-folder on S3 (the sub-path is preserved in the request to origin).</p>
+<p>We use helper lambda functions to forward all requests to <code>index.html</code>:</p>
+<ul>
+<li>Origin Request: CloudFrontSubdirectoryIndex - catches root requests (<code>www.myapp.com/app</code>) and forwards them to <code>index.html</code></li>
+<li>Origin Response: CloudFrontDefaultIndexForOrigin - catches 404 / 403 requests (<code>www.myapp.com/app/some-path</code>) and forwards them to <code>index.html</code></li>
+</ul>
+<p>More details and lambda functions code are below.</p>
+<p>The <code>blog...</code> group of behaviors forward <code>/blog/...</code> requests to the wordpress origin. </p>
+<p>There are special behaviors for <code>wp-login.php</code> and <code>wp-admin/*</code> as these are used for administrative tasks and here we don&#39;t need caching and special behaviors for <code>wp-includes/*</code> and <code>wp-content/*</code> - these are forwarded to S3.</p>
+<p>For the <code>blog*</code> behaviors we also have the <code>CloudFrontRedirectToTrailingSlash</code> lambda function attached to the &quot;Viewer Request&quot; event that forwards <code>www.myapp.com/blog</code> requests to <code>www.myapp.com/blog/</code>.</p>
+<p>The default origin forwards root requests (<a href="http://www.myapp.com/">www.myapp.com/</a>) to unbounce.com landing pages.</p>
+<h1 id="unbounce-setup">Unbounce Setup</h1>
+<p>Unbounce.com is a service for landing pages and there are two (official) ways to use it: point CNAME (such as <code>www.myapp.com</code>) to unbounce.com or use a wordpress plugin - in this case the &quot;Host&quot; header should contain the domain name (<code>www.myapp.com</code>).</p>
+<p>We can use the latter to make unbounce work with CloudFront: we setup the <code>www.myapp.com</code> domain to point to CloudFront and we configure CloudFront to forward the <code>Host</code> header to unbounce.</p>
+<p>The configuration sequence I used is this:</p>
+<ol>
+<li>Add <a href="http://www.myapp.com">www.myapp.com</a> domain on unbounce.com</li>
+<li>Get the unbounce URL, like <code>ab44444888888.unbouncepages.com</code></li>
+<li>In DNS settings, point <code>www</code> CNAME to <code>ab44444888888.unbouncepages.com</code></li>
+<li>Wait until unbounce shows &quot;Working and Secure&quot; for the domain</li>
+<li>Edit (or create) CloudFront distribution, set alternative domain to <a href="http://www.myapp.com">www.myapp.com</a> (or see <a href="https://serverfault.com/a/888776/527019">https://serverfault.com/a/888776/527019</a>, there is also a method based on lambda function)</li>
+<li>Create the CloudFront origin, point it to unbounce URL (<code>ab44444888888.unbouncepages.com</code>)</li>
+<li>Create default behavior <code>(*)</code> for the origin above, disable caching (set &quot;Cache Based on Selected Request Headers&quot; to &quot;All&quot;)</li>
+<li>Change DNS settings, point <code>www</code> subdomain to CloudFront distribution (<code>d33xxx8888xxxx.cloudfront.net</code>) - replace the unbounce domain with CloudFront domain</li>
+<li>Wait for DNS changes to propagate, now the <a href="http://www.myapp.com">www.myapp.com</a> root URL should point to CloudFront</li>
+</ol>
+<p>So we first point CNAME to unbounce.com, wait until unbounce thinks that everything is good and then reconfigure the CNAME to point to CloudFront (and CloudFront forwards the custom domain name via Host header).</p>
+<h1 id="single-page-app-setup">Single Page App Setup</h1>
+<p>The single page app setup is pretty simple with CloudFront: the app source is copied to S3 bucket and then served via CloudFront (the origin is S3 bucket, with one default behavior).</p>
+<p>Example shell script to deploy the SPA application to S3 (also sends Slack notification about the deployment):</p>
+<pre><code>#!/usr/bin/env bash
+
+SCRIPT_PATH=`dirname $0`
+ROOT_PATH=$SCRIPT_PATH/../
+
+SLACK_HOOK=https://hooks.slack.com/services/THANKFT88/BBB44444D/aarrrvRRxxxxxSSSSSjjHHHH
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [[ $APP_ENV == &quot;develop&quot; ]]; then
+    CLOUDFRONT_DISTRIBUTION=EEE88888888888
+    AWS_BUCKET=dev.myapp.com
+elif [[ $APP_ENV == &quot;production&quot; ]]; then
+    CLOUDFRONT_DISTRIBUTION=EEE9999999999
+    AWS_BUCKET=app.myapp.com
+else
+    echo &quot;Unknown environment ${APP_ENV}&quot;
+    exit 1
+fi
+
+echo &quot;Deploying ${GIT_BRANCH} to ${AWS_BUCKET}&quot;
+
+. ${SCRIPT_PATH}/deploy_aws.sh
+
+if [ $? -eq 0 ]; then
+    echo &#39;Deployment: OK&#39;
+    curl -s -X POST $SLACK_HOOK \
+    -H &quot;content-type:application/json&quot; \
+    -d &#39;{&quot;text&quot;:&quot;[frontend] Branch `&#39;&quot;${GIT_BRANCH}&quot;&#39;` was successfully deployed to `&#39;&quot;${AWS_BUCKET}&quot;&#39;` bucket.&quot;}&#39;
+else
+    echo &#39;Deployment: FAILED&#39;
+    exit $?
+    curl -s -X POST $SLACK_HOOK \
+    -H &quot;content-type:application/json&quot; \
+    -d &#39;{&quot;text&quot;:&quot;[frontend] Branch `&#39;&quot;${GIT_BRANCH}&quot;&#39;` deployment to `&#39;&quot;${AWS_BUCKET}&quot;&#39;` bucket FAILED.&quot;}&#39;
+fi
+
+</code></pre><p>And the <code>deploy_aws.sh</code> script:</p>
+<pre><code>#!/usr/bin/env bash
+set -e
+
+SCRIPT_PATH=`dirname $0`
+ROOT_PATH=$SCRIPT_PATH/../
+RELEASE=$(git rev-parse HEAD)
+
+# Expected environment variables
+# AWS_BUCKET:=dev.myapp.com
+# CLOUDFRONT_DISTRIBUTION:=YYY
+# AWS_CLI_OPTS - optional, can be used to set profile
+
+echo &quot;Syncing dist to ${AWS_BUCKET} with options ${AWS_CLI_OPTS}&quot;
+
+aws s3 sync --delete dist/ s3://${AWS_BUCKET}/app/ ${AWS_CLI_OPTS}
+
+# Invalidate app on CloudFront
+aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths /app/* ${AWS_CLI_OPTS}
+</code></pre><p>I&#39;ve used such a setup for Angular and Vue applications, it should work well for other frameworks too.</p>
+<p>In a single-origin setup, it is also useful to:</p>
+<ul>
+<li>Set default object for distribution to <code>index.html</code></li>
+<li>Add 404 and 403 error handlers for distribution and reply 200 OK and with <code>index.html</code> (so all requests are sent to the single page app even if there are no real files on S3)</li>
+</ul>
+<p>Unfortunately, these settings are on the distribution level, although it would be more useful to have them for behaviors: in a multi-origin setup, we need to have same configuration, but only for a specific request path (for example, for <code>www.myapp.com/app</code>, but not for <code>www.myapp.com/blog</code>).</p>
+<p>So in multi-origin setup the solution is to use lambda@edge functions (described below) to do the same - use <code>index.html</code> as default object (CloudFrontSubdirectoryIndex) and redirect requests to non-existing files to <code>index.html</code> (CloudFrontDefaultIndexForOrigin).</p>
+<h1 id="wordpress-setup">WordPress Setup</h1>
+<p>WordPress can be either installed on a standalone EC2 instance, hosted externally or running on ElasticBeanstalk, the CloudFront setup will be similar:</p>
+<ul>
+<li>One origin that points to the wordpress server</li>
+<li>Several behaviors (described above, see <code>blog...</code> group) to describe caching rules for the static and dynamic content.</li>
+</ul>
+<p>I am hosting WordPress on ElasticBeanstalk which has several nuances related to how WordPress works.</p>
+<p>Since we use Elastic Beanstalk as a deployment platform (in general, this is also true if we host on stand-alone EC2), we should treat underlying EC2 instance and it&#39;s file storage as a disposable resource.</p>
+<p>We can use W3 Total Cache plugin (or other) to move variable content to S3 (for example, <code>wp.myapp.com</code> bucket) and serve via CDN (add a distribution for <code>wp.myapp.com</code> domain).</p>
+<p>To deploy the WordPress to S3 we create a repository with WordPress code, do the 
+ configuration changes, plugin or theme installs that affect the code (such as wp-config.php) and deploy to ElasticBeanstalk. 
+ Note that these changes should only be done locally, committed to git and deployed (not configured directly on the live server as these changes may be lost).</p>
+<p>Here are some useful resources describing the WordPress setup options on AWS:</p>
+<ul>
+<li>Using this for the current setup: <a href="https://d0.awsstatic.com/whitepapers/deploying-wordpress-with-aws-elastic-beanstalk.pdf">https://d0.awsstatic.com/whitepapers/deploying-wordpress-with-aws-elastic-beanstalk.pdf</a></li>
+<li>How to accelerate your WordPress site with Amazon CloudFront: <a href="https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/">https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/</a></li>
+<li>W3 Total Cache plugin: <a href="https://wordpress.org/plugins/w3-total-cache/">https://wordpress.org/plugins/w3-total-cache/</a></li>
+<li><a href="https://d0.awsstatic.com/whitepapers/wordpress-best-practices-on-aws.pdf">https://d0.awsstatic.com/whitepapers/wordpress-best-practices-on-aws.pdf</a></li>
+<li>How to accelerate your WordPress site with Amazon CloudFront | AWS Startups Blog: <a href="https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/">https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/</a></li>
+<li>(example with EFS) Deploying a High-Availability WordPress Website with an External Amazon RDS Database to Elastic Beanstalk - AWS Elastic Beanstalk: <a href="https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/php-hawordpress-tutorial.html">https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/php-hawordpress-tutorial.html</a>, <a href="https://github.com/aws-samples/eb-php-wordpress/">https://github.com/aws-samples/eb-php-wordpress/</a></li>
+<li>Hosting WordPress on AWS: <a href="https://github.com/aws-samples/aws-refarch-wordpress">https://github.com/aws-samples/aws-refarch-wordpress</a></li>
+</ul>
+<p><strong>Elastic Beanstalk Setup for PHP App</strong></p>
+<p>The (standard) Elastic Beanstalk setup for php is a set of configurations and scripts that automatically deploys and runs the application on the EC2 instance:</p>
+<ul>
+<li>The app is deployed to <code>/var/www/html</code> and handled by apache</li>
+<li>Apache logs are under <code>/var/log/httpd</code> (logs are also sent to CloudWatch)</li>
+<li>System log is <code>/var/log/messages</code></li>
+</ul>
+<p>Note: along with the application code it is useful to also deploy <code>.git</code> folder (don&#39;t add it to <code>.ebignore</code>), so <code>git status</code> on the server inside the <code>/var/www/html</code> will show if there are any modifications done directly on the server.
+This is useful to check if there are any local changes to the files after changing wordpress settings (if there are changes, we need to copy them back to local machine, commit to git and redeploy).</p>
+<h1 id="single-page-app-setup-function-to-handle-index-documents-in-subfolders-cloudfrontdefaultindexfororigin-">Single Page App Setup: Function To Handle Index Documents in Subfolders (CloudFrontDefaultIndexForOrigin)</h1>
+<p>For multi-origin setup, we use CloudFront distribution to route the requests to multiple origins depending on the request path.</p>
+<p>In this case the application on S3 also needs to be in the sub-folder (<code>my-bucket/app</code>).
+And it means that we lose the ability to redirect failing requests to <code>index.html</code> (this only works in the root folder), so if we go to the url <code>www.myapp.com/app/login</code>, it will end up with a 404 error.</p>
+<p>In a single-origin CloudFront distribution this issue can be solved by setting the default object for the distribution to <code>index.html</code> and also adding &quot;Error pages&quot; for 404 and 403 that would also point to <code>index.html</code>.</p>
+<p>For a &quot;mutli-origin&quot; setup a solution is to add lambda@edge function for the &quot;Origin Response&quot; event and replace 403 / 404 errors with <code>index.html</code> content.</p>
+<p>The Lambda function code (<a href="https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/">source</a>) looks like this:</p>
+<pre><code>&#39;use strict&#39;;
+
+// Source - https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/
+
+const http = require(&#39;https&#39;);
+
+const indexPage = &#39;index.html&#39;;
+
+exports.handler = async (event, context, callback) =&gt; {
+    const cf = event.Records[0].cf;
+    const request = cf.request;
+    const response = cf.response;
+    const statusCode = response.status;
+
+    // Only replace 403 and 404 requests typically received
+    // when loading a page for a SPA that uses client-side routing
+    const doReplace = request.method === &#39;GET&#39;
+                    &amp;&amp; (statusCode == &#39;403&#39; || statusCode == &#39;404&#39;);
+
+    const result = doReplace 
+        ? await generateResponseAndLog(cf, request, indexPage, response)
+        : response;
+
+    callback(null, result);
+};
+
+async function generateResponseAndLog(cf, request, indexPage, originalResponse){
+
+    const domain = cf.config.distributionDomainName;
+    const appPath = getAppPath(request.uri);
+
+    const indexPath = `/${appPath}/${indexPage}`;
+
+    const response = await generateResponse(domain, indexPath, request, originalResponse);
+    // console.log(&#39;response: &#39; + JSON.stringify(response));
+    return response;
+}
+
+async function generateResponse(domain, path, request, originalResponse){
+    try {
+        // Load HTML index from the CloudFront cache
+        const s3Response = await httpGet({ hostname: domain, path: path });
+
+        const headers = s3Response.headers || 
+            {
+                &#39;content-type&#39;: [{ value: &#39;text/html;charset=UTF-8&#39; }]
+            };
+
+        const responseHeaders = wrapAndFilterHeaders(headers, originalResponse.headers || {})
+
+        // Debug headers to see the original requested URL vs the index file request.
+        // responseHeaders[&#39;x-lambda-request-uri&#39;] = [{value: request.uri}]
+        // responseHeaders[&#39;x-lambda-hostname&#39;] = [{value: domain}]
+        // responseHeaders[&#39;x-lambda-path&#39;] = [{value: path}]
+        // responseHeaders[&#39;x-lambda-response-status&#39;] = [{value: String(s3Response.status)}]
+
+        return {
+            status: &#39;200&#39;,
+            headers: responseHeaders,
+            body: s3Response.body
+        };
+    } catch (error) {
+        console.log(error)
+        return {
+            status: &#39;500&#39;,
+            headers:{
+                &#39;content-type&#39;: [{ value: &#39;text/plain&#39; }]
+            },
+            body: &#39;An error occurred loading the page&#39;
+        };
+    }
+}
+
+function httpGet(params) {
+    return new Promise((resolve, reject) =&gt; {
+        http.get(params, (resp) =&gt; {
+            console.log(`Fetching ${params.hostname}${params.path}, status code : ${resp.statusCode}`);
+            let result = {
+                status: resp.statusCode,
+                headers: resp.headers,
+                body: &#39;&#39;
+            };
+            resp.on(&#39;data&#39;, (chunk) =&gt; { result.body += chunk; });
+            resp.on(&#39;end&#39;, () =&gt; { resolve(result); });
+        }).on(&#39;error&#39;, (err) =&gt; {
+            console.log(`Couldn&#39;t fetch ${params.hostname}${params.path} : ${err.message}`);
+            reject(err, null);
+        });
+    });
+}
+
+// Get the app path segment e.g. candidates.app, employers.client etc
+function getAppPath(path){
+    if(!path){
+        return &#39;&#39;;
+    }
+
+    if(path[0] === &#39;/&#39;){
+        path = path.slice(1);
+    }
+
+    const segments = path.split(&#39;/&#39;);
+
+    // will always have at least one segment (may be empty)
+    return segments[0];
+}
+
+// Cloudfront requires header values to be wrapped in an array
+function wrapAndFilterHeaders(headers, originalHeaders){
+    const allowedHeaders = [
+        &#39;content-type&#39;,
+        &#39;content-length&#39;,
+        &#39;last-modified&#39;,
+        &#39;date&#39;,
+        &#39;etag&#39;
+    ];
+
+    const responseHeaders = originalHeaders;
+
+    if(!headers){
+        return responseHeaders;
+    }
+
+    for(var propName in headers) {
+        // only include allowed headers
+        if(allowedHeaders.includes(propName.toLowerCase())){
+            var header = headers[propName];
+
+            if (Array.isArray(header)){
+                // assume already &#39;wrapped&#39; format
+                responseHeaders[propName] = header;
+            } else {
+                // fix to required format
+                responseHeaders[propName] = [{ value: header }];
+            }    
+        }
+
+    }
+
+    return responseHeaders;
+}
+</code></pre><h1 id="wordpress-handle-trailing-slash-function-to-redirect-blog-requests-cloudfrontredirecttotrailingslash-">Wordpress: Handle Trailing Slash - Function To Redirect &quot;/blog&quot; Requests (CloudFrontRedirectToTrailingSlash)</h1>
+<p>This is used to redirect <code>www.myapp.com/blog</code> requests to <code>www.myapp.com/blog/</code> (add trailing slash which triggers index.php loading from the folder):</p>
+<p>The Lambda function code (<a href="https://www.barelyknown.com/posts/add-trailing-slash-to-cloudfront-request">source</a>):</p>
+<pre><code>const path = require(&#39;path&#39;);
+exports.handler = async (event) =&gt; {
+  const { request } = event.Records[0].cf;
+  const { uri } = request;
+  const extension = path.extname(uri);
+  if (extension &amp;&amp; extension.length &gt; 0) {
+    return request;
+  }
+  const last_character = uri.slice(-1);
+  if (last_character === &quot;/&quot;) {
+    return request;
+  }
+  const newUri = `${uri}/`;
+  console.log(`Rewriting ${uri} to ${newUri}...`);
+  request.uri = newUri;
+  return request;
+};
+</code></pre><p>The function is attached to &quot;Viewer Request&quot; event.</p>
+<h1 id="function-to-handle-s3-directory-requests-cloudfrontsubdirectoryindex-">Function to Handle S3 Directory Requests (CloudFrontSubdirectoryIndex)</h1>
+<p>This function is attached to the &quot;Origin Request&quot; event and it handles requests like <code>www.myapp.com/app/</code> (with trailing slash at the end).</p>
+<p>By default this request returns <code>200 OK</code> with <code>application/x-directory</code> content type and empty body.</p>
+<p>The Lambda function adds <code>index.html</code> to these requests (so the request becomes <code>www.myapp.com/app/index.html</code>).</p>
+<p>The lambda function code (<a href="https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/">source</a>):</p>
+<pre><code>&#39;use strict&#39;;
+
+// Source: https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/
+//
+// Handles requests like www.myapp.com/app/ (with trailing slash) and adds index.html to them
+// By default this request returns 200 OK with application/x-directory content type
+exports.handler = (event, context, callback) =&gt; {
+
+    // Extract the request from the CloudFront event that is sent to Lambda@Edge 
+    var request = event.Records[0].cf.request;
+
+    // Extract the URI from the request
+    var olduri = request.uri;
+
+    // Match any &#39;/&#39; that occurs at the end of a URI. Replace it with a default index
+    var newuri = olduri.replace(/\/$/, &#39;\/index.html&#39;);
+
+    // Log the URI as received by CloudFront and the new URI to be used to fetch from origin
+    console.log(&quot;Old URI: &quot; + olduri);
+    console.log(&quot;New URI: &quot; + newuri);
+
+    // Replace the received URI with the URI that includes the index page
+    request.uri = newuri;
+
+    // Return to CloudFront
+    return callback(null, request);
+};
+</code></pre><h1 id="function-to-redirect-cloudfront-requests-cloudfrontredirectapp-">Function to Redirect CloudFront Requests (CloudFrontRedirectApp)</h1>
+<p>This can be useful to transfer the application from single-origin setup to multi-rigin.
+In this case, the <code>app.myapp.com</code> requests should be forwared to <code>www.myapp.com/app</code>.</p>
+<p>Note: in the next section there is another solution for the same problem, based on S3 static website hosting feature.</p>
+<p>With Lambda function, the redirect can be done by attaching a function to the old CloudFront distribution behavior, the &quot;Viewer Request&quot; event:</p>
+<pre><code>const path = require(&#39;path&#39;);
+exports.handler = async (event) =&gt; {
+  const { request } = event.Records[0].cf;
+  const { uri } = request;
+  const newUri = `https://www.myapp.com/app${uri}`;
+  console.log(`Rewriting ${uri} to ${newUri}...`);
+
+  let responseHeaders = {
+      location: [{
+          key: &#39;Location&#39;,
+          value: newUri,
+      }],
+  }
+  // Debug headers to see the original requested URL vs the index file request.
+  responseHeaders[&#39;x-lambda-request-uri&#39;] = [{value: request.uri}]
+  responseHeaders[&#39;x-lambda-redirect-url&#39;] = [{value: newUri}]
+
+  /*
+   * Generate HTTP redirect response with 302 status code and Location header.
+   */
+  const response = {
+      status: &#39;302&#39;,
+      statusDescription: &#39;Found&#39;,
+      headers: responseHeaders,
+  };
+  return response;
+};
+
+</code></pre><h1 id="redirect-requests-to-the-new-location-with-s3-static-website">Redirect Requests to the new Location with S3 Static Website</h1>
+<p>This is another solution to the problem described above: redirect requests from the old location (such as <code>app.myapp.com</code> to new <code>www.myapp.com/www</code>).</p>
+<p>This method is described in <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/tutorial-redirecting-dns-queries.html">AWS docs</a>.</p>
+<p>The initial setup is this:</p>
+<ul>
+<li>The <code>app.myapp.com</code> points to S3 bucket (root), there is CloudFront distribution using it as origin</li>
+<li>The <code>www.myapp.com/app</code> points to S3 bucket (<code>/app</code> subfolder), there is (another) CloudFront distribution using it as origin</li>
+</ul>
+<p>The redirect can be configured like this:</p>
+<ul>
+<li>Create S3 bucket <code>app.myapp.com-old.app</code> (can be empty)</li>
+<li>Enable static website hosting for this bucket</li>
+<li>Select &quot;Redirect requests&quot; option</li>
+<li>Set &quot;Target bucket or domain&quot; to <code>www.myapp.com/app</code></li>
+<li>Set &quot;Protocol&quot; to <code>https</code></li>
+<li>Copy public URL for the bucket (develop.myapp.com-old.app.s3-website-us-east-1.amazonaws.com)</li>
+<li>Edit the CloudFront distribution for <code>app.myapp.com</code>, change origin source to public URL for the new bucket</li>
+</ul>
+<p>Now all requests to <code>app.myapp.com</code> should be redirected to <code>www.myapp.com/app</code>.</p>
+
+      </div>
+      <div>
+<a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+      </div>
+      <div>
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = 'http://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html';  // Replace PAGE_URL with your page's canonical URL variable
+// this.page.identifier = 'html/2019-06-16-multi-origin-cloudfront-setup.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://serebrov.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+
