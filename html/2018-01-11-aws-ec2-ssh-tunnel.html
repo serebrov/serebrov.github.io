@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SSH Tunnels</title>
+    <title>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</title>
 
     <!-- Bootstrap -->
     <!-- https://github.com/necolas/normalize.css -->
@@ -31,7 +31,7 @@
         <a href="/">vim, git, aws and other three-letter words</a>
       </div>
       <div class="post-title">
-          <h1>SSH Tunnels</h1>
+          <h1>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</h1>
       </div>
       <div class="post-body">
           <p>Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
@@ -79,7 +79,18 @@ It is easy to do it, running the following command:</p>
 <pre><code class="lang-bash">ssh my-aws-host -L 5532:my-rds-host-name.cdiofumqrcpr.us-east-1.rds.amazonaws.com:5432
 </code></pre>
 <p>Here <code>my-aws-host</code> is the EC2 instance that has DB access and <code>my-rds-host-name.cdiofumqrcpr...:5432</code> is the RDS host name and port.</p>
-<p>After that, you can use the <code>localhost:5532</code> on your local machine to connect to the remote database.</p>
+<p>After that, you can use the <code>localhost:5532</code> on your local machine to connect to the remote database, for example with <code>psql</code>:</p>
+<pre><code>psql postgresql://my_db_user@localhost:5432/my_db_name
+</code></pre><p>Or dump the database with <code>pg_dump</code>:</p>
+<pre><code>pg_dump -Fc -v --dbname=postgresql://my_db_user@localhost:5432/my_db_name -f my_db_name$(date --iso-8601).pq
+</code></pre><p>Note: both commands above don&#39;t specify the database password, to make it work, the password can be specified in the ~/.pgpass file (so it will not be present in the shell history or visible on the screen when the command is executed).</p>
+<p>The <code>~/.pgpass</code> looks like this:</p>
+<pre><code>localhost:5432:*:my_db_user_one:XXXYYY
+localhost:5432:*:my_db_user_two:XXXYYY
+</code></pre><h1 id="example-connect-to-redis-on-aws">Example: Connect to Redis on AWS</h1>
+<p>Similarly to the PostgreSQL example above, we can create an ssh tunnel to the EC2 instance that has Redis access and expose Redis locally:</p>
+<pre><code>ssh my-ec2-instance -L 6379:id.wssxxx.0001.appp1.cache.amazonaws.com:6379
+</code></pre><p>After that, we can use <code>redis-cli</code> or any other tool on the local machine to connect to redis on 6379 port.</p>
 <h2 id="example-expose-local-server-through-the-ec2-instance">Example: Expose Local Server Through the EC2 Instance</h2>
 <p>Sometimes it can be necessary to make locally running app available through the Internet.
 There are several ways to do that:</p>
@@ -102,6 +113,18 @@ Restart sshd</p>
 <pre><code class="lang-bash">ssh my-aws-host -R *:8181:localhost:8888
 </code></pre>
 <p>Now you should be able to access your local app via <code>ec2-55-222-55-55.compute-1.amazonaws.com:8181</code>.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>If the connection fails, check the following:</p>
+<ul>
+<li>ssh connection and tunnel established successfully - check the ssh output</li>
+<li>sometimes, the connection is working, but the tunnel isn&#39;t, in the ssh output you can see something like &quot;Port forwarding is disabled to avoid man-in-the-middle attacks.&quot; and the instructions on what to do</li>
+<li>you don&#39;t have anything running locally on the specified port<ul>
+<li>check with <code>nc -v 127.0.0.1 5433</code> to see if there is a connection</li>
+<li>additionally check with <code>netstat -l | grep 5433</code> and <code>lsof -i :5433</code></li>
+</ul>
+</li>
+</ul>
+<p>Useful searches for other issues are &quot;ssh tunnel aws rds problem&quot; and &quot;ssh tunnel aws rds connection error&quot;.</p>
 <h2 id="references">References</h2>
 <p><a href="https://vimeo.com/54505525">The Black Magic Of SSH / SSH Can Do That?</a></p>
 <p><a href="https://stackoverflow.com/q/46956396/4612064">How to make requests from an external server to localhost</a></p>

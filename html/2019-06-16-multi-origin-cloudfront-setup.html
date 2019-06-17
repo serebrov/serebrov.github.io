@@ -67,13 +67,13 @@
 <p>The solutions for these problems are described below, in the following sections of this post.</p>
 <p>For this setup, we have the following origins:</p>
 <ul>
-<li>0: app*, origin: S3-app.myapp.com</li>
-<li>1: blog/wp-login.php, origin: wordpress-elb</li>
-<li>2: blog/wp-admin/*, origin: wordpress-elb</li>
-<li>3: blog/wp-includes/*, origin: S3-wordpress.myapp.com</li>
-<li>4: blog/wp-content/*, origin: S3-wordpress.myapp.com</li>
-<li>5: blog*, origin: wordpress-elb</li>
-<li>6: Default (*), origin: unbounce-<a href="http://www.myapp.com">www.myapp.com</a></li>
+<li>0: app*, origin: <code>S3-app.myapp.com</code></li>
+<li>1: blog/wp-login.php, origin: <code>wordpress-elb</code></li>
+<li>2: blog/wp-admin/*, origin: <code>wordpress-elb</code></li>
+<li>3: blog/wp-includes/*, origin: <code>S3-wordpress.myapp.com</code></li>
+<li>4: blog/wp-content/*, origin: <code>S3-wordpress.myapp.com</code></li>
+<li>5: blog*, origin: <code>wordpress-elb</code></li>
+<li>6: Default (*), origin: <code>unbounce-www.myapp.com</code></li>
 </ul>
 <p>The <code>app*</code> behavior serves the single-page application from the S3 origin.
 The app is accessible from the sub-path (<code>myapp.com/app</code>) and should be placed in the sub-folder on S3 (the sub-path is preserved in the request to origin).</p>
@@ -92,15 +92,15 @@ The app is accessible from the sub-path (<code>myapp.com/app</code>) and should 
 <p>We can use the latter to make unbounce work with CloudFront: we setup the <code>www.myapp.com</code> domain to point to CloudFront and we configure CloudFront to forward the <code>Host</code> header to unbounce.</p>
 <p>The configuration sequence I used is this:</p>
 <ol>
-<li>Add <a href="http://www.myapp.com">www.myapp.com</a> domain on unbounce.com</li>
+<li>Add <code>www.myapp.com</code> domain on unbounce.com</li>
 <li>Get the unbounce URL, like <code>ab44444888888.unbouncepages.com</code></li>
 <li>In DNS settings, point <code>www</code> CNAME to <code>ab44444888888.unbouncepages.com</code></li>
 <li>Wait until unbounce shows &quot;Working and Secure&quot; for the domain</li>
-<li>Edit (or create) CloudFront distribution, set alternative domain to <a href="http://www.myapp.com">www.myapp.com</a> (or see <a href="https://serverfault.com/a/888776/527019">https://serverfault.com/a/888776/527019</a>, there is also a method based on lambda function)</li>
+<li>Edit (or create) CloudFront distribution, set alternative domain to <code>www.myapp.com</code> (or see <a href="https://serverfault.com/a/888776/527019">https://serverfault.com/a/888776/527019</a>, there is also a method based on lambda function)</li>
 <li>Create the CloudFront origin, point it to unbounce URL (<code>ab44444888888.unbouncepages.com</code>)</li>
 <li>Create default behavior <code>(*)</code> for the origin above, disable caching (set &quot;Cache Based on Selected Request Headers&quot; to &quot;All&quot;)</li>
 <li>Change DNS settings, point <code>www</code> subdomain to CloudFront distribution (<code>d33xxx8888xxxx.cloudfront.net</code>) - replace the unbounce domain with CloudFront domain</li>
-<li>Wait for DNS changes to propagate, now the <a href="http://www.myapp.com">www.myapp.com</a> root URL should point to CloudFront</li>
+<li>Wait for DNS changes to propagate, now the <code>www.myapp.com</code> root URL should point to CloudFront</li>
 </ol>
 <p>So we first point CNAME to unbounce.com, wait until unbounce thinks that everything is good and then reconfigure the CNAME to point to CloudFront (and CloudFront forwards the custom domain name via Host header).</p>
 <h1 id="single-page-app-setup">Single Page App Setup</h1>

@@ -1,5 +1,5 @@
 ---
-title: SSH Tunnels
+title: SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)
 date: 2018-01-11
 tags: ssh, aws
 type: note
@@ -80,7 +80,36 @@ ssh my-aws-host -L 5532:my-rds-host-name.cdiofumqrcpr.us-east-1.rds.amazonaws.co
 
 Here `my-aws-host` is the EC2 instance that has DB access and `my-rds-host-name.cdiofumqrcpr...:5432` is the RDS host name and port.
 
-After that, you can use the `localhost:5532` on your local machine to connect to the remote database.
+After that, you can use the `localhost:5532` on your local machine to connect to the remote database, for example with `psql`:
+
+```
+psql postgresql://my_db_user@localhost:5432/my_db_name
+```
+
+Or dump the database with `pg_dump`:
+
+```
+pg_dump -Fc -v --dbname=postgresql://my_db_user@localhost:5432/my_db_name -f my_db_name$(date --iso-8601).pq
+```
+
+Note: both commands above don't specify the database password, to make it work, the password can be specified in the ~/.pgpass file (so it will not be present in the shell history or visible on the screen when the command is executed).
+
+The `~/.pgpass` looks like this:
+
+```
+localhost:5432:*:my_db_user_one:XXXYYY
+localhost:5432:*:my_db_user_two:XXXYYY
+```
+
+# Example: Connect to Redis on AWS
+
+Similarly to the PostgreSQL example above, we can create an ssh tunnel to the EC2 instance that has Redis access and expose Redis locally:
+
+```
+ssh my-ec2-instance -L 6379:id.wssxxx.0001.appp1.cache.amazonaws.com:6379
+```
+
+After that, we can use `redis-cli` or any other tool on the local machine to connect to redis on 6379 port.
 
 
 ## Example: Expose Local Server Through the EC2 Instance
@@ -117,6 +146,18 @@ ssh my-aws-host -R *:8181:localhost:8888
 ```
 
 Now you should be able to access your local app via `ec2-55-222-55-55.compute-1.amazonaws.com:8181`.
+
+## Troubleshooting
+
+If the connection fails, check the following:
+
+- ssh connection and tunnel established successfully - check the ssh output
+- sometimes, the connection is working, but the tunnel isn't, in the ssh output you can see something like "Port forwarding is disabled to avoid man-in-the-middle attacks." and the instructions on what to do
+- you don't have anything running locally on the specified port
+  - check with `nc -v 127.0.0.1 5433` to see if there is a connection
+  - additionally check with `netstat -l | grep 5433` and `lsof -i :5433`
+
+Useful searches for other issues are "ssh tunnel aws rds problem" and "ssh tunnel aws rds connection error".
 
 ## References
 
