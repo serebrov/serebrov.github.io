@@ -51,10 +51,10 @@ run           - virtual environments
 </code></pre><p>Apache logs, deployment logs and system messages log are under <code>/var/log</code>.</p>
 <p>Another important directory is <code>/opt/elasticbeanstalk</code> - here there are EB tool scripts and app server restart hooks.</p>
 <p>Apache is managed by <a href="http://supervisord.org/">supervisord</a>, to check the status run this command:</p>
-<pre><code class="lang-bash">sudo supervisorctl -c /opt/python/etc/supervisord.conf status
+<pre><code class="lang-bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
 </code></pre>
 <p>And you can restart apache like this:</p>
-<pre><code class="lang-bash">supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
+<pre><code class="lang-bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
 </code></pre>
 <h3 id="how-to-launch-python-application-manually">How to launch python application manually</h3>
 <p>I have a <a href="http://flask.pocoo.org/">flask</a> application and usually it is started as <code>python application.py</code>.
@@ -65,6 +65,7 @@ To run it on the server instance you need to init virtual environment and set en
 <pre><code class="lang-bash">cd /opt/python/current/app
 python application.py
 </code></pre>
+<p>Or start flask shell with <code>flask shell</code>.</p>
 <h3 id="how-to-install-celery">How to install celery</h3>
 <p><a href="http://www.celeryproject.org/">Celery</a> is a distributed task queue.</p>
 <p>Our requirements are following:</p>

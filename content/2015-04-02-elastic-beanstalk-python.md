@@ -30,13 +30,13 @@ Another important directory is `/opt/elasticbeanstalk` - here there are EB tool 
 Apache is managed by [supervisord](http://supervisord.org/), to check the status run this command:
 
 ```bash
-sudo supervisorctl -c /opt/python/etc/supervisord.conf status
+sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
 ```
 
 And you can restart apache like this:
 
 ```bash
-supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
+sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
 ```
 
 ### How to launch python application manually
@@ -54,6 +54,8 @@ Now you can start the application manually:
 cd /opt/python/current/app
 python application.py
 ```
+
+Or start flask shell with `flask shell`.
 
 ### How to install celery
 
