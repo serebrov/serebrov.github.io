@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AWS Config - Unexpected Charges and Data Analysis</title>
+
+    <!-- Bootstrap -->
+    <!-- https://github.com/necolas/normalize.css -->
+    <link href="/css/normalize.css" rel="stylesheet">
+    <!-- https://github.com/oxalorg/sakura -->
+    <link href="/css/sakura.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/custom.css"/>
+
+    <!-- https://prismjs.com/ -->
+    <!-- Plugins: Line Highlight, Line Numbers, Autolinker, File Highlight,
+                  Keep Markup, Normalize Whitespace
+    -->
+    <!-- Langs: bash, c, cpp, docker, go, haskell, json, makefile, php, plsql,
+                python, rust, smalltalk, sql, vim, yaml
+    -->
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="content">
+      <div class="page-header">
+        <a href="/">vim, git, aws and other three-letter words</a>
+      </div>
+      <small class="pull-right"> 2019-06-16 </small>
+      <div class="post-title">
+          <h1>AWS Config - Unexpected Charges and Data Analysis</h1>
+      </div>
+      <div class="post-body">
+          <p>I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month.
+And I didn&#39;t even remember if I enabled and configured it.</p>
+<p>I could not get any details from AWS Cost Explorer besides that charges are in the same region where our app is running.</p>
+<!-- more -->
+<p>The confusing part was a note in the AWS Config management console:</p>
+<blockquote>
+<p>Why am I seeing this page?
+You can now use Config Rules to check configurations recorded by AWS Config. These steps will update your settings and permissions to use Config Rules.
+To use AWS Config without Config Rules, click here. When you are ready to try Config Rules, update your settings by referring to our documentation.</p>
+</blockquote>
+<p>So it even looked like we didn&#39;t configure AWS Config at all and the questions I had were:</p>
+<p>1) Why are we charged for AWS Config?</p>
+<p>2) Can we disable it?</p>
+<p>3) How can we access the results of AWS Config? (We were charged for something, which might be useful - how to access this data?)</p>
+<p>The <a href="https://aws.amazon.com/config/pricing/">AWS Config pricing</a> page was also a bit misleading - what caught my eye was the table with rule evaluation prices (and I didn&#39;t have any rules defined).</p>
+<p>Only after reading through the examples, I found that they also use some &quot;configuration items&quot; to calculate the price, not only rules evaluations.
+The thing I missed was at the very top: <code>You pay $0.003 per configuration item recorded in your AWS account per AWS Region.</code> (I jumped over this part initially right into the rules pricing table).</p>
+<p>It appears, that AWS Config was enabled and some automation in our account caused the large number of configuration items (changes to the configuration) to be recorded.
+The guide on how to get and query the collected data (its on S3) can be found <a href="https://aws.amazon.com/premiumsupport/knowledge-center/retrieve-aws-config-items-per-month/">here</a>.</p>
+<p>The procedure is following:</p>
+<ul>
+<li>Go to AWS Config settings, check the bucket name</li>
+<li>Go to S3, find that bucket and go into it to get the path to the logs</li>
+<li>The path will be something like this: <code>s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1</code></li>
+<li>Go to <a href="https://console.aws.amazon.com/athena/home">AWS Athena</a>, create external table and query the data</li>
+</ul>
+<p>The table can be created using from query editor.
+First, create the database:</p>
+<pre><code class="lang-sql">CREATE DATABASE s3data
+</code></pre>
+<p>Then, create the table for AWS Config data:</p>
+<pre><code class="lang-sql">CREATE EXTERNAL TABLE awsconfig (
+         fileversion string,
+         configSnapshotId string,
+         configurationitems ARRAY &lt; STRUCT &lt; configurationItemVersion : STRING,
+         configurationItemCaptureTime : STRING,
+         configurationStateId : BIGINT,
+         awsAccountId : STRING,
+         configurationItemStatus : STRING,
+         resourceType : STRING,
+         resourceId : STRING,
+         resourceName : STRING,
+         ARN : STRING,
+         awsRegion : STRING,
+         availabilityZone : STRING,
+         configurationStateMd5Hash : STRING,
+         resourceCreationTime : STRING &gt; &gt; 
+)
+ROW FORMAT SERDE &#39;org.apache.hive.hcatalog.data.JsonSerDe&#39; LOCATION &#39;s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1/&#39;
+</code></pre>
+<p>Replace the <code>LOCATION</code> path with actual path on S3.
+Now we can query the <code>awsconfig</code> table to see how many and which items were created, for example:</p>
+<pre><code class="lang-sql">  SELECT result.configurationitemcapturetime,
+         count(result.configurationitemcapturetime) AS NumberOfChanges
+    FROM (
+          SELECT regexp_replace(
+                    configurationItem.configurationItemCaptureTime, &#39;(.+)(T.+)&#39;, &#39;$1&#39;
+                 ) AS configurationitemcapturetime
+            FROM s3data.awsconfig
+           CROSS JOIN UNNEST(configurationitems) AS t(configurationItem)
+           WHERE &quot;$path&quot; LIKE &#39;%ConfigHistory%&#39;
+             AND configurationItem.configurationItemCaptureTime &gt;= &#39;2019-10-01T%&#39;
+             AND configurationItem.configurationItemCaptureTime &lt;= &#39;2019-10-10T%&#39;
+       ) result
+GROUP BY result.configurationitemcapturetime
+ORDER BY result.configurationitemcapturetime
+</code></pre>
+<p>The above will show number of configuration items created per day.
+The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</code> and join it to access the columns inside JSON.</p>
+<pre><code>    capturetime    NumberOfChanges
+1   2019-10-01     4279
+2   2019-10-02     4254
+3   2019-10-03     4307
+4   2019-10-04     3765
+5   2019-10-05     134
+6   2019-10-06     7
+7   2019-10-07     9
+8   2019-10-08     2
+</code></pre><p>This is how to get a data sample:</p>
+<pre><code class="lang-sql">SELECT configurationItem.configurationItemVersion,
+       configurationItem.configurationItemCaptureTime as fullTime,
+       configurationItem.configurationStateId,
+       configurationItem.awsAccountId,
+       configurationItem.configurationItemStatus,
+       configurationItem.resourceType,
+       configurationItem.resourceId,
+       configurationItem.resourceName,
+       configurationItem.aRN,
+       configurationItem.awsRegion,
+       configurationItem.availabilityZone,
+       configurationItem.configurationStateMd5Hash,
+       configurationItem.resourceCreationTime
+  FROM s3data.awsconfig
+ CROSS JOIN UNNEST(configurationitems) AS t(configurationItem)
+ WHERE &quot;$path&quot; LIKE &#39;%ConfigHistory%&#39;
+   AND configurationItem.configurationItemCaptureTime &gt;= &#39;2019-10-01T%&#39;
+   AND configurationItem.configurationItemCaptureTime &lt;= &#39;2019-10-10T%&#39;
+</code></pre>
+<pre><code>   capturetime ... configurationitemstatus resourcetype         ... resourcename                      ...
+1  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-28-10-23
+2  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-29-10-24
+3  2019-10-07      ResourceDiscovered      AWS::RDS::DBSnapshot     rds:db-wordpress-2019-10-07-10-23
+4  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-production-2019-09-28-10-18
+5  2019-10-07      OK                      AWS::RDS::DBInstance     db-production
+6  2019-10-07      OK                      AWS::RDS::DBInstance     db-wordpress
+7  2019-10-07      OK                      AWS::RDS::DBInstance     db-production
+8  2019-10-07      OK                      AWS::RDS::DBInstance     db-wordpress
+</code></pre><p>And this query fetches data grouped by resource type, name and status:</p>
+<pre><code class="lang-sql">  SELECT configurationItem.resourceType,
+         configurationItem.resourceName,
+         configurationItem.configurationItemStatus,
+         COUNT(configurationItem.resourceId) AS NumberOfChanges
+    FROM s3data.awsconfig
+   CROSS JOIN UNNEST(configurationitems) AS t(configurationItem)
+   WHERE &quot;$path&quot; LIKE &#39;%ConfigHistory%&#39;
+     AND configurationItem.configurationItemCaptureTime &gt;= &#39;2019-10-07T%&#39;
+     AND configurationItem.configurationItemCaptureTime &lt;= &#39;2019-10-08T%&#39;
+GROUP BY configurationItem.resourceType
+         , configurationItem.resourceName
+         , configurationItem.configurationItemStatus
+ORDER BY NumberOfChanges DESC
+</code></pre>
+<pre><code>    resourcetype            resourcename                        configurationitemstatus  NumberOfChanges
+1   AWS::RDS::DBInstance    db-wordpress                        OK                       2
+2   AWS::RDS::DBInstance    db-production                       OK                       2
+3   AWS::RDS::DBSnapshot    rds:db-production-2019-10-07-10-18  ResourceDiscovered       1
+4   AWS::RDS::DBSnapshot    rds:db-wordpress-2019-10-07-10-23   ResourceDiscovered       1
+5   AWS::RDS::DBSnapshot    rds:db-production-2019-09-28-10-18  ResourceDeleted          1
+6   AWS::RDS::DBSnapshot    rds:db-wordpress-2019-09-29-10-24   ResourceDeleted          1
+7   AWS::RDS::DBSnapshot    rds:db-wordpress-2019-09-28-10-23   ResourceDeleted          1
+</code></pre><p>Using these queries, it should be possible to get an idea of what is happening, in my case it was misbehaving ElasticBeanstalk environment with bad health that was constantly re-creating all the resources.</p>
+
+      </div>
+      <div>
+<a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+      </div>
+      <div>
+<div id="disqus_thread"></div>
+<script>
+var disqus_config = function () {
+this.page.url = 'http://serebrov.github.io/html/2019-10-08-aws-config-charges.html';  // Replace PAGE_URL with your page's canonical URL variable
+// this.page.identifier = 'html/2019-10-08-aws-config-charges.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://serebrov.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58056088-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>
+

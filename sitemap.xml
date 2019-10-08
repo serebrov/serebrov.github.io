@@ -11,6 +11,11 @@
   <changefreq>monthly</changefreq>
 </url>
 <url>
+  <loc>http://serebrov.github.io/html/2019-10-08-aws-config-charges.html</loc>
+  <lastmod>2019-06-16T03:00:00+00:00</lastmod>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
   <loc>http://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</loc>
   <lastmod>2019-06-16T03:00:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
