@@ -1,6 +1,6 @@
 ---
 title: AWS Config - Unexpected Charges and Data Analysis
-date: 2019-06-16
+date: 2019-10-08
 tags: aws
 type: note
 ---
