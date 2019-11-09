@@ -28,7 +28,7 @@ In the simplest case we have branches named as `123-branch-description`, where `
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search issue id in the branch name, such a "123-description" or "XXX-123-description"
-issueId=$(echo $branchName | sed -nr 's,([A-Z]?-?[0-9]+)-.+,\1,p')
+issueId=$(echo $branchName | sed -nE 's,([A-Z]?-?[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and issue id was found
 if [[ ! -z $issueId ]]; then
@@ -53,7 +53,7 @@ This version is useful for gitflow and Jira (where we should use PROJECT-123 for
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search jira issue id in a pattern such a "feature/ABC-123-description"
-jiraId=$(echo $branchName | sed -nr 's,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p')
+jiraId=$(echo $branchName | sed -nE 's,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and jiraId was found
 if [[ ! -z $jiraId ]]; then
@@ -82,7 +82,7 @@ The hook below puts short issue number at the beginning of the commit message an
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search issue id in the branch name, such a "123-description" or "XXX-123-description"
-issueId=$(echo $branchName | sed -nr 's,([A-Z]?-?[0-9]+)-.+,\1,p')
+issueId=$(echo $branchName | sed -nE 's,([A-Z]?-?[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and issue id was found
 if [[ ! -z $issueId ]]; then
