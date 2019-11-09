@@ -50,7 +50,7 @@
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search issue id in the branch name, such a &quot;123-description&quot; or &quot;XXX-123-description&quot;
-issueId=$(echo $branchName | sed -nr &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
+issueId=$(echo $branchName | sed -nE &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
 
 # only prepare commit message if pattern matched and issue id was found
 if [[ ! -z $issueId ]]; then
@@ -70,7 +70,7 @@ fi
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search jira issue id in a pattern such a &quot;feature/ABC-123-description&quot;
-jiraId=$(echo $branchName | sed -nr &#39;s,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p&#39;)
+jiraId=$(echo $branchName | sed -nE &#39;s,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p&#39;)
 
 # only prepare commit message if pattern matched and jiraId was found
 if [[ ! -z $jiraId ]]; then
@@ -92,7 +92,7 @@ fi
 branchName=`git rev-parse --abbrev-ref HEAD`
 
 # search issue id in the branch name, such a &quot;123-description&quot; or &quot;XXX-123-description&quot;
-issueId=$(echo $branchName | sed -nr &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
+issueId=$(echo $branchName | sed -nE &#39;s,([A-Z]?-?[0-9]+)-.+,\1,p&#39;)
 
 # only prepare commit message if pattern matched and issue id was found
 if [[ ! -z $issueId ]]; then
