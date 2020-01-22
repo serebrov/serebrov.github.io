@@ -20,6 +20,7 @@ A collection of links to touch typing tutors and games.
 *   [Ratatype](https://www.ratatype.com/) — Online typing tutor and typing lessons
 *   [10FastFingers.com](https://10fastfingers.com/) - [Typing Test](https://10fastfingers.com/typing-test/english), Competitions, Practice & Typing Games
 *   [TyperA](http://typera.net/) - the original typing test
+*   [TypingStudy](https://www.typingstudy.com/) - Touch Typing Practice Online
 
 ## Software
 
