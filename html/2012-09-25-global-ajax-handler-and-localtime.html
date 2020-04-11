@@ -462,13 +462,13 @@ While we can create a jQuery object (or array of objects) like this: <code>$(tex
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
     var relLink = "\/html\/2012-09-25-global-ajax-handler-and-localtime.html";
-    relLink = relLink.replace("\/", "/");
-    if (relLink.endsWith("/")) {
-        relLink = relLink.substr(0, relLink.length - 1);
-    }
+    
+    
+    
+    
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io" + relLink; 
-        console.log('set page url', this.page.url);
+        this.page.url = "https://serebrov.github.io" + relLink; 
+        console.log("set page url", this.page.url);
         
     };
     (function () {

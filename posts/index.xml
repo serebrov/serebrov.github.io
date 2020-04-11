@@ -102,10 +102,10 @@ For example, if you have two blocks with such indentation, the indent will be ju
     
     <item>
       <title>Disqus - code formatting and highlighting in comments</title>
-      <link>https://serebrov.github.io/html/disqus-code-formatting-and-highlighting-in-comments.html/</link>
+      <link>https://serebrov.github.io/html/2018-01-19-disqus-code-in-comments.html</link>
       <pubDate>Fri, 19 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/disqus-code-formatting-and-highlighting-in-comments.html/</guid>
+      <guid>https://serebrov.github.io/html/2018-01-19-disqus-code-in-comments.html</guid>
       <description>It is possible to format and have syntax highlighting for code in Disqus comments. To do that, wrap the code into &amp;lt;pre&amp;gt;&amp;lt;code&amp;gt; tags (see the example comment to this post).
 I didn&amp;rsquo;t know about this feature and, acutally, I think this is an UI flaw.
 It would be great to see the formatting help link or popup when you are editing the comment (and also the preview feature would be really nice to have).</description>
