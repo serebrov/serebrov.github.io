@@ -34,7 +34,7 @@ gopher = "" # used in 404 template ( Generator: https://gopherize.me )
 
 [params.copyright]
 prefix = ""
-holder = "serebrov"
+holder = "Boris Serebrov"
 startYear = "2020"
 suffix = ""
 
