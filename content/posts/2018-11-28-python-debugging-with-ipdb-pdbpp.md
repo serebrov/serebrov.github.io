@@ -24,7 +24,7 @@ pip install pdbpp
 The `ipdb` package improves the standard (pdb) debugger by adding syntax highlight and code completion.
 And the `pdbpp` adds the "sticky" mode, so the debugger can be run in a full-screen mode, in terminal:
 
-![debugger demo](/content/2018-11-28-python-degugging.gif)
+![debugger demo](/2018-11-28-python-degugging.gif)
 
 This way we get an interactive debugging environment where we can execute the code, inspect variables and experiment with the live application state.
 

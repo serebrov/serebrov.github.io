@@ -38,8 +38,8 @@ docker run --rm -v $PWD:/data asciinema/asciicast2gif -t solarized-dark demo.cas
 
 The result looks like this:
 
-![asciinema demo](/content/2018-11-29-demo.gif)
+![asciinema demo](/2018-11-29-demo.gif)
 
 And the recording of the recording process :)
 
-![asciinema self-recording](/content/2018-11-29-asciinema.gif)
+![asciinema self-recording](/2018-11-29-asciinema.gif)
