@@ -3,6 +3,7 @@ title: Formatting Parameter Blocks in Python
 date: 2018-07-27
 tags: [python]
 type: post
+url: "/html/2018-07-27-python-parameter-blocks-formatting.html"
 ---
 
 There are two ways [recommended in pep-8](https://www.python.org/dev/peps/pep-0008/#indentation) to format the blocks with long parameter lists in Python:

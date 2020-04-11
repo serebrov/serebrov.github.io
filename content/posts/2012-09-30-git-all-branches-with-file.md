@@ -3,6 +3,7 @@ title: git - find all branches where file was changed
 date: 2012-09-30
 tags: [git]
 type: note
+url: "/html/2012-09-30-git-all-branches-with-file.html"
 ---
 
 [Solution from stackoverflow](http://stackoverflow.com/questions/6258440/find-a-git-branch-containing-changes-to-a-given-file).

@@ -3,6 +3,7 @@ title: Amazon NoSQL Solutions
 date: 2013-06-11
 tags: [aws]
 type: post
+url: "/html/2013-06-11-amazon-nosql-review.html"
 ---
 
 Amazon provides following [NoSQL](https://en.wikipedia.org/wiki/NoSQL) storage options:

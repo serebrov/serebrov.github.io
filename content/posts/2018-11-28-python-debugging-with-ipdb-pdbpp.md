@@ -3,6 +3,7 @@ title: Debugging Python With ipdb and pdbpp
 date: 2018-11-28
 tags: [python]
 type: note
+url: "/html/2018-11-28-python-debugging-with-ipdb-pdbpp.html"
 ---
 
 To get a very convenient full-screen console debugger for python, install `ipdb` and `pdbpp` packages.

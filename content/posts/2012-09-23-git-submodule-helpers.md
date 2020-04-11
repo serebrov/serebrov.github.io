@@ -3,6 +3,7 @@ title: git - submodule helpers
 date: 2012-09-23
 tags: [git]
 type: note
+url: "/html/2012-06-15-android-mobile-network-problem.html"
 ---
 
 Below are some git commands which can be useful to resolve problems with submodules.

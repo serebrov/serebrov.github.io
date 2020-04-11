@@ -3,6 +3,7 @@ title: Disqus - code formatting and highlighting in comments
 date: 2018-01-19
 tags: [disqus]
 type: note
+html: "/html/2018-01-19-disqus-code-in-comments.html"
 ---
 
 It is possible to format and have syntax highlighting for code in Disqus comments.

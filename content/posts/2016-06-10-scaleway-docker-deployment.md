@@ -3,6 +3,7 @@ title: Setup Automatic Deployment, Updates and Backups of Multiple Web Applicati
 date: 2016-06-10
 tags: [docker, scaleway]
 type: post
+url: "/html/2016-06-10-scaleway-docker-deployment.html"
 ---
 
 The purpose of this setup is:

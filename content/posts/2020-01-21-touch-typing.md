@@ -3,6 +3,7 @@ title: Touch Typing Tutors and Games
 date: 2020-01-21
 tags: [typing]
 type: note
+url: "/html/2020-01-21-touch-typing.html"
 ---
 
 A collection of links to touch typing tutors and games.

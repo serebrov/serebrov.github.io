@@ -3,6 +3,7 @@ title: Recording Linux Terminal Session to GIF with asciinema
 date: 2018-11-29
 tags: [linux]
 type: note
+url: "/html/2018-11-29-linux-terminal-screencast.html"
 ---
 
 The [asciinema](https://github.com/asciinema/asciinema) is a good and simple to use tool to record a screencast from the terminal session.

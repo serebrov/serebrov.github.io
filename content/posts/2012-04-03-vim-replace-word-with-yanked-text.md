@@ -3,6 +3,7 @@ title: vim - replace a word with yanked text
 date: 2012-04-03
 tags: [jquery]
 type: note
+url: "/html/2012-04-03-git-rename-branch.html"
 ---
 
 Copy a word and paste it over other words:

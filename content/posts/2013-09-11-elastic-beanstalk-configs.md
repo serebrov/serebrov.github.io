@@ -3,6 +3,7 @@ title: Elastic Beanstalk - deploy from different machines / by different users (
 date: 2013-09-11
 tags: [aws]
 type: note
+url: "/html/2013-09-11-elastic-beanstalk-configs.html"
 ---
 
 By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
@@ -163,3 +164,4 @@ For example, for 'eb status':
     Status	: Ready
     Health	: Green
 ```
+url: "/html/

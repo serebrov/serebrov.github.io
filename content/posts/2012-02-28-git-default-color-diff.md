@@ -3,6 +3,7 @@ title: git - colored diff, branch, etc by default
 date: 2012-02-28
 tags: [git]
 type: note
+url: "/html/2012-02-13-git-branches-have-diverged.html"
 ---
 
 

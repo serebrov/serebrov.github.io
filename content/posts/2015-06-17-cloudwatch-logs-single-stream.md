@@ -3,6 +3,7 @@ title: CloudWatch Logs - how to log data from multiple instances to the single s
 date: 2015-05-20
 tags: [aws, eb, cw-logs]
 type: note
+url: "/html/2015-06-17-cloudwatch-logs-single-stream.html"
 ---
 
 [After using CloudWatch Logs for some time](/html/2015-05-20-cloudwatch-setup.html) I found that it is very inconvenient to have one stream per instance.

@@ -3,6 +3,7 @@ title: Elastic Beanstalk - how to setup CloudWatch Logs
 date: 2015-05-20
 tags: [aws, eb, cw-logs]
 type: note
+url: "/html/2015-05-20-cloudwatch-setup.html"
 ---
 
 CloudWatch Logs is an AWS service to collect and monitor system and application logs.

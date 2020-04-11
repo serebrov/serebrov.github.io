@@ -3,6 +3,7 @@ title: Git - Your branch and 'origin/xxx' have diverged
 date: 2012-02-13
 tags: [git]
 type: note
+url: "/html/2012-02-10-git-checkout-and-track-remote-branch.html"
 ---
 
 Git error (not after rebase, see below):

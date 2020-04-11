@@ -3,6 +3,7 @@ title: SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Interne
 date: 2018-01-11
 tags: [ssh, aws]
 type: note
+html: "/html/2018-01-11-aws-ec2-ssh-tunnel.html"
 ---
 
 Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.

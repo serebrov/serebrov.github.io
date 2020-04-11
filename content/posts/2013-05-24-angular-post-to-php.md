@@ -3,6 +3,7 @@ title: Angular.js POST data to PHP
 date: 2012-04-03
 tags: [php, angularjs]
 type: note
+url: "/html/2013-05-24-angular-post-to-php.html"
 ---
 
 By default angular.js sends all data in json.

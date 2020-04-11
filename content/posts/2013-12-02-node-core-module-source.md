@@ -3,6 +3,7 @@ title: Node.js - how to get core module source
 date: 2013-12-02
 tags: [node.js]
 type: note
+url: "/html/2013-12-02-node-core-module-source.html"
 ---
 
 It is possible to ask node to show its core module source.

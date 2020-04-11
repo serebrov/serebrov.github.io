@@ -3,6 +3,7 @@ title: There Is No Callback Hell In JavaScript
 date: 2018-01-19
 tags: [js]
 type: post
+url: "/html/2018-01-19-there-is-no-callback-hell.html"
 ---
 
 There is no "callback hell" in Javascript, it is just a bad programming style.

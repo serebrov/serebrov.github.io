@@ -3,6 +3,7 @@ title: Andriod - moblie network problem after BusyBox update
 date: 2012-01-24
 tags: [android]
 type: post
+url: "/html/2012-04-24-git-fugitive-to-resolve-conflicts.html"
 ---
 
 I have LG p500 (Optimus One), rooted with original ROM.

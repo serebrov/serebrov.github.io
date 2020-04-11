@@ -3,6 +3,7 @@ title: Managing NPM packages on github
 date: 2019-02-16
 tags: [node.js, npm]
 type: note
+url: "/html/2019-02-16-manage-npm-packages-on-github.html"
 ---
 
 Sometimes it is simpler to keep the package on github, for example, if you have a fork of a published package with some private changes.

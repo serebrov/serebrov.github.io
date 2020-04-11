@@ -3,6 +3,7 @@ title: Amazon OpsWorks - node.js app with MongoDB setup
 date: 2014-12-19
 tags: [aws]
 type: note
+url: "/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html"
 ---
 
 [Amazon OpsWorks](http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html) provides a way to manage AWS resources

@@ -3,6 +3,7 @@ title: AWS Config - Unexpected Charges and Data Analysis
 date: 2019-10-08
 tags: [aws]
 type: note
+url: "/html/2019-10-08-aws-config-charges.html"
 ---
 
 I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month.

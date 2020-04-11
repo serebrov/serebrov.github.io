@@ -3,6 +3,7 @@ title: Want Scalable Application Architecture? Check AngularJS.
 date: 2013-03-18
 tags: [js, angularjs]
 type: post
+url: "/html/2013-03-18-js-scalable-architecture.html"
 ---
 
 The [Scalable JavaScript Application Architecture](http://www.youtube.com/watch?v=mKouqShWI4o) is a  presentation by [Nicholas Zakas](http://www.nczonline.net/) where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:

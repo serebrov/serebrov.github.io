@@ -3,6 +3,7 @@ title: Git - how to revert multiple recent commits
 date: 2014-01-04
 tags: [git]
 type: note
+url: "/html/2014-01-04-git-revert-multiple-recent-comments.html"
 ---
 
 Let's assume we have a history like this:

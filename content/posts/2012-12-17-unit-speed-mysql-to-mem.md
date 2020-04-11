@@ -3,6 +3,7 @@ title: Speedup unit tests by moving MySql data to memory [Ubuntu]
 date: 2012-04-03
 tags: [mysql]
 type: note
+url: "/html/2012-12-17-unit-speed-mysql-to-mem.html"
 ---
 
 There are several ways to speedup slow unit tests which interact with database:

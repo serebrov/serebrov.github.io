@@ -3,6 +3,7 @@ title: How to set up Drone CI on EC2 instance via Elastic Beanstalk
 date: 2015-07-05
 tags: [aws, eb, drone]
 type: note
+url: "/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html"
 ---
 
 [Drone CI](https://github.com/drone/drone) is a Continuous Integration platform. It uses [Docker](https://www.docker.com/) containers to run tests for your application hosted on [github](http://github.com).

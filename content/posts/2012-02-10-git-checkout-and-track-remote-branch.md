@@ -3,6 +3,7 @@ title: git - checkout and track remote branch
 date: 2012-02-01
 tags: [git]
 type: note
+url: "/html/2012-01-24-jquery-check-version.html"
 ---
 
 

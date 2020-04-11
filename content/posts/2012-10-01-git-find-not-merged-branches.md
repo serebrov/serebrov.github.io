@@ -3,6 +3,7 @@ title: git - find not merged branches
 date: 2012-10-01
 tags: [git]
 type: note
+url: "/html/2012-10-01-git-find-not-merged-branches.html"
 ---
 
 

@@ -3,6 +3,7 @@ title: Simple Git Workflow
 date: 2016-07-03
 tags: [git]
 type: post
+url: "/html/2016-07-03-simple-git-workflow.html"
 ---
 
 The main purpose of this workflow is to have a reliable, but simple to use git workflow.

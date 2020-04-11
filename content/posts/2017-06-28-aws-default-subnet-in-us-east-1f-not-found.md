@@ -3,6 +3,7 @@ title: AWS error - Default subnet in us-east-1f not found
 date: 2017-06-29
 tags: [aws]
 type: note
+url: "/html/2017-06-28-aws-default-subnet-in-us-east-1f-not-found.html"
 ---
 
 I suddenly started getting the `Default subnet in us-east-1f not found` error during the ElasticBeanstalk environment update.

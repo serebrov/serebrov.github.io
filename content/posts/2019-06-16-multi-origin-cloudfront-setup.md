@@ -3,6 +3,7 @@ title: CloudFront Setup to Route Requests to Services Based on Request Path
 date: 2019-06-16
 tags: [aws]
 type: note
+url: "/html/2019-06-16-multi-origin-cloudfront-setup.html"
 ---
 
 AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.

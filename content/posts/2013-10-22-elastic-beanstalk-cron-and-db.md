@@ -3,6 +3,7 @@ title: Elastic Beanstalk - cron command and RDS DB access
 date: 2013-10-22
 tags: [aws]
 type: note
+url: "/html/2013-10-22-elastic-beanstalk-cron-and-db.html"
 ---
 
 Problem

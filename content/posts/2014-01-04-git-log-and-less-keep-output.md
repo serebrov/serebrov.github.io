@@ -3,6 +3,7 @@ title: How to keep git log and less output on the screen
 date: 2014-01-04
 tags: [git]
 type: note
+url: "/html/2014-01-04-git-log-and-less-keep-output.html"
 ---
 
 When `git` uses `less` as pager the output of commands like `git log` disappears from the console

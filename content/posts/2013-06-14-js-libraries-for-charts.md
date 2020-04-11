@@ -3,6 +3,7 @@ title: JS libraties for charts (links)
 date: 2013-06-14
 tags: [js]
 type: note
+url: "/html/2013-06-14-js-libraries-for-charts.html"
 ---
 
 <!-- more -->

@@ -3,6 +3,7 @@ title: Elastic Beanstalk - python application server structure and celery instal
 date: 2015-04-02
 tags: [aws, eb, python, celery, zeromq]
 type: note
+url: "/html/2015-04-02-elastic-beanstalk-python.html"
 ---
 
 Elastic beanstalk python application is deployed under `/opt/python/`.
