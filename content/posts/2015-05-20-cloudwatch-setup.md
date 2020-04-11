@@ -30,12 +30,12 @@ cloudwatchlogs-apache/
 
 Files need to be placed under `.ebextensions` folder. I recommend extracting an archive into `.ebextensions/cloudwatchlogs-apache`. You can also put an archive file itself, but it will be not convenient to view/edit configs then.
 
-First two files ([cwl-setup.config, click to preview](files/cloudwatchlogs-apache/cwl-setup.config) and [eb-logs.config, click to preview](files/cloudwatchlogs-apache/eb-logs.config)) are generic and can be used as is.
+First two files ([cwl-setup.config, click to preview](/cloudwatchlogs-apache/cwl-setup.config) and [eb-logs.config, click to preview](/cloudwatchlogs-apache/eb-logs.config)) are generic and can be used as is.
 These files will setup CloudWatch Logs agent on the instance and configure Elastic Beanstalk logs publication to S3.
 
 Note: you also need to enable the access for Elastic Beanstalk instances to Cloudwatch Logs: add the appropriate permission for the `aws-elasticbeanstalk-ec2-role` in IAM settings.
 
-The last one ([cwl-webrequest-metrics.config, click to preview](files/cloudwatchlogs-apache/cwl-webrequest-metrics.config)) is an example of CloudWatch Logs setup for Apache's access log.
+The last one ([cwl-webrequest-metrics.config, click to preview](/cloudwatchlogs-apache/cwl-webrequest-metrics.config)) is an example of CloudWatch Logs setup for Apache's access log.
 
 Config file consists of several sections - 'Mappings', 'Outputs', 'Resources'.
 There are cross-references between these sections, like filters defined in 'Mappings' section are used later in 'Resources' section for metric filters configuration.

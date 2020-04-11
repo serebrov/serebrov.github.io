@@ -44,7 +44,7 @@ To make it work, it is necessary to open the 2375 port on the server. On Scalewa
 Here I have used the `generic` docker machine driver, there are also specific drivers for popular cloud providers - [AWS, Digital Ocean, etc](https://docs.docker.com/machine/drivers/).
 Note: Scaleway has the [Docker Machine plugin](https://github.com/scaleway/docker-machine-driver-scaleway), using it you can do even more and automatically launch the new instance during the setup.
 
-Check the full setup script [here](files/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
+Check the full setup script [here](/scaleway-docker/init-docker.sh), on Scaleway I also had to create loopback devices because docker setup failed with `[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed`.
 
 If something goes wrong during the setup, run `docker-machine rm scaleway`, fix the problem and run the setup again.
 
@@ -110,7 +110,7 @@ VOLUME /var/www/html/files
 
 This container is based on the official [php image](https://hub.docker.com/\_/php/).
 To make the php `mail` function work, I also setup `msmtp` and configure php to use it.
-The example of the msmtp configuration file is [here](files/scaleway-docker/msmtprc).
+The example of the msmtp configuration file is [here](/scaleway-docker/msmtprc).
 
 On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch "Block SMTP" from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).
 
@@ -184,10 +184,10 @@ web-deploy/
 
 Top level scripts include:
 
-- [web-deploy/deploy.sh](files/scaleway-docker/deploy.sh) - deploy all apps locally or to the remote instance
-- [web-deploy/init-docker.sh](files/scaleway-docker/init-docker.sh) - use it for initial server setup (only needed once, for the new server)
-- [web-deploy/init-db-files.sh](files/scaleway-docker/init-db-files.sh) - uploads files and database dumps to remote server and then goes over dumps in mysql/dump and drops/creates databases and loads dumps, also users [web-deploy/mysql/init-db.sh](files/scaleway-docker/init-db.sh) and [web-deploy/mysql/dumps/load-dumps.sh](files/scaleway-docker/load-dumps.sh), dump files should be under `web-deploy/mysql/dumps`
-- [web-deploy/mysql-cli.sh](files/scaleway-docker/mysql-cli.sh) can be user to start the MySQL client for the MySQL container
+- [web-deploy/deploy.sh](/scaleway-docker/deploy.sh) - deploy all apps locally or to the remote instance
+- [web-deploy/init-docker.sh](/scaleway-docker/init-docker.sh) - use it for initial server setup (only needed once, for the new server)
+- [web-deploy/init-db-files.sh](/scaleway-docker/init-db-files.sh) - uploads files and database dumps to remote server and then goes over dumps in mysql/dump and drops/creates databases and loads dumps, also users [web-deploy/mysql/init-db.sh](/scaleway-docker/init-db.sh) and [web-deploy/mysql/dumps/load-dumps.sh](/scaleway-docker/load-dumps.sh), dump files should be under `web-deploy/mysql/dumps`
+- [web-deploy/mysql-cli.sh](/scaleway-docker/mysql-cli.sh) can be user to start the MySQL client for the MySQL container
 
 The `deploy.sh` script uses docker-machine to build and run the containers on the remote server.
 There are several modes it can be used it:
@@ -301,7 +301,7 @@ Few interesting things happen here:
 - The problem with permissions to the shared volume is solved by running `chown` from within the container (apache runs as www-data and after creation the files folder will belong to root user)
 - This build script is used both for local and remote deployment, the remote part is handled by Docker Machine which allows to run docker commands against the remote host (this is handled in the `deploy.sh` script)
 
-Note: the `docker_rm_app_image` function from the build script is defined in the [utils.sh script](files/scaleway-docker/utils.sh).
+Note: the `docker_rm_app_image` function from the build script is defined in the [utils.sh script](/scaleway-docker/utils.sh).
 
 The `web-deploy` project also includes setup for HAProxy and MySQL containers.
 
@@ -473,7 +473,7 @@ There are few options to run cron with docker:
 
 Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.
 
-The [web-deploy/init-db-files.sh](files/scaleway-docker/init-db-files.sh) script contains code to setup cron, here is the related part:
+The [web-deploy/init-db-files.sh](/scaleway-docker/init-db-files.sh) script contains code to setup cron, here is the related part:
 
 ```bash
   docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd

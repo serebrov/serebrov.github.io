@@ -15,7 +15,7 @@ Where G1-G3 are 'good' commits and B1-B3 are 'bad' commits and we
 want to revert them.
 <!-- more -->
 
-[Here is the shell script](files/git-revert/init.sh) to create the
+[Here is the shell script](/git-revert/init.sh) to create the
 revision history like above, you can use it to try and see the effect of different
 commands.
 

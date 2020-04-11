@@ -42,7 +42,7 @@ A collection of links to touch typing tutors and games.
 
 Keyboard with finger positions (source: [http://frontype.com/keyboarding/400px-Touch-typing.png](http://frontype.com/keyboarding/400px-Touch-typing.png)):
 
-![Keyboard Memo](files/400px-Touch-typing.png "Keyboard Touch Typing Memo")
+![Keyboard Memo](/400px-Touch-typing.png "Keyboard Touch Typing Memo")
 
 Shows which key should be pressed with which finger (middle pink is for index fingers, green for middle fingers and so on).
 

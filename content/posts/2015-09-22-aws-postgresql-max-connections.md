@@ -17,7 +17,7 @@ The PostgreSQL server was running on the db.t1.micro RDS instance and the 'Curre
 
 Here is how it looked:
 
-![cwl-setup.config, click to preview](files/2015-09-22-22-connections.png).
+![cwl-setup.config, click to preview](/2015-09-22-22-connections.png).
 
 And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.
 While actually we already at 100% of connections.
