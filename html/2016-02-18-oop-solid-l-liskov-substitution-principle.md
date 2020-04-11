@@ -554,8 +554,14 @@ doAction(Time time)
   <div class='container sep-before'>
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
+    var relLink = "\/html\/2016-02-18-oop-solid-l-liskov-substitution-principle.md";
+    relLink = relLink.replace("\/", "/");
+    if (relLink.endsWith("/")) {
+        relLink = relLink.substr(0, relLink.length - 1);
+    }
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io/\/html\/2016-02-18-oop-solid-l-liskov-substitution-principle.md"; 
+        this.page.url = "http://serebrov.github.io" + relLink; 
+        console.log('set page url', this.page.url);
         
     };
     (function () {

@@ -415,8 +415,14 @@ Restart sshd</p>
   <div class='container sep-before'>
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
+    var relLink = "\/html\/ssh-tunnels-how-to-access-aws-rds-locally-without-exposing-it-to-internet.html\/";
+    relLink = relLink.replace("\/", "/");
+    if (relLink.endsWith("/")) {
+        relLink = relLink.substr(0, relLink.length - 1);
+    }
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io/\/html\/ssh-tunnels-how-to-access-aws-rds-locally-without-exposing-it-to-internet.html\/"; 
+        this.page.url = "http://serebrov.github.io" + relLink; 
+        console.log('set page url', this.page.url);
         
     };
     (function () {

@@ -355,8 +355,14 @@ origin/master is not changed (still points to older version).</p>
   <div class='container sep-before'>
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
+    var relLink = "\/html\/2012-09-30-git-branch-ahead-after-pull.html";
+    relLink = relLink.replace("\/", "/");
+    if (relLink.endsWith("/")) {
+        relLink = relLink.substr(0, relLink.length - 1);
+    }
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io/\/html\/2012-09-30-git-branch-ahead-after-pull.html"; 
+        this.page.url = "http://serebrov.github.io" + relLink; 
+        console.log('set page url', this.page.url);
         
     };
     (function () {

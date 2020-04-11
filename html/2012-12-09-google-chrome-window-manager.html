@@ -412,8 +412,14 @@ This extension makes a vertical split for vieing two tabs at once. It&rsquo;s ac
   <div class='container sep-before'>
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
+    var relLink = "\/html\/2012-12-09-google-chrome-window-manager.html";
+    relLink = relLink.replace("\/", "/");
+    if (relLink.endsWith("/")) {
+        relLink = relLink.substr(0, relLink.length - 1);
+    }
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io/\/html\/2012-12-09-google-chrome-window-manager.html"; 
+        this.page.url = "http://serebrov.github.io" + relLink; 
+        console.log('set page url', this.page.url);
         
     };
     (function () {
