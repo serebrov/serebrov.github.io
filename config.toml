@@ -72,8 +72,8 @@ page = "" # Twitter page username
 titleSeparator = "•"
 
 [params.social]
-email = "contact@example.com"
-github = "achary"
+email = "serebrov@gmail.com"
+github = "serebrov"
 
 [params.comments]
 enable = true
