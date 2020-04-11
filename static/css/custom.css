@@ -1,0 +1,7 @@
+.search-results li {
+    height: 2.5em;
+    height: auto;
+    min-height: 2.5em;
+    border: none;
+    border-bottom: 1px dashed;
+}
