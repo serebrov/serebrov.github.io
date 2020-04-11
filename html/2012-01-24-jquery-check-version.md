@@ -2,23 +2,27 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='There are several ways to speedup slow unit tests which interact with database:
- Refactor code and tests and do not interact with db in unit tests Use sqlite db in memory instead of MySql Use MySql MEMORY engine Move MySql data to memory  It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
- stop mysql move /var/lib/mysql to /dev/shm/mysql link /var/lib/mysql to /dev/shm/mysql start mysql  In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.'>
+<meta name='description' content='To check whether jQuery is loaded to the page and verify minimum version:
+if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); }  Here a regular expression determines a required jQuery version -
+/[X-9]\.[Y-9].[Z-9]/  For example, for 1.3.1 use
+/[1-9]\.[3-9].[1-9]/  and for 1.2.3 use
+/[1-9]\.[2-9].[3-9]/  '>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='Speedup unit tests by moving MySql data to memory [Ubuntu] • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='There are several ways to speedup slow unit tests which interact with database:
- Refactor code and tests and do not interact with db in unit tests Use sqlite db in memory instead of MySql Use MySql MEMORY engine Move MySql data to memory  It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
- stop mysql move /var/lib/mysql to /dev/shm/mysql link /var/lib/mysql to /dev/shm/mysql start mysql  In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.'>
-<meta property='og:url' content='https://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html'>
+<meta property='og:title' content='jQuery - check minimal required version • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='To check whether jQuery is loaded to the page and verify minimum version:
+if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); }  Here a regular expression determines a required jQuery version -
+/[X-9]\.[Y-9].[Z-9]/  For example, for 1.3.1 use
+/[1-9]\.[3-9].[1-9]/  and for 1.2.3 use
+/[1-9]\.[2-9].[3-9]/  '>
+<meta property='og:url' content='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='mysql'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.67.0" />
 
-  <title>Speedup unit tests by moving MySql data to memory [Ubuntu] • vim, git, aws and other three-letter words</title>
-  <link rel='canonical' href='https://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html'>
+  <title>jQuery - check minimal required version • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -40,7 +44,7 @@ if (!doNotTrack) {
   
 
 </head>
-<body class='page type-note has-sidebar'>
+<body class='page type-posts has-sidebar'>
 
   <div class='site'><div id='sidebar' class='sidebar'>
   <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
@@ -210,7 +214,7 @@ if (!doNotTrack) {
     <style>.widget-breadcrumbs li:after{content:'\2f '}</style>
   <section class='widget widget-breadcrumbs sep-after'>
     <nav id='breadcrumbs'>
-      <ol><li><a href='/'>Home</a></li><li><a href='/posts/'>Posts</a></li><li><span>Speedup unit tests by moving MySql data to memory [Ubuntu]</span></li></ol>
+      <ol><li><a href='/'>Home</a></li><li><a href='/posts/'>Posts</a></li><li><span>jQuery - check minimal required version</span></li></ol>
     </nav>
   </section></div>
       </div>
@@ -229,7 +233,7 @@ if (!doNotTrack) {
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'>Speedup unit tests by moving MySql data to memory [Ubuntu]</h1>
+      <h1 class='title'>jQuery - check minimal required version</h1>
       
 
     </div>
@@ -243,7 +247,7 @@ if (!doNotTrack) {
   
 </svg>
 <span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2012-04-03T00:00:00Z'>2012, Apr 03</time>
+  <time class='entry-date' datetime='2012-01-24T00:00:00Z'>2012, Jan 24</time>
 </span>
 
   
@@ -254,7 +258,7 @@ if (!doNotTrack) {
   <polyline points="12 6 12 12 15 15"/>
   
 </svg>
-2 mins read
+One min read
 </span>
 
 
@@ -270,108 +274,23 @@ if (!doNotTrack) {
   
 
   <div class="container entry-content custom">
-    <p>There are several ways to speedup slow unit tests which interact with database:</p>
-<ul>
-<li>Refactor code and tests and do not interact with db in unit tests</li>
-<li>Use sqlite db in memory instead of MySql</li>
-<li>Use MySql MEMORY engine</li>
-<li>Move MySql data to memory</li>
-</ul>
-<!-- raw HTML omitted -->
-<p>It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:</p>
-<ul>
-<li>stop mysql</li>
-<li>move /var/lib/mysql to /dev/shm/mysql</li>
-<li>link /var/lib/mysql to /dev/shm/mysql</li>
-<li>start mysql</li>
-</ul>
-<p>In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.
-To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.sbin.mysqld</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    /dev/shm/mysql/ r,
-    /dev/shm/mysql/** rwk,
-</code></pre></div><p>But it doesn&rsquo;t work for me and I disabled apparmor for mysql (not recommended):</p>
-<pre><code>sudo mv /etc/apparmor.d/usr.sbin.mysqld /etc/apparmor.d/disable
+    <p>To check whether jQuery is loaded to the page and verify minimum version:</p>
+<pre><code>if (typeof jQuery == 'undefined' ||
+!/[1-9]\.[3-9].[1-9]/.test($.fn.jquery)
+) {
+    throw('jQuery version 1.3.1 or above is required');
+}
 </code></pre>
-<p>Below are shell scripts to move MySql data to /dev/shm and back, restore backed up data and check db state.</p>
-<h2 id="move-db-to-memory-script">Move db to memory script</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
-    <span style="color:#75715e">#Check if run as root</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>whoami<span style="color:#e6db74">`</span> !<span style="color:#f92672">=</span> root <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        echo <span style="color:#e6db74">&#34;You must be root to do that!&#34;</span>
-        exit <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">fi</span>
-
-    service mysql stop
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -s /var/lib/mysql.backup <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        cp -pRL /var/lib/mysql /var/lib/mysql.backup
-    <span style="color:#66d9ef">fi</span>
-    mv /var/lib/mysql /dev/shm/mysql
-    chown -R mysql:mysql /dev/shm/mysql
-    ln -s /dev/shm/mysql /var/lib/mysql
-    chown -h mysql:mysql /var/lib/mysql
-    service mysql start
-</code></pre></div><h2 id="move-db-to-disk-script">Move db to disk script</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
-    <span style="color:#75715e">#Check if run as root</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>whoami<span style="color:#e6db74">`</span> !<span style="color:#f92672">=</span> root <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        echo <span style="color:#e6db74">&#34;You must be root to do that!&#34;</span>
-        exit <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">fi</span>
-
-    service mysql stop
-    rm /var/lib/mysql
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -s /dev/shm/mysql <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        cp -pRL /var/lib/mysql.backup /var/lib/mysql
-    <span style="color:#66d9ef">else</span>
-        mv /dev/shm/mysql /var/lib/mysql
-    <span style="color:#66d9ef">fi</span>
-    service mysql start
-</code></pre></div><h2 id="restore-db-backup-script">Restore db backup script</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
-    <span style="color:#75715e">#Check if run as root</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>whoami<span style="color:#e6db74">`</span> !<span style="color:#f92672">=</span> root <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        echo <span style="color:#e6db74">&#34;You must be root to do that!&#34;</span>
-        exit <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">fi</span>
-
-    service mysql stop
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -s /var/lib/mysql.backup <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        exit -1
-    <span style="color:#66d9ef">fi</span>
-    rm /var/lib/mysql
-    cp -pRL /var/lib/mysql.backup /var/lib/mysql
-    rm -rf /dev/shm/mysql
-    service mysql start
-</code></pre></div><h2 id="check-db-state-script">Check db state script</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
-    <span style="color:#75715e">#Check if run as root</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>whoami<span style="color:#e6db74">`</span> !<span style="color:#f92672">=</span> root <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        echo <span style="color:#e6db74">&#34;You must be root to do that!&#34;</span>
-        exit <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">fi</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -L /var/lib/mysql <span style="color:#f92672">]</span>
-    <span style="color:#66d9ef">then</span>
-        echo <span style="color:#e6db74">&#34;Mem db&#34;</span>
-        exit <span style="color:#ae81ff">0</span>
-    <span style="color:#66d9ef">else</span>
-        echo <span style="color:#e6db74">&#34;File db&#34;</span>
-        exit <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">fi</span>
-</code></pre></div><h2 id="links">Links</h2>
-<p><a href="http://stackoverflow.com/questions/9500032/unit-test-application-including-database-is-too-slow">Unit test application including database is too slow</a></p>
-<p><a href="http://stackoverflow.com/questions/4894850/force-an-entire-mysql-database-to-be-in-memory">Force an entire MySQL database to be in memory</a></p>
-<p><a href="http://stackoverflow.com/questions/3096148/how-to-run-djangos-test-database-only-in-memory">How to run django&rsquo;s test database only in memory?</a></p>
-<p><a href="https://gist.github.com/1152547">Script to put mysqld on a ram disk in ubuntu 10.04. Runs on every hudson slave boot</a></p>
-<p><a href="http://www.indimon.co.uk/2012/mysql-tmpdir-on-devshm/">MySQL tmpdir on /dev/shm</a></p>
-<p><a href="http://stackoverflow.com/questions/2783313/how-can-i-get-around-mysql-errcode-13-with-select-into-outfile">How can I get around MySQL Errcode 13 with SELECT INTO OUTFILE?</a></p>
+<!-- raw HTML omitted -->
+<p>Here a regular expression determines a required jQuery version -</p>
+<pre><code>/[X-9]\.[Y-9].[Z-9]/
+</code></pre>
+<p>For example, for 1.3.1 use</p>
+<pre><code>/[1-9]\.[3-9].[1-9]/
+</code></pre>
+<p>and for 1.2.3 use</p>
+<pre><code>/[1-9]\.[2-9].[3-9]/
+</code></pre>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
@@ -393,7 +312,7 @@ To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/mysql/'>mysql</a></div>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/jquery/'>jquery</a></div>
 
   </div>
 </footer>
@@ -402,19 +321,9 @@ To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.
 </article>
 
 <nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/html/2012-04-03-git-rename-branch.html'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>vim - replace a word with yanked text</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/html/2012-03-15-oauth-1-0.html'>
-        <span class='screen-reader-text'>Next post: </span>git - rename branch (local and remote)<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='container'><div class='next-entry sep-before'>
+      <a href='/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
+        <span class='screen-reader-text'>Next post: </span>Andriod - moblie network problem after BusyBox update<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -431,7 +340,7 @@ To fix this it is recommended to add following to the <code>/etc/apparmor.d/usr.
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://serebrov.github.io\/html\/2012-12-17-unit-speed-mysql-to-mem.html"; 
+        this.page.url = "https://serebrov.github.io\/html\/2012-01-24-jquery-check-version.md"; 
         
         
     };

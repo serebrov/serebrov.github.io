@@ -124,10 +124,10 @@ const verifyUser = function(username, password, callback) { dataBase.verifyUser(
     
     <item>
       <title>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</title>
-      <link>https://serebrov.github.io/html/ssh-tunnels-how-to-access-aws-rds-locally-without-exposing-it-to-internet.html/</link>
+      <link>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</link>
       <pubDate>Thu, 11 Jan 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/ssh-tunnels-how-to-access-aws-rds-locally-without-exposing-it-to-internet.html/</guid>
+      <guid>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</guid>
       <description>Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
 Setup To make SSH commands shorter and easier to use, edit the ~/.ssh/config and add the configuration for the hosts you are going to connect.
 The configuration defines default ssh options, so instead of the command like this ssh ec2-user@ec2-55-222-55-55.compute-1.amazonaws.com -i ~/.</description>
@@ -808,10 +808,10 @@ I suspected that this was someting with dns settings, but did not find any solut
     
     <item>
       <title>jQuery - check minimal required version</title>
-      <link>https://serebrov.github.io/html/jquery-check-minimal-required-version.html/</link>
+      <link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</link>
       <pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/jquery-check-minimal-required-version.html/</guid>
+      <guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</guid>
       <description>To check whether jQuery is loaded to the page and verify minimum version:
 if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); }  Here a regular expression determines a required jQuery version -
 /[X-9]\.[Y-9].[Z-9]/  For example, for 1.3.1 use
