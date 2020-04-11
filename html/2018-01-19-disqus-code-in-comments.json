@@ -1,1 +1,0 @@
-{"title":"Disqus - code formatting and highlighting in comments","date":"2018-01-19T00:00:00.000Z","tags":"disqus","type":"note","intro":"<p>It is possible to format and have syntax highlighting for code in Disqus comments.\nTo do that, wrap the code into <code>&lt;pre&gt;&lt;code&gt;</code> tags (see the example comment to this post).</p>\n"}

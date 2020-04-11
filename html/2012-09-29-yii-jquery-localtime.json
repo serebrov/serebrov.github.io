@@ -1,1 +1,0 @@
-{"title":"Yii and jquery.localtime.js - display dates in user local timezone","date":"2012-09-29T00:00:00.000Z","tags":"jquery","type":"note","intro":"<p>With this method we work on the server with UTC timezone dates and convert them\nto a user local timezone on client.</p>\n"}

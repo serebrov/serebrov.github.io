@@ -1,1 +1,0 @@
-{"title":"Elastic Beanstalk - python application server structure and celery installation","date":"2015-04-02T00:00:00.000Z","tags":"aws,eb,python,celery,zeromq","type":"note","intro":"<p>Elastic beanstalk python application is deployed under <code>/opt/python/</code>.\nThe application is running under Apache web server.</p>\n"}

@@ -1,1 +1,0 @@
-{"title":"PHP - friend a class via extend","date":"2012-04-03T00:00:00.000Z","tags":"php","type":"note","intro":"<p>C++ allows to declare one class as a friend of another one.</p>\n<p>This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.</p>\n"}
