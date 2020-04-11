@@ -1,1 +1,0 @@
-{"title":"phpmyadmin and eaccelerator problem","date":"2012-04-03T00:00:00.000Z","tags":"git","type":"note","intro":"<p>Error when trying to access phpmyadmin (in Chrome):</p>\n<pre><code>Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.\n</code></pre>"}

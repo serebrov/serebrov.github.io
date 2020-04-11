@@ -1,1 +1,0 @@
-{"title":"innodb notes","date":"2012-09-24T00:00:00.000Z","tags":"mysql","type":"note","intro":"<p>Below are some notes regarding the innodb transactions and locks.\nMost of them are just a copy-paste from <a href=\"http://dev.mysql.com/doc/refman/5.5/en/innodb-storage-engine.html\">innodb docs</a> with my notes.\nAlso there are some examples of custom-maid deadlocks.</p>\n"}

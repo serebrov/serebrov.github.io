@@ -1,1 +1,0 @@
-{"title":"yii - catch and log MySQL deadlock errors","date":"2012-03-28T00:00:00.000Z","tags":"yii","type":"post","intro":"<p>This method allows to log InnoDB monitor output when deadlock error occured.\nThis way we will have much more useful data to find and fix deadlock.</p>\n"}
