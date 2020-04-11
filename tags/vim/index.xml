@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vim on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/vim/</link>
+    <description>Recent content in vim on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 24 Apr 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>git - use vim with fugitive to resolve merge conflicts</title>
+      <link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link>
+      <pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
+      <description>To use fugitive as you mergetool you can use the following.
+git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description>
+    </item>
+    
+  </channel>
+</rss>

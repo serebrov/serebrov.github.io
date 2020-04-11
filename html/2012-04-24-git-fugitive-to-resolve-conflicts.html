@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I have LG p500 (Optimus One), rooted with original ROM.
+After update to BusyBox 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.
+I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&rsquo;t help. I did a factory reset - also didn&rsquo;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.'>
+<meta name='theme-color' content='#44ccff'>
+
+<meta property='og:title' content='Andriod - moblie network problem after BusyBox update • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='I have LG p500 (Optimus One), rooted with original ROM.
+After update to BusyBox 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.
+I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&rsquo;t help. I did a factory reset - also didn&rsquo;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.'>
+<meta property='og:url' content='https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
+<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='android'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.67.0" />
+
+  <title>Andriod - moblie network problem after BusyBox update • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
+:root{--color-accent:#44ccff;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-58056088-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg'>
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+      <a href='/'>
+      vim, git, aws and other three-letter words
+      </a>
+    </h2>
+    <div class='desc'>
+    Software Development Notes
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-search sep-after'>
+  <header>
+    <h4 class='title widget-title'>Search</h4>
+  </header>
+
+  <form action='/search' id='search-form' class='search-form'>
+    <label>
+      <span class='screen-reader-text'>Search</span>
+      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
+    </label></form>
+
+</section>
+<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/'>Home</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/archive/'>Archive</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Tags</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/android/' style='font-size:1em'>android</a>
+      </li><li>
+        <a href='/tags/angularjs/' style='font-size:1.1176470588235294em'>angularjs</a>
+      </li><li>
+        <a href='/tags/aws/' style='font-size:2em'>aws</a>
+      </li><li>
+        <a href='/tags/celery/' style='font-size:1em'>celery</a>
+      </li><li>
+        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
+      </li><li>
+        <a href='/tags/cw-logs/' style='font-size:1.0588235294117647em'>cw-logs</a>
+      </li><li>
+        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
+      </li><li>
+        <a href='/tags/docker/' style='font-size:1em'>docker</a>
+      </li><li>
+        <a href='/tags/drone/' style='font-size:1em'>drone</a>
+      </li><li>
+        <a href='/tags/dynamodb/' style='font-size:1.1176470588235294em'>dynamodb</a>
+      </li><li>
+        <a href='/tags/eb/' style='font-size:1.1764705882352942em'>eb</a>
+      </li><li>
+        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
+      </li><li>
+        <a href='/tags/emr/' style='font-size:1.0588235294117647em'>emr</a>
+      </li><li>
+        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1.8823529411764706em'>git</a>
+      </li><li>
+        <a href='/tags/hive/' style='font-size:1em'>hive</a>
+      </li><li>
+        <a href='/tags/jquery/' style='font-size:1.1764705882352942em'>jquery</a>
+      </li><li>
+        <a href='/tags/js/' style='font-size:1.1176470588235294em'>js</a>
+      </li><li>
+        <a href='/tags/linux/' style='font-size:1em'>linux</a>
+      </li><li>
+        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
+      </li><li>
+        <a href='/tags/mysql/' style='font-size:1.0588235294117647em'>mysql</a>
+      </li><li>
+        <a href='/tags/node.js/' style='font-size:1.1764705882352942em'>node.js</a>
+      </li><li>
+        <a href='/tags/npm/' style='font-size:1em'>npm</a>
+      </li><li>
+        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
+      </li><li>
+        <a href='/tags/oop/' style='font-size:1em'>oop</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1.1764705882352942em'>php</a>
+      </li><li>
+        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.1176470588235294em'>python</a>
+      </li><li>
+        <a href='/tags/rds/' style='font-size:1em'>rds</a>
+      </li><li>
+        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
+      </li><li>
+        <a href='/tags/selenium/' style='font-size:1.3529411764705883em'>selenium</a>
+      </li><li>
+        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
+      </li><li>
+        <a href='/tags/typing/' style='font-size:1em'>typing</a>
+      </li><li>
+        <a href='/tags/vim/' style='font-size:1em'>vim</a>
+      </li><li>
+        <a href='/tags/yii/' style='font-size:1.1764705882352942em'>yii</a>
+      </li><li>
+        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/posts/'>Posts</a>
+      </li><li class='item'>
+        <a href='/archive/'>Archive</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'>
+    
+    <style>.widget-breadcrumbs li:after{content:'\2f '}</style>
+  <section class='widget widget-breadcrumbs sep-after'>
+    <nav id='breadcrumbs'>
+      <ol><li><a href='/'>Home</a></li><li><a href='/posts/'>Posts</a></li><li><span>Andriod - moblie network problem after BusyBox update</span></li></ol>
+    </nav>
+  </section></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Andriod - moblie network problem after BusyBox update</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2012-01-24T00:00:00Z'>2012, Jan 24</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+  
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class="container entry-content custom">
+    <p>I have LG p500 (Optimus One), rooted with original ROM.</p>
+<p>After update to <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox</a> 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.</p>
+<p>I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&rsquo;t help. I did a factory reset - also didn&rsquo;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</p>
+<!-- raw HTML omitted -->
+<p>So I started examining system logs and found this error:</p>
+<pre><code>Failed to replace default route com.android.server.NativeDaemonConnectorException
+06-12 17:04:40.999 E/NetworkManagmentService(1560)com.android.server.NetworkManagementService 994
+Failed to replace default route com.android.server.NativeDaemonConnectorException:
+Cmd {route replace def v4 rmnet0 31.144.159.49} failed with code 400 : {failed to replace default route for [rmnet0 -4] (I/O error)}: for iface [rmnet0]
+06-12 17:04:40.999 E/NetworkStateTracker(1560)android.net.NetworkStateTracker 249
+Unable to add default route.
+</code></pre>
+<p>I googled this error and found XDA thread which mention this error, page where it mentioned first - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=418">XDA forum thread, see post 4174</a>.</p>
+<p>Note that I use original LG ROM (not the rom discussed in that thread). Few pages later there is a more detailed examination - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=428">see post 4272 and 4275</a>.</p>
+<p>During discussion they suggested to try this command (I modified it a bit because original forum version gave error about wrong arguments. I issued this command in the <a href="https://play.google.com/store/apps/details?id=os.tools.scriptmanager">Script Manager</a> via su):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    su -c <span style="color:#e6db74">&#34;ip -4 route replace default via 109.46.130.66 dev rmnet0&#34;</span>
+</code></pre></div><p>Where ip (109.46.130.66) is ip address from the com.android.server.NativeDaemonConnectorException error above - I think this is dynamic dns server I got from my mobile network provider (different on each connection).
+And this command makes network work! But only for curren session. When I reconnect GPRS the network doesn&rsquo;t work again (because new dns server ip is issued every time).</p>
+<p>The final solution is to take an &ldquo;ip&rdquo; binary from the original rom and replace a busybox&rsquo;s version:</p>
+<ul>
+<li>Get the <a href="http://forum.xda-developers.com/showthread.php?t=1260920">stock rom</a></li>
+<li>Extract system files from kdz format, <a href="http://forum.xda-developers.com/showthread.php?t=901417">how to</a></li>
+<li>After extracting &ldquo;system.mbn&rdquo;: copy system/bin/ip to the device (somewhere, for example, sd card root).</li>
+<li>Rename /system/bin/ip to /system/bin/ip_busybox (just a backup). To access system folder on the device I used <a href="https://play.google.com/store/apps/details?id=com.estrongs.android.pop">ES File Explorer</a> with root mode enabled.</li>
+<li>Copy original &ldquo;ip&rdquo; (from sdcard root) to /system/bin/</li>
+</ul>
+<p>Finally I want to thank <a href="https://play.google.com/store/apps/details?id=stericson.busybox">BusyBox installer</a> developer, Stephen. I contacted him by email when I realized that problem was with busybox installer and he answered and put effort to help me find the solution. Also he posted about this issue in the mentioned above XDA thread (I could not do this because have no permission to post into developer topics on XDA).</p>
+ <a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/android/'>android</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/jquery-check-minimal-required-version.html/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>jQuery - check minimal required version</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/html/2012-01-24-jquery-check-version.html'>
+        <span class='screen-reader-text'>Next post: </span>git - checkout and track remote branch<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+<section id='comments' class='comments'>
+  <div class='container sep-before'>
+    <div class='comments-area'><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "serebrov" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+  </div>
+</section>
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><div class='copyright'>
+  <p> &copy; 2020 Boris Serebrov </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/custom.js'></script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

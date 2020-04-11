@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mysql on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/mysql/</link>
+    <description>Recent content in mysql on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 24 Sep 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>innodb notes</title>
+      <link>https://serebrov.github.io/html/2012-09-24-innodb.html</link>
+      <pubDate>Mon, 24 Sep 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-09-24-innodb.html</guid>
+      <description>Below are some notes regarding the innodb transactions and locks. Most of them are just a copy-paste from innodb docs with my notes. Also there are some examples of custom-maid deadlocks.
+In the examples of MySQL operations different sessions are marked as (1) and (2), for example:
+ create table child (id int(11) NOT NULL) ENGINE=InnoDB;  common operation, do it from any session   (1) start transaction;  do it in session #1   (2) start transaction;  do it in session #2    To get two (or more) sessions just launch several instances of mysql in different console windows.</description>
+    </item>
+    
+    <item>
+      <title>Speedup unit tests by moving MySql data to memory [Ubuntu]</title>
+      <link>https://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html</link>
+      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html</guid>
+      <description>There are several ways to speedup slow unit tests which interact with database:
+ Refactor code and tests and do not interact with db in unit tests Use sqlite db in memory instead of MySql Use MySql MEMORY engine Move MySql data to memory  It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
+ stop mysql move /var/lib/mysql to /dev/shm/mysql link /var/lib/mysql to /dev/shm/mysql start mysql  In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.</description>
+    </item>
+    
+  </channel>
+</rss>

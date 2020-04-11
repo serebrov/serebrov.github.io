@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>express.js on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/express.js/</link>
+    <description>Recent content in express.js on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Aug 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/express.js/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>express.js and ejs - reuse template on server and client</title>
+      <link>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</link>
+      <pubDate>Mon, 20 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</guid>
+      <description>ejs has a client-side support but documentation and examples do not describe how to reuse the same template on the server and on the client side.
+For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</description>
+    </item>
+    
+  </channel>
+</rss>

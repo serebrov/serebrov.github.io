@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Archive on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/archive/</link>
+    <description>Recent content in Archive on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 29 Sep 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/archive/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Yii and jquery.localtime.js - display dates in user local timezone</title>
+      <link>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</link>
+      <pubDate>Sat, 29 Sep 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</guid>
+      <description>With this method we work on the server with UTC timezone dates and convert them to a user local timezone on client.
+Use ‘TIMESTAMP’ type for date/datetime DB fields Setup MySQL and PHP timezone Set UTC timezone for both MySQL and PHP.
+Yii db config (MySQL):
+‘db’ =&amp;gt; array( &amp;#39;connectionString&amp;#39; =&amp;gt; &amp;#39;...’, &amp;#39;initSQLs&amp;#39;=&amp;gt;&amp;#34;set time_zone=&amp;#39;+00:00’;&amp;#34;, ); And PHP timezone:
+date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 See date formats here Helper functions to convert dates:</description>
+    </item>
+    
+    <item>
+      <title>global ajax response handler and jquery.localtime plugin</title>
+      <link>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</link>
+      <pubDate>Tue, 25 Sep 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</guid>
+      <description>The jquery.localtime plugin allows to convert date/time strings to a local user time on a client site. By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.
+Possible solution is to add some special handling to $.ajax &amp;lsquo;success&amp;rsquo; handlers, but it can require a lot of modifications. Better way is to set some global handler for all ajax requests and apply conversion to local time there.</description>
+    </item>
+    
+    <item>
+      <title>innodb notes</title>
+      <link>https://serebrov.github.io/html/2012-09-24-innodb.html</link>
+      <pubDate>Mon, 24 Sep 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-09-24-innodb.html</guid>
+      <description>Below are some notes regarding the innodb transactions and locks. Most of them are just a copy-paste from innodb docs with my notes. Also there are some examples of custom-maid deadlocks.
+In the examples of MySQL operations different sessions are marked as (1) and (2), for example:
+ create table child (id int(11) NOT NULL) ENGINE=InnoDB;  common operation, do it from any session   (1) start transaction;  do it in session #1   (2) start transaction;  do it in session #2    To get two (or more) sessions just launch several instances of mysql in different console windows.</description>
+    </item>
+    
+    <item>
+      <title>Yii url rules - optional parameters</title>
+      <link>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</link>
+      <pubDate>Thu, 13 Sep 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</guid>
+      <description>Assume we have an action &amp;ldquo;articles/get&amp;rdquo; which accepts optional parameters and we want to setup following URLs:
+articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft  We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
+In the code we have a single &amp;lsquo;article/get&amp;rsquo; action which allows us to get specific article (last revision) by name (&amp;lsquo;GET articles/my-article&amp;rsquo;) or id (&amp;lsquo;GET articles/33&amp;rsquo;).</description>
+    </item>
+    
+    <item>
+      <title>express.js and ejs - reuse template on server and client</title>
+      <link>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</link>
+      <pubDate>Mon, 20 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</guid>
+      <description>ejs has a client-side support but documentation and examples do not describe how to reuse the same template on the server and on the client side.
+For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</description>
+    </item>
+    
+    <item>
+      <title>selenium - problem with big file upload</title>
+      <link>https://serebrov.github.io/html/2012-08-20-selenium-problem-with-big-file-upload.html</link>
+      <pubDate>Mon, 20 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-08-20-selenium-problem-with-big-file-upload.html</guid>
+      <description>Problem Selenium 2.25.0, python 2.7, ubuntu 12.04, Firebox 4.0 (yes, old version but we need it) hangs when uploading a file larger then (about) 600KB.
+Solution For now I fixed this by commenting out local file upload (three first lines):
+def send_keys(self, *value): &amp;#34;&amp;#34;&amp;#34;Simulates typing into the element.&amp;#34;&amp;#34;&amp;#34; #local_file = LocalFileDetector.is_local_file(*value) #if local_file is not None: #value = self._upload(local_file) typing = [] for val in value: if isinstance(val, Keys): typing.append(val) elif isinstance(val, int): val = str(val) for i in range(len(val)): typing.</description>
+    </item>
+    
+    <item>
+      <title>selenium webdriver - get webelement by jQuery selector</title>
+      <link>https://serebrov.github.io/html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html</link>
+      <pubDate>Thu, 02 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html</guid>
+      <description>This can be necessary for example for selector like #id &amp;gt; li:visible.
+If you will try to do webdriver.find_element_by_css_selector you will get an error message &amp;ldquo;The given selector #id &amp;gt; li:visible is either invalid or does not result in a WebElement.&amp;rdquo;
+The workaround is to use jQuery to find element. It can be done with this code (python):
+script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&amp;quot; element = webdriver.execute_script(script);  </description>
+    </item>
+    
+    <item>
+      <title>selenium webdriver - set php session cookie</title>
+      <link>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-set-php-session-cookie.html</link>
+      <pubDate>Tue, 24 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-set-php-session-cookie.html</guid>
+      <description>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.
+Fortunately it is easy to do with javascript.
+Here is example of a JS code to set the cookie:
+document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&amp;quot;;  And here is python code version (assume you have set &amp;lsquo;cookie&amp;rsquo; and &amp;lsquo;domain&amp;rsquo; variables:</description>
+    </item>
+    
+    <item>
+      <title>selenium webdriver - trigger event on element via jQuery</title>
+      <link>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html</link>
+      <pubDate>Tue, 24 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html</guid>
+      <description>The &amp;lsquo;executeScript&amp;rsquo; method of the webdriver receives additional &amp;lsquo;arguments&amp;rsquo; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
+event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(arguments[0]).trigger(&#39;&amp;quot;+event+&amp;quot;&#39;)&amp;quot; webdriver.execute_script(script, web_element)  Links Stackoverflow question</description>
+    </item>
+    
+    <item>
+      <title>GImport yii extension</title>
+      <link>https://serebrov.github.io/html/2012-10-10-gimport.html</link>
+      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-10-10-gimport.html</guid>
+      <description>GImport yii extension implements recursive import of directories with caching.
+Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.
+Basic usage example:
+$importer = new GImport; $importer-&amp;gt;add(&amp;#39;modules.myModule.*&amp;#39;); This code will import all clasees from modules/myModule/ directory.
+GImport can also be configured as application component. Add following code into the application config:
+return array( ... &amp;#39;preload&amp;#39; =&amp;gt; array(&amp;#39;log&amp;#39;, &amp;#39;import&amp;#39;), .</description>
+    </item>
+    
+    <item>
+      <title>PHP - friend a class via extend</title>
+      <link>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</link>
+      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</guid>
+      <description>C++ allows to declare one class as a friend of another one.
+This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.
+For example this can be used in State pattern to keep setState method of context class protected.
+To emulate this in PHP we can inherit state class from context class:
+class AContext { private $_state; protected function setState(AState $state) { $this-&amp;gt;_state = $state; } public function request() { $this-&amp;gt;_state-&amp;gt;handle(); } } abstract class AState extends AContext { private $_owner; public function __construct(AContext $owner) { $this-&amp;gt;_owner = $owner; } protected function getOwner() { return $this-&amp;gt;_owner; } abstract function handle(); } class AConcreteState extends AState { public function handle() { .</description>
+    </item>
+    
+    <item>
+      <title>phpmyadmin and eaccelerator problem</title>
+      <link>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</link>
+      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</guid>
+      <description>Error when trying to access phpmyadmin (in Chrome):
+Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.  The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
+php_flag eaccelerator.enable 0  </description>
+    </item>
+    
+    <item>
+      <title>yii - catch and log MySQL deadlock errors</title>
+      <link>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</link>
+      <pubDate>Wed, 28 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</guid>
+      <description>This method allows to log InnoDB monitor output when deadlock error occured. This way we will have much more useful data to find and fix deadlock.
+Extend error handler class:
+class AppErrorHandler extends CErrorHandler { protected function handleException($exception) { /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]: * Serialization failure: 1213 Deadlock found when trying to get lock; * try restarting transaction. The SQL statement executed was: * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1) */ //can we check $exception-&amp;gt;getCode() ?</description>
+    </item>
+    
+    <item>
+      <title>selenium - problem with loading x_ignore_nofocus.so</title>
+      <link>https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html</link>
+      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html</guid>
+      <description>Problem: selenium fails to start Firefox with following error:
+&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;  In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
+It is because x_ignore_nofocus library tries to load 32bit version of the libX11 instead of 64bit.</description>
+    </item>
+    
+    <item>
+      <title>selenium - run tests on a virtual display</title>
+      <link>https://serebrov.github.io/html/2012-02-20-selenium-run-on-virtual-display.html</link>
+      <pubDate>Mon, 20 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-02-20-selenium-run-on-virtual-display.html</guid>
+      <description>Selenium tests require browser to run, so usually we run them on the X-server enabled machine. But in some cases, like CI system running on the headless EC2 instance, we want to run it on the virtual display. This can be done using xvfb (X virtual framebuffer).
+Set up Install xvfb
+sudo apt-get install xvfb Install x11vnc
+sudo apt-get install x11vnc Run tests on virtual display Start xvbf (virtual display number 99)</description>
+    </item>
+    
+    <item>
+      <title>yii - class table inheritance</title>
+      <link>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</link>
+      <pubDate>Wed, 01 Feb 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</guid>
+      <description>It seems that we have no perfect solution for class table inheritance (or multiple table inheritance) in yii (comparing to the very good one for single table inheritance).
+Possible solutions are:
+ Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
+    </item>
+    
+    <item>
+      <title>selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</title>
+      <link>https://serebrov.github.io/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html</guid>
+      <description>Problem: after setting the boolean flags for Firefox profile the webdriver fails with &amp;ldquo;Can&amp;rsquo;t load the profile&amp;rdquo; error.
+I tried to disable native events for Firefox webdriver in a following way:
+ffp = webdriver.firefox.firefox_profile.FirefoxProfile(path) if (Config.ff_native_events_enabled == False): ffp.native_events_enabled = False ffb = webdriver.firefox.firefox_binary.FirefoxBinary(firefox_path=Config.browser_binary) selenium = webdriver.Firefox(firefox_profile=ffp, firefox_binary=ffb) After that Firefox starts, but python code can not connect to the webdriver extension.
+Test fails with error like this:
+Traceback (most recent call last): .</description>
+    </item>
+    
+  </channel>
+</rss>

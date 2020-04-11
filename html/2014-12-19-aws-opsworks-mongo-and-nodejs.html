@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Amazon OpsWorks provides a way to manage AWS resources using Chef recipes.
+Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server. It is similar to the php application &#43; mysql setup described in the OpsWorks Getting Started guide.
+The OpsWorks setup includes:
+ Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy  MongoDb setup is based on this blog post.'>
+<meta name='theme-color' content='#44ccff'>
+
+<meta property='og:title' content='Amazon OpsWorks - node.js app with MongoDB setup • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='Amazon OpsWorks provides a way to manage AWS resources using Chef recipes.
+Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server. It is similar to the php application &#43; mysql setup described in the OpsWorks Getting Started guide.
+The OpsWorks setup includes:
+ Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy  MongoDb setup is based on this blog post.'>
+<meta property='og:url' content='https://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html'>
+<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2014-12-19T00:00:00Z'/><meta property='article:modified_time' content='2014-12-19T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.67.0" />
+
+  <title>Amazon OpsWorks - node.js app with MongoDB setup • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
+:root{--color-accent:#44ccff;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-58056088-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-note has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg'>
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+      <a href='/'>
+      vim, git, aws and other three-letter words
+      </a>
+    </h2>
+    <div class='desc'>
+    Software Development Notes
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-search sep-after'>
+  <header>
+    <h4 class='title widget-title'>Search</h4>
+  </header>
+
+  <form action='/search' id='search-form' class='search-form'>
+    <label>
+      <span class='screen-reader-text'>Search</span>
+      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
+    </label></form>
+
+</section>
+<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/'>Home</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/archive/'>Archive</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Tags</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/android/' style='font-size:1em'>android</a>
+      </li><li>
+        <a href='/tags/angularjs/' style='font-size:1.1176470588235294em'>angularjs</a>
+      </li><li>
+        <a href='/tags/aws/' style='font-size:2em'>aws</a>
+      </li><li>
+        <a href='/tags/celery/' style='font-size:1em'>celery</a>
+      </li><li>
+        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
+      </li><li>
+        <a href='/tags/cw-logs/' style='font-size:1.0588235294117647em'>cw-logs</a>
+      </li><li>
+        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
+      </li><li>
+        <a href='/tags/docker/' style='font-size:1em'>docker</a>
+      </li><li>
+        <a href='/tags/drone/' style='font-size:1em'>drone</a>
+      </li><li>
+        <a href='/tags/dynamodb/' style='font-size:1.1176470588235294em'>dynamodb</a>
+      </li><li>
+        <a href='/tags/eb/' style='font-size:1.1764705882352942em'>eb</a>
+      </li><li>
+        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
+      </li><li>
+        <a href='/tags/emr/' style='font-size:1.0588235294117647em'>emr</a>
+      </li><li>
+        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1.8823529411764706em'>git</a>
+      </li><li>
+        <a href='/tags/hive/' style='font-size:1em'>hive</a>
+      </li><li>
+        <a href='/tags/jquery/' style='font-size:1.1764705882352942em'>jquery</a>
+      </li><li>
+        <a href='/tags/js/' style='font-size:1.1176470588235294em'>js</a>
+      </li><li>
+        <a href='/tags/linux/' style='font-size:1em'>linux</a>
+      </li><li>
+        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
+      </li><li>
+        <a href='/tags/mysql/' style='font-size:1.0588235294117647em'>mysql</a>
+      </li><li>
+        <a href='/tags/node.js/' style='font-size:1.1764705882352942em'>node.js</a>
+      </li><li>
+        <a href='/tags/npm/' style='font-size:1em'>npm</a>
+      </li><li>
+        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
+      </li><li>
+        <a href='/tags/oop/' style='font-size:1em'>oop</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1.1764705882352942em'>php</a>
+      </li><li>
+        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.1176470588235294em'>python</a>
+      </li><li>
+        <a href='/tags/rds/' style='font-size:1em'>rds</a>
+      </li><li>
+        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
+      </li><li>
+        <a href='/tags/selenium/' style='font-size:1.3529411764705883em'>selenium</a>
+      </li><li>
+        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
+      </li><li>
+        <a href='/tags/typing/' style='font-size:1em'>typing</a>
+      </li><li>
+        <a href='/tags/vim/' style='font-size:1em'>vim</a>
+      </li><li>
+        <a href='/tags/yii/' style='font-size:1.1764705882352942em'>yii</a>
+      </li><li>
+        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/posts/'>Posts</a>
+      </li><li class='item'>
+        <a href='/archive/'>Archive</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'>
+    
+    <style>.widget-breadcrumbs li:after{content:'\2f '}</style>
+  <section class='widget widget-breadcrumbs sep-after'>
+    <nav id='breadcrumbs'>
+      <ol><li><a href='/'>Home</a></li><li><a href='/posts/'>Posts</a></li><li><span>Amazon OpsWorks - node.js app with MongoDB setup</span></li></ol>
+    </nav>
+  </section></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Amazon OpsWorks - node.js app with MongoDB setup</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2014-12-19T00:00:00Z'>2014, Dec 19</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+7 mins read
+</span>
+
+
+  
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class="container entry-content custom">
+    <p><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/welcome.html">Amazon OpsWorks</a> provides a way to manage AWS resources
+using <a href="http://docs.chef.io/recipes.html">Chef recipes</a>.</p>
+<p>Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server.
+It is similar to the php application + mysql setup described
+in the OpsWorks <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html">Getting Started guide</a>.</p>
+<!-- raw HTML omitted -->
+<p>The OpsWorks setup includes:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingstacks.html">Stack</a> - a container for the deployment process we will setup</li>
+<li>Two <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinglayers.html">Layers</a> - node.js app and MongoDB</li>
+<li>Two <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinginstances.html">Instances</a> - one EC2 instance for node app and another for mongo</li>
+<li>One <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingapps.html">Application</a> - this is the code we will deploy</li>
+</ul>
+<p>MongoDb setup is based on <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">this blog post</a>.
+We will use <a href="https://github.com/edelight/chef-mongodb">MongoDB Chef cookbook</a> which allows us to deploy different MongoDB setups - single instance,
+replica set, sharding, replica sets with sharding.
+It is also possible to manage mongo users and setup <a href="https://mms.mongodb.com/">MongoDB Monitoring System (MMS)</a> agent.</p>
+<p>See the detailed step-by-step guide on working with OpsWorks UI is <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/gettingstarted_intro.html">here</a>.
+I will describe only important steps and problems I had.
+Also the difference from the standard setup is that I actually launched two node apps on the node.js server instance - the main application and
+the test application (both are from the same source code repository).</p>
+<ul>
+<li>Create a new stack, set a name and check other default parameters</li>
+<li>It is good to create and set the &lsquo;Default SSH key&rsquo;, so you will be able to ssh to instances later to debug problems with the setup</li>
+<li>Add Node.js App Server layer - select &lsquo;Node.js App Server&rsquo; as a type</li>
+<li>Add MongoDB layer - select &lsquo;Custom&rsquo; as a type</li>
+</ul>
+<h2 id="nodejs-layer-setup">Node.js layer setup.</h2>
+<p>As mentioned above, I have two node apps which I wanted to launch on the same server - main app and test app.
+The main app works on the port 80 and the test app on the 3300.
+Repository structure is this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── app
+├── public
+├── package.json
+├── server.js - this is the main app entry point
+├── ...
+└── test-app
+    ├── bin/www - this is the test app entry point
+    ├── app.js
+    ├── ...
+</code></pre></div><p>The <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workinglayers-node.html">standard node.js layer</a> uses chef recipes from <a href="https://github.com/aws/opsworks-cookbooks/tree/release-chef-11.10/opsworks_nodejs">the opsworks cookbooks repository</a> and has some limitations:</p>
+<ul>
+<li>The main file must be named server.js and reside in the deployed application&rsquo;s root directory.</li>
+<li>Express apps must include a package.json file in the application&rsquo;s root directory.</li>
+<li>The application must listen on port 80 (for HTTP requests) or port 443 (for HTTPS requests).</li>
+</ul>
+<p>In my case the main app already had the required layout (it is based on <a href="http://meanjs.org/">mean.js</a>).
+I only had to setup port 80 for the production environment.</p>
+<p>The test app requires a simple custom chef recipe and some additional layer settings.
+To use custom recipes it is necessary to create a separate <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-installingcustom-repo.html">cookbook repository</a>.
+It can be, for example, public or private git repository on github or bitbucket.
+In my case I used private bitbucket repository with following structure:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
+├── mongodb-singlenode
+│   ├── metadata.rb
+│   └── recipes
+│       └── default.rb
+├── nodeapp
+│   ├── metadata.rb
+│   ├── recipes
+│   │   └── default.rb
+│   └── templates
+│       └── default
+│           └── app_test.monitrc.erb
+└── README.md
+</code></pre></div><p>Here I have custom recipe for mongodb setup (it is described below) and a custom recipe with template for the node app.
+The nodeapp/metadata.rb just contains a cookbook metadata, see <a href="https://github.com/aws/opsworks-cookbooks/blob/release-chef-11.10/opsworks_nodejs/metadata.rb">example</a>.
+The recipes/default.rb is this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">deploy <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;my_app&#39;</span><span style="color:#f92672">]</span>
+
+script <span style="color:#e6db74">&#34;setup_test_app&#34;</span> <span style="color:#66d9ef">do</span>
+  interpreter <span style="color:#e6db74">&#34;bash&#34;</span>
+  user <span style="color:#e6db74">&#34;root&#34;</span>
+  cwd <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>deploy<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy_to</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/current/app-test&#34;</span>
+  code <span style="color:#e6db74">&lt;&lt;-EOH
+</span><span style="color:#e6db74"></span>    npm install <span style="color:#f92672">-</span>d
+  <span style="color:#66d9ef">EOH</span>
+<span style="color:#66d9ef">end</span>
+
+template <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>node<span style="color:#f92672">.</span>default<span style="color:#f92672">[</span><span style="color:#e6db74">:monit</span><span style="color:#f92672">][</span><span style="color:#e6db74">:conf_dir</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/node_web_app-app-test.monitrc&#34;</span> <span style="color:#66d9ef">do</span>
+  source <span style="color:#e6db74">&#39;app_test.monitrc.erb&#39;</span>
+  owner <span style="color:#e6db74">&#39;root&#39;</span>
+  group <span style="color:#e6db74">&#39;root&#39;</span>
+  mode <span style="color:#e6db74">&#39;0644&#39;</span>
+  variables(
+    <span style="color:#e6db74">:deploy</span> <span style="color:#f92672">=&gt;</span> deploy,
+    <span style="color:#e6db74">:deploy_to</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>deploy<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy_to</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/current/app-test&#34;</span>,
+    <span style="color:#e6db74">:test_port</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">3300</span>,
+    <span style="color:#e6db74">:test_env</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;production&#39;</span>,
+    <span style="color:#e6db74">:application_name</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;app-test&#39;</span>,
+    <span style="color:#e6db74">:monitored_script</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>deploy<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy_to</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">/current/app-test/bin/www&#34;</span>
+  )
+  notifies <span style="color:#e6db74">:restart</span>, <span style="color:#e6db74">&#34;service[monit]&#34;</span>, <span style="color:#e6db74">:immediately</span>
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>This recipe invokes <code>npm install -d</code> inside the test app folder and then creates a monit service config.
+So our test app will be watched by monit and restarted in the case of failure.
+This is the same setup the standard OpsWorks node.js layer uses for the main application.</p>
+<p>To see the status of the application run the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo monit status
+</code></pre></div><p>This will display status of all services watched by monit.
+And monit logs it&rsquo;s events to syslog (<code>/var/log/syslog</code>).</p>
+<p>The <code>templates/default/app_test.monitrc.erb</code> contains a config file template:</p>
+<pre><code class="language-erb" data-lang="erb">check host node_web_app_&lt;%= @application_name %&gt; with address 127.0.0.1
+  start program = &quot;/bin/sh -c 'cd &lt;%= @deploy_to %&gt; ; source &lt;%= @deploy_to %&gt;/../shared/app.env ; /usr/bin/env PORT=&lt;%= @test_port %&gt; NODE_ENV=&lt;%= @test_env %&gt; NODE_PATH=&lt;%= @deploy_to %&gt;/node_modules:&lt;%= @deploy_to %&gt; /usr/local/bin/node &lt;%= @monitored_script %&gt;'&quot;
+  stop program = &quot;/usr/bin/pkill -f 'node &lt;%= @monitored_script %&gt;'&quot;
+  &lt;% if @deploy[:ssl_support] -%&gt;
+  if failed port &lt;%= @test_port %&gt; type TCPSSL protocol HTTP
+  &lt;% else -%&gt;
+  if failed port &lt;%= @test_port %&gt; protocol HTTP
+  &lt;% end -%&gt;
+    request /
+    with timeout 10 seconds
+    then restart
+</code></pre><p>This way we setup monit to run and monitor the test app.
+App is started with command like <code>PORT=3300 NODE_ENV=production path/to/deployment/current/app-test/bin/www</code>.</p>
+<p>Now change the layer settings:</p>
+<ul>
+<li>Custom recipe</li>
+<li>For the Node.js App Server select &lsquo;Recipes&rsquo;, click &lsquo;Edit&rsquo;</li>
+<li>Set the custom recipes repository URL and add &lsquo;nodeapp::default&rsquo; recipe to the &lsquo;Deploy&rsquo; step.</li>
+<li>This way we will launch our custom recipe each time the app is deployed</li>
+<li>Network - optional step, here you may want to enable Elastic IP, so the app server will always have the same IP</li>
+<li>Security - here you need to add a custom security group to the layer to open port 3300 for our test app</li>
+<li>Open the EC2 service, Security Groups, create new security group and allow port 3300, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html">see also docs</a></li>
+<li>Go back to the node app layer settings, Security tab and add a custom security group you created</li>
+</ul>
+<h2 id="mongodb-layer-setup">MongoDB layer setup</h2>
+<p>The setup is based on <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">this blog post</a>.
+It uses the custom chef recipe from our cookbook repository:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
+├── mongodb-singlenode
+│   ├── metadata.rb
+│   └── recipes
+│       └── default.rb
+├── nodeapp
+│   ├── ...
+</code></pre></div><p>Here we have Berksfile which describes dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
+
+cookbook <span style="color:#e6db74">&#39;mongodb&#39;</span>
+</code></pre></div><p>The <code>mongodb-singlenode/metadata.rb</code> with recipe dependency info:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">name        <span style="color:#e6db74">&#34;mongodb-singlenode&#34;</span>
+description <span style="color:#e6db74">&#39;MongoDB single node Berkshelf based install&#39;</span>
+maintainer  <span style="color:#e6db74">&#34;Company&#34;</span>
+license     <span style="color:#e6db74">&#34;Apache 2.0&#34;</span>
+version     <span style="color:#e6db74">&#34;1.0.0&#34;</span>
+
+depends <span style="color:#e6db74">&#39;mongodb&#39;</span>
+</code></pre></div><p>And a custom recipe <code>mongodb-singlenode/recipes/default.rb</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">node<span style="color:#f92672">.</span>normal<span style="color:#f92672">[</span><span style="color:#e6db74">:mongodb</span><span style="color:#f92672">][</span><span style="color:#e6db74">:config</span><span style="color:#f92672">][</span><span style="color:#e6db74">:bind_ip</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;127.0.0.1,</span><span style="color:#e6db74">#{</span>node<span style="color:#f92672">[</span><span style="color:#e6db74">:opsworks</span><span style="color:#f92672">][</span><span style="color:#e6db74">:instance</span><span style="color:#f92672">][</span><span style="color:#e6db74">:private_ip</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+
+include_recipe <span style="color:#e6db74">&#34;mongodb::default&#34;</span>
+</code></pre></div><p>The important part here is the first string where we add instance&rsquo;s private ip to the &lsquo;bind_ip&rsquo; parameter.
+This way the MongoDB instance will be available to our node.js app server.</p>
+<p>The way I set the <code>bind_ip</code> parameter is different from the <a href="https://github.com/edelight/chef-mongodb#single-mongodb-instance">recommended</a>
+because I had an <a href="https://github.com/edelight/chef-mongodb#single-mongodb-instance">issue with recommended setup</a>.
+Also it is necessary to use Amazon Linux instance for mongo because there is also a problem (solvable, but I didn&rsquo;t tested the solution) with ubuntu setup.</p>
+<p>Now open the mongo layer in the OpsWorks UI, &lsquo;Recipes&rsquo; settings and add our custom <code>mongodb-singlenode::default</code> recipe to the &lsquo;Setup&rsquo; step.</p>
+<h2 id="finalize-the-setup">Finalize the setup</h2>
+<p>Now add one instance to each layer. You can do this from both <code>Layers</code> and <code>Instances</code> pages in the OpsWorks UI.
+I use Ubuntu 14.04 for node.js app layer and Amazon Linux 2014.09 for mongo layer.</p>
+<p>Give some meaningful name for the mongo instance (the <code>Hostname</code> parameter). This data goes to <code>/etc/hosts</code> on each instance.</p>
+<p>For example, if the mongo host is &lsquo;my-app-db&rsquo; then the node.js app can connect to the database using <code>mongodb://my-app-db/dbname</code> connection string.</p>
+<p>Add an application (from <code>Apps</code> page). Essential parameters are:</p>
+<ul>
+<li>Type - Node.js</li>
+<li>Data source type - None (we use custom mongo setup)</li>
+<li>Set repository parameters</li>
+<li>Add an environment variable: NODE_ENV - production</li>
+</ul>
+<p>Now go to &lsquo;Deployments&rsquo; and deploy an app.
+If everything is done right it will setup mongodb and node.js and deploy application code.
+In the case of failure the OpsWorks will display a link to the log file.</p>
+<h2 id="additional-information-and-related-links">Additional information and related links</h2>
+<ul>
+<li>MongoDB documentation <a href="http://docs.mongodb.org/ecosystem/platforms/amazon-ec2/">has a section about setup on Amazon EC2</a>.</li>
+<li>Already mentioned <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">blog post</a> about mongo setup with OpsWorks and another <a href="http://netinlet.com/blog/2014/01/18/setting-up-a-mongodb-replicaset-with-aws-opsworks/">blog post about replicaset setup</a>.</li>
+<li>OpsWorks <a href="https://github.com/aws/opsworks-cookbooks/tree/release-chef-11.4">cookbooks repository</a></li>
+<li><a href="http://stackoverflow.com/questions/18637735/setting-up-mongodb-via-aws-opsworks">Stackoverflow: setting up mongodb via AWS opsworks</a></li>
+<li><a href="https://github.com/ujuettner/opsworks-mongodb-example">opsworks-mongodb-example repository</a></li>
+<li><a href="https://github.com/9apps/mongodb">MongoDB on AWS (RDS-Style)</a></li>
+<li><a href="http://softwarebyjosh.com/2012/03/11/elastic-ips-and-mongodb-replica-sets.html">Fault Tolerant MongoDB on EC2</a></li>
+<li><a href="https://media.amazonwebservices.com/AWS_NoSQL_MongoDB.pdf">NoSQL Database in the Cloud: MongoDB on AWS</a></li>
+<li><a href="http://www.slideshare.net/AmazonWebServices/ebs-mongo-dbwebinarfinal-nn">High Performance MongoDB Clusters with Amazon EBS Provisioned IOPS</a></li>
+<li><a href="https://medium.com/@polkaspots/building-a-mongo-replica-set-with-chef-and-vagrant-24dc2f59dc90">Building a Mongo Replica Set with Chef and Vagrant article</a></li>
+<li><a href="https://www.linode.com/docs/databases/mongodb/creating-a-mongodb-replication-set-on-ubuntu-12-04-precise">Linode: Creating a MongoDB Replication Set on Ubuntu 12.04 (Precise)</a></li>
+<li><a href="http://racingtadpole.com/blog/meteor-mongodb-webfaction/">Hosting meteor with MongoDb on Webfaction</a></li>
+</ul>
+<p>OpsWorks, Chef and Ruby:</p>
+<ul>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/attributes.html">OpsWorks attribute reference</a></li>
+<li><a href="https://docs.chef.io/resource.html">OpsWorks resource reference</a></li>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-installingcustom-repo.html">Cookbook repository structure</a></li>
+<li><a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-extend-scripts.html">How to use shell scripts</a></li>
+<li><a href="http://stackoverflow.com/questions/14848110/how-i-can-change-a-file-with-chef">Stackoverflow: How I can change a file with chef?</a></li>
+<li><a href="https://docs.chef.io/ruby.html">Just Enough Ruby for Chef</a></li>
+<li><a href="https://docs.chef.io/dsl_recipe.html">About the Recipe DSL</a></li>
+<li><a href="http://stackoverflow.com/questions/20569521/what-ruby-features-are-used-in-chef-recipes">Stackoverflow: what ruby features are used in chef recipes?</a></li>
+<li><a href="http://stackoverflow.com/questions/19719968/ruby-code-blocks-and-chef/19726723#19726723">Stackoverflow: Ruby Code Blocks and Chef</a></li>
+</ul>
+<p>Hosted MongoDB:
+<a href="https://www.compose.io/mongodb/">compose.io (as I understand former MongoHQ)</a>, <a href="http://mongodirector.com/">MongoDirector</a>, <a href="https://mongolab.com/">mongolab</a>, <a href="http://objectrocket.com/">ObjectRocket</a> and <a href="http://docs.dotcloud.com/services/mongodb/">dotCloud</a>.</p>
+ <a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/aws/'>aws</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/2014-01-04-git-revert-multiple-recent-comments.html'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Git - how to revert multiple recent commits</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/html/2014-12-30-aws-ebs-mongo-backups.html'>
+        <span class='screen-reader-text'>Next post: </span>AWS OpsWorks - setup mongodb ebs volume backups<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+<section id='comments' class='comments'>
+  <div class='container sep-before'>
+    <div class='comments-area'><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "serebrov" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+  </div>
+</section>
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><div class='copyright'>
+  <p> &copy; 2020 Boris Serebrov </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/custom.js'></script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

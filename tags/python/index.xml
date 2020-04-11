@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/python/</link>
+    <description>Recent content in python on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 28 Nov 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Debugging Python With ipdb and pdbpp</title>
+      <link>https://serebrov.github.io/html/2018-11-28-python-debugging-with-ipdb-pdbpp.html</link>
+      <pubDate>Wed, 28 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2018-11-28-python-debugging-with-ipdb-pdbpp.html</guid>
+      <description>To get a very convenient full-screen console debugger for python, install ipdb and pdbpp packages.
+Then use __import__(&#39;ipdb&#39;).set_trace() to start the debugger and enter sticky to switch to the full-screen mode.
+Both packages can be installed with pip:
+virtualenv -p python3 venv source venv/bin/activate pip install ipdb pip install pdbpp The ipdb package improves the standard (pdb) debugger by adding syntax highlight and code completion. And the pdbpp adds the &amp;ldquo;sticky&amp;rdquo; mode, so the debugger can be run in a full-screen mode, in terminal:</description>
+    </item>
+    
+    <item>
+      <title>Formatting Parameter Blocks in Python</title>
+      <link>https://serebrov.github.io/html/2018-07-27-python-parameter-blocks-formatting.html</link>
+      <pubDate>Fri, 27 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2018-07-27-python-parameter-blocks-formatting.html</guid>
+      <description>There are two ways recommended in pep-8 to format the blocks with long parameter lists in Python:
+# Arguments start on the next line foo = long_function_name( var_one, var_two, var_three, var_four) Another way is:
+# Arguments start on the same line foo = long_function_name(var_one, var_two, var_three, var_four) I always prefer the first option and the other one is problematic for a few reasons.
+For example, if you have two blocks with such indentation, the indent will be jumping:</description>
+    </item>
+    
+    <item>
+      <title>Elastic Beanstalk - python application server structure and celery installation</title>
+      <link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link>
+      <pubDate>Thu, 02 Apr 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</guid>
+      <description>Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
+Source folder structure is this:
+bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.</description>
+    </item>
+    
+  </channel>
+</rss>

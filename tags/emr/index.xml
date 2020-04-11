@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>emr on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/emr/</link>
+    <description>Recent content in emr on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 25 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/emr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Amazon DynamoDB - how to add global secondary index</title>
+      <link>https://serebrov.github.io/html/2015-01-25-aws-add-secondary-index.html</link>
+      <pubDate>Sun, 25 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2015-01-25-aws-add-secondary-index.html</guid>
+      <description>Note: this post is outdated, because it is already possible to add a secondary index to the existing table (it was not possible in earlier DynamoDB versions).
+At the moment it is not possible to add a secondary index into the existing table. This feature is announced but not yet available.
+So the only way is to create a new table and migrate the existing data to it. This can be done using Amazon EMR.</description>
+    </item>
+    
+    <item>
+      <title>Amazon DynamoDB, EMR and Hive notes</title>
+      <link>https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</link>
+      <pubDate>Sat, 24 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</guid>
+      <description>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
+Now it is possible to run Hive commands in few following ways:
+ Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.</description>
+    </item>
+    
+  </channel>
+</rss>

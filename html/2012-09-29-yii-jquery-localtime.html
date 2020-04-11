@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='With this method we work on the server with UTC timezone dates and convert them to a user local timezone on client.
+Use ‘TIMESTAMP’ type for date/datetime DB fields Setup MySQL and PHP timezone Set UTC timezone for both MySQL and PHP.
+Yii db config (MySQL):
+‘db’ =&gt; array( &#39;connectionString&#39; =&gt; &#39;...’, &#39;initSQLs&#39;=&gt;&#34;set time_zone=&#39;&#43;00:00’;&#34;, ); And PHP timezone:
+date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 See date formats here Helper functions to convert dates:'>
+<meta name='theme-color' content='#44ccff'>
+
+<meta property='og:title' content='Yii and jquery.localtime.js - display dates in user local timezone • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='With this method we work on the server with UTC timezone dates and convert them to a user local timezone on client.
+Use ‘TIMESTAMP’ type for date/datetime DB fields Setup MySQL and PHP timezone Set UTC timezone for both MySQL and PHP.
+Yii db config (MySQL):
+‘db’ =&gt; array( &#39;connectionString&#39; =&gt; &#39;...’, &#39;initSQLs&#39;=&gt;&#34;set time_zone=&#39;&#43;00:00’;&#34;, ); And PHP timezone:
+date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 See date formats here Helper functions to convert dates:'>
+<meta property='og:url' content='https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html'>
+<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
+<meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-09-29T00:00:00Z'/><meta property='article:modified_time' content='2012-09-29T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.67.0" />
+
+  <title>Yii and jquery.localtime.js - display dates in user local timezone • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
+:root{--color-accent:#44ccff;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-58056088-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-note has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg'>
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+      <a href='/'>
+      vim, git, aws and other three-letter words
+      </a>
+    </h2>
+    <div class='desc'>
+    Software Development Notes
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-search sep-after'>
+  <header>
+    <h4 class='title widget-title'>Search</h4>
+  </header>
+
+  <form action='/search' id='search-form' class='search-form'>
+    <label>
+      <span class='screen-reader-text'>Search</span>
+      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
+    </label></form>
+
+</section>
+<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/'>Home</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/archive/'>Archive</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Tags</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/android/' style='font-size:1em'>android</a>
+      </li><li>
+        <a href='/tags/angularjs/' style='font-size:1.1176470588235294em'>angularjs</a>
+      </li><li>
+        <a href='/tags/aws/' style='font-size:2em'>aws</a>
+      </li><li>
+        <a href='/tags/celery/' style='font-size:1em'>celery</a>
+      </li><li>
+        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
+      </li><li>
+        <a href='/tags/cw-logs/' style='font-size:1.0588235294117647em'>cw-logs</a>
+      </li><li>
+        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
+      </li><li>
+        <a href='/tags/docker/' style='font-size:1em'>docker</a>
+      </li><li>
+        <a href='/tags/drone/' style='font-size:1em'>drone</a>
+      </li><li>
+        <a href='/tags/dynamodb/' style='font-size:1.1176470588235294em'>dynamodb</a>
+      </li><li>
+        <a href='/tags/eb/' style='font-size:1.1764705882352942em'>eb</a>
+      </li><li>
+        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
+      </li><li>
+        <a href='/tags/emr/' style='font-size:1.0588235294117647em'>emr</a>
+      </li><li>
+        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1.8823529411764706em'>git</a>
+      </li><li>
+        <a href='/tags/hive/' style='font-size:1em'>hive</a>
+      </li><li>
+        <a href='/tags/jquery/' style='font-size:1.1764705882352942em'>jquery</a>
+      </li><li>
+        <a href='/tags/js/' style='font-size:1.1176470588235294em'>js</a>
+      </li><li>
+        <a href='/tags/linux/' style='font-size:1em'>linux</a>
+      </li><li>
+        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
+      </li><li>
+        <a href='/tags/mysql/' style='font-size:1.0588235294117647em'>mysql</a>
+      </li><li>
+        <a href='/tags/node.js/' style='font-size:1.1764705882352942em'>node.js</a>
+      </li><li>
+        <a href='/tags/npm/' style='font-size:1em'>npm</a>
+      </li><li>
+        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
+      </li><li>
+        <a href='/tags/oop/' style='font-size:1em'>oop</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1.1764705882352942em'>php</a>
+      </li><li>
+        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.1176470588235294em'>python</a>
+      </li><li>
+        <a href='/tags/rds/' style='font-size:1em'>rds</a>
+      </li><li>
+        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
+      </li><li>
+        <a href='/tags/selenium/' style='font-size:1.3529411764705883em'>selenium</a>
+      </li><li>
+        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
+      </li><li>
+        <a href='/tags/typing/' style='font-size:1em'>typing</a>
+      </li><li>
+        <a href='/tags/vim/' style='font-size:1em'>vim</a>
+      </li><li>
+        <a href='/tags/yii/' style='font-size:1.1764705882352942em'>yii</a>
+      </li><li>
+        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/posts/'>Posts</a>
+      </li><li class='item'>
+        <a href='/archive/'>Archive</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'>
+    
+    <style>.widget-breadcrumbs li:after{content:'\2f '}</style>
+  <section class='widget widget-breadcrumbs sep-after'>
+    <nav id='breadcrumbs'>
+      <ol><li><a href='/'>Home</a></li><li><a href='/archive/'>Archive</a></li><li><span>Yii and jquery.localtime.js - display dates in user local timezone</span></li></ol>
+    </nav>
+  </section></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Yii and jquery.localtime.js - display dates in user local timezone</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2012-09-29T00:00:00Z'>2012, Sep 29</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+4 mins read
+</span>
+
+
+  
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class="container entry-content custom">
+    <p>With this method we work on the server with UTC timezone dates and convert them
+to a user local timezone on client.</p>
+<!-- raw HTML omitted -->
+<h2 id="use-timestamp-type-for-datedatetime-db-fields">Use ‘TIMESTAMP’ type for date/datetime DB fields</h2>
+<h2 id="setup-mysql-and-php-timezone">Setup MySQL and PHP timezone</h2>
+<p>Set UTC timezone for both MySQL and PHP.</p>
+<p>Yii db config (MySQL):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    ‘db’ =&gt; array(
+        &#39;connectionString&#39; =&gt; &#39;...’,
+        &#39;initSQLs&#39;=&gt;&#34;set time_zone=&#39;+00:00’;&#34;,
+    );
+</code></pre></div><p>And PHP timezone:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    date_default_timezone_set(‘UTC’);
+</code></pre></div><h2 id="generate-html-with-utc-dates-in-iso-8601">Generate HTML with UTC dates in ISO 8601</h2>
+<p>See <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">date formats here</a>
+Helper functions to convert dates:</p>
+<ul>
+<li>
+<p>MySQL date to UTC</p>
+<p>$utcString = gmdate(&lsquo;Y-m-d\TH:i:s\Z&rsquo;, strtotime($dateTimeString));</p>
+</li>
+<li>
+<p>UTC date to HTML</p>
+<p>echo CHtml::tag(&lsquo;span&rsquo;, array(&lsquo;class'=&gt;'localtime&rsquo;), $utcString);</p>
+</li>
+<li>
+<p>UTC date to timestamp</p>
+<p>$ts = strtotime($utcString);</p>
+</li>
+</ul>
+<h2 id="add-localtime-plugin-and-localtimex-extension">Add localtime plugin and localtimex extension</h2>
+<p>Include scripts into the page, see <a href="http://code.google.com/p/jquery-localtime/">jquery.localtime.js plugin here</a> and
+jquery.localtimex.js code at the end.
+To disable jquery.localtime.js default initialization pass empty format to setFormat()
+method (or remove jQuery.ready block at the end of jquery.localtime.js).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtime-0.5.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtimex.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">setFormat</span>({}); &lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>Use localtimex:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;.localtime&#39;</span>).<span style="color:#a6e22e">localtimex</span>(<span style="color:#e6db74">&#39;dd MMM yyyy HH:mm:ss&#39;</span>);
+    &lt;/<span style="color:#f92672">script</span>&gt;
+</code></pre></div><p>By default plugin will localize specified elements and re-localize them in the case of ajax updates.
+Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">description</a>.</p>
+<h2 id="date-inputs">Date inputs</h2>
+<p>jquery.localtimex.js plugin also supports date inputs localization (tested with jQuery UI datepicker and depends on it).</p>
+<p>It will convert UTC value to local time, so user can work with it. Before form submit plugin will convert it back to UTC.</p>
+<p>Example of usage:</p>
+<ol>
+<li>
+<p>Use initial UTC value for date input or leave it empty:</p>
+<p>$myDate = gmdate(&lsquo;Y-m-d\TH:i:s\Z&rsquo;, time()); //today, use it as initial date input value</p>
+</li>
+<li>
+<p>When configuring the jQuery datepicker plugin - set date format to &lsquo;mm/dd/yy&rsquo; and add css class &lsquo;localdatepicker&rsquo;.</p>
+</li>
+<li>
+<p>Attach jquery.localtimex plugin to the same input, set date format to &lsquo;MM/dd/yyyy&rsquo; and use css class &lsquo;localdatepicker&rsquo;:</p>
+<p>$('.localdatepicker&rsquo;).localtimex(&lsquo;MM/dd/yyyy&rsquo;);</p>
+</li>
+<li>
+<p>On the client side localtimex plugin will convert initial UTC value to the local client time and then will convert it back when form is submitted</p>
+</li>
+<li>
+<p>On the server side - accept UTC value, convert it to the MySQL format / timestamp:</p>
+<p>$myDateMySql = Yii::app()-&gt;dateFormatter-&gt;format(&lsquo;yyyy-MM-dd&rsquo;, strtotime($UTCValue));
+$myDateTimestamp = strtotime($UTCValue);</p>
+</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">jquery</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">js</span>
+<span style="color:#f92672">-------------------------------------------</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * @name jquery.localtimex.js
+</span><span style="color:#75715e">     * @author Boris Serebrov
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * Depends on: jQuery, jQuery UI datepicker (local date parsing),
+</span><span style="color:#75715e">     * jquery.localtime-0.5.js (http://code.google.com/p/jquery-localtime/)
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * Usage:
+</span><span style="color:#75715e">     * - do not configure jquery.localtime plugin, instead use this plugin
+</span><span style="color:#75715e">     *   on elements you need localize:
+</span><span style="color:#75715e">     *   $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);
+</span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;);
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * Ajax response handling:
+</span><span style="color:#75715e">     * - by default plugin will localize elements after ajax requests
+</span><span style="color:#75715e">     * - to disable this behavior pass &#39;ajaxLocalize&#39;:false to options
+</span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;, {&#39;ajaxLocalize&#39;:false});
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * Date inputs handling:
+</span><span style="color:#75715e">     * - server put UTC time into input (or leave it empty)
+</span><span style="color:#75715e">     * - UTC value converted to local time, user can modify it in local format
+</span><span style="color:#75715e">     * - on form submit value converted back to UTC and posted to server
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * jQuery UI datepicker configuration:
+</span><span style="color:#75715e">     * - add &#39;localtimex&#39; plugin to date input
+</span><span style="color:#75715e">     * - set dateFormat of a date picker accordingly to localtime plugin output format
+</span><span style="color:#75715e">     *   - they use different standards for date presentation,
+</span><span style="color:#75715e">     *     so we have to describe the same presentation twice
+</span><span style="color:#75715e">     *   - for example: localtime plugin - &#39;MM/dd/yyyy&#39;, datepicker - &#39;mm/dd/yy&#39;
+</span><span style="color:#75715e">     * - initial input value should be UTC in ISO format or empty
+</span><span style="color:#75715e">     */</span>
+    (<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">$</span>) {
+      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">format</span>, <span style="color:#a6e22e">opt</span>) {
+
+        <span style="color:#a6e22e">format</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">format</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;yyyy-MM-dd HH:mm:ss&#39;</span>;
+        <span style="color:#a6e22e">opt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">extend</span>({
+            <span style="color:#e6db74">&#39;ajaxLocalize&#39;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>
+        }, <span style="color:#a6e22e">opt</span>);
+
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">ajaxLocalize</span>) {
+          <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
+          <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;body&#39;</span>).<span style="color:#a6e22e">ajaxComplete</span>(<span style="color:#66d9ef">function</span>() {
+            <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">selector</span>).<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
+              <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
+            });
+          });
+        }
+
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
+          <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
+          <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
+            <span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">form</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;submit form-pre-serialize&#39;</span>, <span style="color:#66d9ef">function</span>() {
+                <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">dt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">datepicker</span>.<span style="color:#a6e22e">parseDate</span>(
+                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">datepicker</span>(<span style="color:#e6db74">&#39;option&#39;</span>, <span style="color:#e6db74">&#39;dateFormat&#39;</span>), <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>()
+                );
+                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">dt</span>) {
+                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>(<span style="color:#a6e22e">dt</span>.<span style="color:#a6e22e">toISOString</span>());
+                }
+            });
+          }
+        });
+      };
+
+      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">localize</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">element</span>, <span style="color:#a6e22e">format</span>) {
+          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>)) {
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
+              <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">utcVal</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>();
+              <span style="color:#75715e">//input can be empty initially
+</span><span style="color:#75715e"></span>              <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">utcVal</span>.<span style="color:#a6e22e">length</span>) {
+                <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>(), <span style="color:#a6e22e">format</span>));
+              }
+            } <span style="color:#66d9ef">else</span> {
+              <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(), <span style="color:#a6e22e">format</span>));
+            }
+          }
+          <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>, <span style="color:#66d9ef">true</span>);
+        }
+      };
+    }) (<span style="color:#a6e22e">jQuery</span>);
+</code></pre></div><h2 id="links">Links</h2>
+<p><a href="http://www.yiiframework.com/wiki/197/local-time-zones-and-locales/">Yii wiki: Local time zones and locales</a></p>
+<p><a href="http://www.yiiframework.com/wiki/183/using-international-dates/">Yii wiki: Using International Dates</a></p>
+<p><a href="http://www.yiiframework.com/extension/i18n-datetime-behavior/">Yii extension: i18n-datetime-behavior</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php/topic/9950-datetime-and-internationalization/">Yii forum: DATETIME and internationalization</a></p>
+<p><a href="http://www.yiiframework.com/forum/index.php/topic/3649-dealing-with-i18n-date-formats/">Yii forum: Dealing with i18N date formats</a></p>
+<p><a href="http://www.yiiplayground.cubedwater.com/index.php?r=InternationalizationModule/datetime/userinput">Yii playground: User input advanced example</a></p>
+<p><a href="http://www.yiiplayground.cubedwater.com/index.php?r=InternationalizationModule/datetime/localeManager">Yii playground: LocaleManager application component</a></p>
+ <a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/jquery/'>jquery</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/2012-09-25-global-ajax-handler-and-localtime.html'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>global ajax response handler and jquery.localtime plugin</a>
+    </div></div>
+</nav>
+
+
+<section id='comments' class='comments'>
+  <div class='container sep-before'>
+    <div class='comments-area'><div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "serebrov" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+  </div>
+</section>
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><div class='copyright'>
+  <p> &copy; 2020 Boris Serebrov </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/custom.js'></script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

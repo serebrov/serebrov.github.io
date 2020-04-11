@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scaleway on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/scaleway/</link>
+    <description>Recent content in scaleway on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Jun 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://serebrov.github.io/tags/scaleway/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</title>
+      <link>https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html</link>
+      <pubDate>Fri, 10 Jun 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html</guid>
+      <description>The purpose of this setup is:
+ Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files  In this case I deploy to Scaleway, but same approach can be used for almost any cloud service.</description>
+    </item>
+    
+  </channel>
+</rss>
