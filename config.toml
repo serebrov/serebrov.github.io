@@ -76,38 +76,38 @@ email = "contact@example.com"
 github = "achary"
 
 [params.comments]
-enable = false
+enable = true
 
 # Isso: https://posativ.org/isso/
-[params.comments.isso]
-enable = false
-scriptSrc = "" # "https://isso.example.com/js/embed.min.js"
-dataAttrs = "" # "data-isso='https://isso.example.com' data-isso-require-author='true'"
-
-[params.comments.staticman]
-enable = true
-apiEndpoint = "https://api.staticman.net/v2/entry"
-maxDepth = 2
-username = "achary"
-repository = "engimo"
-branch = "master"
-
-# Utterances: https://utteranc.es
-[params.comments.utterances]
-enable = false
-issueTerm = "pathname" # pathname / url / title
-
-[params.comments.utterances.github]
-username = "achary"
-repository = "engimo"
+# [params.comments.isso]
+# enable = false
+# scriptSrc = "" # "https://isso.example.com/js/embed.min.js"
+# dataAttrs = "" # "data-isso='https://isso.example.com' data-isso-require-author='true'"
+# 
+# [params.comments.staticman]
+# enable = true
+# apiEndpoint = "https://api.staticman.net/v2/entry"
+# maxDepth = 2
+# username = "achary"
+# repository = "engimo"
+# branch = "master"
+# 
+# # Utterances: https://utteranc.es
+# [params.comments.utterances]
+# enable = false
+# issueTerm = "pathname" # pathname / url / title
+# 
+# [params.comments.utterances.github]
+# username = "achary"
+# repository = "engimo"
 
 [params.search]
 client = "fuse" # algolia / fuse / lunr
 
-[params.search.algolia]
-appId = ""
-indexName = ""
-searchApiKey = ""
+# [params.search.algolia]
+# appId = ""
+# indexName = ""
+# searchApiKey = ""
 
 [taxonomies]
 author = "authors"
