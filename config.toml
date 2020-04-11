@@ -4,7 +4,7 @@ title = "vim, git, aws and other three-letter words"
 theme = "engimo"
 
 disqusShortname = "serebrov"
-googleAnalytics = ""
+googleAnalytics = "UA-58056088-1"
 
 Paginate = 100
 preserveTaxonomyNames = true
