@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg3511"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   width="640"
+   height="640"
+   viewBox="0 0 640 640"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/Users/adam/workingCopies/engimo/static/favicon.png"
+   inkscape:export-xdpi="2.25"
+   inkscape:export-ydpi="2.25">
+  <metadata
+     id="metadata3517">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3515" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="925"
+     id="namedview3513"
+     showgrid="false"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="302.03368"
+     inkscape:cy="445.07734"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3511" />
+  <path
+     style="fill:#44ccff;fill-opacity:1"
+     d="M 299.97126,638.83374 C 186.84352,631.36916 86.745294,565.59634 35.680934,465.17309 11.850948,418.30901 1.027719,372.99814 1.027719,320.09927 c 0,-52.89886 10.823229,-98.20973 34.653215,-145.07381 C 79.506044,88.838939 161.96472,26.051526 256.22126,7.09702 c 40.14812,-8.0735808 87.35187,-8.0735808 127.5,0 94.25653,18.954506 176.71521,81.741919 220.54032,167.92844 23.82999,46.86408 34.65321,92.17495 34.65321,145.07381 0,52.89887 -10.82322,98.20974 -34.65321,145.07382 -57.46231,113.00547 -178.3087,181.97336 -304.29032,173.66065 z"
+     id="path3470"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssssssssss" />
+  <path
+     style="fill:#000000;fill-opacity:0.20512821;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 453.96588,123.04741 -206.13385,75.64986 -67.75,318.07812 123.47852,122.25977 c 124.68252,6.78183 243.78493,-61.92977 300.70117,-173.86133 23.82999,-46.86408 34.65234,-92.17535 34.65234,-145.07422 0,-3.41593 -0.0459,-6.79919 -0.13672,-10.1543 z"
+     id="path3420"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccccsscc" />
+  <g
+     style="font-style:normal;font-weight:normal;font-size:539.98876953px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     id="text3557">
+    <path
+       d="m 180.09624,123.16804 273.94938,0 0,76.72692 -172.43782,0 0,73.29925 162.15484,0 0,76.72692 -162.15484,0 0,90.17391 178.23849,0 0,76.72692 -279.75005,0 0,-393.65392 z"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#ffffff"
+       id="path4145" />
+  </g>
+</svg>

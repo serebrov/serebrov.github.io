@@ -1,0 +1,19 @@
+{
+  "library": {
+    "path": "//unpkg.com/mathjax@2.7.5/MathJax.js",
+    "config": "TeX-MML-AM_CHTML"
+  },
+  "config": {
+    "tex2jax": {
+      "extensions": ["tex2jax.js"],
+      "inlineMath": [["$", "$"], ["\\(", "\\)"]],
+      "displayMath": [ ["$$","$$"], ["\\[","\\]"] ],
+      "processEscapes": true,
+      "tex": {
+        "macros": {
+          "\\_": "_"
+        }
+      }
+    }
+  }
+}

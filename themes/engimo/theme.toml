@@ -1,0 +1,55 @@
+name = "Engimo"
+license = "MIT"
+licenselink = "https://github.com/achary/engimo/blob/master/LICENSE"
+description = "Minimalist theme for Engineers"
+homepage = "https://engimo.netlify.com"
+tags = [
+  "blog",
+  "minimal",
+  "minimalist",
+  "responsive",
+  "engineering"
+]
+features = [
+  "accessibility",
+  "algolia",
+  "analytics",
+  "breadcrumbs",
+  "comments",
+  "cover-image",
+  "disqus",
+  "entry-navigation",
+  "favicon",
+  "fuse.js",
+  "isso",
+  "lunr.js",
+  "multilingual",
+  "multi-author",
+  "opengraph",
+  "pagination",
+  "rtl",
+  "search",
+  "shortcodes",
+  "sidebar",
+  "single-column",
+  "social-menu",
+  "staticman",
+  "syntax-highlighting",
+  "table-of-contents",
+  "utterances",
+  "widgets",
+  "graphviz",
+  "wavedrom",
+  "deprecated-pages",
+  "mathjax"
+]
+min_version = 0.55
+
+[author]
+  name = "Adam Charytoniuk"
+  homepage = "https://github.com/achary/engimo"
+
+[original]
+  name = "Munif Tanjim"
+  homepage = "https://muniftanjim.com"
+  repo = "https://github.com/MunifTanjim/minimo"
