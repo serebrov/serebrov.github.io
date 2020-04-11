@@ -374,11 +374,10 @@ One min read
 
 <section id='comments' class='comments'>
   <div class='container sep-before'>
-    <div class='comments-area'><div>TEST CUSTOM TPL</div>
-<div id="disqus_thread"></div>
+    <div class='comments-area'><div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io/https:\/\/serebrov.github.io\/html\/2012-12-09-php-friend-via-extend.md"; 
+        this.page.url = "http://serebrov.github.io/\/html\/2012-12-09-php-friend-via-extend.md"; 
         
     };
     (function () {
