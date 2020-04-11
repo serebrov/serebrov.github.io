@@ -1,7 +1,7 @@
 ---
 title: phpmyadmin and eaccelerator problem
 date: 2012-04-03
-tags: git
+tags: [php]
 type: note
 ---
 

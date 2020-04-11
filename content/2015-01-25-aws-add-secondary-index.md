@@ -1,7 +1,7 @@
 ---
 title: Amazon DynamoDB - how to add global secondary index
 date: 2015-01-25
-tags: aws,dynamodb,emr
+tags: [aws, dynamodb, emr]
 type: note
 ---
 

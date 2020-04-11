@@ -1,7 +1,7 @@
 ---
 title: Simple Git Workflow
 date: 2016-07-03
-tags: git
+tags: [git]
 type: post
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)
 date: 2013-09-11
-tags: aws
+tags: [aws]
 type: note
 ---
 

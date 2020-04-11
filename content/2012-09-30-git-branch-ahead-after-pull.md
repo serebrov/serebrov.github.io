@@ -1,7 +1,7 @@
 ---
 title: git - Your branch is ahead of 'origin/master' by 1 commit after pull
 date: 2012-09-30
-tags: git
+tags: [git]
 type: note
 ---
 

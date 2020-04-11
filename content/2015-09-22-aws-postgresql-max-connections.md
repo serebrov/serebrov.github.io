@@ -1,7 +1,7 @@
 ---
 title: AWS PostgreSQL RDS - remaining connection slots are reserved error
 date: 2015-09-22
-tags: aws,rds,postgresql
+tags: [aws, rds, postgresql]
 type: note
 ---
 

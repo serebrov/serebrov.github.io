@@ -1,7 +1,7 @@
 ---
 title: selenium webdriver - trigger event on element via jQuery
 date: 2012-07-24
-tags: selenium
+tags: [selenium]
 type: note
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: There Is No Callback Hell In JavaScript
 date: 2018-01-19
-tags: js
+tags: [js]
 type: post
 ---
 

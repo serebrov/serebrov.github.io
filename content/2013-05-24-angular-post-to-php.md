@@ -1,7 +1,7 @@
 ---
 title: Angular.js POST data to PHP
 date: 2012-04-03
-tags: php,angularjs
+tags: [php, angularjs]
 type: note
 ---
 

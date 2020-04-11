@@ -1,7 +1,7 @@
 ---
 title: Node.js - how to debug mocha test with node inspector
 date: 2013-12-02
-tags: node.js
+tags: [node.js]
 type: note
 ---
 

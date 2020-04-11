@@ -1,7 +1,7 @@
 ---
 title: Yii and jquery.localtime.js - display dates in user local timezone
 date: 2012-09-29
-tags: jquery
+tags: [jquery]
 type: note
 ---
 

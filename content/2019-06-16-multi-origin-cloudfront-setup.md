@@ -1,7 +1,7 @@
 ---
 title: CloudFront Setup to Route Requests to Services Based on Request Path
 date: 2019-06-16
-tags: aws
+tags: [aws]
 type: note
 ---
 

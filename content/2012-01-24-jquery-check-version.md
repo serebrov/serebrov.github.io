@@ -1,7 +1,7 @@
 ---
 title: jQuery - check minimal required version
-date: 2012-01-24
-tags: jquery
+date: "2012-01-24"
+tags: [jquery]
 type: note
 ---
 

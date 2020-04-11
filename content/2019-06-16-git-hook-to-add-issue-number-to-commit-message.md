@@ -1,7 +1,7 @@
 ---
 title: Git Hook to Add Issue Number to Commit Message
 date: 2019-06-16
-tags: git
+tags: [git]
 type: note
 ---
 

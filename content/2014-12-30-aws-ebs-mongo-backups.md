@@ -1,7 +1,7 @@
 ---
 title: AWS OpsWorks - setup mongodb ebs volume backups
 date: 2014-12-30
-tags: aws,mongodb
+tags: [aws, mongodb]
 type: note
 ---
 

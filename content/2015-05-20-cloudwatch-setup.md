@@ -1,7 +1,7 @@
 ---
 title: Elastic Beanstalk - how to setup CloudWatch Logs
 date: 2015-05-20
-tags: aws,eb,cw-logs
+tags: [aws, eb, cw-logs]
 type: note
 ---
 

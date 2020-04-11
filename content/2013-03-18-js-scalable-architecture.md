@@ -1,7 +1,7 @@
 ---
 title: Want Scalable Application Architecture? Check AngularJS.
 date: 2013-03-18
-tags: js,angularjs
+tags: [js, angularjs]
 type: post
 ---
 

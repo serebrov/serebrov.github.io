@@ -1,7 +1,7 @@
 ---
 title: SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)
 date: 2018-01-11
-tags: ssh, aws
+tags: [ssh, aws]
 type: note
 ---
 

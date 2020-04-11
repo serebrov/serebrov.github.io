@@ -1,7 +1,7 @@
 ---
 title: How to set up Drone CI on EC2 instance via Elastic Beanstalk
 date: 2015-07-05
-tags: aws,eb,drone
+tags: [aws, eb, drone]
 type: note
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: How to keep git log and less output on the screen
 date: 2014-01-04
-tags: git
+tags: [git]
 type: note
 ---
 

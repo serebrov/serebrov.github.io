@@ -1,7 +1,7 @@
 ---
 title: global ajax response handler and jquery.localtime plugin
 date: 2012-09-25
-tags: jquery
+tags: [jquery]
 type: note
 ---
 

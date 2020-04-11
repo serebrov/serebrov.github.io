@@ -1,7 +1,7 @@
 ---
 title: yii - catch and log MySQL deadlock errors
 date: 2012-03-28
-tags: yii
+tags: [yii]
 type: post
 ---
 

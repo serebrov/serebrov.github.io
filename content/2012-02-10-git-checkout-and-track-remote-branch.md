@@ -1,7 +1,7 @@
 ---
 title: git - checkout and track remote branch
 date: 2012-02-01
-tags: git
+tags: [git]
 type: note
 ---
 

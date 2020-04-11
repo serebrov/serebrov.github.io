@@ -1,7 +1,7 @@
 ---
 title: Amazon NoSQL Solutions
 date: 2013-06-11
-tags: aws
+tags: [aws]
 type: post
 ---
 

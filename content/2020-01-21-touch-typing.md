@@ -1,7 +1,7 @@
 ---
 title: Touch Typing Tutors and Games
 date: 2020-01-21
-tags: typing
+tags: [typing]
 type: note
 ---
 

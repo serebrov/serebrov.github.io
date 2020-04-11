@@ -1,7 +1,7 @@
 ---
 title: Disqus - code formatting and highlighting in comments
 date: 2018-01-19
-tags: disqus
+tags: [disqus]
 type: note
 ---
 

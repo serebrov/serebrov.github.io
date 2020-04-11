@@ -1,7 +1,7 @@
 ---
 title: OOP SOLID Principles "L" - Liskov Substitution Principle
 date: 2016-02-18
-tags: oop
+tags: [oop]
 type: post
 ---
 

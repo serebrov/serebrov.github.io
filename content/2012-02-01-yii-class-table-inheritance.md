@@ -1,7 +1,7 @@
 ---
 title: yii - class table inheritance
 date: 2012-02-01
-tags: yii
+tags: [yii]
 type: post
 ---
 

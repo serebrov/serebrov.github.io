@@ -1,7 +1,7 @@
 ---
 title: git - find not merged branches
 date: 2012-10-01
-tags: git
+tags: [git]
 type: note
 ---
 

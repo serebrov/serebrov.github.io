@@ -1,7 +1,7 @@
 ---
 title: selenium - problem with big file upload
 date: 2012-08-20
-tags: selenium
+tags: [selenium]
 type: note
 ---
 

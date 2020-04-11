@@ -1,7 +1,7 @@
 ---
 title: express.js and ejs - reuse template on server and client
 date: 2012-08-20
-tags: ejs,express.js,node.js
+tags: [ejs, express.js, node.js]
 type: post
 ---
 

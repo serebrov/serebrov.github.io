@@ -1,7 +1,7 @@
 ---
 title: AWS - Deployment via OpsWorks from the command line
 date: 2014-12-30
-tags: aws
+tags: [aws]
 type: note
 ---
 

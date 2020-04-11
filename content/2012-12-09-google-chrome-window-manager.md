@@ -1,7 +1,7 @@
 ---
 title: Window managers for Google Chrome
 date: 2012-12-09
-tags: chrome
+tags: [chrome]
 type: note
 ---
 

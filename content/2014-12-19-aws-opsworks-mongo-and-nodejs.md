@@ -1,7 +1,7 @@
 ---
 title: Amazon OpsWorks - node.js app with MongoDB setup
 date: 2014-12-19
-tags: aws
+tags: [aws]
 type: note
 ---
 

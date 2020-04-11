@@ -1,7 +1,7 @@
 ---
 title: selenium - python Firefox webdriver - unsafe setters in firefox_profile.py
 date: 2012-02-30
-tags: selenium
+tags: [selenium]
 type: note
 ---
 

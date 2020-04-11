@@ -1,7 +1,7 @@
 ---
 title: vim - replace a word with yanked text
 date: 2012-04-03
-tags: jquery
+tags: [jquery]
 type: note
 ---
 

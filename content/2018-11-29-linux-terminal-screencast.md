@@ -1,7 +1,7 @@
 ---
 title: Recording Linux Terminal Session to GIF with asciinema
 date: 2018-11-29
-tags: linux
+tags: [linux]
 type: note
 ---
 

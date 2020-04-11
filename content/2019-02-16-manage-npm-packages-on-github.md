@@ -1,7 +1,7 @@
 ---
 title: Managing NPM packages on github
 date: 2019-02-16
-tags: node.js, npm
+tags: [node.js, npm]
 type: note
 ---
 

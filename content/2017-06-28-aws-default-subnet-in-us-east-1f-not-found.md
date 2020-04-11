@@ -1,7 +1,7 @@
 ---
 title: AWS error - Default subnet in us-east-1f not found
 date: 2017-06-29
-tags: aws
+tags: [aws]
 type: note
 ---
 

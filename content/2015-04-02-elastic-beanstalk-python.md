@@ -1,7 +1,7 @@
 ---
 title: Elastic Beanstalk - python application server structure and celery installation
 date: 2015-04-02
-tags: aws,eb,python,celery,zeromq
+tags: [aws, eb, python, celery, zeromq]
 type: note
 ---
 

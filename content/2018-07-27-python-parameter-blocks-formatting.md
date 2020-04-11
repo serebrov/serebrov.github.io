@@ -1,7 +1,7 @@
 ---
 title: Formatting Parameter Blocks in Python
 date: 2018-07-27
-tags: python
+tags: [python]
 type: post
 ---
 

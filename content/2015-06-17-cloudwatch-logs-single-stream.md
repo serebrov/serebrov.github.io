@@ -1,7 +1,7 @@
 ---
 title: CloudWatch Logs - how to log data from multiple instances to the single stream
 date: 2015-05-20
-tags: aws,eb,cw-logs
+tags: [aws, eb, cw-logs]
 type: note
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Speedup unit tests by moving MySql data to memory [Ubuntu]
 date: 2012-04-03
-tags: mysql
+tags: [mysql]
 type: note
 ---
 

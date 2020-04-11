@@ -1,7 +1,7 @@
 ---
 title: Amazon DynamoDB, EMR and Hive notes
 date: 2015-01-24
-tags: aws,dynamodb,emr,hive
+tags: [aws, dynamodb, emr, hive]
 type: note
 ---
 

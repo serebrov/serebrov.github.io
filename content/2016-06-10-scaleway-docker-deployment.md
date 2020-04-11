@@ -1,7 +1,7 @@
 ---
 title: Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server
 date: 2016-06-10
-tags: docker, scaleway
+tags: [docker, scaleway]
 type: post
 ---
 

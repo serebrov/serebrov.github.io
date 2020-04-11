@@ -1,7 +1,7 @@
 ---
 title: PHP - friend a class via extend
 date: 2012-04-03
-tags: php
+tags: [php]
 type: note
 ---
 

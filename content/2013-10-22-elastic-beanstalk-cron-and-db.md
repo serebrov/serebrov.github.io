@@ -1,7 +1,7 @@
 ---
 title: Elastic Beanstalk - cron command and RDS DB access
 date: 2013-10-22
-tags: aws
+tags: [aws]
 type: note
 ---
 

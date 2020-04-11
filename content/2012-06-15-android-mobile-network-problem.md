@@ -1,7 +1,7 @@
 ---
 title: Andriod - moblie network problem after BusyBox update
 date: 2012-01-24
-tags: android
+tags: [android]
 type: post
 ---
 
