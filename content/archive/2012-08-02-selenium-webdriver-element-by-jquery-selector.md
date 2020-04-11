@@ -3,6 +3,7 @@ title: selenium webdriver - get webelement by jQuery selector
 date: 2012-08-02
 tags: [selenium]
 type: note
+url: "/html/2012-08-02-selenium-webdriver-element-by-jquery-selector.html"
 ---
 
 

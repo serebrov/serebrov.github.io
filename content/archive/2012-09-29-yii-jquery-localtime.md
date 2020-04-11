@@ -3,6 +3,7 @@ title: Yii and jquery.localtime.js - display dates in user local timezone
 date: 2012-09-29
 tags: [jquery]
 type: note
+url: "/html/2012-09-29-yii-jquery-localtime.html"
 ---
 
 With this method we work on the server with UTC timezone dates and convert them

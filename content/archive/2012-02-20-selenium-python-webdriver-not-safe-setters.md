@@ -3,6 +3,7 @@ title: selenium - python Firefox webdriver - unsafe setters in firefox_profile.p
 date: 2012-02-30
 tags: [selenium]
 type: note
+url: "/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html"
 ---
 
 Problem: after setting the boolean flags for Firefox profile the webdriver fails with "Can't load the profile" error.

@@ -3,6 +3,7 @@ title: yii - catch and log MySQL deadlock errors
 date: 2012-03-28
 tags: [yii]
 type: post
+url: "/html/2012-03-28-yii-catch-and-log-deadlocks.html"
 ---
 
 This method allows to log InnoDB monitor output when deadlock error occured.

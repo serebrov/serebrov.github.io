@@ -3,6 +3,7 @@ title: selenium - problem with big file upload
 date: 2012-08-20
 tags: [selenium]
 type: note
+url: "/html/2012-08-20-selenium-problem-with-big-file-upload.html"
 ---
 
 Problem

@@ -3,6 +3,7 @@ title: global ajax response handler and jquery.localtime plugin
 date: 2012-09-25
 tags: [jquery]
 type: note
+url: "/html/2012-09-25-global-ajax-handler-and-localtime.html"
 ---
 
 The [jquery.localtime plugin](http://code.google.com/p/jquery-localtime) allows to convert date/time strings to a local user time on a client site.

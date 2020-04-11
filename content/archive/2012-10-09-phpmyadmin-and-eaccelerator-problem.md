@@ -3,6 +3,7 @@ title: phpmyadmin and eaccelerator problem
 date: 2012-04-03
 tags: [php]
 type: note
+url: "/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html"
 ---
 
 Error when trying to access phpmyadmin (in Chrome):

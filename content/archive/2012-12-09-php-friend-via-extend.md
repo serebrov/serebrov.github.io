@@ -3,6 +3,7 @@ title: PHP - friend a class via extend
 date: 2012-04-03
 tags: [php]
 type: note
+url: "/html/2012-12-09-php-friend-via-extend.md"
 ---
 
 C++ allows to declare one class as a friend of another one.
