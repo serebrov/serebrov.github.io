@@ -6,6 +6,10 @@
     border-bottom: 1px dashed;
 }
 
+pre {
+    font-size: 0.9em;
+}
+
 .all-posts-link {
     padding-top: 10px;
 }

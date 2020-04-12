@@ -340,7 +340,7 @@ One min read
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://serebrov.github.io\/html\/2012-01-24-jquery-check-version.md"; 
+        this.page.url = "http://serebrov.github.io\/html\/2012-01-24-jquery-check-version.md"; 
         
         
     };

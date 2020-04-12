@@ -555,7 +555,7 @@ doAction(Time time)
     <div class='comments-area'><div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = "https://serebrov.github.io\/html\/2016-02-18-oop-solid-l-liskov-substitution-principle.md"; 
+        this.page.url = "http://serebrov.github.io\/html\/2016-02-18-oop-solid-l-liskov-substitution-principle.md"; 
         
         
     };
