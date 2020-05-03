@@ -2,21 +2,25 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Software Development Notes'>
+<meta name='description' content='It can be useful to have more than one configuration file, for example, to build several code bundles.
+The config file to use can be set with VUE_CLI_SERVICE_CONFIG_PATH environment variable:
+# Build using vue.config.public.js CONF=`realpath vue.config.public.js` VUE_CLI_SERVICE_CONFIG_PATH=$CONF npm run build -- --mode production # build using vue.config.js npm run build -- --mode production Where npm run build is defined in package.json as vue-cli-service build.
+It is also possible to create several bundles using vue cli multi-page mode, but in this case we will have big common js and css &ldquo;vendors&rdquo; package.'>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='Tag: typing • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='Software Development Notes'>
-<meta property='og:url' content='https://serebrov.github.io/tags/typing/'>
+<meta property='og:title' content='Vue.js Cli: How to Use Multiple vue.config.js Configs • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='It can be useful to have more than one configuration file, for example, to build several code bundles.
+The config file to use can be set with VUE_CLI_SERVICE_CONFIG_PATH environment variable:
+# Build using vue.config.public.js CONF=`realpath vue.config.public.js` VUE_CLI_SERVICE_CONFIG_PATH=$CONF npm run build -- --mode production # build using vue.config.js npm run build -- --mode production Where npm run build is defined in package.json as vue-cli-service build.
+It is also possible to create several bundles using vue cli multi-page mode, but in this case we will have big common js and css &ldquo;vendors&rdquo; package.'>
+<meta property='og:url' content='https://serebrov.github.io/html/2020-05-03-vue-cli-multiple-configs.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content='2020-05-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='vue'><meta property='article:published_time' content='2020-05-03T00:00:00Z'/><meta property='article:modified_time' content='2020-05-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.67.0" />
 
-  <title>Tag: typing • vim, git, aws and other three-letter words</title>
-  <link rel='canonical' href='https://serebrov.github.io/tags/typing/'>
-  
-    <link href="https://serebrov.github.io/tags/typing/index.xml" rel="alternate" type="application/rss+xml" title="vim, git, aws and other three-letter words" />
+  <title>Vue.js Cli: How to Use Multiple vue.config.js Configs • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2020-05-03-vue-cli-multiple-configs.html'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -38,7 +42,7 @@ if (!doNotTrack) {
   
 
 </head>
-<body class='taxonomy type-tags taxonomy-tag has-sidebar'>
+<body class='page type-note has-sidebar'>
 
   <div class='site'><div id='sidebar' class='sidebar'>
   <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
@@ -216,45 +220,137 @@ if (!doNotTrack) {
       <main id='content'>
 
 
-<header class='header'>
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'><span class='taxonomy-name'>Tag: </span>typing</h1>
-
+      <h1 class='title'>Vue.js Cli: How to Use Multiple vue.config.js Configs</h1>
       
 
     </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2020-05-03T00:00:00Z'>2020, May 03</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+One min read
+</span>
+
+
+  
+  
+</div>
+
+
   </div>
 </header>
 
-
-
-
-<div class='container list-container'>
-  <ul class='list'>
-    
-      <li class='item'>
-  <div class='meta'>
-    <span>
-  <span class='screen-reader-text'>Posted on </span>
-  <time datetime='2020-01-21T00:00:00Z'>2020, Jan 21</time>
-</span>
-
-  </div>
-  <header class='item-header'>
-    <h3 class='item-title'>
-      <a href='/html/2020-01-21-touch-typing.html'>Touch Typing Tutors and Games
-      </a>
-    </h3>
-  </header>
-</li>
-
-    
-  </ul>
-
+  
   
 
+  <div class="container entry-content custom">
+    <p>It can be useful to have more than one configuration file, for example, to build several code bundles.</p>
+<!-- raw HTML omitted -->
+<p>The config file to use can be set with <code>VUE_CLI_SERVICE_CONFIG_PATH</code> environment variable:</p>
+<pre><code># Build using vue.config.public.js
+CONF=`realpath vue.config.public.js`
+VUE_CLI_SERVICE_CONFIG_PATH=$CONF npm run build -- --mode production
+
+# build using vue.config.js
+npm run build -- --mode production
+</code></pre><p>Where <code>npm run build</code> is defined in <code>package.json</code> as <code>vue-cli-service build</code>.</p>
+<p>It is also possible to create several bundles using vue cli <a href="https://cli.vuejs.org/config/#pages">multi-page mode</a>, but in this case we will have big common js and css &ldquo;vendors&rdquo; package.</p>
+<p>The js bundle is <a href="https://stackoverflow.com/a/61089300/4612064">solvable with custom chanks settings</a>, but it still leaves big css shared package (I didn&rsquo;t find the solution for that).</p>
+<p>The separate vue.config.js file had an advantage of building a completely independent bundle.</p>
+<p>The <a href="https://stackoverflow.com/a/50951316/4612064">alternative, check the comments</a> is to have <a href="https://gist.github.com/educkf/97e76da8d8c2b5dad17846a7d576e205">separate configs and copy them over</a>, but this is less convenient than using the environment variable.</p>
+<p>Note: I didn&rsquo;t find any mention on <code>VUE_CLI_SERVICE_CONFIG_PATH</code> in the documentation, found it looking at the <a href="https://github.com/vuejs/vue-cli/blob/a1041a897e4e9e57924bb6a2bfffde5db1d87ae7/packages/%40vue/cli-service/lib/Service.js#L323">source code</a>.</p>
+ <a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+
 </div>
+<div class="popup">
+    <div class="close">close</div>
+    <div class="download">
+        <a href="" target="_blank">Download (<span class="name"></span>)</a>
+    </div>
+    <div class="popup-content"></div>
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/vue/'>vue</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/2020-01-21-touch-typing.html'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Touch Typing Tutors and Games</a>
+    </div></div>
+</nav>
+
+
+<section id='comments' class='comments'>
+  <div class='container sep-before'>
+    <div class='comments-area'><div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://serebrov.github.io\/html\/2020-05-03-vue-cli-multiple-configs.html"; 
+        
+        
+    };
+    (function () {
+        
+        var d = document,
+            s = d.createElement("script");
+        s.src = "https://serebrov.disqus.com/embed.js";
+        s.setAttribute("data-timestamp", +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript
+    >Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript"
+        >comments powered by Disqus.</a
+    ></noscript
+>
+</div>
+  </div>
+</section>
 
       </main>
 
@@ -295,4 +391,25 @@ if (!doNotTrack) {
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
