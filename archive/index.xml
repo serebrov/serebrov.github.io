@@ -6,10 +6,22 @@
     <description>Recent content in Archive on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 29 Sep 2012 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://serebrov.github.io/archive/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>PHP - utf-8 strings handling</title>
+      <link>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</link>
+      <pubDate>Sat, 23 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</guid>
+      <description>Enable mbstring function overloading mode and set default encoding for string functions to utf-8 in php.ini:
+mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7  These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
+Default encoding can also be set using mb_internal_encoding function:
+mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as argument in mbstring function:</description>
+    </item>
     
     <item>
       <title>Yii and jquery.localtime.js - display dates in user local timezone</title>
