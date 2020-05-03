@@ -33,17 +33,6 @@ The confusing part was a note in the AWS Config management console:</description
     </item>
     
     <item>
-      <title>CloudFront Setup to Route Requests to Services Based on Request Path</title>
-      <link>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</link>
-      <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</guid>
-      <description>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
-For example:
- www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog  CloudFront Setup Structure CloudFront distribution can have one or more origins (sources to serve the data from) and one or more behaviors (rules defining how to cache the data based on the request path).</description>
-    </item>
-    
-    <item>
       <title>Git Hook to Add Issue Number to Commit Message</title>
       <link>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</link>
       <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
@@ -52,6 +41,17 @@ For example:
       <description>When using project management system (Jira, Redmine, Github issues, etc) it is useful to add the issue number into commit message that makes is easier to understand which issue the commit belongs to and often allows the project management system to display related commits.
 For same reasons, it is also useful to include the issue number into branch name, such as 123-branch-description or feature/PROJECT-123-branch-description.
 The process of adding the issue number into commit message can be automated with git prepare-commit-msg hook (shell script).</description>
+    </item>
+    
+    <item>
+      <title>Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path</title>
+      <link>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</link>
+      <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</guid>
+      <description>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
+For example:
+ www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog  CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.</description>
     </item>
     
     <item>

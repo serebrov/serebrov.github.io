@@ -23,14 +23,14 @@ The confusing part was a note in the AWS Config management console:</description
     </item>
     
     <item>
-      <title>CloudFront Setup to Route Requests to Services Based on Request Path</title>
+      <title>Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path</title>
       <link>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</link>
       <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</guid>
       <description>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
 For example:
- www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog  CloudFront Setup Structure CloudFront distribution can have one or more origins (sources to serve the data from) and one or more behaviors (rules defining how to cache the data based on the request path).</description>
+ www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog  CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.</description>
     </item>
     
     <item>
