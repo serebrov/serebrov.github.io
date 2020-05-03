@@ -35,16 +35,6 @@ Possible solution is to add some special handling to $.ajax &amp;lsquo;success&a
     </item>
     
     <item>
-      <title>vim - replace a word with yanked text</title>
-      <link>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</guid>
-      <description>Copy a word and paste it over other words:
-yiw yank inner word (copy word under cursor, say &amp;#34;first&amp;#34;). ...	Move the cursor to another word (say &amp;#34;second&amp;#34;). viwp	select &amp;#34;second&amp;#34;, then replace it with &amp;#34;first&amp;#34;. ...	Move the cursor to another word (say &amp;#34;third&amp;#34;). viw&amp;#34;0p	select &amp;#34;third&amp;#34;, then replace it with &amp;#34;first&amp;#34;.Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;). Yanking text also copies the text to register 0 (&amp;ldquo;0).</description>
-    </item>
-    
-    <item>
       <title>jQuery - check minimal required version</title>
       <link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</link>
       <pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate>

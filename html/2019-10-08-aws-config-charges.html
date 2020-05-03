@@ -125,7 +125,7 @@ if (!doNotTrack) {
       </li><li>
         <a href='/tags/hive/' style='font-size:1em'>hive</a>
       </li><li>
-        <a href='/tags/jquery/' style='font-size:1.1764705882352942em'>jquery</a>
+        <a href='/tags/jquery/' style='font-size:1.1176470588235294em'>jquery</a>
       </li><li>
         <a href='/tags/js/' style='font-size:1.1176470588235294em'>js</a>
       </li><li>
@@ -159,7 +159,7 @@ if (!doNotTrack) {
       </li><li>
         <a href='/tags/typing/' style='font-size:1em'>typing</a>
       </li><li>
-        <a href='/tags/vim/' style='font-size:1em'>vim</a>
+        <a href='/tags/vim/' style='font-size:1.0588235294117647em'>vim</a>
       </li><li>
         <a href='/tags/vue/' style='font-size:1em'>vue</a>
       </li><li>
