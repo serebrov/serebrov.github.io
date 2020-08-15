@@ -6,10 +6,20 @@
     <description>Recent content in Posts on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 03 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 15 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://serebrov.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Oculus Quest for Work: First Impressions</title>
+      <link>https://serebrov.github.io/html/2020-05-03-oculus-quest-for-work.html</link>
+      <pubDate>Sat, 15 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2020-05-03-oculus-quest-for-work.html</guid>
+      <description>After reading this, this and this and this, I&amp;rsquo;ve got Oculus Quest willing to try it for work. I am a software developer and spend 8-10 hours per day before the laptop. My main machine at the moment is Mac Book Pro, I also own Thinkpad with Linux.
+This way, in terms of software, ImmersedVR seems to be the only contender and only compatible headsets are Oculus Go and Oculus Quest.</description>
+    </item>
     
     <item>
       <title>Vue.js Cli: How to Use Multiple vue.config.js Configs</title>
