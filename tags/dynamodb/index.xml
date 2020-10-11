@@ -6,11 +6,7 @@
     <description>Recent content in dynamodb on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 25 Jan 2015 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/dynamodb/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 25 Jan 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/dynamodb/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Amazon DynamoDB - how to add global secondary index</title>
       <link>https://serebrov.github.io/html/2015-01-25-aws-add-secondary-index.html</link>

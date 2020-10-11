@@ -5,11 +5,7 @@
     <link>https://serebrov.github.io/page/</link>
     <description>Recent content in Pages on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    
-	<atom:link href="https://serebrov.github.io/page/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>en-us</language><atom:link href="https://serebrov.github.io/page/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Search</title>
       <link>https://serebrov.github.io/search/</link>

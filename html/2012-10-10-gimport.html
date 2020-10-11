@@ -21,7 +21,7 @@ return array( ... &#39;preload&#39; =&gt; array(&#39;log&#39;, &#39;import&#39;)
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='yii'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>GImport yii extension • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-10-10-gimport.html'>
@@ -275,25 +275,25 @@ One min read
 <p>Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.</p>
 <!-- raw HTML omitted -->
 <p>Basic usage example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    $importer = new GImport;
-    $importer-&gt;add(&#39;modules.myModule.*&#39;);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    $importer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">GImport</span>;
+    $importer<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#39;modules.myModule.*&#39;</span>);
 </code></pre></div><p>This code will import all clasees from modules/myModule/ directory.</p>
 <p>GImport can also be configured as application component. Add following code into the application config:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    return array(
-    ...
-    &#39;preload&#39; =&gt; array(&#39;log&#39;, &#39;import&#39;),
-    ...
-    &#39;components&#39; =&gt; array(
-        &#39;import&#39; =&gt; array(
-            &#39;class&#39;=&gt;&#39;GImport&#39;,
-            &#39;import&#39; =&gt; array(
-                // add directories to import and
-                // put &#39;import&#39; component to preload to trigger import
-                // on application initialization
-                &#39;application.extensions.*&#39;,
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+    <span style="color:#f92672">...</span>
+    <span style="color:#e6db74">&#39;preload&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#39;log&#39;</span>, <span style="color:#e6db74">&#39;import&#39;</span>),
+    <span style="color:#f92672">...</span>
+    <span style="color:#e6db74">&#39;components&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
+        <span style="color:#e6db74">&#39;import&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
+            <span style="color:#e6db74">&#39;class&#39;</span><span style="color:#f92672">=&gt;</span><span style="color:#e6db74">&#39;GImport&#39;</span>,
+            <span style="color:#e6db74">&#39;import&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
+                <span style="color:#75715e">// add directories to import and
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// put &#39;import&#39; component to preload to trigger import
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// on application initialization
+</span><span style="color:#75715e"></span>                <span style="color:#e6db74">&#39;application.extensions.*&#39;</span>,
             ),
         ),
-    ...
+    <span style="color:#f92672">...</span>
 </code></pre></div><p>Download at <a href="http://www.yiiframework.com/extension/gimport/">extension page</a>.</p>
 <p><a href="http://www.yiiframework.com/forum/index.php/topic/36445-extension-gimport/">Forum topic</a>.</p>
  <a href="https://stackexchange.com/users/261528">

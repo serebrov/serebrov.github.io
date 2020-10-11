@@ -6,11 +6,7 @@
     <description>Recent content in npm on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/npm/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/npm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Managing NPM packages on github</title>
       <link>https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</link>

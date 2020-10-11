@@ -15,7 +15,7 @@ Or, in other words: the subclass should behave the same way as the base class.'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='oop'><meta property='article:published_time' content='2016-02-18T00:00:00Z'/><meta property='article:modified_time' content='2016-02-18T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>OOP SOLID Principles &#34;L&#34; - Liskov Substitution Principle • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2016-02-18-oop-solid-l-liskov-substitution-principle.md'>

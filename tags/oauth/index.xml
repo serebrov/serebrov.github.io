@@ -6,11 +6,7 @@
     <description>Recent content in oauth on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Mar 2012 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/oauth/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 15 Mar 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/oauth/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>oauth 1.0 notes</title>
       <link>https://serebrov.github.io/html/2012-02-28-git-default-color-diff.html</link>

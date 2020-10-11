@@ -15,7 +15,7 @@ Now it is possible to run Hive commands in few following ways:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='dynamodb'><meta property='article:tag' content='emr'><meta property='article:tag' content='hive'><meta property='article:published_time' content='2015-01-24T00:00:00Z'/><meta property='article:modified_time' content='2015-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>Amazon DynamoDB, EMR and Hive notes • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html'>
@@ -317,7 +317,7 @@ TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> 
 </code></pre></div><h3 id="hive---timestamp-to-date-conversions">Hive - timestamp to date conversions</h3>
 <p>Examples of some queries to convert the timestamp to date string:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- Convert timestamp to date in UTC+2 timezone
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp, from_unixtime(stamp, <span style="color:#e6db74">&#39;y-M-d HⓜsZ+0200&#39;</span>) <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp, from_unixtime(stamp, <span style="color:#e6db74">&#39;y-M-d Hⓜ️sZ+0200&#39;</span>) <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
 
 <span style="color:#75715e">-- Select data by date string
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">where</span> stamp <span style="color:#f92672">&gt;</span> unix_timestamp(<span style="color:#e6db74">&#39;2014-12-25 10:18:41+0200&#39;</span>) <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;

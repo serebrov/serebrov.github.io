@@ -6,11 +6,7 @@
     <description>Recent content in zeromq on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Apr 2015 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/zeromq/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 02 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/zeromq/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Elastic Beanstalk - python application server structure and celery installation</title>
       <link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link>

@@ -6,11 +6,7 @@
     <description>Recent content in typing on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Jan 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/typing/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 21 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/typing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Touch Typing Tutors and Games</title>
       <link>https://serebrov.github.io/html/2020-01-21-touch-typing.html</link>
@@ -18,7 +14,7 @@
       
       <guid>https://serebrov.github.io/html/2020-01-21-touch-typing.html</guid>
       <description>A collection of links to touch typing tutors and games.
-Online Typing Tutors  [keybr.com] - Typing practice, supports Qwerty, Dvorak, Colemak and Workman layouts The Typing Cat - Free online keyboard typing tutor TypingClub - Learn Touch Typing Free typing.io - Typing Practice for Programmers Typing Scout - Faster typing means more spare time :) Solotyping - Touch Typing Course | Online Typing Test | Learn to Type Faster Ratatype — Online typing tutor and typing lessons 10FastFingers.</description>
+Online Typing Tutors  [keybr.com] - Typing practice, supports Qwerty, Dvorak, Colemak and Workman layouts The Typing Cat - Free online keyboard typing tutor TypingClub - Learn Touch Typing Free typing.io - Typing Practice for Programmers https://monkey-type.com/ - a minimalistic, customizable typing test, featuring many test modes, open source Typing Scout - Faster typing means more spare time :) Ratatype — Online typing tutor and typing lessons Solotyping - Touch Typing Course | Online Typing Test | Learn to Type Faster 10FastFingers.</description>
     </item>
     
   </channel>

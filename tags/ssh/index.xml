@@ -6,11 +6,7 @@
     <description>Recent content in ssh on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jan 2018 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 11 Jan 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</title>
       <link>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</link>

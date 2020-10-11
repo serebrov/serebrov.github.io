@@ -6,11 +6,7 @@
     <description>Recent content in docker on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Jun 2016 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 10 Jun 2016 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</title>
       <link>https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html</link>

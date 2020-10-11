@@ -15,7 +15,7 @@ Possible solutions are:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='yii'><meta property='article:published_time' content='2012-02-01T00:00:00Z'/><meta property='article:modified_time' content='2012-02-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>yii - class table inheritance • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html'>
@@ -319,57 +319,57 @@ ENGINE <span style="color:#f92672">=</span> InnoDB;
 ENGINE <span style="color:#f92672">=</span> InnoDB;
 </code></pre></div><p>Here the &lsquo;car&rsquo; table is a single inheritance table with type field (ENUM with class names).
 Base class is &lsquo;Car&rsquo;:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">class Car extends CActiveRecord {
-    public function tableName() {
-        return &#39;car&#39;;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">CActiveRecord</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">tableName</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;car&#39;</span>;
     }
 
-    protected function instantiate($attributes) {
-        $class=$attributes[&#39;type&#39;];
-        $model=new $class(null);
-        return $model;
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">instantiate</span>($attributes) {
+        $class<span style="color:#f92672">=</span>$attributes[<span style="color:#e6db74">&#39;type&#39;</span>];
+        $model<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> $class(<span style="color:#66d9ef">null</span>);
+        <span style="color:#66d9ef">return</span> $model;
     }
 
-    public function beforeSave() {
-        if ($this-&gt;isNewRecord) {
-            $this-&gt;type = get_class($this);
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">beforeSave</span>() {
+        <span style="color:#66d9ef">if</span> ($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">isNewRecord</span>) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">get_class</span>($this);
         }
-        return parent::beforeSave();
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">parent</span><span style="color:#f92672">::</span><span style="color:#a6e22e">beforeSave</span>();
     }
 }
 
-class FamilyCar extends Car {
-    public function tableName() {
-        return &#39;car&#39;;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FamilyCar</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Car</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">tableName</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;car&#39;</span>;
     }
 
-    public function relations() {
-        return array(
-            &#39;data&#39; =&gt; array(self::HAS_ONE, &#39;FamilyCarData&#39;, &#39;car_id&#39;),
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">relations</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+            <span style="color:#e6db74">&#39;data&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(<span style="color:#a6e22e">self</span><span style="color:#f92672">::</span><span style="color:#a6e22e">HAS_ONE</span>, <span style="color:#e6db74">&#39;FamilyCarData&#39;</span>, <span style="color:#e6db74">&#39;car_id&#39;</span>),
         );
     }
 
-    function defaultScope() {
-        return array(
-            &#39;condition&#39;=&gt;&#34;type=&#39;FamilyCar&#39;&#34;,
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">defaultScope</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+            <span style="color:#e6db74">&#39;condition&#39;</span><span style="color:#f92672">=&gt;</span><span style="color:#e6db74">&#34;type=&#39;FamilyCar&#39;&#34;</span>,
         );
     }
 }
 
-class SportCar extends Car {
-    public function tableName() {
-        return &#39;car&#39;;
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SportCar</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Car</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">tableName</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;car&#39;</span>;
     }
 
-    public function relations() {
-        return array(
-            &#39;data&#39; =&gt; array(self::HAS_ONE, &#39;SportCarData&#39;, &#39;car_id&#39;),
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">relations</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+            <span style="color:#e6db74">&#39;data&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(<span style="color:#a6e22e">self</span><span style="color:#f92672">::</span><span style="color:#a6e22e">HAS_ONE</span>, <span style="color:#e6db74">&#39;SportCarData&#39;</span>, <span style="color:#e6db74">&#39;car_id&#39;</span>),
         );
     }
 
-    function defaultScope() {
-        return array(
-            &#39;condition&#39;=&gt;&#34;type=&#39;SportCar&#39;&#34;,
+    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">defaultScope</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+            <span style="color:#e6db74">&#39;condition&#39;</span><span style="color:#f92672">=&gt;</span><span style="color:#e6db74">&#34;type=&#39;SportCar&#39;&#34;</span>,
         );
     }
 }
@@ -381,26 +381,26 @@ class SportCar extends Car {
 </ol>
 <p>With this approach you should handle two models in controllers and views related to subclasses (<code>FamilyCar</code> and <code>SportCar</code>).</p>
 <p>For example, create action in the <code>FamilyCar</code> controller:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">public function actionCreate() {
-    //create base model and model with extended data
-    $model=new FamilyCar;
-    $model-&gt;data=new FamilyCarData;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">actionCreate</span>() {
+    <span style="color:#75715e">//create base model and model with extended data
+</span><span style="color:#75715e"></span>    $model<span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FamilyCar</span>;
+    $model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span><span style="color:#f92672">=</span><span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FamilyCarData</span>;
 
-    if(isset($_POST[&#39;FamilyCarData&#39;])) {
-        //get properties for both models and save them
-        //of cause it is better to use transaction here
-        $model-&gt;attributes=$_POST[&#39;FamilyCar&#39;];
-        $model-&gt;data-&gt;attributes=$_POST[&#39;FamilyCarData&#39;];
-        if($model-&gt;save()) {
-            $model-&gt;data-&gt;car_id = $model-&gt;id;
-            if ($model-&gt;data-&gt;save()) {
-                $this-&gt;redirect(array(&#39;view&#39;,&#39;id&#39;=&gt;$model-&gt;id));
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isset</span>($_POST[<span style="color:#e6db74">&#39;FamilyCarData&#39;</span>])) {
+        <span style="color:#75715e">//get properties for both models and save them
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//of cause it is better to use transaction here
+</span><span style="color:#75715e"></span>        $model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">attributes</span><span style="color:#f92672">=</span>$_POST[<span style="color:#e6db74">&#39;FamilyCar&#39;</span>];
+        $model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">attributes</span><span style="color:#f92672">=</span>$_POST[<span style="color:#e6db74">&#39;FamilyCarData&#39;</span>];
+        <span style="color:#66d9ef">if</span>($model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">save</span>()) {
+            $model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">car_id</span> <span style="color:#f92672">=</span> $model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">id</span>;
+            <span style="color:#66d9ef">if</span> ($model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">data</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">save</span>()) {
+                $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">redirect</span>(<span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#39;view&#39;</span>,<span style="color:#e6db74">&#39;id&#39;</span><span style="color:#f92672">=&gt;</span>$model<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">id</span>));
             }
         }
     }
 
-    $this-&gt;render(&#39;create&#39;,array(
-        &#39;model&#39;=&gt;$model,
+    $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;create&#39;</span>,<span style="color:#66d9ef">array</span>(
+        <span style="color:#e6db74">&#39;model&#39;</span><span style="color:#f92672">=&gt;</span>$model,
     ));
 }
 </code></pre></div><p>And the view code will be like this:</p>

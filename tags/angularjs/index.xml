@@ -6,11 +6,7 @@
     <description>Recent content in angularjs on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 24 May 2013 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/angularjs/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 24 May 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/angularjs/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Angular.js and SEO - pre-render content on the server</title>
       <link>https://serebrov.github.io/html/2013-05-24-angular-seo.html</link>
@@ -31,7 +27,7 @@ For simple variables there is ng-bind. And for lists there is ng-include. Here i
       <guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid>
       <description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
  Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani  The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
- base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&amp;rsquo; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
+ base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&#39; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
     </item>
     
     <item>

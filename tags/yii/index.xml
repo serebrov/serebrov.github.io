@@ -6,11 +6,7 @@
     <description>Recent content in yii on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 13 Sep 2012 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/yii/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 13 Sep 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/yii/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Yii url rules - optional parameters</title>
       <link>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</link>

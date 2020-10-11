@@ -6,11 +6,7 @@
     <description>Recent content in php on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/tags/php/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/php/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PHP - utf-8 strings handling</title>
       <link>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</link>

@@ -15,7 +15,7 @@ Update: logging to the same stream from multiple sources is not recommended and 
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='eb'><meta property='article:tag' content='cw-logs'><meta property='article:published_time' content='2015-05-20T00:00:00Z'/><meta property='article:modified_time' content='2015-05-20T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>CloudWatch Logs - how to log data from multiple instances to the single stream • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-06-17-cloudwatch-logs-single-stream.html'>
@@ -272,21 +272,21 @@ The Logs UI is really complex to use - I need to remember instance names, open t
 <p><strong>Update</strong>: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine). Check the comments for more information and thanks Sergei for pointing this out.</p>
 <p>To use the single stream, we can just set a static string for stream name instead of {instance_id}, like this (see <code>log_stream_name = error_log</code>):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">
-  <span style="color:#66d9ef">AWSEBAutoScalingGroup</span>:
-    <span style="color:#66d9ef">Metadata</span>:
+  <span style="color:#f92672">AWSEBAutoScalingGroup</span>:
+    <span style="color:#f92672">Metadata</span>:
       <span style="color:#e6db74">&#34;AWS::CloudFormation::Init&#34;</span>:
-        <span style="color:#66d9ef">CWLogsAgentConfigSetup</span>:
-          <span style="color:#66d9ef">files</span>:
+        <span style="color:#f92672">CWLogsAgentConfigSetup</span>:
+          <span style="color:#f92672">files</span>:
             <span style="color:#e6db74">&#34;/tmp/cwlogs/conf.d/apache-error.conf&#34;</span>:
-              <span style="color:#66d9ef">content </span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">                [apache-error_log]</span>
-                file = `{<span style="color:#e6db74">&#34;Fn::FindInMap&#34;</span>:[<span style="color:#e6db74">&#34;CWLogs&#34;</span>, <span style="color:#e6db74">&#34;WebErrorLogGroup&#34;</span>, <span style="color:#e6db74">&#34;LogFile&#34;</span>]}`
-                log_group_name = `{ <span style="color:#e6db74">&#34;Ref&#34;</span> : <span style="color:#e6db74">&#34;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&#34;</span> }`
-                log_stream_name = error_log
-                datetime_format = `{<span style="color:#e6db74">&#34;Fn::FindInMap&#34;</span>:[<span style="color:#e6db74">&#34;CWLogs&#34;</span>, <span style="color:#e6db74">&#34;WebErrorLogGroup&#34;</span>, <span style="color:#e6db74">&#34;TimestampFormat&#34;</span>]}`
-              <span style="color:#66d9ef">mode  </span>: <span style="color:#e6db74">&#34;000400&#34;</span>
-              <span style="color:#66d9ef">owner </span>: root
-              <span style="color:#66d9ef">group </span>: root
+              <span style="color:#f92672">content </span>: |<span style="color:#e6db74">
+</span><span style="color:#e6db74">                [apache-error_log]
+</span><span style="color:#e6db74">                file = `{&#34;Fn::FindInMap&#34;:[&#34;CWLogs&#34;, &#34;WebErrorLogGroup&#34;, &#34;LogFile&#34;]}`
+</span><span style="color:#e6db74">                log_group_name = `{ &#34;Ref&#34; : &#34;AWSEBCloudWatchLogs8832c8d3f1a54c238a40e36f31ef55a0WebErrorLogGroup&#34; }`
+</span><span style="color:#e6db74">                log_stream_name = error_log
+</span><span style="color:#e6db74">                datetime_format = `{&#34;Fn::FindInMap&#34;:[&#34;CWLogs&#34;, &#34;WebErrorLogGroup&#34;, &#34;TimestampFormat&#34;]}`</span>                
+              <span style="color:#f92672">mode  </span>: <span style="color:#e6db74">&#34;000400&#34;</span>
+              <span style="color:#f92672">owner </span>: <span style="color:#ae81ff">root</span>
+              <span style="color:#f92672">group </span>: <span style="color:#ae81ff">root</span>
 </code></pre></div><p>Now we need to make sure our log records contain instance id or IP address, so we can understand which instance generated each log record.</p>
 <p>Fortunately, python application logs in the apache&rsquo;s error_log already have IP address, so nothing to do here. The log looks like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">[Wed Jun 17 16:02:46.944612 2015] [:error] [pid 20405] [remote 172.31.11.92:0] mod_wsgi (pid=20405): Exception occurred processing WSGI script &#39;/opt/python/current/app/application.py&#39;.

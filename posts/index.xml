@@ -6,11 +6,7 @@
     <description>Recent content in Posts on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 15 Aug 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://serebrov.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 15 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Oculus Quest for Work: First Impressions</title>
       <link>https://serebrov.github.io/html/2020-05-03-oculus-quest-for-work.html</link>
@@ -40,7 +36,7 @@ It is also possible to create several bundles using vue cli multi-page mode, but
       
       <guid>https://serebrov.github.io/html/2020-01-21-touch-typing.html</guid>
       <description>A collection of links to touch typing tutors and games.
-Online Typing Tutors  [keybr.com] - Typing practice, supports Qwerty, Dvorak, Colemak and Workman layouts The Typing Cat - Free online keyboard typing tutor TypingClub - Learn Touch Typing Free typing.io - Typing Practice for Programmers Typing Scout - Faster typing means more spare time :) Solotyping - Touch Typing Course | Online Typing Test | Learn to Type Faster Ratatype — Online typing tutor and typing lessons 10FastFingers.</description>
+Online Typing Tutors  [keybr.com] - Typing practice, supports Qwerty, Dvorak, Colemak and Workman layouts The Typing Cat - Free online keyboard typing tutor TypingClub - Learn Touch Typing Free typing.io - Typing Practice for Programmers https://monkey-type.com/ - a minimalistic, customizable typing test, featuring many test modes, open source Typing Scout - Faster typing means more spare time :) Ratatype — Online typing tutor and typing lessons Solotyping - Touch Typing Course | Online Typing Test | Learn to Type Faster 10FastFingers.</description>
     </item>
     
     <item>
@@ -444,7 +440,7 @@ For simple variables there is ng-bind. And for lists there is ng-include. Here i
       <guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid>
       <description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
  Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani  The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
- base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&amp;rsquo; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
+ base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&#39; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
     </item>
     
     <item>

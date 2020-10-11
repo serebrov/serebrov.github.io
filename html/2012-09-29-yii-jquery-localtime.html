@@ -19,7 +19,7 @@ date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 S
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-09-29T00:00:00Z'/><meta property='article:modified_time' content='2012-09-29T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.67.0" />
+<meta name="generator" content="Hugo 0.76.3" />
 
   <title>Yii and jquery.localtime.js - display dates in user local timezone • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html'>
@@ -276,12 +276,12 @@ to a user local timezone on client.</p>
 <h2 id="setup-mysql-and-php-timezone">Setup MySQL and PHP timezone</h2>
 <p>Set UTC timezone for both MySQL and PHP.</p>
 <p>Yii db config (MySQL):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    ‘db’ =&gt; array(
-        &#39;connectionString&#39; =&gt; &#39;...’,
-        &#39;initSQLs&#39;=&gt;&#34;set time_zone=&#39;+00:00’;&#34;,
-    );
-</code></pre></div><p>And PHP timezone:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    date_default_timezone_set(‘UTC’);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#a6e22e">‘db’</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
+        <span style="color:#e6db74">&#39;connectionString&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;...’,
+</span><span style="color:#e6db74">        &#39;</span><span style="color:#a6e22e">initSQLs</span><span style="color:#e6db74">&#39;=&gt;&#34;set time_zone=&#39;</span><span style="color:#f92672">+</span><span style="color:#ae81ff">00</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span><span style="color:#a6e22e">’</span>;<span style="color:#e6db74">&#34;,
+</span><span style="color:#e6db74">    );
+</span></code></pre></div><p>And PHP timezone:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#a6e22e">date_default_timezone_set</span>(<span style="color:#a6e22e">‘UTC’</span>);
 </code></pre></div><h2 id="generate-html-with-utc-dates-in-iso-8601">Generate HTML with UTC dates in ISO 8601</h2>
 <p>See <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">date formats here</a>
 Helper functions to convert dates:</p>
@@ -292,7 +292,7 @@ Helper functions to convert dates:</p>
 </li>
 <li>
 <p>UTC date to HTML</p>
-<p>echo CHtml::tag(&lsquo;span&rsquo;, array(&lsquo;class'=&gt;'localtime&rsquo;), $utcString);</p>
+<p>echo CHtml::tag(&lsquo;span&rsquo;, array(&lsquo;class&rsquo;=&gt;&lsquo;localtime&rsquo;), $utcString);</p>
 </li>
 <li>
 <p>UTC date to timestamp</p>
@@ -327,7 +327,7 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
 </li>
 <li>
 <p>Attach jquery.localtimex plugin to the same input, set date format to &lsquo;MM/dd/yyyy&rsquo; and use css class &lsquo;localdatepicker&rsquo;:</p>
-<p>$('.localdatepicker&rsquo;).localtimex(&lsquo;MM/dd/yyyy&rsquo;);</p>
+<p>$('.localdatepicker').localtimex(&lsquo;MM/dd/yyyy&rsquo;);</p>
 </li>
 <li>
 <p>On the client side localtimex plugin will convert initial UTC value to the local client time and then will convert it back when form is submitted</p>
