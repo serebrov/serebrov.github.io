@@ -6,7 +6,18 @@
     <description>Recent content in Posts on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 15 Aug 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 21 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mitosis Keyboard First Impressions</title>
+      <link>https://serebrov.github.io/html/2020-11-22-mitosis-keyboard-first-impressions.html</link>
+      <pubDate>Sat, 21 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2020-11-22-mitosis-keyboard-first-impressions.html</guid>
+      <description>Mitosis Keyboard First Impressions
+I&amp;rsquo;ve received my Mitosis few days ago and I like it a lot so far:
+ The size: perfect for the 36 keys layout I use The shape: very comfortable, lowered outer columns feel great for pinkies  I wished the inner column, for the index finger would not be shifted up as it is, it causes a bit of extension to use Y and T I also think the bottom thumb row is too far, so I am using the top row, having the bottom one without keycaps, so it doesn&amp;rsquo;t get in a way   Wireless: probably this was one of main reasons to get it, it is really nice to freely move both halves without having to care about wires  And I like the decision to use the radio channel instead of bluetooth which gives much longer battery lifetime It requires a receiver to be connected to the computer, but that is not a big deal, also it is cool to realize that your keyboard (QMK) is actually running inside that small board   Layout: not sure which layout was there initially, it was QWERTY while the default layout in QMK configuratior is Maltron (I think), anyway, I changed it to my layout, similar to what I have on Moonlander Open source, here is the announcement post, hardware, receiver firmware and keyboard firmware, QMK  How it looks, and the receiver.</description>
+    </item>
+    
     <item>
       <title>Oculus Quest for Work: First Impressions</title>
       <link>https://serebrov.github.io/html/2020-05-03-oculus-quest-for-work.html</link>
