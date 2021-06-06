@@ -271,10 +271,10 @@ if (!doNotTrack) {
 <p>At the moment it is not possible to add a secondary index into the existing table.
 This feature is <a href="https://forums.aws.amazon.com/ann.jspa?annID=2650">announced</a> but not yet available.</p>
 <p>So the only way is to create a new table and migrate the existing data to it.
-This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html">Amazon EMR</a>.</p>
+This can be done using <a href="https://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html">Amazon EMR</a>.</p>
 <!-- raw HTML omitted -->
 <h3 id="create-the-new-table">Create the new table</h3>
-<p>The new table can be created from the DynamoDB console or with code like this (in python / <a href="http://boto.readthedocs.org/en/latest/ref/dynamodb.html">boto</a>):</p>
+<p>The new table can be created from the DynamoDB console or with code like this (in python / <a href="https://boto.readthedocs.org/en/latest/ref/dynamodb.html">boto</a>):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Table<span style="color:#f92672">.</span>create(
     <span style="color:#e6db74">&#39;my_table_v2&#39;</span>,
     schema <span style="color:#f92672">=</span> [HashKey(<span style="color:#e6db74">&#39;my_hash&#39;</span>), RangeKey(<span style="color:#e6db74">&#39;a_range&#39;</span>, data_type<span style="color:#f92672">=</span>NUMBER)],
@@ -290,7 +290,7 @@ This can be done using <a href="http://docs.aws.amazon.com/ElasticMapReduce/late
 </code></pre></div><h3 id="move-data-from-the-old-table-to-new-table">Move data from the old table to new table</h3>
 <p>This is not complex to implement such data transfer also in python / boto, but if there is a lot of data the process can take long time to complete.</p>
 <p>In this case it is much more convenient to use EMR for this - process is launched and monitored and all logs are recorded.</p>
-<p>Another option is to use AWS Data Pipeline service, see the example of <a href="http://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/dp-crossregion-ddb.html">cross-region data copy</a>. Table to table data copy can be done in a similar way.</p>
+<p>Another option is to use AWS Data Pipeline service, see the example of <a href="https://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/dp-crossregion-ddb.html">cross-region data copy</a>. Table to table data copy can be done in a similar way.</p>
 <p>But in my case the AWS Data Pipeline service was not available for the region where DynamoDB was launched, so I used EMR (and actually data pipeline also uses EMR behind the scenes).</p>
 <p>Amazon EMR allows to create a step of type &lsquo;Hive program&rsquo; where we can only specify the S3 path to the hive script to run (all other parameters are optional).</p>
 <p>So we create and upload to S3 the hive script like shown below and then launch or use existing EMR cluster to transfer the data:</p>
@@ -319,10 +319,10 @@ TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> 
 Most of the information is in the <code>stderr</code> log.
 Also note that logs are not available just when the process is finished. Just wait few minutes and logs will appear.</p>
 <h2 id="links">Links</h2>
-<p><a href="http://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html">Amazon DynamoDB, EMR and Hive notes</a></p>
-<p><a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html">Optimizing Performance for Amazon EMR Operations in DynamoDB</a></p>
+<p><a href="https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html">Amazon DynamoDB, EMR and Hive notes</a></p>
+<p><a href="https://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html">Optimizing Performance for Amazon EMR Operations in DynamoDB</a></p>
 <p><a href="http://arjon.es/2014/01/29/hive-dynamodb-pitfalls/">Hive &amp; DynamoDB Pitfalls</a></p>
-<p><a href="http://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow">Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow</a></p>
+<p><a href="https://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow">Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow</a></p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>

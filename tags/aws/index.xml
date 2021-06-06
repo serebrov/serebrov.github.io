@@ -157,7 +157,7 @@ Now it is possible to run Hive commands in few following ways:
       <pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</guid>
-      <description>I described how to setup mongodb on EC2 using OpsWroks and here is how to setup mongo data backups.
+      <description>I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
  Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
