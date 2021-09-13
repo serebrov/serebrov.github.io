@@ -19,7 +19,7 @@ Traceback (most recent call last): .'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='selenium'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>selenium - python Firefox webdriver - unsafe setters in firefox_profile.py • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html'>
@@ -85,7 +85,7 @@ if (!doNotTrack) {
     <div class='container'>
       <ul><li class='item'>
   <a href='/'>Home</a></li><li class='item'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -208,8 +208,8 @@ if (!doNotTrack) {
         <a href='/'>Home</a>
       </li><li class='item'>
         <a href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -274,9 +274,9 @@ if (!doNotTrack) {
     <p>Problem: after setting the boolean flags for Firefox profile the webdriver fails with &ldquo;Can&rsquo;t load the profile&rdquo; error.</p>
 <!-- raw HTML omitted -->
 <p>I tried to disable native events for Firefox webdriver in a following way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    ffp <span style="color:#f92672">=</span> webdriver<span style="color:#f92672">.</span>firefox<span style="color:#f92672">.</span>firefox_profile<span style="color:#f92672">.</span>FirefoxProfile(path)
-    <span style="color:#66d9ef">if</span> (Config<span style="color:#f92672">.</span>ff_native_events_enabled <span style="color:#f92672">==</span> False):
-        ffp<span style="color:#f92672">.</span>native_events_enabled <span style="color:#f92672">=</span> False
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    ffp <span style="color:#f92672">=</span> webdriver<span style="color:#f92672">.</span>firefox<span style="color:#f92672">.</span>firefox_profile<span style="color:#f92672">.</span>FirefoxProfile(path)
+    <span style="color:#66d9ef">if</span> (Config<span style="color:#f92672">.</span>ff_native_events_enabled <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>):
+        ffp<span style="color:#f92672">.</span>native_events_enabled <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
     ffb <span style="color:#f92672">=</span> webdriver<span style="color:#f92672">.</span>firefox<span style="color:#f92672">.</span>firefox_binary<span style="color:#f92672">.</span>FirefoxBinary(firefox_path<span style="color:#f92672">=</span>Config<span style="color:#f92672">.</span>browser_binary)
     selenium <span style="color:#f92672">=</span> webdriver<span style="color:#f92672">.</span>Firefox(firefox_profile<span style="color:#f92672">=</span>ffp, firefox_binary<span style="color:#f92672">=</span>ffb)
 </code></pre></div><p>After that Firefox starts, but python code can not connect to the webdriver extension.</p>
@@ -298,22 +298,22 @@ WebDriverException: Message: &quot;Can't load the profile. Profile Dir: /tmp/tmp
 <h2 id="solution">Solution</h2>
 <p>After some examination I found that webdriver (python code) passes parameters to the fireforx extension through the user.js file in the Firefox profile folder.
 And it looked like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    user_pref(<span style="color:#e6db74">&#34;security.warn_entering_weak&#34;</span>, false);
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    user_pref(<span style="color:#e6db74">&#34;security.warn_entering_weak&#34;</span>, false);
     user_pref(<span style="color:#e6db74">&#34;security.fileuri.strict_origin_policy&#34;</span>, false);
-    user_pref(<span style="color:#e6db74">&#34;webdriver_enable_native_events&#34;</span>, False);
+    user_pref(<span style="color:#e6db74">&#34;webdriver_enable_native_events&#34;</span>, <span style="color:#66d9ef">False</span>);
     <span style="color:#f92672">...</span>
 </code></pre></div><p>Note that here we have lowercase &lsquo;false&rsquo; for all options except the <code>webdriver_enable_native_events</code>.
 The python code which is responsible for this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># my code</span>
-    ffp<span style="color:#f92672">.</span>native_events_enabled <span style="color:#f92672">=</span> False
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># my code</span>
+    ffp<span style="color:#f92672">.</span>native_events_enabled <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
 
     <span style="color:#75715e"># webdriver code</span>
-    <span style="color:#a6e22e">@native_events_enabled.setter</span>
+    <span style="color:#a6e22e">@native_events_enabled</span><span style="color:#f92672">.</span>setter
     <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">native_events_enabled</span>(self, value):
         self<span style="color:#f92672">.</span>default_preferences[<span style="color:#e6db74">&#39;webdriver_enable_native_events&#39;</span>] <span style="color:#f92672">=</span> str(value)
 </code></pre></div><p>Here python boolean value is converted into the &ldquo;False&rdquo; string.
 The solution is to use in my code lowercase string instead of boolean:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># my code</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#75715e"># my code</span>
     ffp<span style="color:#f92672">.</span>native_events_enabled <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;false&#34;</span>
 </code></pre></div><p>I also added a <a href="http://code.google.com/p/selenium/issues/detail?id=3400">bug report</a> and hope this will be fixed in selenium code.
 The same problem exist for other boolean setters, like <code>accept_untrusted_certs</code>.</p>

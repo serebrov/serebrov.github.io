@@ -13,7 +13,7 @@ yiw yank inner word (copy word under cursor, say &#34;first&#34;). ...	Move the 
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='vim'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>vim - replace a word with yanked text • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-04-03-git-rename-branch.html'>
@@ -78,7 +78,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -200,8 +200,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -266,7 +266,7 @@ One min read
 
   <div class="container entry-content custom">
     <p>Copy a word and paste it over other words:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim">    <span style="color:#a6e22e">yiw</span>     <span style="color:#a6e22e">yank</span> <span style="color:#a6e22e">inner</span> <span style="color:#a6e22e">word</span> (<span style="color:#a6e22e">copy</span> <span style="color:#a6e22e">word</span> <span style="color:#a6e22e">under</span> <span style="color:#a6e22e">cursor</span>, <span style="color:#a6e22e">say</span> <span style="color:#e6db74">&#34;first&#34;</span>).<span style="color:#960050;background-color:#1e0010">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-vim" data-lang="vim">    <span style="color:#a6e22e">yiw</span>     <span style="color:#a6e22e">yank</span> <span style="color:#a6e22e">inner</span> <span style="color:#a6e22e">word</span> (<span style="color:#a6e22e">copy</span> <span style="color:#a6e22e">word</span> <span style="color:#a6e22e">under</span> <span style="color:#a6e22e">cursor</span>, <span style="color:#a6e22e">say</span> <span style="color:#e6db74">&#34;first&#34;</span>).<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span>    ...	 <span style="color:#a6e22e">Move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">cursor</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">another</span> <span style="color:#a6e22e">word</span> (<span style="color:#a6e22e">say</span> <span style="color:#e6db74">&#34;second&#34;</span>).<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">viwp</span>	 <span style="color:#a6e22e">select</span> <span style="color:#e6db74">&#34;second&#34;</span>, <span style="color:#a6e22e">then</span> <span style="color:#a6e22e">replace</span> <span style="color:#a6e22e">it</span> <span style="color:#a6e22e">with</span> <span style="color:#e6db74">&#34;first&#34;</span>.<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span>    ...	 <span style="color:#a6e22e">Move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">cursor</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">another</span> <span style="color:#a6e22e">word</span> (<span style="color:#a6e22e">say</span> <span style="color:#e6db74">&#34;third&#34;</span>).<span style="color:#960050;background-color:#1e0010">

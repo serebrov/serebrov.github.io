@@ -19,7 +19,7 @@ class AContext { private $_state; protected function setState(AState $state) { $
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='php'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>PHP - friend a class via extend • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md'>
@@ -85,7 +85,7 @@ if (!doNotTrack) {
     <div class='container'>
       <ul><li class='item'>
   <a href='/'>Home</a></li><li class='item'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -208,8 +208,8 @@ if (!doNotTrack) {
         <a href='/'>Home</a>
       </li><li class='item'>
         <a href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -276,7 +276,7 @@ One min read
 <!-- raw HTML omitted -->
 <p>For example this can be used in <a href="http://sourcemaking.com/design_patterns/state">State pattern</a> to keep <code>setState</code> method of context class protected.</p>
 <p>To emulate this in PHP we can inherit state class from context class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AContext</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AContext</span> {
         <span style="color:#66d9ef">private</span> $_state;
 
         <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">setState</span>(<span style="color:#a6e22e">AState</span> $state) {

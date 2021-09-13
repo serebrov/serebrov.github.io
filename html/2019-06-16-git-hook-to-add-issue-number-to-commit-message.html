@@ -15,7 +15,7 @@ The process of adding the issue number into commit message can be automated with
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2019-06-16T00:00:00Z'/><meta property='article:modified_time' content='2019-06-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Git Hook to Add Issue Number to Commit Message • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -274,7 +274,7 @@ if (!doNotTrack) {
 <p>Below are few examples of hook scripts.</p>
 <h2 id="branch-named-as-123-branch-description">Branch Named as <code>123-branch-description</code></h2>
 <p>In the simplest case we have branches named as <code>123-branch-description</code>, where <code>123</code> is the issue id:</p>
-<pre><code>#!/bin/bash
+<pre tabindex="0"><code>#!/bin/bash
 
 # This hook works for branches named such as &quot;123-description&quot; and will add &quot;[#123]&quot; to the commit message.
 
@@ -294,7 +294,7 @@ if [[ ! -z $issueId ]]; then
 fi
 </code></pre><h2 id="branch-named-as-featureproject-123-branch-description">Branch Named as <code>feature/PROJECT-123-branch-description</code></h2>
 <p>This version is useful for gitflow and Jira (where we should use PROJECT-123 format to display commits in the issue):</p>
-<pre><code>#!/bin/bash
+<pre tabindex="0"><code>#!/bin/bash
 
 # This hook works for branches named such as &quot;feature/ABC-123-description&quot; and will add &quot;[ABC-123]&quot; to the commit message.
 
@@ -316,7 +316,7 @@ fi
 <p>This is useful when project uses multiple repositories on GitHub and issues tracked in one of the project (or there is a separate project for issues).</p>
 <p>In this case, we aslo need to add full repository name to the commit message.</p>
 <p>The hook below puts short issue number at the beginning of the commit message and adds full issue id (<code>organization/repository/#issueId</code>) at the end.</p>
-<pre><code>#!/bin/bash
+<pre tabindex="0"><code>#!/bin/bash
 
 # This hook works for branches named such as &quot;123-description&quot; and will add &quot;[#123]&quot; to the commit message.
 

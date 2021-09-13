@@ -11,7 +11,7 @@
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2013-09-11T00:00:00Z'/><meta property='article:modified_time' content='2013-09-11T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html'>
@@ -76,7 +76,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -198,8 +198,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -285,7 +285,7 @@ Also we are going to make some changes to eb sources to make it understand relat
 <p>Just download <a href="http://aws.amazon.com/code/6752709412171743">eb tools</a> and extract somewhere inside your project.
 Or copy existing version into the project.</p>
 <p>Add a wrapper script to run the original eb tool:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
 
     <span style="color:#75715e"># Run the eb tool from the root project directory as</span>
     <span style="color:#75715e"># console/eb {parameters}</span>
@@ -297,7 +297,7 @@ Or copy existing version into the project.</p>
     eb <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>
 </code></pre></div><p>Script should be on the same lever as the extracted directory.
 For example I have:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    project_root/
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    project_root/
     | .ebextensions/
     | .elasticbeanstalk/
     | .git/
@@ -311,12 +311,12 @@ For example I have:</p>
 </code></pre></div><p>So I launch the &lsquo;eb&rsquo; as &lsquo;console/eb parameters&rsquo; from the project root directory.</p>
 <h2 id="add-eb-configs-under-git-control">Add eb configs under git control</h2>
 <p>Add the EB configs under git control:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git add -f .elasticbeanstalk
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git add -f .elasticbeanstalk
 </code></pre></div><h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
 <p>For the 2.5.1 version I had to make two changes in the config file parser class.</p>
 <p>The file path is &hellip;/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utility/configfile_parser.py.</p>
 <p>And the changes are:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">41</span> - 47<span style="color:#f92672">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">41</span> - 47<span style="color:#f92672">]</span>
     def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
         <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
         pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
@@ -336,7 +336,7 @@ For example I have:</p>
 </code></pre></div><p>Now you can use relative to project root paths in your configs.</p>
 <h2 id="change-paths-in-configs-to-relative">Change paths in configs to relative</h2>
 <p>I had three absolute paths in my ./elasticbeanstalk/config:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
     ..
     AwsCredentialFile<span style="color:#f92672">=</span>/home/username/.elasticbeanstalk/aws_credential_file
     ..
@@ -355,7 +355,7 @@ For example I have:</p>
 </code></pre></div><p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
 config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).</p>
 <p>Other two paths (for branch configs) can now be changed to relative:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
     <span style="color:#75715e"># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
     <span style="color:#75715e"># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
     ...
@@ -374,7 +374,7 @@ config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).<
 </code></pre></div><h2 id="use-it">Use it</h2>
 <p>Make sure you are using the &lsquo;eb&rsquo; wrapper script from the root project directory.
 For example, for &lsquo;eb status&rsquo;:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd project/root/dir
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd project/root/dir
     $ ./path/to/eb status
     Load sectioned config file: project/root/dir/.elasticbeanstalk/config
     Load config file: /home/user/.elasticbeanstalk/aws_credential_file

@@ -17,7 +17,7 @@ The OpsWorks setup includes:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2014-12-19T00:00:00Z'/><meta property='article:modified_time' content='2014-12-19T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Amazon OpsWorks - node.js app with MongoDB setup • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -300,7 +300,7 @@ the test application (both are from the same source code repository).</p>
 <p>As mentioned above, I have two node apps which I wanted to launch on the same server - main app and test app.
 The main app works on the port 80 and the test app on the 3300.
 Repository structure is this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── app
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── app
 ├── public
 ├── package.json
 ├── server.js - this is the main app entry point
@@ -321,7 +321,7 @@ I only had to setup port 80 for the production environment.</p>
 To use custom recipes it is necessary to create a separate <a href="http://docs.aws.amazon.com/opsworks/latest/userguide/workingcookbook-installingcustom-repo.html">cookbook repository</a>.
 It can be, for example, public or private git repository on github or bitbucket.
 In my case I used private bitbucket repository with following structure:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
 ├── mongodb-singlenode
 │   ├── metadata.rb
 │   └── recipes
@@ -337,7 +337,7 @@ In my case I used private bitbucket repository with following structure:</p>
 </code></pre></div><p>Here I have custom recipe for mongodb setup (it is described below) and a custom recipe with template for the node app.
 The nodeapp/metadata.rb just contains a cookbook metadata, see <a href="https://github.com/aws/opsworks-cookbooks/blob/release-chef-11.10/opsworks_nodejs/metadata.rb">example</a>.
 The recipes/default.rb is this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">deploy <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;my_app&#39;</span><span style="color:#f92672">]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">deploy <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span><span style="color:#e6db74">:deploy</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;my_app&#39;</span><span style="color:#f92672">]</span>
 
 script <span style="color:#e6db74">&#34;setup_test_app&#34;</span> <span style="color:#66d9ef">do</span>
   interpreter <span style="color:#e6db74">&#34;bash&#34;</span>
@@ -367,11 +367,11 @@ template <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{<
 So our test app will be watched by monit and restarted in the case of failure.
 This is the same setup the standard OpsWorks node.js layer uses for the main application.</p>
 <p>To see the status of the application run the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo monit status
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo monit status
 </code></pre></div><p>This will display status of all services watched by monit.
 And monit logs it&rsquo;s events to syslog (<code>/var/log/syslog</code>).</p>
 <p>The <code>templates/default/app_test.monitrc.erb</code> contains a config file template:</p>
-<pre><code class="language-erb" data-lang="erb">check host node_web_app_&lt;%= @application_name %&gt; with address 127.0.0.1
+<pre tabindex="0"><code class="language-erb" data-lang="erb">check host node_web_app_&lt;%= @application_name %&gt; with address 127.0.0.1
   start program = &quot;/bin/sh -c 'cd &lt;%= @deploy_to %&gt; ; source &lt;%= @deploy_to %&gt;/../shared/app.env ; /usr/bin/env PORT=&lt;%= @test_port %&gt; NODE_ENV=&lt;%= @test_env %&gt; NODE_PATH=&lt;%= @deploy_to %&gt;/node_modules:&lt;%= @deploy_to %&gt; /usr/local/bin/node &lt;%= @monitored_script %&gt;'&quot;
   stop program = &quot;/usr/bin/pkill -f 'node &lt;%= @monitored_script %&gt;'&quot;
   &lt;% if @deploy[:ssl_support] -%&gt;
@@ -398,7 +398,7 @@ App is started with command like <code>PORT=3300 NODE_ENV=production path/to/dep
 <h2 id="mongodb-layer-setup">MongoDB layer setup</h2>
 <p>The setup is based on <a href="http://blogs.aws.amazon.com/application-management/post/Tx1RB65XDMNVLUA/Deploying-MongoDB-with-OpsWorks">this blog post</a>.
 It uses the custom chef recipe from our cookbook repository:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
 ├── mongodb-singlenode
 │   ├── metadata.rb
 │   └── recipes
@@ -406,11 +406,11 @@ It uses the custom chef recipe from our cookbook repository:</p>
 ├── nodeapp
 │   ├── ...
 </code></pre></div><p>Here we have Berksfile which describes dependencies:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
 
 cookbook <span style="color:#e6db74">&#39;mongodb&#39;</span>
 </code></pre></div><p>The <code>mongodb-singlenode/metadata.rb</code> with recipe dependency info:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">name        <span style="color:#e6db74">&#34;mongodb-singlenode&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">name        <span style="color:#e6db74">&#34;mongodb-singlenode&#34;</span>
 description <span style="color:#e6db74">&#39;MongoDB single node Berkshelf based install&#39;</span>
 maintainer  <span style="color:#e6db74">&#34;Company&#34;</span>
 license     <span style="color:#e6db74">&#34;Apache 2.0&#34;</span>
@@ -418,7 +418,7 @@ version     <span style="color:#e6db74">&#34;1.0.0&#34;</span>
 
 depends <span style="color:#e6db74">&#39;mongodb&#39;</span>
 </code></pre></div><p>And a custom recipe <code>mongodb-singlenode/recipes/default.rb</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">node<span style="color:#f92672">.</span>normal<span style="color:#f92672">[</span><span style="color:#e6db74">:mongodb</span><span style="color:#f92672">][</span><span style="color:#e6db74">:config</span><span style="color:#f92672">][</span><span style="color:#e6db74">:bind_ip</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;127.0.0.1,</span><span style="color:#e6db74">#{</span>node<span style="color:#f92672">[</span><span style="color:#e6db74">:opsworks</span><span style="color:#f92672">][</span><span style="color:#e6db74">:instance</span><span style="color:#f92672">][</span><span style="color:#e6db74">:private_ip</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">node<span style="color:#f92672">.</span>normal<span style="color:#f92672">[</span><span style="color:#e6db74">:mongodb</span><span style="color:#f92672">][</span><span style="color:#e6db74">:config</span><span style="color:#f92672">][</span><span style="color:#e6db74">:bind_ip</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;127.0.0.1,</span><span style="color:#e6db74">#{</span>node<span style="color:#f92672">[</span><span style="color:#e6db74">:opsworks</span><span style="color:#f92672">][</span><span style="color:#e6db74">:instance</span><span style="color:#f92672">][</span><span style="color:#e6db74">:private_ip</span><span style="color:#f92672">]</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
 
 include_recipe <span style="color:#e6db74">&#34;mongodb::default&#34;</span>
 </code></pre></div><p>The important part here is the first string where we add instance&rsquo;s private ip to the &lsquo;bind_ip&rsquo; parameter.

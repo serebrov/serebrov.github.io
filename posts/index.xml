@@ -617,7 +617,7 @@ Color highlighted diffs with git, svn and cvs</description>
       <description>Git error (not after rebase, see below):
 Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  Error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch)
 History looks like:
-... o ---- o ---- A ---- B origin/branch_xxx (upstream work) \  C branch_xxx (your work) Most easy way to solve - is to rebase commit C to the remote state:</description>
+... o ---- o ---- A ---- B origin/branch_xxx (upstream work) \  C branch_xxx (your work) The solution depends on what has actually happened, the reason why the upstream state has changed.</description>
     </item>
     
     <item>

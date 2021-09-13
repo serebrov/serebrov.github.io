@@ -15,7 +15,7 @@ In the examples of MySQL operations different sessions are marked as (1) and (2)
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='mysql'><meta property='article:published_time' content='2012-09-24T00:00:00Z'/><meta property='article:modified_time' content='2012-09-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>innodb notes • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-09-24-innodb.html'>
@@ -81,7 +81,7 @@ if (!doNotTrack) {
     <div class='container'>
       <ul><li class='item'>
   <a href='/'>Home</a></li><li class='item'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
         <a href='/'>Home</a>
       </li><li class='item'>
         <a href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -1175,8 +1175,7 @@ MySQL thread id 51, OS thread handle 0xa6aceb40, query id 1025 localhost root
 TABLE LOCK table `appceo`.`d` trx id 3EDBDA lock mode IX
 RECORD LOCKS space id 0 page no 1507 n bits 72 index `PRIMARY` of table `db`.`d` trx id 3EDBDA lock_mode X
 Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
-0: len 8; hex 73757072656d756d; asc supremum;;
-</code></pre>
+0: len 8; hex 73757072656d756d; asc supremum;;</code></pre>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>

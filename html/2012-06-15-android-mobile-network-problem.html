@@ -15,7 +15,7 @@ $ git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 c
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-09-23T00:00:00Z'/><meta property='article:modified_time' content='2012-09-23T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>git - submodule helpers • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -271,7 +271,7 @@ if (!doNotTrack) {
 <!-- raw HTML omitted -->
 <h2 id="get-a-list-of-commits-inside-a-submodule">Get a list of commits inside a submodule</h2>
 <p>Submodules are identified by SHA-1 hashes so you may need to get a list of them. Do the following inside the submodule folder (or inside the separate submodule repository):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git log --oneline
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git log --oneline
 
     5bd722f commit <span style="color:#ae81ff">5</span>
     b5c1524 commit <span style="color:#ae81ff">4</span>
@@ -280,12 +280,12 @@ if (!doNotTrack) {
     c180c5a commit <span style="color:#ae81ff">1</span>
     702fc8a commit <span style="color:#ae81ff">0</span>
 </code></pre></div><h2 id="view-current-submodule-commit">View current submodule commit</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git submodule status
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git submodule status
 
     5bd722fa26dcdd64128392aa28e08849fe37f111 sub <span style="color:#f92672">(</span>heads/master<span style="color:#f92672">)</span>
 </code></pre></div><h2 id="compare-a-submodule-state-with-another-branch">Compare a submodule state with another branch</h2>
 <p>Assume we are on the &ldquo;branch1&rdquo; and want to compare &lsquo;sub&rsquo; submodule state with master:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git diff master -- sub
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git diff master -- sub
 
     diff --git a/sub b/sub
     index 702fc8a..5bd722f <span style="color:#ae81ff">160000</span>
@@ -297,7 +297,7 @@ if (!doNotTrack) {
 </code></pre></div><p>Where &ldquo;-Subproject commit&rdquo; is another (master) branch state and &ldquo;+Subproject commit&rdquo; is a current branch state.
 VIEW CHANGES TO SUBMODULE STATE ON THE CURRENT BRANCH
 What we do is show a git log with diffs for submodule (named &lsquo;sub&rsquo; in this case):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git log -p sub
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git log -p sub
 
     commit 261aa4bdb6944c77fc98e52748d656e56969ba6a
     Author: name

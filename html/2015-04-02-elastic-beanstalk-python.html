@@ -15,7 +15,7 @@ bin httpdlaunch - a tool script to set environment variables and launch httpd bu
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='eb'><meta property='article:tag' content='python'><meta property='article:tag' content='celery'><meta property='article:tag' content='zeromq'><meta property='article:published_time' content='2015-04-02T00:00:00Z'/><meta property='article:modified_time' content='2015-04-02T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Elastic Beanstalk - python application server structure and celery installation • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -271,7 +271,7 @@ if (!doNotTrack) {
 The application is running under Apache web server.</p>
 <!-- raw HTML omitted -->
 <p>Source folder structure is this:</p>
-<pre><code>bin
+<pre tabindex="0"><code>bin
   httpdlaunch - a tool script to set environment variables and launch httpd
 bundle        - dir with app source code, used during updates
 current       - symlink to the recent source code version under bundle
@@ -283,15 +283,15 @@ run           - virtual environments
 </code></pre><p>Apache logs, deployment logs and system messages log are under <code>/var/log</code>.</p>
 <p>Another important directory is <code>/opt/elasticbeanstalk</code> - here there are EB tool scripts and app server restart hooks.</p>
 <p>Apache is managed by <a href="http://supervisord.org/">supervisord</a>, to check the status run this command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
 </code></pre></div><p>And you can restart apache like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
 </code></pre></div><h3 id="how-to-launch-python-application-manually">How to launch python application manually</h3>
 <p>I have a <a href="http://flask.pocoo.org/">flask</a> application and usually it is started as <code>python application.py</code>.
 To run it on the server instance you need to init virtual environment and set environment variables first:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">source /opt/python/run/venv/bin/activate <span style="color:#f92672">&amp;&amp;</span> source /opt/python/current/env
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">source /opt/python/run/venv/bin/activate <span style="color:#f92672">&amp;&amp;</span> source /opt/python/current/env
 </code></pre></div><p>Now you can start the application manually:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /opt/python/current/app
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">cd /opt/python/current/app
 python application.py
 </code></pre></div><p>Or start flask shell with <code>flask shell</code>.</p>
 <h3 id="how-to-install-celery">How to install celery</h3>
@@ -302,7 +302,7 @@ python application.py
 <li>the celery application should be watched by supervisord and restarted in the case of failure</li>
 </ul>
 <p>The final project structure will be this:</p>
-<pre><code>  .ebextensions/               - elastic beanstal configs
+<pre tabindex="0"><code>  .ebextensions/               - elastic beanstal configs
     myapp.config               - main config
     deploy.sh                  - deployment script, launched from main config
     utils.sh                   - utility functions for deployment script
@@ -315,13 +315,13 @@ python application.py
   application.py               - main application
   requirements.txt             - project requirements for pip
 </code></pre><p>First, add the following line to the requirements.txt in the root folder of your project (these requirements will be installed with pip automatically):</p>
-<pre><code>...
+<pre tabindex="0"><code>...
 Celery==3.1.17
 </code></pre><p>Note that the version number can be different, 3.1.17 is just an actual version at the moment of writing.</p>
 <p>Then create a main celery application file. In my case, this is <code>celery.py</code> file in the root folder.
 Here I don&rsquo;t describe the celery application file content - do whatever you need from celery here.</p>
 <p>Now modify the elasticbeanstalk config (.elasticbeanstak/myapp.config) to include the deployment script:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">container_commands:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">container_commands:
   004-start-container-commands:
     command: logger <span style="color:#e6db74">&#34;Start deploy script&#34;</span> -t <span style="color:#e6db74">&#34;DEPLOY&#34;</span>
   005-command:
@@ -334,7 +334,7 @@ Here I don&rsquo;t describe the celery application file content - do whatever yo
 <p>In general I find the approach with shell script for beanstalk configuration to be much more convenient than the standard way to put shell script code to the text config file.
 More details about this method can be found in the great <a href="http://www.hudku.com/blog/innocuous-looking-evil-devil/">Innocuous looking Evil Devil</a> article. Check also <a href="http://www.hudku.com/blog/tag/elastic-beanstalk">related posts</a>.</p>
 <p>This deployment script <code>.ebextensions/deploy.sh</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>set -e
 
 SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
@@ -367,12 +367,12 @@ supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
 </code></pre></div><p>A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
 So in any case we need to modify the main supervisord config.
 The script above does this by adding a following lines to it:</p>
-<pre><code>[include]
+<pre tabindex="0"><code>[include]
 ; it is possible to include multiple files, names should be separated by space
 files=celeryd.conf
 </code></pre><p>The <code>celeryd.conf</code> is copied into the same folder where supervisord.conf resides.</p>
 <p>The <code>.ebextensions/utils.sh</code> script contains additional functions used by deployment script:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>set -e
 
 SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
@@ -439,7 +439,7 @@ script_add_line<span style="color:#f92672">()</span> <span style="color:#f92672"
     <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>The celeryd.conf in <code>.ebextensions/files/celeryd.conf</code> is a supervisord config:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[program:celeryd]</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[program:celeryd]</span>
 <span style="color:#a6e22e">command</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/current/app/scripts/celeryd</span>
 
 <span style="color:#a6e22e">directory</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/current/app</span>
@@ -464,7 +464,7 @@ script_add_line<span style="color:#f92672">()</span> <span style="color:#f92672"
 <span style="color:#75715e">; so it starts first</span>
 <span style="color:#75715e">; priority=998</span>
 </code></pre></div><p>Restart hook <code>.ebextensions/files/99_restart_services.sh</code> restarts celery application when application server is reloaded or restarted:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
 </span><span style="color:#75715e"></span>
 set -xe
 
@@ -476,7 +476,7 @@ set -xe
 
 eventHelper.py --msg <span style="color:#e6db74">&#34;Application server successfully restarted.&#34;</span> --severity INFO
 </code></pre></div><p>Finally the script under <code>scripts/celeryd</code> is used to set environment variables, activate virtual environment and run celery application:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/bash
 </span><span style="color:#75715e"></span>
 source /opt/python/current/env
 source /opt/python/run/venv/bin/activate
@@ -490,14 +490,14 @@ exec /opt/python/run/venv/bin/celery worker -A tasks --loglevel<span style="colo
 The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.</p>
 <h3 id="bonus-how-to-install-zeromq-libaray">Bonus: how to install ZeroMQ libaray</h3>
 <p>To install ZeroMQ python library add it to requirements.txt:</p>
-<pre><code>Flask==0.9
+<pre tabindex="0"><code>Flask==0.9
 boto==2.34.0
 ...
 pyzmq==13.0.2
 </code></pre><p>Installation process also includes a compilation phase and you can get an error like this:</p>
-<pre><code>gcc: error trying to exec 'cc1plus': execvp: No such file or directory
+<pre tabindex="0"><code>gcc: error trying to exec 'cc1plus': execvp: No such file or directory
 </code></pre><p>To solve this problem, add following packages into the elasticbeanstalk config:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">  <span style="color:#f92672">packages</span>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">  <span style="color:#f92672">packages</span>:
     <span style="color:#f92672">yum</span>:
       <span style="color:#f92672">gcc</span>: []
       <span style="color:#f92672">gcc-c++</span>: []

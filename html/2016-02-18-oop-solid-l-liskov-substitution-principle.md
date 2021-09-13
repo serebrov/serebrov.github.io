@@ -15,7 +15,7 @@ Or, in other words: the subclass should behave the same way as the base class.'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='oop'><meta property='article:published_time' content='2016-02-18T00:00:00Z'/><meta property='article:modified_time' content='2016-02-18T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>OOP SOLID Principles &#34;L&#34; - Liskov Substitution Principle • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2016-02-18-oop-solid-l-liskov-substitution-principle.md'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -268,7 +268,7 @@ if (!doNotTrack) {
 
   <div class="container entry-content custom">
     <p>According to the <a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia</a> the Liskov Substitution Principle (LSP) is defined as:</p>
-<pre><code>Subtype Requirement:
+<pre tabindex="0"><code>Subtype Requirement:
 Let f(x) be a property provable about objects x of type T.
 Then f(y) should be true for objects y of type S where S is a subtype of T.
 </code></pre><p>The basic idea - if you have an object of type <code>T</code> then you can also use objects of its subclasses instead of it.</p>
@@ -288,7 +288,7 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
 <p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
 <p>Let&rsquo;s imagine we have following class hierarchy:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">   .------------.          .------------.          .-------------.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">   .------------.          .------------.          .-------------.
    | LiveBeing  |          |   Animal   |&lt;|--------|     Cat     |
    |------------|&lt;|--------|------------|          |-------------|
    | + breeze() |          | + eat()    |&lt;|---.    | + mew()     |
@@ -306,7 +306,7 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
 <p>Of course, it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
 <p>This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
   Animal findPet()
       <span style="color:#66d9ef">return</span> new Animal()
@@ -334,7 +334,7 @@ It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>An
 <p>For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&rsquo;t have such a method).</p>
 <h2 id="contravariance-child---parent----of-method-arguments-in-the-subtype">Contravariance (Child -&gt; Parent -&gt; &hellip;) of method arguments in the subtype</h2>
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
   void feed(Animal animal)
     <span style="color:#f92672">...</span>
 
@@ -354,7 +354,7 @@ function doAction(Owner owner)
 </code></pre></div><p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.</p>
 <p>But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
 <p>Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
   void feed(Animal animal)
     animal<span style="color:#f92672">-&gt;</span>eat(this<span style="color:#f92672">-&gt;</span>findFood());
 
@@ -368,7 +368,7 @@ function doAction(Owner owner)
 <p>By the way, if the method doesn&rsquo;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
 <p>No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadFoodException</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadFoodException</span>
 
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadCatFoodException</span> extends BadFoodException
 
@@ -409,7 +409,7 @@ function doAction(Owner owner)
 <p>In most cases preconditions are expectations about method input arguments, also an object&rsquo;s internal state can be a part of the precondition.</p>
 <p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts a wider range of arguments).</p>
 <p>The same logic applies not only to the types of arguments but to the other kind of expectations as well, such as a range of the integer argument:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
   void setHour(int hour)
     <span style="color:#75715e"># hour should be between 0 and 23</span>
     <span style="color:#66d9ef">assert</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> hour <span style="color:#f92672">and</span> hour <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">23</span>)
@@ -431,7 +431,7 @@ function doAction(The24Hours hours)
 <p>Postconditions are usually expectations related to the method return value.</p>
 <p>Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
 <p>An example of postcondition rule violation:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
   number setHour(number hour)
     <span style="color:#f92672">...</span>
     <span style="color:#66d9ef">assert</span> (this<span style="color:#f92672">.</span>hour <span style="color:#f92672">is</span> integer)
@@ -450,7 +450,7 @@ function doAction(The24Hours hours)
 </code></pre></div><p>So again, due to <code>LSP</code> violation, we can not use the child class instead of the parent.</p>
 <h2 id="invariants-of-the-parent-type-must-be-preserved-in-a-subtype">Invariants of the parent type must be preserved in a subtype</h2>
 <p>Invariant is something that is not changed during the method execution. It can be the whole or part of the object internal state:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
   <span style="color:#75715e"># invariant: this.hour is not changed</span>
   number getHour()
     <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
@@ -466,12 +466,12 @@ function doAction(The24Hours hours)
   <span style="color:#66d9ef">if</span> (hours<span style="color:#f92672">-&gt;</span>getHour() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">12</span>)
      <span style="color:#75715e"># OK for The24Hours</span>
      <span style="color:#75715e"># Problem for TheTime, now getHour() can return value &gt; 12</span>
-     <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;First half of the day&#39;</span>, hours<span style="color:#f92672">-&gt;</span>getHour()
+     print <span style="color:#e6db74">&#39;First half of the day&#39;</span>, hours<span style="color:#f92672">-&gt;</span>getHour()
 </code></pre></div><h2 id="history-constraint-the-history-rule">History constraint (the &ldquo;history rule&rdquo;)</h2>
 <p>The subtypes should not introduce new methods that will allow modifying the object state in a way that is not possible for the parent class.</p>
 <p>The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
 <p>For example:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Time</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Time</span>
   <span style="color:#75715e"># it is immutable, once time is set, there is no way to change it</span>
   constructor(int hour, int minute)
   getTime()
@@ -483,11 +483,11 @@ function doAction(The24Hours hours)
   setTime(int hour, int minute)
 
 doAction(Time time)
-  <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;Now it is: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
+  print <span style="color:#e6db74">&#39;Now it is: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
   doOtherAction(time)
   <span style="color:#75715e"># OK for Time, it can not be changed, so value is the same</span>
   <span style="color:#75715e"># Problem for FlexibleTime, the `doOtherAction` could change it</span>
-  <span style="color:#66d9ef">print</span> <span style="color:#e6db74">&#39;Now it is still: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
+  print <span style="color:#e6db74">&#39;Now it is still: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
 
 </code></pre></div><h1 id="links">Links</h1>
 <p><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia:Liskov substitution principle</a></p>

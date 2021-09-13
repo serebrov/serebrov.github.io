@@ -19,7 +19,7 @@ And this connection information is actually misleading - it shows 22 connections
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='rds'><meta property='article:tag' content='postgresql'><meta property='article:published_time' content='2015-09-22T00:00:00Z'/><meta property='article:modified_time' content='2015-09-22T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>AWS PostgreSQL RDS - remaining connection slots are reserved error • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-09-22-aws-postgresql-max-connections.html'>
@@ -84,7 +84,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -206,8 +206,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -272,7 +272,7 @@ if (!doNotTrack) {
 
   <div class="container entry-content custom">
     <p>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">FATAL:  remaining connection slots are reserved <span style="color:#66d9ef">for</span> non-replication superuser connections
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">FATAL:  remaining connection slots are reserved <span style="color:#66d9ef">for</span> non-replication superuser connections
 </code></pre></div><p>The PostgreSQL server was running on the db.t1.micro RDS instance and the &lsquo;Current activity&rsquo; column showed &lsquo;22 connections&rsquo; and a red line which should represent a connection limit was far away from the 22 value.</p>
 <!-- raw HTML omitted -->
 <p>Here is how it looked:</p>
@@ -280,7 +280,7 @@ if (!doNotTrack) {
 <p>And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.
 While actually we already at 100% of connections.</p>
 <p>After some time, when the database load went down, I was able to login with psql to check max_connections parameter:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">template1<span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">show</span> max_connections;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">template1<span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">show</span> max_connections;
   max_connections
 <span style="color:#75715e">-----------------
 </span><span style="color:#75715e"></span> <span style="color:#ae81ff">26</span>
@@ -299,7 +299,7 @@ The db.t1.micro instance has 1GB memory, and calculation like <code>1024*1024*10
 <p>So I decided to change the instance type to db.t2.small, it costs twice more, but it has 2GB RAM and default max_connections value is 60.</p>
 <p>In my case the higher connection consumption was not something unexpected, the Elastic Beanstalk scaled the application to 6 EC2 instances under load. Each instance runs a flask application with several threads, so they can easily consume around 20 connections.
 To actually make sure that everything is OK with connections handling, run the following query:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">template1<span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> pg_stat_activity;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">template1<span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> pg_stat_activity;
 
  datid <span style="color:#f92672">|</span>  datname <span style="color:#f92672">|</span> ... <span style="color:#f92672">|</span>    backend_start    <span style="color:#f92672">|</span> ... <span style="color:#f92672">|</span>     query_start     <span style="color:#f92672">|</span>    state_change     <span style="color:#f92672">|</span> waiting <span style="color:#f92672">|</span> <span style="color:#66d9ef">state</span> <span style="color:#f92672">|</span> ... <span style="color:#f92672">|</span>  query
 <span style="color:#75715e">-------+----------+-----+---------------------+-----+---------------------+---------------------+---------+-------+-----+--------------------------

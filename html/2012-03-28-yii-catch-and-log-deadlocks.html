@@ -15,7 +15,7 @@ class AppErrorHandler extends CErrorHandler { protected function handleException
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='yii'><meta property='article:published_time' content='2012-03-28T00:00:00Z'/><meta property='article:modified_time' content='2012-03-28T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>yii - catch and log MySQL deadlock errors • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html'>
@@ -81,7 +81,7 @@ if (!doNotTrack) {
     <div class='container'>
       <ul><li class='item'>
   <a href='/'>Home</a></li><li class='item'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
         <a href='/'>Home</a>
       </li><li class='item'>
         <a href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -271,7 +271,7 @@ One min read
 This way we will have much more useful data to find and fix deadlock.</p>
 <!-- raw HTML omitted -->
 <p>Extend error handler class:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AppErrorHandler</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">CErrorHandler</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AppErrorHandler</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">CErrorHandler</span> {
         <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">handleException</span>($exception) {
             <span style="color:#75715e">/* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]:
 </span><span style="color:#75715e">            * Serialization failure: 1213 Deadlock found when trying to get lock;
@@ -292,7 +292,7 @@ This way we will have much more useful data to find and fix deadlock.</p>
         }
     }
 </code></pre></div><p>Put it in <code>application/protected/components</code> and set in the <code>config/main.php</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">array</span>(
         <span style="color:#f92672">...</span>
         <span style="color:#e6db74">&#39;components&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
             <span style="color:#e6db74">&#39;errorHandler&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(

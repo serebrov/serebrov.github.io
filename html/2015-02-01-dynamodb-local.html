@@ -17,7 +17,7 @@ Without the -sharedDB parameter the DB file name depends on connection parameter
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='dynamodb'><meta property='article:published_time' content='2015-01-25T00:00:00Z'/><meta property='article:modified_time' content='2015-01-25T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Local Amazon DynamoDB - tools, dump/restore and testing • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-02-01-dynamodb-local.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -272,13 +272,13 @@ if (!doNotTrack) {
     <h3 id="setup">Setup</h3>
 <p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Tools.DynamoDBLocal.html">Download</a> and extract dynamodb local to some folder.</p>
 <p>Launch it (-sharedDb allows us to connect to the same database with other tools):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ java -Djava.library.path<span style="color:#f92672">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ java -Djava.library.path<span style="color:#f92672">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 </code></pre></div><p>By default it will be running on the port 8000 and will create the db file in the same directory where it was launched.</p>
 <!-- raw HTML omitted -->
 <p>Without the <code>-sharedDB</code> parameter the DB file name depends on connection parameters, the name is <code>{aws_access_key_id}_{region_name}.db</code>.
 So different clients can use different databases.</p>
 <p>There is also an <code>-inMemory</code> parameter to keep data in memory:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ java -Djava.library.path<span style="color:#f92672">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar - inMemory -sharedDb
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ java -Djava.library.path<span style="color:#f92672">=</span>./DynamoDBLocal_lib -jar DynamoDBLocal.jar - inMemory -sharedDb
 </code></pre></div><h3 id="how-to-load-a-test-data-and-dumprestore-the-data">How to load a test data and dump/restore the data</h3>
 <p>The easiest way is to create some script to generate the test data.
 This way it is possible to run DynamoDB local in memory and populate it with test data after launch.

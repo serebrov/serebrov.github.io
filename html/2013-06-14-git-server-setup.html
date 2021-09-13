@@ -19,7 +19,7 @@ $ su git git@localname$ cd ~ git@localname$ mkdir .ssh For each user who need an
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2013-06-14T00:00:00Z'/><meta property='article:modified_time' content='2013-06-14T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>How to setup git server on ubuntu with push email notifications • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2013-06-14-git-server-setup.html'>
@@ -84,7 +84,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -206,8 +206,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -277,26 +277,26 @@ if (!doNotTrack) {
 Below is the setup process with some comments and updates.</p>
 <!-- raw HTML omitted -->
 <p>Add git user, set some password (you will be asked for it):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo adduser git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo adduser git
 </code></pre></div><p>Log in as git user and setup authorized ssh keys:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ su git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ su git
     git@localname$ cd ~
     git@localname$ mkdir .ssh
 </code></pre></div><p>For each user who need an access to the server add user&rsquo;s public key into ~/.ssh/authorized_keys
 to generate new key-pair for the user use ssh-keygen see <a href="https://help.github.com/articles/generating-ssh-keys">github manual</a> for details.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ cat /home/usera/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ cat /home/usera/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
     git@localname$ cat /home/userb/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 </code></pre></div><p>Change permissions for .ssh folder and authorized_keys file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ chmod <span style="color:#ae81ff">600</span> ~/.ssh/authorized_keys
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ chmod <span style="color:#ae81ff">600</span> ~/.ssh/authorized_keys
     git@localname$ chmod <span style="color:#ae81ff">755</span> ~/.ssh
 </code></pre></div><p>Make a dir for repositories and init bare repositories:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ mkdir ~/server
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git@localname$ mkdir ~/server
     git@localname$ cd server
     git@localname$ mkdir project.git
     git@localname$ cd project.git
     git@localname$ git --bare init
 </code></pre></div><p>Sequrity - set git-shell for the git user:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># check where git-shell is</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># check where git-shell is</span>
     $ which git-shell
     /usr/bin/git-shell
 
@@ -308,7 +308,7 @@ to generate new key-pair for the user use ssh-keygen see <a href="https://help.g
     <span style="color:#75715e"># change shell for git user:</span>
         git❌1000:1000::/home/git:/usr/bin/git-shell
 </code></pre></div><p>On the user side - clone the repository or add a remote to existing repository:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># clone</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># clone</span>
     $ git clone ssh://git@server.host.name/home/git/server/project.git
 
     <span style="color:#75715e"># or add remote</span>
@@ -333,25 +333,25 @@ See:</p>
 <h4 id="when-the-user-tries-to-execute-a-server-operation-git-asks-for-git-user-password-instead-of-ssh-key-passphrase">When the user tries to execute a server operation git asks for git user password instead of ssh key passphrase.</h4>
 <p>Check auth log (/var/log/auth.log) for errors.
 In my case there were errors related to git user&rsquo;s .ssh and authorized_keys permissions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    Aug <span style="color:#ae81ff">15</span> 15:25:24 seb-ubu sshd<span style="color:#f92672">[</span>4561<span style="color:#f92672">]</span>: Authentication refused: bad ownership or modes <span style="color:#66d9ef">for</span> file /home/git/.ssh/authorized_keys
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    Aug <span style="color:#ae81ff">15</span> 15:25:24 seb-ubu sshd<span style="color:#f92672">[</span>4561<span style="color:#f92672">]</span>: Authentication refused: bad ownership or modes <span style="color:#66d9ef">for</span> file /home/git/.ssh/authorized_keys
     ...
     Aug <span style="color:#ae81ff">15</span> 15:47:48 seb-ubu sshd<span style="color:#f92672">[</span>7145<span style="color:#f92672">]</span>: Authentication refused: bad ownership or modes <span style="color:#66d9ef">for</span> directory /home/git/.ssh
 </code></pre></div><p>Changing access permissions as described above fixed the issue.</p>
 <h4 id="how-to-make-existing-git-repository-bare">How to make existing git repository bare</h4>
 <p>If you already have a repository and want to put it on the server then it seems to be safe to just
 copy the .git folder from the existing repository:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># source: project/.git</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e"># source: project/.git</span>
     $ cp -r project/.git project.git
     $ cd project.git
     $ git config --bool core.bare true
 </code></pre></div><h2 id="git-server---email-notifications-on-push">Git Server - email notifications on push</h2>
 <p>Git already has a script to handle email notifications after push.
 Check the /usr/share/doc/git/contrib/hooks/post-receive-email for instructions:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo chmod a+x /usr/share/git-core/contrib/hooks/post-receive-email
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo chmod a+x /usr/share/git-core/contrib/hooks/post-receive-email
     $ cd /path/to/your/repository.git
     $ ln -sf /usr/share/git-core/contrib/hooks/post-receive-email hooks/post-receive
 </code></pre></div><p>Configure notifications:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd /path/to/your/repository.git
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd /path/to/your/repository.git
 
     <span style="color:#75715e"># who should receive notifications</span>
     $ git config hooks.mailinglist <span style="color:#e6db74">&#34;user1@example.com user2@example.com&#34;</span>
@@ -368,36 +368,36 @@ Check the /usr/share/doc/git/contrib/hooks/post-receive-email for instructions:<
 Below is a description of the sendmail setup process.</p>
 <h2 id="setup-sendmail-on-ubuntu">Setup sendmail on Ubuntu</h2>
 <p>Install it:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo apt-get install sendmail
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo apt-get install sendmail
 </code></pre></div><p>Check your hosts file - in my case sendmail was incredibly slow and this was fixed by following
 line in /etc/hosts:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    127.0.0.1 localhost.localdomain localhost myhostname &lt;--- order matters!!!
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    127.0.0.1 localhost.localdomain localhost myhostname &lt;--- order matters!!!
 </code></pre></div><p>Note that you need to use the same order as above - localhost.localdomain, localhost and then
 myhostname (replace myhostname with your real host name, check the output of &lsquo;hostname&rsquo; command).</p>
 <p>Send a test email:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ echo <span style="color:#e6db74">&#34;My test email being sent from sendmail&#34;</span> | /usr/sbin/sendmail myemail@domain.com
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ echo <span style="color:#e6db74">&#34;My test email being sent from sendmail&#34;</span> | /usr/sbin/sendmail myemail@domain.com
 </code></pre></div><p>If you have problems with emails then check the log: /var/log/mail.log and error log: /var/log/mail.err.</p>
 <h3 id="setup-smtp-for-sendmail">Setup SMTP for sendmail</h3>
 <p>If you want to setup SMTP server for you emails do the following:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd /etc/mail
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd /etc/mail
     $ sudo mkdir auth
     $ sudo chmod <span style="color:#ae81ff">700</span> auth
     $ sudo vim client-info
 </code></pre></div><p>Enter following line into the client-info file:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    AuthInfo:smtp.server.com <span style="color:#e6db74">&#34;U:mymail@server.com&#34;</span> <span style="color:#e6db74">&#34;I:mymail@server.com&#34;</span> <span style="color:#e6db74">&#34;P:mypassword&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    AuthInfo:smtp.server.com <span style="color:#e6db74">&#34;U:mymail@server.com&#34;</span> <span style="color:#e6db74">&#34;I:mymail@server.com&#34;</span> <span style="color:#e6db74">&#34;P:mypassword&#34;</span>
 </code></pre></div><p>Here you put you smtp server name (instead of &lsquo;smtp.server.com&rsquo;) and your credentials.
 &lsquo;U&rsquo; is an smtp user (usually your email), &lsquo;I&rsquo; is an account (usually also your email) and &lsquo;P&rsquo; is a password.
 See details for parameters <a href="http://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy">here</a>.</p>
 <p>Continue setup:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo bash -c <span style="color:#e6db74">&#34;makemap hash client-info &lt; client-info&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo bash -c <span style="color:#e6db74">&#34;makemap hash client-info &lt; client-info&#34;</span>
 </code></pre></div><p>Edit the /etc/mail/sendmail.mc and add following lines before the &ldquo;MAILER_DEFINITIONS&rdquo; line:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    define<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;SMART_HOST&#39;</span>,<span style="color:#e6db74">&#39;smtp.server.com&#39;</span><span style="color:#f92672">)</span>dnl
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    define<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;SMART_HOST&#39;</span>,<span style="color:#e6db74">&#39;smtp.server.com&#39;</span><span style="color:#f92672">)</span>dnl
     define<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;confAUTH_MECHANISMS&#39;</span>, <span style="color:#e6db74">&#39;EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN&#39;</span><span style="color:#f92672">)</span>dnl
     FEATURE<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;authinfo&#39;</span>,<span style="color:#e6db74">&#39;hash /etc/mail/auth/client-info&#39;</span><span style="color:#f92672">)</span>dnl
 </code></pre></div><p>Process the sendmail.mc with m4:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo bash -c <span style="color:#e6db74">&#34;m4 sendmail.mc &gt; sendmail.cf&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo bash -c <span style="color:#e6db74">&#34;m4 sendmail.mc &gt; sendmail.cf&#34;</span>
 </code></pre></div><p>Restart sendmail:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo service sendmail restart
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ sudo service sendmail restart
 </code></pre></div><p>Resources:</p>
 <ul>
 <li><a href="http://stackoverflow.com/questions/10359437/sendmail-how-to-configure-sendmail-on-ubuntu">sendmail: how to configure sendmail on ubuntu?</a></li>

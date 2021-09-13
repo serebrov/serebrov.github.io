@@ -15,7 +15,7 @@ So the only way is to create a new table and migrate the existing data to it. Th
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='dynamodb'><meta property='article:tag' content='emr'><meta property='article:published_time' content='2015-01-25T00:00:00Z'/><meta property='article:modified_time' content='2015-01-25T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Amazon DynamoDB - how to add global secondary index • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-01-25-aws-add-secondary-index.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -275,7 +275,7 @@ This can be done using <a href="https://docs.aws.amazon.com/ElasticMapReduce/lat
 <!-- raw HTML omitted -->
 <h3 id="create-the-new-table">Create the new table</h3>
 <p>The new table can be created from the DynamoDB console or with code like this (in python / <a href="https://boto.readthedocs.org/en/latest/ref/dynamodb.html">boto</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Table<span style="color:#f92672">.</span>create(
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">Table<span style="color:#f92672">.</span>create(
     <span style="color:#e6db74">&#39;my_table_v2&#39;</span>,
     schema <span style="color:#f92672">=</span> [HashKey(<span style="color:#e6db74">&#39;my_hash&#39;</span>), RangeKey(<span style="color:#e6db74">&#39;a_range&#39;</span>, data_type<span style="color:#f92672">=</span>NUMBER)],
     global_indexes <span style="color:#f92672">=</span> [
@@ -294,7 +294,7 @@ This can be done using <a href="https://docs.aws.amazon.com/ElasticMapReduce/lat
 <p>But in my case the AWS Data Pipeline service was not available for the region where DynamoDB was launched, so I used EMR (and actually data pipeline also uses EMR behind the scenes).</p>
 <p>Amazon EMR allows to create a step of type &lsquo;Hive program&rsquo; where we can only specify the S3 path to the hive script to run (all other parameters are optional).</p>
 <p>So we create and upload to S3 the hive script like shown below and then launch or use existing EMR cluster to transfer the data:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- This only removes Hive view for dynamo table, not the table itself
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- This only removes Hive view for dynamo table, not the table itself
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">EXISTS</span> my_table;
 <span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> my_table (my_hash string, a_range bigint, my_another_hash string, another_range bigint)
 STORED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>

@@ -17,7 +17,7 @@ docker run --rm -v $PWD:/data asciinema/asciicast2gif -t solarized-dark demo.'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2018-11-29T00:00:00Z'/><meta property='article:modified_time' content='2018-11-29T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Recording Linux Terminal Session to GIF with asciinema • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2018-11-29-linux-terminal-screencast.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -272,11 +272,11 @@ One min read
     <p>The <a href="https://github.com/asciinema/asciinema">asciinema</a> is a good and simple to use tool to record a screencast from the terminal session.</p>
 <p>And <a href="https://github.com/asciinema/asciicast2gif">asciicast2gif</a> allows to convert the recording to gif animation.</p>
 <!-- raw HTML omitted -->
-<pre><code>virtualenv -p python3 venv
+<pre tabindex="0"><code>virtualenv -p python3 venv
 source venv/bin/activate
 
 pip install asciinema
-</code></pre><pre><code>$ asciinema
+</code></pre><pre tabindex="0"><code>$ asciinema
 asciinema: recording asciicast to demo.cast
 asciinema: press &lt;ctrl-d&gt; or type &quot;exit&quot; when you're done
 
@@ -286,7 +286,7 @@ $ &lt;ctrl-d&gt;
 asciinema: recording finished
 asciinema: asciicast saved to demo.cast
 </code></pre><p>And convert it to gif:</p>
-<pre><code>docker run --rm -v $PWD:/data asciinema/asciicast2gif -t solarized-dark demo.cast demo.gif
+<pre tabindex="0"><code>docker run --rm -v $PWD:/data asciinema/asciicast2gif -t solarized-dark demo.cast demo.gif
 </code></pre><p>The result looks like this:</p>
 <p><img src="/2018-11-29-demo.gif" alt="asciinema demo"></p>
 <p>And the recording of the recording process :)</p>

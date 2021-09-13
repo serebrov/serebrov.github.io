@@ -17,7 +17,7 @@ The relevant part from the mongodb docs:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='mongodb'><meta property='article:published_time' content='2014-12-30T00:00:00Z'/><meta property='article:modified_time' content='2014-12-30T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>AWS OpsWorks - setup mongodb ebs volume backups • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -273,7 +273,7 @@ if (!doNotTrack) {
 <p>In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.</p>
 <!-- raw HTML omitted -->
 <p>The relevant part from the <a href="http://docs.mongodb.org/ecosystem/tutorial/backup-and-restore-mongodb-on-amazon-ec2/">mongodb docs</a>:</p>
-<pre><code>    Backup with --journal
+<pre tabindex="0"><code>    Backup with --journal
 
     The journal file allows for roll forward recovery.
     The journal files are located in the dbpath
@@ -301,7 +301,7 @@ I wanted a completely automated setup where I don&rsquo;t need to take manual st
 <li>Aws snapshot tool also sends results via SNS and I get backup notifications by email</li>
 </ul>
 <p>The recipe (<code>ec2-backup/recipes/default.rb</code>) looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">
 <span style="color:#75715e"># see https://github.com/stuart-warren/chef-aws-tag</span>
 
 <span style="color:#75715e"># Assign tag to the instance</span>
@@ -362,7 +362,7 @@ cron <span style="color:#e6db74">&#34;backup-monthly&#34;</span> <span style="co
 <span style="color:#66d9ef">end</span>
 </code></pre></div><p>Under the recipe files folder (<code>ec2-backup/files/default/</code>) I have a modified copy of the aws-snapshot-tool.
 The recipe folder layout is this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
 ├── ec2-backup
 │   ├── files
 │   │   └── default
@@ -372,7 +372,7 @@ The recipe folder layout is this:</p>
 │   └── recipes
 │       └── default.rb
 </code></pre></div><p>The <code>Berksfile</code> contains dependency info (only aws is relevant to ec2-backup recipe):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
 
 cookbook <span style="color:#e6db74">&#39;mongodb&#39;</span>
 cookbook <span style="color:#e6db74">&#39;aws&#39;</span>, <span style="color:#e6db74">&#39;&gt;= 0.2.4&#39;</span>
@@ -380,9 +380,9 @@ cookbook <span style="color:#e6db74">&#39;aws&#39;</span>, <span style="color:#e
 My modification was to allow tagging instances instead of volumes.
 There is already a similar pull request in the <a href="https://github.com/evannuil/aws-snapshot-tool/pull/19">original repository</a> so I didn&rsquo;t submit my change back.
 There is also one new option in the config.py (see the full config example <a href="https://github.com/evannuil/aws-snapshot-tool/blob/559c1f6cf77b87c66c07b177451e76dcccc385fa/config.sample">here</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#f92672">...</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#f92672">...</span>
     <span style="color:#75715e"># Set to True to use intance tags, False - volume tags</span>
-    <span style="color:#e6db74">&#39;use_instance_tag&#39;</span>: True,
+    <span style="color:#e6db74">&#39;use_instance_tag&#39;</span>: <span style="color:#66d9ef">True</span>,
     <span style="color:#f92672">...</span>
 </code></pre></div><p>That&rsquo;s all, now I have mongo data backups with email notifications.</p>
 <h2 id="links">Links</h2>

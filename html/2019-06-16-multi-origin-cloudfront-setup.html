@@ -15,7 +15,7 @@ For example:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2019-06-16T00:00:00Z'/><meta property='article:modified_time' content='2019-06-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -324,7 +324,7 @@ The app is accessible from the sub-path (<code>myapp.com/app</code>) and should 
 <h1 id="single-page-app-setup">Single Page App Setup</h1>
 <p>The single page app setup is quite simple with CloudFront: the app source is copied to S3 bucket and then served via CloudFront (the origin is S3 bucket, with one default behavior).</p>
 <p>Here is an example shell script to deploy the SPA application to S3 (which also sends Slack notification about the deployment):</p>
-<pre><code>#!/usr/bin/env bash
+<pre tabindex="0"><code>#!/usr/bin/env bash
 
 SLACK_HOOK=https://hooks.slack.com/services/XXX/YYY/aaabbbccc
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -427,7 +427,7 @@ And it means that we lose the ability to redirect failing requests to <code>inde
 <p>In a single-origin CloudFront distribution this issue can be solved by setting the default object for the distribution to <code>index.html</code> and also adding &ldquo;Error pages&rdquo; for 404 and 403 that would also point to <code>index.html</code>.</p>
 <p>For a &ldquo;mutli-origin&rdquo; setup a solution is to add lambda@edge function for the &ldquo;Origin Response&rdquo; event and replace 403 / 404 errors with <code>index.html</code> content.</p>
 <p>The Lambda function code (<a href="https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/">source</a>) looks like this:</p>
-<pre><code>'use strict';
+<pre tabindex="0"><code>'use strict';
 
 // Source - https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/
 
@@ -571,7 +571,7 @@ function wrapAndFilterHeaders(headers, originalHeaders){
 </code></pre><h1 id="lambda-code-cloudfrontredirecttotrailingslash">Lambda Code: CloudFrontRedirectToTrailingSlash</h1>
 <p>This function is used for wordpress setup to redirect <code>www.myapp.com/blog</code> requests to <code>www.myapp.com/blog/</code> (add trailing slash which triggers index.php loading from the folder).</p>
 <p>The Lambda function code (<a href="https://www.barelyknown.com/posts/add-trailing-slash-to-cloudfront-request">source</a>):</p>
-<pre><code>const path = require('path');
+<pre tabindex="0"><code>const path = require('path');
 exports.handler = async (event) =&gt; {
   const { request } = event.Records[0].cf;
   const { uri } = request;
@@ -594,7 +594,7 @@ exports.handler = async (event) =&gt; {
 <p>By default this request returns <code>200 OK</code> with <code>application/x-directory</code> content type and empty body.</p>
 <p>The Lambda function adds <code>index.html</code> to these requests (so the request becomes <code>www.myapp.com/app/index.html</code>).</p>
 <p>The lambda function code (<a href="https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/">source</a>):</p>
-<pre><code>'use strict';
+<pre tabindex="0"><code>'use strict';
 
 // Source: https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/
 //
@@ -626,7 +626,7 @@ exports.handler = (event, context, callback) =&gt; {
 In this case, the <code>app.myapp.com</code> requests should be forwared to <code>www.myapp.com/app</code>.</p>
 <p>Note: in the next section there is another solution for the same problem, based on S3 static website hosting feature.</p>
 <p>With Lambda function, the redirect can be done by attaching a function to the old CloudFront distribution behavior, the &ldquo;Viewer Request&rdquo; event:</p>
-<pre><code>const path = require('path');
+<pre tabindex="0"><code>const path = require('path');
 exports.handler = async (event) =&gt; {
   const { request } = event.Records[0].cf;
   const { uri } = request;

@@ -15,7 +15,7 @@ I suspected that this was someting with dns settings, but did not find any solut
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='android'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Andriod - moblie network problem after BusyBox update • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
@@ -80,7 +80,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -202,8 +202,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -282,7 +282,7 @@ Unable to add default route.
 <p>I googled this error and found XDA thread which mention this error, page where it mentioned first - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=418">XDA forum thread, see post 4174</a>.</p>
 <p>Note that I use original LG ROM (not the rom discussed in that thread). Few pages later there is a more detailed examination - <a href="http://forum.xda-developers.com/showthread.php?t=1314898&amp;page=428">see post 4272 and 4275</a>.</p>
 <p>During discussion they suggested to try this command (I modified it a bit because original forum version gave error about wrong arguments. I issued this command in the <a href="https://play.google.com/store/apps/details?id=os.tools.scriptmanager">Script Manager</a> via su):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    su -c <span style="color:#e6db74">&#34;ip -4 route replace default via 109.46.130.66 dev rmnet0&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    su -c <span style="color:#e6db74">&#34;ip -4 route replace default via 109.46.130.66 dev rmnet0&#34;</span>
 </code></pre></div><p>Where ip (109.46.130.66) is ip address from the com.android.server.NativeDaemonConnectorException error above - I think this is dynamic dns server I got from my mobile network provider (different on each connection).
 And this command makes network work! But only for curren session. When I reconnect GPRS the network doesn&rsquo;t work again (because new dns server ip is issued every time).</p>
 <p>The final solution is to take an &ldquo;ip&rdquo; binary from the original rom and replace a busybox&rsquo;s version:</p>

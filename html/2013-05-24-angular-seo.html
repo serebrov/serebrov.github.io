@@ -17,7 +17,7 @@ For simple variables there is ng-bind. And for lists there is ng-include. Here i
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='angularjs'><meta property='article:published_time' content='2013-05-24T00:00:00Z'/><meta property='article:modified_time' content='2013-05-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Angular.js and SEO - pre-render content on the server • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2013-05-24-angular-seo.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -270,7 +270,7 @@ if (!doNotTrack) {
 
   <div class="container entry-content custom">
     <p>With angular.js you have an HTML which looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">span</span>&gt;{{variableValue}}&lt;/<span style="color:#f92672">span</span>&gt;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">span</span>&gt;{{variableValue}}&lt;/<span style="color:#f92672">span</span>&gt;
     &lt;<span style="color:#f92672">ul</span>&gt;
         &lt;<span style="color:#f92672">li</span> <span style="color:#a6e22e">ng-repeat</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item in items&#34;</span> <span style="color:#a6e22e">ng-bind</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;item.name&#34;</span>&gt;&lt;/<span style="color:#f92672">li</span>&gt;
     &lt;/<span style="color:#f92672">ul</span>&gt;
@@ -279,7 +279,7 @@ if (!doNotTrack) {
 <p>For simple variables there is <a href="http://docs.angularjs.org/api/ng.directive:ngBind">ng-bind</a>.
 And for lists there is <a href="http://docs.angularjs.org/api/ng.directive:ngInclude">ng-include</a>.
 Here is the example from above with pre-rendered content:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">ng-bind</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;variableValue&#34;</span>&gt;Static indexed value&lt;/<span style="color:#f92672">span</span>&gt;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">ng-bind</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;variableValue&#34;</span>&gt;Static indexed value&lt;/<span style="color:#f92672">span</span>&gt;
     &lt;<span style="color:#f92672">ul</span> <span style="color:#a6e22e">ng-include</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#39;your/dynamic/list&#39;&#34;</span>&gt;
         &lt;<span style="color:#f92672">li</span>&gt;seo-friendly item1&lt;/<span style="color:#f92672">li</span>&gt;
         &lt;<span style="color:#f92672">li</span>&gt;seo-friendly item2&lt;/<span style="color:#f92672">li</span>&gt;

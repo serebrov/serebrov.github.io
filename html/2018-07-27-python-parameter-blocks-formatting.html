@@ -17,7 +17,7 @@ For example, if you have two blocks with such indentation, the indent will be ju
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='python'><meta property='article:published_time' content='2018-07-27T00:00:00Z'/><meta property='article:modified_time' content='2018-07-27T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Formatting Parameter Blocks in Python • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2018-07-27-python-parameter-blocks-formatting.html'>
@@ -82,7 +82,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -204,8 +204,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -270,24 +270,24 @@ if (!doNotTrack) {
 
   <div class="container entry-content custom">
     <p>There are two ways <a href="https://www.python.org/dev/peps/pep-0008/#indentation">recommended in pep-8</a> to format the blocks with long parameter lists in Python:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Arguments start on the next line</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Arguments start on the next line</span>
 foo <span style="color:#f92672">=</span> long_function_name(
     var_one, var_two,
     var_three, var_four)
 </code></pre></div><p>Another way is:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Arguments start on the same line</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Arguments start on the same line</span>
 foo <span style="color:#f92672">=</span> long_function_name(var_one, var_two,
                          var_three, var_four)
 </code></pre></div><p>I always prefer the first option and the other one is problematic for a few reasons.</p>
 <!-- raw HTML omitted -->
 <p>For example, if you have two blocks with such indentation, the indent will be jumping:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Two functions formatted in such way don&#39;t look good, indent is jumping</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Two functions formatted in such way don&#39;t look good, indent is jumping</span>
 foo <span style="color:#f92672">=</span> long_function_name(var_one, var_two,
                          var_three, var_four)
 bar <span style="color:#f92672">=</span> another_func(var_one, var_two,
                    var_three, var_four)
 </code></pre></div><p>Another reason is that the indentation will be broken if you, for example, rename the function or make it a class method:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">foo <span style="color:#f92672">=</span> long_function_name(var_one, var_two,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">foo <span style="color:#f92672">=</span> long_function_name(var_one, var_two,
                          var_three, var_four)
 
 <span style="color:#75715e"># After renaming the function (or the `foo` variable), we need to fix the indentation on following lines</span>
@@ -298,7 +298,7 @@ foo <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span
                          var_three, var_four)
 </code></pre></div><p>Now, besides the rename / refactoring we need to also fix the indentation in following lines.</p>
 <p>While the first way of formatting works good in these cases:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Two functions near each other, indentation is not jumping</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Two functions near each other, indentation is not jumping</span>
 foo <span style="color:#f92672">=</span> long_function_name(
     var_one, var_two,
     var_three, var_four)

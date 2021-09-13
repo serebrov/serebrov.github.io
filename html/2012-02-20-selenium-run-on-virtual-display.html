@@ -17,7 +17,7 @@ sudo apt-get install x11vnc Run tests on virtual display Start xvbf (virtual dis
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='selenium'><meta property='article:published_time' content='2012-02-20T00:00:00Z'/><meta property='article:modified_time' content='2012-02-20T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>selenium - run tests on a virtual display • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-20-selenium-run-on-virtual-display.html'>
@@ -83,7 +83,7 @@ if (!doNotTrack) {
     <div class='container'>
       <ul><li class='item'>
   <a href='/'>Home</a></li><li class='item'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -206,8 +206,8 @@ if (!doNotTrack) {
         <a href='/'>Home</a>
       </li><li class='item'>
         <a href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -275,22 +275,22 @@ This can be done using xvfb (X virtual framebuffer).</p>
 <!-- raw HTML omitted -->
 <h2 id="set-up">Set up</h2>
 <p>Install xvfb</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    sudo apt-get install xvfb
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    sudo apt-get install xvfb
 </code></pre></div><p>Install x11vnc</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    sudo apt-get install x11vnc
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    sudo apt-get install x11vnc
 </code></pre></div><h2 id="run-tests-on-virtual-display">Run tests on virtual display</h2>
 <p>Start xvbf (virtual display number 99)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    Xvfb -ac :99
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    Xvfb -ac :99
 </code></pre></div><p>Tell tests to run on virtual display</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    export DISPLAY<span style="color:#f92672">=</span>:99
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    export DISPLAY<span style="color:#f92672">=</span>:99
 </code></pre></div><p>Or inside the test code (python)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;DISPLAY&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;:99&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    os.environ<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;DISPLAY&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;:99&#39;</span>
     ...
     selenium <span style="color:#f92672">=</span> webdriver.Firefox<span style="color:#f92672">(</span>firefox_profile<span style="color:#f92672">=</span>ffp, firefox_binary<span style="color:#f92672">=</span>ffb<span style="color:#f92672">)</span>
     ...
 </code></pre></div><h2 id="watch-tests-running-on-virtual-display">Watch tests running on virtual display</h2>
 <p>Start x11vnc server on the same display:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    x11vnc -display :99
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    x11vnc -display :99
 </code></pre></div><p>Use vnc client (for example, <a href="https://launchpad.net/gtkvncviewer">gtkvncviewer</a>) to connect to the localhost and watch how tests are running.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://serverfault.com/questions/273095/connect-to-xvfb-remote-to-fix-firefox-headless-crash">Stackoverflow</a></p>

@@ -13,7 +13,7 @@
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='docker'><meta property='article:tag' content='scaleway'><meta property='article:published_time' content='2016-06-10T00:00:00Z'/><meta property='article:modified_time' content='2016-06-10T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.79.0" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html'>
@@ -78,7 +78,7 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
   <a href='/posts/'>Posts</a></li><li class='item'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
@@ -200,8 +200,8 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
         <a href='/archive/'>Archive</a>
       </li></ul>
@@ -282,7 +282,7 @@ I used Scaleway&rsquo;s VC1S server with Ubuntu 14.04.
 You also need to install <a href="https://docs.docker.com/engine/installation/linux/ubuntulinux/">Docker Engine</a> and <a href="https://docs.docker.com/machine/install-machine/">Docker Machine</a> locally.</p>
 <h2 id="docker-machine---setup-docker-remotely">Docker Machine - setup Docker remotely</h2>
 <p>Next step is to setup the Docker on the server, this is done with <code>docker-machine create</code> command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">SSH_HOST<span style="color:#f92672">=</span>111.222.333.44
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">SSH_HOST<span style="color:#f92672">=</span>111.222.333.44
 SSH_USER<span style="color:#f92672">=</span>root
 SSH_KEY<span style="color:#f92672">=</span>~/.ssh/id_rsa_scaleway
 
@@ -301,7 +301,7 @@ Note: Scaleway has the <a href="https://github.com/scaleway/docker-machine-drive
 <h3 id="projects-layout">Projects layout</h3>
 <p>There are several web applications which I want do deploy, each packaged into the docker container.</p>
 <p>On the filesystem they reside in the same <code>~/web</code> folder along with the <code>web-deploy</code> project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">in ~/web $
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">in ~/web $
 projecta.com/
    Dockerfile
    config/
@@ -320,7 +320,7 @@ projectc.com/
    ...
 web-deploy/
 </code></pre></div><p>The typical Dockerfile for the php application looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM php:5.6-apache
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM php:5.6-apache
 
 RUN apt-get update &amp;&amp; \
   apt-get install -y msmtp wget &amp;&amp; \
@@ -348,7 +348,7 @@ To make the php <code>mail</code> function work, I also setup <code>msmtp</code>
 The example of the msmtp configuration file is <a href="/scaleway-docker/msmtprc">here</a>.</p>
 <p>On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch &ldquo;Block SMTP&rdquo; from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).</p>
 <p>Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"># re-use image which we already use
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"># re-use image which we already use
 FROM php:5.6-apache
 MAINTAINER serebrov@gmail.com
 
@@ -376,7 +376,7 @@ VOLUME /var/www/redmine/files
 Ruby application is running under apache with mod passenger.</p>
 <h2 id="the-web-deploy-project">The web deploy project</h2>
 <p>The <code>web-deploy</code> project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">in ~/web $
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">in ~/web $
 projecta.com/
 projectb.com/
 projectc.com/
@@ -421,7 +421,7 @@ There are several modes it can be used it:</p>
 <li><code>./deploy.sh production projecta.com</code> - deploy only projecta.com on the remote server</li>
 </ul>
 <p>The script looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>set -e
 
 SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
@@ -474,7 +474,7 @@ PROJECTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</s
 docker ps
 </code></pre></div><p>Internally, the <code>deploy.sh</code> script goes over the scripts under <code>/build</code> sub-folder with build scripts and executes them to create or update docker containers.</p>
 <p>The build script looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>set -e
 
 SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
@@ -521,12 +521,12 @@ docker exec $APP_NAME sh -c <span style="color:#e6db74">&#39;chown -R www-data:w
 <h2 id="haproxy-setup">HAProxy setup</h2>
 <p>This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point on the server. Requests to port 80 are reverse-proxied to other containers.
 The Dockerfile is simple:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM haproxy:1.5
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM haproxy:1.5
 COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 # this is needed to setup ssl for one of projects
 COPY ./mycompany.pem /etc/ssl/certs/
 </code></pre></div><p>The configuration file (web-deploy/haproxy/haproxy.cfg) looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">global
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">global
     log /dev/log local2
     maxconn     2048
     tune.ssl.default-dh-param 2048
@@ -590,7 +590,7 @@ backend projectd
     balance roundrobin
     server srv_redmine 127.0.0.1:8100
 </code></pre></div><p>And the build script (web-deploy/haproxy/build.sh) is this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>
 export | grep DOCKER
 docker-machine ip scaleway
@@ -618,12 +618,12 @@ See the config file and <a href="https://www.digitalocean.com/community/tutorial
 </ul>
 <h2 id="mysql-setup">MySql setup</h2>
 <p>The MySql container (it is under web-deploy/mysql folder) also has a simple Dockerfile:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM mysql:5.6
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">FROM mysql:5.6
 ENV MYSQL_ROOT_PASSWORD=myrootpassword
 
 VOLUME /var/www/mysql
 </code></pre></div><p>The build script looks like this:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/usr/bin/env bash
 </span><span style="color:#75715e"></span>
 SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
 APP_NAME<span style="color:#f92672">=</span>web-mysql
@@ -659,7 +659,7 @@ The app containers which need the database are linked to this container.</p>
 </ul>
 <p>Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.</p>
 <p>The <a href="/scaleway-docker/init-db-files.sh">web-deploy/init-db-files.sh</a> script contains code to setup cron, here is the related part:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">  docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd
   docker-machine scp -r ./config/web-cron scaleway:/etc/cron.d/
   docker-machine scp -r ./config/.s3cfg scaleway:/root
 </code></pre></div><p>The <code>postfix</code> and <code>mutt</code> are need for cron to send local emails about jobs. You can check these mails by ssh&rsquo;ing to the server and running mutt.
@@ -672,7 +672,7 @@ So I used cron to backup files and databases to Amazon&rsquo;s S3.</p>
 When I try to create bucket from the command line it returns <code>S3 error: 400 (TooManyBuckets): You have attempted to create more buckets than allowed</code>.
 And the note in the Scaleway UI states &ldquo;We&rsquo;re currently scaling up our SIS infrastructure to handle the load generated by all our new users. All new bucket creation are currently forbidden to preserve the service quality for current SIS users.&rdquo;.</p>
 <p>The cron file to perform backups looks this way:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"># In the case of problems, cron sends local email, can be checked with mutt
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text"># In the case of problems, cron sends local email, can be checked with mutt
 # (it requires apt-get install postfix mutt)
 # Also check cron messages in /var/log/syslog
 # update geolite database
