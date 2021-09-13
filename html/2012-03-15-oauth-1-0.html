@@ -268,13 +268,13 @@ One min read
 
   <div class="container entry-content custom">
     <p>Rename local branch:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git branch -m old-branch-name new-branch-name
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git branch -m old-branch-name new-branch-name
 </code></pre></div><p>Rename remote branch:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#delete remote branch with old name</span>
-    git push origin :old-branch-name
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#delete remote branch with old name</span>
+git push origin :old-branch-name
 
-    <span style="color:#75715e"># create remote renamed branch</span>
-    git push origin new-branch-name
+<span style="color:#75715e"># create remote renamed branch</span>
+git push origin new-branch-name
 </code></pre></div><!-- raw HTML omitted -->
 <h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/1526794/git-rename-remote-branch">stackoverflow</a></p>

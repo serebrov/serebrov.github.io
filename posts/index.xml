@@ -604,15 +604,15 @@ Flow description:
       
       <guid>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</guid>
       <description>To have colored git commands output, use the following command:
-$ git config color.ui true or (globally)
-$ git config --global color.ui true Alternatively, you can set color for individual git commands.
+git config color.ui true or (globally)
+git config --global color.ui true Alternatively, you can set color for individual git commands.
 git config color.branch auto git config color.diff auto git config color.interactive auto git config color.status auto See also color.* options in the git config docs.
 Links git book
 Color highlighted diffs with git, svn and cvs</description>
     </item>
     
     <item>
-      <title>Git - Your branch and &#39;origin/xxx&#39; have diverged</title>
+      <title>git - your branch and &#39;origin/xxx&#39; have diverged error</title>
       <link>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</link>
       <pubDate>Mon, 13 Feb 2012 00:00:00 +0000</pubDate>
       
