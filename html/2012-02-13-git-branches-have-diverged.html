@@ -2,18 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='See color.* options in the git config docs:
-$ git config color.branch auto $ git config color.diff auto $ git config color.interactive auto $ git config color.status auto Or, you can set all of them on with the color.ui option:
+<meta name='description' content='To have colored git commands output, use the following command:
 $ git config color.ui true or (globally)
-$ git config --global color.ui true Links git book
+$ git config --global color.ui true Alternatively, you can set color for individual git commands.
+git config color.branch auto git config color.diff auto git config color.interactive auto git config color.status auto See also color.* options in the git config docs.
+Links git book
 Color highlighted diffs with git, svn and cvs'>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='git - colored diff, branch, etc by default • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='See color.* options in the git config docs:
-$ git config color.branch auto $ git config color.diff auto $ git config color.interactive auto $ git config color.status auto Or, you can set all of them on with the color.ui option:
+<meta property='og:title' content='git - colored diff, branch, etc output by default • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='To have colored git commands output, use the following command:
 $ git config color.ui true or (globally)
-$ git config --global color.ui true Links git book
+$ git config --global color.ui true Alternatively, you can set color for individual git commands.
+git config color.branch auto git config color.diff auto git config color.interactive auto git config color.status auto See also color.* options in the git config docs.
+Links git book
 Color highlighted diffs with git, svn and cvs'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
@@ -21,7 +23,7 @@ Color highlighted diffs with git, svn and cvs'>
 
 <meta name="generator" content="Hugo 0.88.1" />
 
-  <title>git - colored diff, branch, etc by default • vim, git, aws and other three-letter words</title>
+  <title>git - colored diff, branch, etc output by default • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html'>
   
   
@@ -230,7 +232,7 @@ if (!doNotTrack) {
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'>git - colored diff, branch, etc by default</h1>
+      <h1 class='title'>git - colored diff, branch, etc output by default</h1>
       
 
     </div>
@@ -271,17 +273,18 @@ One min read
   
 
   <div class="container entry-content custom">
-    <p>See color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config</a> docs:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git config color.branch auto
-    $ git config color.diff auto
-    $ git config color.interactive auto
-    $ git config color.status auto
-</code></pre></div><!-- raw HTML omitted -->
-<p>Or, you can set all of them on with the color.ui option:</p>
+    <p>To have colored git commands output, use the following command:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git config color.ui true
 </code></pre></div><p>or (globally)</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git config --global color.ui true
-</code></pre></div><h2 id="links">Links</h2>
+</code></pre></div><p>Alternatively, you can set color for individual git commands.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git config color.branch auto
+git config color.diff auto
+git config color.interactive auto
+git config color.status auto
+</code></pre></div><p>See also color.* options in the <a href="http://schacon.github.com/git/git-config.html">git config docs</a>.</p>
+<h2 id="links">Links</h2>
 <p><a href="http://book.git-scm.com/5_customizing_git.html">git book</a></p>
 <p><a href="http://stefaanlippens.net/color_highlighted_diffs_with_git_svn_cvs">Color highlighted diffs with git, svn and cvs</a></p>
  <a href="https://stackexchange.com/users/261528">

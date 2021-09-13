@@ -19,12 +19,12 @@ git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp
     
     <item>
       <title>vim - replace a word with yanked text</title>
-      <link>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</link>
+      <link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link>
       <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</guid>
-      <description>Copy a word and paste it over other words:
-yiw yank inner word (copy word under cursor, say &amp;#34;first&amp;#34;). ...	Move the cursor to another word (say &amp;#34;second&amp;#34;). viwp	select &amp;#34;second&amp;#34;, then replace it with &amp;#34;first&amp;#34;. ...	Move the cursor to another word (say &amp;#34;third&amp;#34;). viw&amp;#34;0p	select &amp;#34;third&amp;#34;, then replace it with &amp;#34;first&amp;#34;.Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;). Yanking text also copies the text to register 0 (&amp;ldquo;0).</description>
+      <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
+      <description>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
+ Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words:  Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word)    Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description>
     </item>
     
   </channel>

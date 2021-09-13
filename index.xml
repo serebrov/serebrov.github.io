@@ -686,7 +686,9 @@ Stackoverflow: How do I commit all deleted files in Git?</description>
       <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-03-15-oauth-1-0.html</guid>
-      <description>#rename local branch git branch -m old-branch-name new-branch-name #delete remote branch with old name git push origin :old-branch-name # create remote renamed branch git push origin new-branch-name Links stackoverflow</description>
+      <description>Rename local branch:
+git branch -m old-branch-name new-branch-name Rename remote branch:
+#delete remote branch with old name git push origin :old-branch-name # create remote renamed branch git push origin new-branch-name Links stackoverflow</description>
     </item>
     
     <item>
@@ -726,12 +728,12 @@ php_flag eaccelerator.enable 0  </description>
     
     <item>
       <title>vim - replace a word with yanked text</title>
-      <link>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</link>
+      <link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link>
       <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/2012-04-03-git-rename-branch.html</guid>
-      <description>Copy a word and paste it over other words:
-yiw yank inner word (copy word under cursor, say &amp;#34;first&amp;#34;). ...	Move the cursor to another word (say &amp;#34;second&amp;#34;). viwp	select &amp;#34;second&amp;#34;, then replace it with &amp;#34;first&amp;#34;. ...	Move the cursor to another word (say &amp;#34;third&amp;#34;). viw&amp;#34;0p	select &amp;#34;third&amp;#34;, then replace it with &amp;#34;first&amp;#34;.Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;). Yanking text also copies the text to register 0 (&amp;ldquo;0).</description>
+      <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
+      <description>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
+ Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words:  Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word)    Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description>
     </item>
     
     <item>
@@ -757,15 +759,16 @@ Flow description:
     </item>
     
     <item>
-      <title>git - colored diff, branch, etc by default</title>
+      <title>git - colored diff, branch, etc output by default</title>
       <link>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</link>
       <pubDate>Tue, 28 Feb 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</guid>
-      <description>See color.* options in the git config docs:
-$ git config color.branch auto $ git config color.diff auto $ git config color.interactive auto $ git config color.status auto Or, you can set all of them on with the color.ui option:
+      <description>To have colored git commands output, use the following command:
 $ git config color.ui true or (globally)
-$ git config --global color.ui true Links git book
+$ git config --global color.ui true Alternatively, you can set color for individual git commands.
+git config color.branch auto git config color.diff auto git config color.interactive auto git config color.status auto See also color.* options in the git config docs.
+Links git book
 Color highlighted diffs with git, svn and cvs</description>
     </item>
     
@@ -798,10 +801,10 @@ sudo apt-get install x11vnc Run tests on virtual display Start xvbf (virtual dis
       <pubDate>Mon, 13 Feb 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</guid>
-      <description>Git error (not after rebase, see below):
-Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  Error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch)
-History looks like:
- ... o ---- o ---- A ---- B origin/branch_xxx (upstream work) \ C branch_xxx (your work) The solution depends on what has actually happened, the reason why the upstream state has changed.</description>
+      <description>Git error:
+Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
+Another case for the error is git rebase (error is expected, see below).
+The history looks like this:</description>
     </item>
     
     <item>
