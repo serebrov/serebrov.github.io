@@ -2,20 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='To use fugitive as you mergetool you can use the following.
-git config --global mergetool.fugitive.cmd &#39;vim -f -c &#34;Gdiff&#34; &#34;$MERGED&#34;&#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast'>
+<meta name='description' content='To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
+ Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words:  Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&quot;0p on another word, here &quot;0p will paste from 0 register (the default register will contain previously replaced word)    Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;).'>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='git - use vim with fugitive to resolve merge conflicts • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='To use fugitive as you mergetool you can use the following.
-git config --global mergetool.fugitive.cmd &#39;vim -f -c &#34;Gdiff&#34; &#34;$MERGED&#34;&#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast'>
+<meta property='og:title' content='vim - replace a word with yanked text • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
+ Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words:  Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&quot;0p on another word, here &quot;0p will paste from 0 register (the default register will contain previously replaced word)    Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;).'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='vim'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-04-24T00:00:00Z'/><meta property='article:modified_time' content='2012-04-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='vim'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.88.1" />
 
-  <title>git - use vim with fugitive to resolve merge conflicts • vim, git, aws and other three-letter words</title>
+  <title>vim - replace a word with yanked text • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html'>
   
   
@@ -224,7 +224,7 @@ if (!doNotTrack) {
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'>git - use vim with fugitive to resolve merge conflicts</h1>
+      <h1 class='title'>vim - replace a word with yanked text</h1>
       
 
     </div>
@@ -238,7 +238,7 @@ if (!doNotTrack) {
   
 </svg>
 <span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2012-04-24T00:00:00Z'>2012, Apr 24</time>
+  <time class='entry-date' datetime='2012-04-03T00:00:00Z'>2012, Apr 03</time>
 </span>
 
   
@@ -265,13 +265,26 @@ One min read
   
 
   <div class="container entry-content custom">
-    <p>To use fugitive as you mergetool you can use the following.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git config --global mergetool.fugitive.cmd <span style="color:#e6db74">&#39;vim -f -c &#34;Gdiff&#34; &#34;$MERGED&#34;&#39;</span>
-    git config --global merge.tool fugitive
-</code></pre></div><!-- raw HTML omitted -->
+    <p>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:</p>
+<ul>
+<li>Yank inner word: <code>yiw</code></li>
+<li>Move cursor to another word</li>
+<li>Select it and paste over: <code>viwp</code></li>
+<li>If you need to replace more words:
+<ul>
+<li>Option 1: <code>gvy</code> to reselect and copy pasted word then do <code>viwp</code> on another word</li>
+<li>Option 2: use <code>viw&quot;0p</code> on another word, here <code>&quot;0p</code> will paste from <code>0</code> register (the default register will contain previously replaced word)</li>
+</ul>
+</li>
+</ul>
+<!-- raw HTML omitted -->
+<p>Deleting, changing and yanking text copies the affected text to the unnamed register (&quot;&quot;).</p>
+<p>Yanking text also copies the text to register 0 (&ldquo;0).</p>
+<p>So the command <code>yiw</code> copies the current word to <code>&quot;&quot;</code> and to <code>&quot;0</code>.</p>
+<p>Typing <code>viw</code> selects the current word, then pressing <code>p</code> pastes the unnamed register over the visual selection.
+The visual selection is deleted to the unnamed register.</p>
 <h2 id="links">Links</h2>
-<p><a href="http://stackoverflow.com/questions/7309707/my-git-mergetool-open-4not-3-windows-in-vimdiff">stackoverflow</a>
-<a href="http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/">fugitive screencast</a></p>
+<p><a href="http://vim.wikia.com/wiki/Replace_a_word_with_yanked_text">vim.wikia.com</a></p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>
@@ -293,7 +306,7 @@ One min read
   <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/vim/'>vim</a>, <a class='tag' href='/tags/git/'>git</a></div>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/vim/'>vim</a></div>
 
   </div>
 </footer>
@@ -303,7 +316,7 @@ One min read
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/html/2013-05-24-angular-post-to-php.html'>
+      <a href='/html/2012-02-28-git-default-color-diff.html'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -311,10 +324,10 @@ One min read
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Angular.js POST data to PHP</a>
+        <span class='screen-reader-text'>Previous post: </span>oauth 1.0 notes</a>
     </div><div class='next-entry sep-before'>
-      <a href='/html/2012-06-15-android-mobile-network-problem.html'>
-        <span class='screen-reader-text'>Next post: </span>git - submodule helpers<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/html/2012-12-17-unit-speed-mysql-to-mem.html'>
+        <span class='screen-reader-text'>Next post: </span>Speedup unit tests by moving MySql data to memory [Ubuntu]<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>

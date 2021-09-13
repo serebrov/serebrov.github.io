@@ -524,10 +524,10 @@ git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 com
     
     <item>
       <title>git - use vim with fugitive to resolve merge conflicts</title>
-      <link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link>
+      <link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link>
       <pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate>
       
-      <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
+      <guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid>
       <description>To use fugitive as you mergetool you can use the following.
 git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description>
     </item>
