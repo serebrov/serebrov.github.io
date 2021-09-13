@@ -6,7 +6,17 @@
     <description>Recent content in Archive on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/archive/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Jun 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/archive/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Amazon NoSQL Solutions</title>
+      <link>https://serebrov.github.io/html/2013-06-11-amazon-nosql-review.html</link>
+      <pubDate>Tue, 11 Jun 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2013-06-11-amazon-nosql-review.html</guid>
+      <description>Amazon provides following NoSQL storage options:
+ [SimpleDB] (http://aws.amazon.com/simpledb/) - Amazon SimpleDB is a highly available and flexible non-relational data store that offloads the work of database administration. Developers simply store and query data items via web services requests and Amazon SimpleDB does the rest. [DynamoDB] (http://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a fully-managed, high performance, NoSQL database service that is easy to set up, operate, and scale.  Amazon&amp;rsquo;s review of big data solutions Amazon&amp;rsquo;s review Big Data on AWS mentions only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data management.</description>
+    </item>
+    
     <item>
       <title>PHP - utf-8 strings handling</title>
       <link>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</link>
@@ -17,6 +27,28 @@
 mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7  These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
 Default encoding can also be set using mb_internal_encoding function:
 mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as argument in mbstring function:</description>
+    </item>
+    
+    <item>
+      <title>Want Scalable Application Architecture? Check AngularJS.</title>
+      <link>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</link>
+      <pubDate>Mon, 18 Mar 2013 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid>
+      <description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
+ Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani  The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
+ base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&#39; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
+    </item>
+    
+    <item>
+      <title>Window managers for Google Chrome</title>
+      <link>https://serebrov.github.io/html/2012-12-09-google-chrome-window-manager.html</link>
+      <pubDate>Sun, 09 Dec 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2012-12-09-google-chrome-window-manager.html</guid>
+      <description>A list of extensions to manage position of chrome tabs / windows and to create splits. Descriptions are original texts from extension pages.
+Tabs Outliner Next Generation Session/Windows/Tabs Manager and Too_Many_Open_Tabs Solution That Really Works.
+ Ultimate overview for all of your open, and not so open (read further), browser windows and tabs, in a resizable vertical side view, with a Tree Style Tab feature. A KILLER FEATURE – Has the unique ability to close and preserve “in place” any tab or window, without removing them from the original context in the tree.</description>
     </item>
     
     <item>

@@ -5,14 +5,14 @@
 <meta name='description' content='Let&rsquo;s assume we have a history like this:
 G1 - G2 - G3 - B1 - B2 - B3 Where G1-G3 are &lsquo;good&rsquo; commits and B1-B3 are &lsquo;bad&rsquo; commits and we want to revert them.
 Here is the shell script to create the revision history like above, you can use it to try and see the effect of different commands.
-git reset The first method is a simple way to throw away few recent commits, it re-writes the commit history, so only use it when your changes are not pushed to the server yet (or when you are 100% sure about what you are doing).'>
+git reset The first method is a simple way to throw away few recent commits.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='Git - how to revert multiple recent commits • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='Let&rsquo;s assume we have a history like this:
 G1 - G2 - G3 - B1 - B2 - B3 Where G1-G3 are &lsquo;good&rsquo; commits and B1-B3 are &lsquo;bad&rsquo; commits and we want to revert them.
 Here is the shell script to create the revision history like above, you can use it to try and see the effect of different commands.
-git reset The first method is a simple way to throw away few recent commits, it re-writes the commit history, so only use it when your changes are not pushed to the server yet (or when you are 100% sure about what you are doing).'>
+git reset The first method is a simple way to throw away few recent commits.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2014-01-04T00:00:00Z'/><meta property='article:modified_time' content='2014-01-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
@@ -253,7 +253,7 @@ if (!doNotTrack) {
   <polyline points="12 6 12 12 15 15"/>
   
 </svg>
-5 mins read
+6 mins read
 </span>
 
 
@@ -278,13 +278,13 @@ want to revert them.</p>
 revision history like above, you can use it to try and see the effect of different
 commands.</p>
 <h2 id="git-reset">git reset</h2>
-<p>The first method is a simple way to throw away few recent commits,
-it re-writes the commit history, so only use it when your changes
-are not pushed to the server yet (or when you are 100% sure about what
-you are doing).</p>
-<p>The <code>git reset</code> command can be used this way (the <code>--hard</code> flag will
-also clear any pending changes which are not commited yet):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git reset --hard HEAD~3  <span style="color:#75715e"># Careful, will remove not-commited changes</span>
+<p>The first method is a simple way to throw away few recent commits.
+It re-writes the commit history, so only use it when your changes are not public yet (you can do this locally or on your private branch).</p>
+<p>The <code>git reset</code> command can be used to throw away recent commits (the <code>--hard</code> flag will also remove any local changes that are not commited yet):</p>
+<pre tabindex="0"><code>Careful: `git reset` will rewirte history.
+
+Careful: `--hard` will remove not-commited local changes.
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git reset --hard HEAD~3
 </code></pre></div><p>Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B1</code> is <code>HEAD~2</code>.
 This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">G1 - G2 - G3 - B1 - B2 - B3
@@ -293,10 +293,8 @@ This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p>
              <span style="color:#ae81ff">\ </span>   <span style="color:#ae81ff">\-</span>--------- HEAD~2
               <span style="color:#ae81ff">\-</span>------------- HEAD~3
 </code></pre></div><h2 id="git-revert">git revert</h2>
-<p>If your changes are pushed to the remote repository or you want in general to aviod
-changing the commit history, then it is better to use <code>revert</code>.</p>
-<p>The <code>revert</code> command takes SHA1 of one or several commits and
-generates the new change to reverse the effect of these commits.</p>
+<p>If your changes are public already (for example, merged to <code>master</code> or other public branch), then it is better to avoid history rewrites and use <code>git revert</code> to generate anti-commit for your changes.</p>
+<p>The <code>revert</code> command takes SHA1 of one or several commits and generates the new change to reverse the effect of these commits.</p>
 <blockquote>
 <p>Note for Mercurial users: in Mercurial, the <code>revert</code> command works differently -
 it takes the revision identifier and reverts the state of the repository to that
@@ -327,23 +325,53 @@ Run git diff to check this (output should be empty):</p>
 </code></pre></div><p>In this case there is no need to specify HEAD~3 since it is a good commit we do not want to revert.
 This is very useful if we want to revert some specific commits, for example, revert <code>B3</code> and <code>B1</code>, but keep <code>B2</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git revert --no-commit HEAD HEAD~2
-</code></pre></div><h2 id="revert-to-the-specific-revision">Revert to the specific revision</h2>
-<p>The <code>git revert</code> command reverts a range of specified revisions, but sometimes we just
-want to restore the state of some specific revision instead of reverting commits one-by-one.
-This is also how <code>hg revert</code> works in Mercurial.</p>
-<p>This is especially useful if we want to revert past merge point, where it can be quite
-difficult to use <code>git revert</code> because we will also need to specify which parent to
-follow at merge point (you&rsquo;ll see a <code>Commit XXX is a merge but no -m option was given.</code> message).</p>
+</code></pre></div><h2 id="revert-the-commit-in-the-middle-of-the-history">Revert the commit in the middle of the history</h2>
+<p>For example, we have history like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">G1 - G2 - G3 - B1 - G4 - G5
+</code></pre></div><p>And want to revert the <code>B1</code> commit.</p>
+<p>The safe way is to use the <code>git revert B1-sha1</code> command, as described above - it will generate an anti-commit for <code>B1</code>.</p>
+<p>The other method is to use interactive rebase to move the bad commit to the top of the history and then remove it with <code>git reset</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git rebase -i HEAD~3
+
+pick B1-sha commit message
+pick G4-sha commit message
+pick G5-sha commit message
+</code></pre></div><p>Here (in the file, opened by <code>git rebase</code>) we can edit the order of the commits and move the bad commit to the end of the commit history:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">pick G4-sha commit message
+pick G5-sha commit message
+pick B1-sha commit message
+</code></pre></div><p>Save the file and exit the editor. If everything is alright (commit has no dependencies), the command will be completed successfully.
+Note: otherwise (you&rsquo;ve got conflicts error) it is probably better to do <code>git rebase --abort</code> to get back to the previous state and re-consider the update strategy.</p>
+<p>Now the history should look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">G1 - G2 - G3 - G4 - G5 - B1
+</code></pre></div><p>And we can remove the last commit with <code>git reset --hard HEAD~1</code> (again, careful, it will remove any local uncommited changes and will rewrite history, do not use on public branches).</p>
+<h2 id="rollback-to-the-specific-revision">Rollback to the specific revision</h2>
+<p>The <code>git revert</code> command reverts a range of specified revisions, but sometimes we just want to restore the state of some specific revision instead of reverting commits one-by-one.</p>
+<p>This is also how <code>hg revert</code> works in Mercurial.</p>
+<p>This is especially useful if we want to revert past the merge point, where it can be quite difficult to use <code>git revert</code> because we will also need to specify which parent to follow at merge point (you&rsquo;ll see a <code>Commit XXX is a merge but no -m option was given.</code> message).</p>
+<h3 id="revert-to-the-specific-revision-using-git-checkout">Revert to the specific revision using git checkout</h3>
+<p>Having a history like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
+ /-- master
+/
+G1 - G2 - G3 - B1 - B2 - B3
+                          <span style="color:#ae81ff">\-</span>-- branch
+</code></pre></div><p>We can rollback the branch state to <code>G3</code> commit this way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout G3-sha
+git branch -D branch  <span style="color:#75715e"># Delete existing branch</span>
+git checkout -b branch  <span style="color:#75715e"># Checkout branch with the same name again</span>
+git push -f origin HEAD  <span style="color:#75715e"># Force-push the new branch</span>
+</code></pre></div><p>So, basically, we are removing the existing branch and creating another branch with the same name from <code>G3</code>.</p>
 <h3 id="revert-to-the-specific-revision-using-git-reset">Revert to the specific revision using git reset</h3>
 <p>The solution comes from the <a href="https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095">Revert to a commit by a SHA hash in Git?</a> question.</p>
 <p>Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
 The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># Careful, reset --hard will remove non-commited changes</span>
-$ git reset --hard 0682c06  <span style="color:#75715e"># Use the SHA1 of the revision you want to revert to</span>
+<pre tabindex="0"><code>Careful, reset --hard will remove non-commited changes
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git reset --hard 0682c06  <span style="color:#75715e"># Use the SHA1 of the revision you want to revert to</span>
 HEAD is now at 0682c06 G3
 $ git reset --soft HEAD@<span style="color:#f92672">{</span>1<span style="color:#f92672">}</span>
 $ git commit -m <span style="color:#e6db74">&#34;Reverting to the state of the project at 0682c06&#34;</span>
-</code></pre></div><h3 id="revert-to-the-specific-revision-using-git-read-tree">Revert to the specific revision using git read-tree</h3>
+</code></pre></div><h3 id="rollback-to-the-specific-revision-using-git-read-tree">Rollback to the specific revision using git read-tree</h3>
 <p>This solution comes from <a href="https://stackoverflow.com/questions/30572775/how-to-do-hg-revert-all-with-git">How to do hg revert &ndash;all with git?</a> question:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git read-tree -um @ 0682c06  <span style="color:#75715e"># Use the SHA1 of the revision you want to revert to</span>
 </code></pre></div><p>The <code>-m</code> option instructs <code>read-tree</code> to merge the specified state and <code>-u</code> will update work tree with the results of the merge.</p>

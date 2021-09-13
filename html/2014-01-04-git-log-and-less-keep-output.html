@@ -2,17 +2,19 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less. This is not convenient in many cases so here is how to fix this.
+<meta name='description' content='When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less.
+This is not convenient in many cases so here is how to fix this.
 Just for git commands:
-git config --global --replace-all core.pager &quot;less -iXFR&quot;  For less globally (including git) - add to .bashrc / .zshrc / etc:
-export LESS=-iXFR  The options we set for less are:'>
+git config --global --replace-all core.pager &#34;less -iXFR&#34; For less command, globally (including git) - add to your shell profile (.bashrc, .zshrc, etc):
+export LESS=-iXFR Options we set for less:'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='How to keep git log and less output on the screen • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less. This is not convenient in many cases so here is how to fix this.
+<meta property='og:description' content='When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less.
+This is not convenient in many cases so here is how to fix this.
 Just for git commands:
-git config --global --replace-all core.pager &quot;less -iXFR&quot;  For less globally (including git) - add to .bashrc / .zshrc / etc:
-export LESS=-iXFR  The options we set for less are:'>
+git config --global --replace-all core.pager &#34;less -iXFR&#34; For less command, globally (including git) - add to your shell profile (.bashrc, .zshrc, etc):
+export LESS=-iXFR Options we set for less:'>
 <meta property='og:url' content='https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2014-01-04T00:00:00Z'/><meta property='article:modified_time' content='2014-01-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
@@ -269,22 +271,20 @@ One min read
   
 
   <div class="container entry-content custom">
-    <p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console
-screen when you exit from less.
-This is not convenient in many cases so here is how to fix this.</p>
-<!-- raw HTML omitted -->
+    <p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console screen when you exit from less.</p>
+<p>This is not convenient in many cases so here is how to fix this.</p>
 <p>Just for git commands:</p>
-<pre><code>git config --global --replace-all core.pager &quot;less -iXFR&quot;
-</code></pre>
-<p>For less globally (including git) - add to .bashrc / .zshrc / etc:</p>
-<pre><code>export LESS=-iXFR
-</code></pre>
-<p>The options we set for less are:</p>
-<pre><code>* -i - ignore case when searching (but respect case if search term contains uppercase letters)
-* -X - do not clear screen on exit
-* -F - exit if text is less then one screen long
-* -R - was on by default on my system, something related to colors
-</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git config --global --replace-all core.pager <span style="color:#e6db74">&#34;less -iXFR&#34;</span>
+</code></pre></div><p>For <code>less</code> command, globally (including git) - add to your shell profile (<code>.bashrc</code>, <code>.zshrc</code>, etc):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export LESS<span style="color:#f92672">=</span>-iXFR
+</code></pre></div><!-- raw HTML omitted -->
+<p>Options we set for <code>less</code>:</p>
+<ul>
+<li>-i - ignore case when searching (but respect case if search term contains uppercase letters)</li>
+<li>-X - do not clear screen on exit</li>
+<li>-F - exit if text is less then one screen long</li>
+<li>-R - was on by default on my system, something related to colors</li>
+</ul>
 <h1 id="links">Links</h1>
 <p><a href="http://www.linuxquestions.org/questions/linux-software-2/more-or-less-but-less-does-not-keep-its-output-on-the-screen-938187/">Linux Questions: more or less - but less does not keep its output on the screen</a></p>
  <a href="https://stackexchange.com/users/261528">

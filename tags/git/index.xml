@@ -37,7 +37,7 @@ The main idea of this workflow is that we create a new branch for every task and
       <description>Let&amp;rsquo;s assume we have a history like this:
 G1 - G2 - G3 - B1 - B2 - B3 Where G1-G3 are &amp;lsquo;good&amp;rsquo; commits and B1-B3 are &amp;lsquo;bad&amp;rsquo; commits and we want to revert them.
 Here is the shell script to create the revision history like above, you can use it to try and see the effect of different commands.
-git reset The first method is a simple way to throw away few recent commits, it re-writes the commit history, so only use it when your changes are not pushed to the server yet (or when you are 100% sure about what you are doing).</description>
+git reset The first method is a simple way to throw away few recent commits.</description>
     </item>
     
     <item>
@@ -46,10 +46,11 @@ git reset The first method is a simple way to throw away few recent commits, it 
       <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</guid>
-      <description>When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less. This is not convenient in many cases so here is how to fix this.
+      <description>When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less.
+This is not convenient in many cases so here is how to fix this.
 Just for git commands:
-git config --global --replace-all core.pager &amp;quot;less -iXFR&amp;quot;  For less globally (including git) - add to .bashrc / .zshrc / etc:
-export LESS=-iXFR  The options we set for less are:</description>
+git config --global --replace-all core.pager &amp;#34;less -iXFR&amp;#34; For less command, globally (including git) - add to your shell profile (.bashrc, .zshrc, etc):
+export LESS=-iXFR Options we set for less:</description>
     </item>
     
     <item>
