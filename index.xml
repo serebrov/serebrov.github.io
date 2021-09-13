@@ -6,7 +6,50 @@
     <description>Recent content in Home on vim, git, aws and other three-letter words</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Sep 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>git - cherry-pick a range of commits</title>
+      <link>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</link>
+      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</guid>
+      <description>To cherry pick a range of commits to another branch, we can use the START^..END commit range syntax, where START is the first commit in the range and END is the last commit:
+git cherry-pick START^..END References How to cherry-pick a range of commits and merge them into another branch?</description>
+    </item>
+    
+    <item>
+      <title>git - how to move history to another repository</title>
+      <link>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</link>
+      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</guid>
+      <description>Git allows joining unrelated repositories via remotes which, in turn, allows moving files and change history between them.
+Some cases when this might be needed:
+ Extract part of a big repository into a separate repository, preserving change history Splitting big repository to a set of smaller repositories Merge smaller repository into a bigger one (merge in library from the external repository)  Preserving the history has an important effect: after we do the change, for example, extract a part of a bigger repository into a separate repository, we can continue moving changes between them (merge updates from the big repository to the small one and back).</description>
+    </item>
+    
+    <item>
+      <title>git - show number of commits by author</title>
+      <link>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</link>
+      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</guid>
+      <description>The shortlog -ns will show number of commits by author:
+git shortlog -ns 280 Author One 46 Author Two 25 authorthree 14 au 4 x 3 Autor One 1 ide user x </description>
+    </item>
+    
+    <item>
+      <title>git - update commit message</title>
+      <link>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</link>
+      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</guid>
+      <description>Simple: Change Last Commit Message To change the last commit message, use commit with --amend flag:
+Careful: `commit --amend` will rewirte history, do not use on public branches. $ git commit --amend It will open an editor and change the commit message, changes will be applied after saving the file and closing the editor.
+Advanced: Change Any Commit Message Besides other things, interactive rebase allows editing commit messages:
+git rebase -i HEAD~3 pick SHA-A commit message pick SHA-B commit message pick SHA-C commit message Do not change commit messages just yet, only change pick in the first column to r (or full reword):</description>
+    </item>
+    
     <item>
       <title>Mitosis Keyboard First Impressions</title>
       <link>https://serebrov.github.io/html/2020-11-22-mitosis-keyboard-first-impressions.html</link>
@@ -329,7 +372,7 @@ The OpsWorks setup includes:
     </item>
     
     <item>
-      <title>Git - how to revert multiple recent commits</title>
+      <title>git - how to revert multiple recent commits</title>
       <link>https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</link>
       <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
       

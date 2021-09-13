@@ -3,21 +3,36 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://serebrov.github.io/</loc>
-    <lastmod>2020-11-21T00:00:00+00:00</lastmod>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/posts/</loc>
-    <lastmod>2020-11-21T00:00:00+00:00</lastmod>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/archive/</loc>
-    <lastmod>2013-06-11T00:00:00+00:00</lastmod>
+    <lastmod>2015-05-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/tags/git/</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://serebrov.github.io/tags/</loc>
+    <lastmod>2021-09-13T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/tags/kbd/</loc>
     <lastmod>2020-11-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/html/2020-11-22-mitosis-keyboard-first-impressions.html</loc>
-    <lastmod>2020-11-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://serebrov.github.io/tags/</loc>
     <lastmod>2020-11-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/html/2020-05-03-oculus-quest-for-work.html</loc>
@@ -43,9 +58,6 @@
   </url><url>
     <loc>https://serebrov.github.io/html/2019-10-08-aws-config-charges.html</loc>
     <lastmod>2019-10-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://serebrov.github.io/tags/git/</loc>
-    <lastmod>2019-06-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</loc>
     <lastmod>2019-06-16T00:00:00+00:00</lastmod>
