@@ -483,10 +483,11 @@ Tabs Outliner Next Generation Session/Windows/Tabs Manager and Too_Many_Open_Tab
       <pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</guid>
-      <description>git-branch(1)
-With &amp;ndash;contains, shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit).
-With &amp;ndash;merged, only branches merged into the named commit (i.e. the branches whose tip commits are reachable from the named commit) will be listed.
-With &amp;ndash;no-merged only branches not merged into the named commit will be listed. If the argument is missing it defaults to HEAD (i.</description>
+      <description>Branches that were not merged with master:
+git branch -a --no-merged (or git branch -a --no-merged master) Branches that were merged with feature:
+git branch -a --merged feature Branches that were merged not with feature:
+git branch -a --no-merged feature Reference The git-branch(1) command:
+ with --contains flag shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit).</description>
     </item>
     
     <item>
