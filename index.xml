@@ -672,12 +672,13 @@ return array( ... &amp;#39;preload&amp;#39; =&amp;gt; array(&amp;#39;log&amp;#39
     </item>
     
     <item>
-      <title>git - git rm already deleted files</title>
+      <title>git - remove already deleted files</title>
       <link>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</link>
       <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</guid>
-      <description>git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
+      <description>To remove files that were already deleted on the file system, run git add with -u flag:
+git status D abc.c git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
 Stackoverflow: How do I commit all deleted files in Git?</description>
     </item>
     

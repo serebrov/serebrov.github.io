@@ -319,8 +319,8 @@ One min read
 
 <nav class='entry-nav'>
   <div class='container'><div class='next-entry sep-before'>
-      <a href='/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
-        <span class='screen-reader-text'>Next post: </span>Andriod - moblie network problem after BusyBox update<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/html/2012-01-24-jquery-check-version.html'>
+        <span class='screen-reader-text'>Next post: </span>git - checkout and track remote branch<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>

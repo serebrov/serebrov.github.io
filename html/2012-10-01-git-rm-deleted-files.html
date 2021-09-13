@@ -2,12 +2,14 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
+<meta name='description' content='To remove files that were already deleted on the file system, run git add with -u flag:
+git status D abc.c git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
 Stackoverflow: How do I commit all deleted files in Git?'>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='git - git rm already deleted files • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
+<meta property='og:title' content='git - remove already deleted files • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='To remove files that were already deleted on the file system, run git add with -u flag:
+git status D abc.c git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
 Stackoverflow: How do I commit all deleted files in Git?'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
@@ -15,7 +17,7 @@ Stackoverflow: How do I commit all deleted files in Git?'>
 
 <meta name="generator" content="Hugo 0.88.1" />
 
-  <title>git - git rm already deleted files • vim, git, aws and other three-letter words</title>
+  <title>git - remove already deleted files • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html'>
   
   
@@ -224,7 +226,7 @@ if (!doNotTrack) {
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'>git - git rm already deleted files</h1>
+      <h1 class='title'>git - remove already deleted files</h1>
       
 
     </div>
@@ -265,9 +267,13 @@ One min read
   
 
   <div class="container entry-content custom">
-    <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git add -u
-</code></pre></div><!-- raw HTML omitted -->
-<p>This tells git to automatically stage tracked files - including deleting the previously tracked files.</p>
+    <p>To remove files that were already deleted on the file system, run <code>git add</code> with <code>-u</code> flag:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git status
+D abc.c
+
+git add -u
+</code></pre></div><p>This tells git to automatically stage tracked files - including deleting the previously tracked files.</p>
+<!-- raw HTML omitted -->
 <p><a href="http://stackoverflow.com/questions/1402776/how-do-i-commit-all-deleted-files-in-git">Stackoverflow: How do I commit all deleted files in Git?</a></p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
