@@ -520,7 +520,7 @@ git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -
       <guid>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</guid>
       <description>Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit (or X commits) after git pull origin master.
 The sequence:
- Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.”  The reason is because during “pull origin master” reference to the remote origin/master is not changed (still points to older version).</description>
+ Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.”  The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).</description>
     </item>
     
     <item>
@@ -565,7 +565,7 @@ In the examples of MySQL operations different sessions are marked as (1) and (2)
       <guid>https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</guid>
       <description>Below are some git commands which can be useful to resolve problems with submodules.
 Get a list of commits inside a submodule Submodules are identified by SHA-1 hashes so you may need to get a list of them. Do the following inside the submodule folder (or inside the separate submodule repository):
-$ git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 commit 2 c180c5a commit 1 702fc8a commit 0 View current submodule commit $ git submodule status 5bd722fa26dcdd64128392aa28e08849fe37f111 sub (heads/master) Compare a submodule state with another branch Assume we are on the &amp;ldquo;branch1&amp;rdquo; and want to compare &amp;lsquo;sub&amp;rsquo; submodule state with master:</description>
+git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 commit 2 c180c5a commit 1 702fc8a commit 0 View current submodule commit git submodule status 5bd722fa26dcdd64128392aa28e08849fe37f111 sub (heads/master) Compare a submodule state with another branch Assume we are on the &amp;ldquo;branch1&amp;rdquo; and want to compare &amp;lsquo;sub&amp;rsquo; submodule state with master:</description>
     </item>
     
     <item>

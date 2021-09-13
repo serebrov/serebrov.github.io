@@ -4,13 +4,13 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit (or X commits) after git pull origin master.
 The sequence:
- Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit.”  The reason is because during “pull origin master” reference to the remote origin/master is not changed (still points to older version).'>
+ Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit.”  The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='git - Your branch is ahead of &#39;origin/master&#39; by 1 commit after pull • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit (or X commits) after git pull origin master.
 The sequence:
- Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit.”  The reason is because during “pull origin master” reference to the remote origin/master is not changed (still points to older version).'>
+ Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit.”  The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-09-30T00:00:00Z'/><meta property='article:modified_time' content='2012-09-30T00:00:00Z'/><meta name='twitter:card' content='summary'>
@@ -251,7 +251,7 @@ if (!doNotTrack) {
   <polyline points="12 6 12 12 15 15"/>
   
 </svg>
-One min read
+2 mins read
 </span>
 
 
@@ -276,17 +276,17 @@ One min read
 <li>Change is received and merged</li>
 <li>git status shows “Your branch is ahead of &lsquo;origin/master&rsquo; by 1 commit.”</li>
 </ul>
-<p>The reason is because during “pull origin master” reference to the remote
-origin/master is not changed (still points to older version).</p>
+<p>The reason is because during <code>pull origin master</code> reference to the remote
+<code>origin/master</code> is not changed (still points to older version).</p>
+<p>Solution: you, probably, do not want to use the <code>git pull origin master</code> command.
+Use <code>git pull</code> instead (will fetch remote changes, update remote references and merge remote changes to your local branch) or <code>git fetch</code> (will fetch remote references, but without merge to your local branch, you can merge manually via <code>git merge origin/master</code>).</p>
 <!-- raw HTML omitted -->
 <p>To check this:</p>
-<pre><code>git diff origin/master
-</code></pre>
-<p>It will show the difference - it should be the last master change.</p>
-<p>To fix this exacute:</p>
-<pre><code>git fetch origin
-</code></pre>
-<p>This will update git links to remotes.</p>
+<pre tabindex="0"><code>git diff origin/master
+</code></pre><p>It will show the difference - it should be the last master change.</p>
+<p>To fix this execute:</p>
+<pre tabindex="0"><code>git fetch origin
+</code></pre><p>This will update git links to remotes.</p>
 <p>If you have this situation then you probably wanted to do just <code>git pull</code> instead of <code>git pull origin master</code>.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/1741143/git-git-pull-origin-mybranch-leaves-local-mybranch-n-commits-ahead-of-origin">Stackoverflow: &lsquo;git pull origin mybranch&rsquo; leaves local mybranch N commits ahead of origin. Why?</a></p>
