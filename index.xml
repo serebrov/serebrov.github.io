@@ -18,7 +18,7 @@ git cherry-pick START^..END References How to cherry-pick a range of commits and
     </item>
     
     <item>
-      <title>git - how to move history to another repository</title>
+      <title>git - how to move files with history to another repository</title>
       <link>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</link>
       <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
       
@@ -46,8 +46,7 @@ git shortlog -ns 280 Author One 46 Author Two 25 authorthree 14 au 4 x 3 Autor O
       <guid>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</guid>
       <description>Simple: Change Last Commit Message To change the last commit message, use commit with --amend flag:
 Careful: `commit --amend` will rewirte history, do not use on public branches. $ git commit --amend It will open an editor and change the commit message, changes will be applied after saving the file and closing the editor.
-Advanced: Change Any Commit Message Besides other things, interactive rebase allows editing commit messages:
-git rebase -i HEAD~3 pick SHA-A commit message pick SHA-B commit message pick SHA-C commit message Do not change commit messages just yet, only change pick in the first column to r (or full reword):</description>
+Advanced: Change Any Commit Message or Multiple Commit Messages Besides other things, interactive rebase allows editing commit messages:</description>
     </item>
     
     <item>
