@@ -2,24 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Diff staged changes Show staged changes - added to index, but not commited yet:
-git diff --cached # or git diff --staged Diff pulled changes Show diff of changes pulled from upstream:
-git pull origin git diff @{1}.. Here @ means HEAD and @{1} means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with git reflog.
-Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.'>
+<meta name='description' content='Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.
+Note: the confusing part is that log with two dots only shows changes on one branch, while diff with two dots includes changes on both branches (showing changes from one branch as removed and from another branch - as added).'>
 <meta name='theme-color' content='#44ccff'>
 
-<meta property='og:title' content='git - view changes - diff and log • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='Diff staged changes Show staged changes - added to index, but not commited yet:
-git diff --cached # or git diff --staged Diff pulled changes Show diff of changes pulled from upstream:
-git pull origin git diff @{1}.. Here @ means HEAD and @{1} means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with git reflog.
-Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.'>
+<meta property='og:title' content='git - viewing changes - diff and log • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.
+Note: the confusing part is that log with two dots only shows changes on one branch, while diff with two dots includes changes on both branches (showing changes from one branch as removed and from another branch - as added).'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-10-01T00:00:00Z'/><meta property='article:modified_time' content='2012-10-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
 <meta name="generator" content="Hugo 0.88.1" />
 
-  <title>git - view changes - diff and log • vim, git, aws and other three-letter words</title>
+  <title>git - viewing changes - diff and log • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html'>
   
   
@@ -228,7 +224,7 @@ if (!doNotTrack) {
   <header class='header entry-header'>
   <div class='container sep-after'>
     <div class='header-info'>
-      <h1 class='title'>git - view changes - diff and log</h1>
+      <h1 class='title'>git - viewing changes - diff and log</h1>
       
 
     </div>
@@ -269,26 +265,16 @@ if (!doNotTrack) {
   
 
   <div class="container entry-content custom">
-    <h2 id="diff-staged-changes">Diff staged changes</h2>
-<p>Show staged changes - added to index, but not commited yet:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff --cached
-<span style="color:#75715e"># or</span>
-git diff --staged
-</code></pre></div><h2 id="diff-pulled-changes">Diff pulled changes</h2>
-<p>Show diff of changes pulled from upstream:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git pull origin
-git diff @<span style="color:#f92672">{</span>1<span style="color:#f92672">}</span>..
-</code></pre></div><p>Here <code>@</code> means <code>HEAD</code> and <code>@{1}</code> means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with <code>git reflog</code>.</p>
-<h2 id="diff-and-log-between-two-branches-all-changes-on-both-branches">Diff and log between two branches (all changes on both branches)</h2>
+    <h2 id="diff-and-log-between-two-branches-all-changes-on-both-branches">Diff and log between two branches (all changes on both branches)</h2>
 <p>To see all changes between two branches, use <code>diff</code> with two or three dots and <code>log</code> with three dots between branch names.</p>
-<!-- raw HTML omitted -->
 <p>Note: the confusing part is that <code>log</code> with two dots only shows changes on one branch, while <code>diff</code> with two dots includes changes on both branches (showing changes from one branch as removed and from another branch - as added).
 See the section below on how to see only new changes on the branch.</p>
 <p>For example, we have a history like this:</p>
 <pre tabindex="0"><code>    ... A ---- B ---- C ---- D  master
                \
                 E ---- F  branch
-</code></pre><p>List of new commits on both branches (log with three dots):</p>
+</code></pre><h3 id="list-of-new-commits-on-both-branches-log-with-three-dots">List of new commits on both branches (log with three dots):</h3>
+<!-- raw HTML omitted -->
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log master...branch
 
 commit F
@@ -302,7 +288,7 @@ commit &gt; F
 commit &lt; D
 commit &gt; E
 commit &lt; C
-</code></pre></div><p>Diff with two dots, <code>master</code> commits shown as removed changes, <code>branch</code> commits - as added:</p>
+</code></pre></div><h3 id="diff-with-two-dots-master-commits-shown-as-removed-changes-branch-commits---as-added">Diff with two dots, <code>master</code> commits shown as removed changes, <code>branch</code> commits - as added:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff master..branch
 -changes from C,D
 +changes from E,F
@@ -311,7 +297,7 @@ commit &lt; C
 git diff master branch
 -changes from C,D
 +changes from E,F
-</code></pre></div><p>Diff with two dots, <code>branch</code> commits are shown as removed changes, <code>master</code> commits as added:</p>
+</code></pre></div><h3 id="diff-with-two-dots-branch-commits-are-shown-as-removed-changes-master-commits-as-added">Diff with two dots, <code>branch</code> commits are shown as removed changes, <code>master</code> commits as added:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff branch..master
 +changes from C,D
 -changes from E,F
@@ -327,11 +313,11 @@ git diff branch master
 <pre tabindex="0"><code>    ... A ---- B ---- C ---- D  master
                \
                 E ---- F  branch
-</code></pre><p>List of new commits on <code>branch</code> (log with two dots):</p>
+</code></pre><h3 id="list-of-new-commits-on-branch-log-with-two-dots">List of new commits on <code>branch</code> (log with two dots):</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log master..branch
 F
 E
-</code></pre></div><p>List of new commits on <code>branch</code> (cherry):</p>
+</code></pre></div><h3 id="list-of-new-commits-on-branch-cherry">List of new commits on <code>branch</code> (cherry):</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git cherry master
 + F
 + E
@@ -340,11 +326,11 @@ git cherry -v master
 + F commit message
 + E commit message
 </code></pre></div><p>The <code>git cherry</code> command provides a more compact output with the list of new commits on the <code>branch</code> comparing to <code>master</code>.</p>
-<p>List of new commits on <code>master</code> (log with two dots):</p>
+<h3 id="list-of-new-commits-on-master-log-with-two-dots">List of new commits on <code>master</code> (log with two dots):</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log branch..master
 D
 C
-</code></pre></div><p>Diff, only new commits on <code>branch</code> (log with two dots and <code>-p</code> or diff with three dots):</p>
+</code></pre></div><h3 id="diff-only-new-commits-on-branch-log-with-two-dots-and--p-or-diff-with-three-dots">Diff, only new commits on <code>branch</code> (log with two dots and <code>-p</code> or diff with three dots):</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log -p master..branch
 +changes from F
 +changes from E
@@ -352,7 +338,7 @@ C
 git diff master...branch
 +changes from E
 +changes from F
-</code></pre></div><p>Diff, only new commits on <code>master</code> (log with two dots and <code>-p</code> or diff with tree dots):</p>
+</code></pre></div><h3 id="diff-only-new-commits-on-master-log-with-two-dots-and--p-or-diff-with-tree-dots">Diff, only new commits on <code>master</code> (log with two dots and <code>-p</code> or diff with tree dots):</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log -p branch..master
 +changes from D
 +changes from C
@@ -392,6 +378,16 @@ It is more consistent and easier to remember - less dots (two) - less changes (o
 <li><code>git log master...branch</code> - new commits on both <code>master</code> and <code>branch</code></li>
 <li><code>git log -p master...branch</code> - changes on both <code>master</code> and <code>branch</code></li>
 </ul>
+<h2 id="diff-staged-changes">Diff staged changes</h2>
+<p>Show staged changes - added to index, but not commited yet:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff --cached
+<span style="color:#75715e"># or</span>
+git diff --staged
+</code></pre></div><h2 id="diff-pulled-changes">Diff pulled changes</h2>
+<p>Show diff of changes pulled from upstream:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git pull origin
+git diff @<span style="color:#f92672">{</span>1<span style="color:#f92672">}</span>..
+</code></pre></div><p>Here <code>@</code> means <code>HEAD</code> and <code>@{1}</code> means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with <code>git reflog</code>.</p>
 <h2 id="log-without-merge-commits">Log without merge commits</h2>
 <p>To show the log without merge commits use <code>--no-merges</code> flag:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --no-merges
