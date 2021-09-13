@@ -483,8 +483,10 @@ With &amp;ndash;no-merged only branches not merged into the named commit will be
       <pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</guid>
-      <description>Diff staged changes git diff --cached # or git diff --staged Diff pulled changes git pull origin git diff @{1}.. Diff two branches ... A ---- B ---- C ---- D master \  E ---- F test We can use both git diff (to get differences) or git log (to get list of changes):
-git log/diff master..test F E git log/diff test..master D C git log/diff master...test D C F E git log --left-right master.</description>
+      <description>Diff staged changes Show staged changes - added to index, but not commited yet:
+git diff --cached # or git diff --staged Diff pulled changes Show diff of changes pulled from upstream:
+git pull origin git diff @{1}.. Here @ means HEAD and @{1} means &amp;ldquo;prior value of the HEAD&amp;rdquo;, the list of prior values can be seen with git reflog.
+Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.</description>
     </item>
     
     <item>
