@@ -19,7 +19,7 @@ if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jque
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.88.1" />
+<meta name="generator" content="Hugo 0.92.1" />
 
   <title>jQuery - check minimal required version • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
@@ -384,7 +384,7 @@ One min read
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2020-2021 Boris Serebrov </p>
+  <p> &copy; 2020-2022 Boris Serebrov </p>
 </div>
 
         </div>

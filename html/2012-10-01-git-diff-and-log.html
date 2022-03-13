@@ -13,7 +13,7 @@ Note: the confusing part is that log with two dots only shows changes on one bra
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-10-01T00:00:00Z'/><meta property='article:modified_time' content='2012-10-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.88.1" />
+<meta name="generator" content="Hugo 0.92.1" />
 
   <title>git - viewing changes - diff and log • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html'>
@@ -391,7 +391,7 @@ git diff @<span style="color:#f92672">{</span>1<span style="color:#f92672">}</sp
 <h2 id="log-without-merge-commits">Log without merge commits</h2>
 <p>To show the log without merge commits use <code>--no-merges</code> flag:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --no-merges
-</code></pre></div><h2 id="log-without-other-branch-commits">Log without other branch commits</h2>
+</code></pre></div><h2 id="log-without-another-branch-commits">Log without another branch commits</h2>
 <p>To exclude commits on <code>master</code> (or another) branch, use <code>--not</code> flag:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log contrib --not master <span style="color:#75715e"># or git log contrib ^master</span>
 </code></pre></div><p>To exclude both commits on <code>master</code> commits and merge commits:</p>
@@ -541,7 +541,7 @@ git log refA refB --not refC
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2020-2021 Boris Serebrov </p>
+  <p> &copy; 2020-2022 Boris Serebrov </p>
 </div>
 
         </div>

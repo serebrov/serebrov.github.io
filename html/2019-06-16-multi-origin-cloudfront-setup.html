@@ -15,7 +15,7 @@ For example:
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2019-06-16T00:00:00Z'/><meta property='article:modified_time' content='2019-06-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.88.1" />
+<meta name="generator" content="Hugo 0.92.1" />
 
   <title>Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html'>
@@ -412,7 +412,7 @@ This is useful to check if there are any local changes to the files after changi
 <li>Get the unbounce URL, like <code>ab44444888888.unbouncepages.com</code></li>
 <li>In DNS settings, point <code>www</code> CNAME to <code>ab44444888888.unbouncepages.com</code></li>
 <li>Wait until unbounce shows &ldquo;Working and Secure&rdquo; for the domain</li>
-<li>Edit (or create) CloudFront distribution, set alternative domain to <code>www.myapp.com</code> (or see <a href="https://serverfault.com/a/888776/527019,">https://serverfault.com/a/888776/527019,</a> there is also a method based on lambda function)</li>
+<li>Edit (or create) CloudFront distribution, set alternative domain to <code>www.myapp.com</code> (or see <a href="https://serverfault.com/a/888776/527019">https://serverfault.com/a/888776/527019</a>, there is also a method based on lambda function)</li>
 <li>Create the CloudFront origin, point it to unbounce URL (<code>ab44444888888.unbouncepages.com</code>)</li>
 <li>Create default behavior <code>(*)</code> for the origin above, disable caching (set &ldquo;Cache Based on Selected Request Headers&rdquo; to &ldquo;All&rdquo;)</li>
 <li>Change DNS settings, point <code>www</code> subdomain to CloudFront distribution (<code>d33xxx8888xxxx.cloudfront.net</code>) - replace the unbounce domain with CloudFront domain</li>
@@ -779,7 +779,7 @@ exports.handler = async (event) =&gt; {
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2020-2021 Boris Serebrov </p>
+  <p> &copy; 2020-2022 Boris Serebrov </p>
 </div>
 
         </div>
