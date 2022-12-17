@@ -19,7 +19,7 @@ date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 S
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-09-29T00:00:00Z'/><meta property='article:modified_time' content='2012-09-29T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Yii and jquery.localtime.js - display dates in user local timezone • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html'>
@@ -278,13 +278,13 @@ to a user local timezone on client.</p>
 <h2 id="setup-mysql-and-php-timezone">Setup MySQL and PHP timezone</h2>
 <p>Set UTC timezone for both MySQL and PHP.</p>
 <p>Yii db config (MySQL):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#a6e22e">‘db’</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
-        <span style="color:#e6db74">&#39;connectionString&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;...’,
-</span><span style="color:#e6db74">        &#39;</span><span style="color:#a6e22e">initSQLs</span><span style="color:#e6db74">&#39;=&gt;&#34;set time_zone=&#39;</span><span style="color:#f92672">+</span><span style="color:#ae81ff">00</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span><span style="color:#a6e22e">’</span>;<span style="color:#e6db74">&#34;,
-</span><span style="color:#e6db74">    );
-</span></code></pre></div><p>And PHP timezone:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    <span style="color:#a6e22e">date_default_timezone_set</span>(<span style="color:#a6e22e">‘UTC’</span>);
-</code></pre></div><h2 id="generate-html-with-utc-dates-in-iso-8601">Generate HTML with UTC dates in ISO 8601</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>    <span style="color:#a6e22e">‘db’</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">array</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;connectionString&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;...’,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#39;</span><span style="color:#a6e22e">initSQLs</span><span style="color:#e6db74">&#39;=&gt;&#34;set time_zone=&#39;</span><span style="color:#f92672">+</span><span style="color:#ae81ff">00</span><span style="color:#f92672">:</span><span style="color:#ae81ff">00</span><span style="color:#a6e22e">’</span>;<span style="color:#e6db74">&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    );
+</span></span></span></code></pre></div><p>And PHP timezone:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>    <span style="color:#a6e22e">date_default_timezone_set</span>(<span style="color:#a6e22e">‘UTC’</span>);
+</span></span></code></pre></div><h2 id="generate-html-with-utc-dates-in-iso-8601">Generate HTML with UTC dates in ISO 8601</h2>
 <p>See <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">date formats here</a>
 Helper functions to convert dates:</p>
 <ul>
@@ -306,14 +306,14 @@ Helper functions to convert dates:</p>
 jquery.localtimex.js code at the end.
 To disable jquery.localtime.js default initialization pass empty format to setFormat()
 method (or remove jQuery.ready block at the end of jquery.localtime.js).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtime-0.5.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtimex.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">setFormat</span>({}); &lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>Use localtimex:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
-        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;.localtime&#39;</span>).<span style="color:#a6e22e">localtimex</span>(<span style="color:#e6db74">&#39;dd MMM yyyy HH:mm:ss&#39;</span>);
-    &lt;/<span style="color:#f92672">script</span>&gt;
-</code></pre></div><p>By default plugin will localize specified elements and re-localize them in the case of ajax updates.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtime-0.5.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/js/jquery.localtimex.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">setFormat</span>({}); &lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>Use localtimex:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>    &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/javascript&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;.localtime&#39;</span>).<span style="color:#a6e22e">localtimex</span>(<span style="color:#e6db74">&#39;dd MMM yyyy HH:mm:ss&#39;</span>);
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><p>By default plugin will localize specified elements and re-localize them in the case of ajax updates.
 Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/wiki/Usage">description</a>.</p>
 <h2 id="date-inputs">Date inputs</h2>
 <p>jquery.localtimex.js plugin also supports date inputs localization (tested with jQuery UI datepicker and depends on it).</p>
@@ -325,11 +325,11 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
 <p>$myDate = gmdate(&lsquo;Y-m-d\TH:i:s\Z&rsquo;, time()); //today, use it as initial date input value</p>
 </li>
 <li>
-<p>When configuring the jQuery datepicker plugin - set date format to &lsquo;mm/dd/yy&rsquo; and add css class &lsquo;localdatepicker&rsquo;.</p>
+<p>When configuring the jQuery datepicker plugin - set date format to &lsquo;mm/dd/yy&rsquo; and add css class &rsquo;localdatepicker&rsquo;.</p>
 </li>
 <li>
-<p>Attach jquery.localtimex plugin to the same input, set date format to &lsquo;MM/dd/yyyy&rsquo; and use css class &lsquo;localdatepicker&rsquo;:</p>
-<p>$('.localdatepicker').localtimex(&lsquo;MM/dd/yyyy&rsquo;);</p>
+<p>Attach jquery.localtimex plugin to the same input, set date format to &lsquo;MM/dd/yyyy&rsquo; and use css class &rsquo;localdatepicker&rsquo;:</p>
+<p>$(&rsquo;.localdatepicker&rsquo;).localtimex(&lsquo;MM/dd/yyyy&rsquo;);</p>
 </li>
 <li>
 <p>On the client side localtimex plugin will convert initial UTC value to the local client time and then will convert it back when form is submitted</p>
@@ -340,90 +340,90 @@ Date format is ISO 8601, see <a href="http://code.google.com/p/jquery-localtime/
 $myDateTimestamp = strtotime($UTCValue);</p>
 </li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">jquery</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">js</span>
-<span style="color:#f92672">-------------------------------------------</span>
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * @name jquery.localtimex.js
-</span><span style="color:#75715e">     * @author Boris Serebrov
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * Depends on: jQuery, jQuery UI datepicker (local date parsing),
-</span><span style="color:#75715e">     * jquery.localtime-0.5.js (http://code.google.com/p/jquery-localtime/)
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * Usage:
-</span><span style="color:#75715e">     * - do not configure jquery.localtime plugin, instead use this plugin
-</span><span style="color:#75715e">     *   on elements you need localize:
-</span><span style="color:#75715e">     *   $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);
-</span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;);
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * Ajax response handling:
-</span><span style="color:#75715e">     * - by default plugin will localize elements after ajax requests
-</span><span style="color:#75715e">     * - to disable this behavior pass &#39;ajaxLocalize&#39;:false to options
-</span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;, {&#39;ajaxLocalize&#39;:false});
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * Date inputs handling:
-</span><span style="color:#75715e">     * - server put UTC time into input (or leave it empty)
-</span><span style="color:#75715e">     * - UTC value converted to local time, user can modify it in local format
-</span><span style="color:#75715e">     * - on form submit value converted back to UTC and posted to server
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * jQuery UI datepicker configuration:
-</span><span style="color:#75715e">     * - add &#39;localtimex&#39; plugin to date input
-</span><span style="color:#75715e">     * - set dateFormat of a date picker accordingly to localtime plugin output format
-</span><span style="color:#75715e">     *   - they use different standards for date presentation,
-</span><span style="color:#75715e">     *     so we have to describe the same presentation twice
-</span><span style="color:#75715e">     *   - for example: localtime plugin - &#39;MM/dd/yyyy&#39;, datepicker - &#39;mm/dd/yy&#39;
-</span><span style="color:#75715e">     * - initial input value should be UTC in ISO format or empty
-</span><span style="color:#75715e">     */</span>
-    (<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">$</span>) {
-      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">format</span>, <span style="color:#a6e22e">opt</span>) {
-
-        <span style="color:#a6e22e">format</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">format</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;yyyy-MM-dd HH:mm:ss&#39;</span>;
-        <span style="color:#a6e22e">opt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">extend</span>({
-            <span style="color:#e6db74">&#39;ajaxLocalize&#39;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>
-        }, <span style="color:#a6e22e">opt</span>);
-
-        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">ajaxLocalize</span>) {
-          <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
-          <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;body&#39;</span>).<span style="color:#a6e22e">ajaxComplete</span>(<span style="color:#66d9ef">function</span>() {
-            <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">selector</span>).<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
-              <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
-            });
-          });
-        }
-
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
-          <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
-          <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
-            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
-            <span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">form</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;submit form-pre-serialize&#39;</span>, <span style="color:#66d9ef">function</span>() {
-                <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">dt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">datepicker</span>.<span style="color:#a6e22e">parseDate</span>(
-                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">datepicker</span>(<span style="color:#e6db74">&#39;option&#39;</span>, <span style="color:#e6db74">&#39;dateFormat&#39;</span>), <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>()
-                );
-                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">dt</span>) {
-                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>(<span style="color:#a6e22e">dt</span>.<span style="color:#a6e22e">toISOString</span>());
-                }
-            });
-          }
-        });
-      };
-
-      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> {
-        <span style="color:#a6e22e">localize</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">element</span>, <span style="color:#a6e22e">format</span>) {
-          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>)) {
-            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
-              <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">utcVal</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>();
-              <span style="color:#75715e">//input can be empty initially
-</span><span style="color:#75715e"></span>              <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">utcVal</span>.<span style="color:#a6e22e">length</span>) {
-                <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>(), <span style="color:#a6e22e">format</span>));
-              }
-            } <span style="color:#66d9ef">else</span> {
-              <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(), <span style="color:#a6e22e">format</span>));
-            }
-          }
-          <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>, <span style="color:#66d9ef">true</span>);
-        }
-      };
-    }) (<span style="color:#a6e22e">jQuery</span>);
-</code></pre></div><h2 id="links">Links</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">jquery</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">js</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-------------------------------------------</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @name jquery.localtimex.js
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @author Boris Serebrov
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Depends on: jQuery, jQuery UI datepicker (local date parsing),
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * jquery.localtime-0.5.js (http://code.google.com/p/jquery-localtime/)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Usage:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - do not configure jquery.localtime plugin, instead use this plugin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   on elements you need localize:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   $(&#39;.localtime&#39;).localtimex(&#39;dd MMM yyyy HH:mm:ss&#39;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Ajax response handling:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - by default plugin will localize elements after ajax requests
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - to disable this behavior pass &#39;ajaxLocalize&#39;:false to options
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   $(&#39;.localdate&#39;).localtimex(&#39;dd MMM yyyy&#39;, {&#39;ajaxLocalize&#39;:false});
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Date inputs handling:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - server put UTC time into input (or leave it empty)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - UTC value converted to local time, user can modify it in local format
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - on form submit value converted back to UTC and posted to server
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * jQuery UI datepicker configuration:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - add &#39;localtimex&#39; plugin to date input
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - set dateFormat of a date picker accordingly to localtime plugin output format
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   - they use different standards for date presentation,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *     so we have to describe the same presentation twice
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *   - for example: localtime plugin - &#39;MM/dd/yyyy&#39;, datepicker - &#39;mm/dd/yy&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * - initial input value should be UTC in ISO format or empty
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">$</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">format</span>, <span style="color:#a6e22e">opt</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">format</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">format</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;yyyy-MM-dd HH:mm:ss&#39;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">opt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">extend</span>({
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;ajaxLocalize&#39;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>        }, <span style="color:#a6e22e">opt</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">opt</span>.<span style="color:#a6e22e">ajaxLocalize</span>) {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">$</span>(<span style="color:#e6db74">&#39;body&#39;</span>).<span style="color:#a6e22e">ajaxComplete</span>(<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">selector</span>).<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>              <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>          });
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">each</span>(<span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span>.<span style="color:#a6e22e">localize</span>(<span style="color:#66d9ef">this</span>, <span style="color:#a6e22e">format</span>);
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">$</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">form</span>).<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;submit form-pre-serialize&#39;</span>, <span style="color:#66d9ef">function</span>() {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">dt</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">datepicker</span>.<span style="color:#a6e22e">parseDate</span>(
+</span></span><span style="display:flex;"><span>                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">datepicker</span>(<span style="color:#e6db74">&#39;option&#39;</span>, <span style="color:#e6db74">&#39;dateFormat&#39;</span>), <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>()
+</span></span><span style="display:flex;"><span>                );
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">dt</span>) {
+</span></span><span style="display:flex;"><span>                  <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">self</span>).<span style="color:#a6e22e">val</span>(<span style="color:#a6e22e">dt</span>.<span style="color:#a6e22e">toISOString</span>());
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>      };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtimex</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">localize</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">element</span>, <span style="color:#a6e22e">format</span>) {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">is</span>(<span style="color:#e6db74">&#34;:input&#34;</span>)) {
+</span></span><span style="display:flex;"><span>              <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">utcVal</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>();
+</span></span><span style="display:flex;"><span>              <span style="color:#75715e">//input can be empty initially
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>              <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">utcVal</span>.<span style="color:#a6e22e">length</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;value&#39;</span>, <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">val</span>(), <span style="color:#a6e22e">format</span>));
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>              <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">localtime</span>.<span style="color:#a6e22e">toLocalTime</span>(<span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">text</span>(), <span style="color:#a6e22e">format</span>));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>          <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">element</span>).<span style="color:#a6e22e">attr</span>(<span style="color:#e6db74">&#39;data-localized&#39;</span>, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      };
+</span></span><span style="display:flex;"><span>    }) (<span style="color:#a6e22e">jQuery</span>);
+</span></span></code></pre></div><h2 id="links">Links</h2>
 <p><a href="http://www.yiiframework.com/wiki/197/local-time-zones-and-locales/">Yii wiki: Local time zones and locales</a></p>
 <p><a href="http://www.yiiframework.com/wiki/183/using-international-dates/">Yii wiki: Using International Dates</a></p>
 <p><a href="http://www.yiiframework.com/extension/i18n-datetime-behavior/">Yii extension: i18n-datetime-behavior</a></p>

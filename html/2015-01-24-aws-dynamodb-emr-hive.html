@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
 Now it is possible to run Hive commands in few following ways:
- Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &lsquo;Hive program&rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.'>
+Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &lsquo;Hive program&rsquo; step Run it from Hue web-interface (see below) Connect to Hue Hue is a Hadoop web interface.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='Amazon DynamoDB, EMR and Hive notes • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
 Now it is possible to run Hive commands in few following ways:
- Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &lsquo;Hive program&rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.'>
+Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &lsquo;Hive program&rsquo; step Run it from Hue web-interface (see below) Connect to Hue Hue is a Hadoop web interface.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='aws'><meta property='article:tag' content='dynamodb'><meta property='article:tag' content='emr'><meta property='article:tag' content='hive'><meta property='article:published_time' content='2015-01-24T00:00:00Z'/><meta property='article:modified_time' content='2015-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Amazon DynamoDB, EMR and Hive notes • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html'>
@@ -293,47 +293,46 @@ The recommended way to connect to Hue is via <a href="http://docs.aws.amazon.com
 <li>Export data from dynamo to S3 and then query it, in this case queries are a bit slower than for a native Hive table, but data persists on S3, so it is possible to terminate the cluster and then launch it again when necessary</li>
 </ul>
 <p>Example of the script to move data from dynamo to hive native table:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- Here you can drop/create an external table at any time - this will not affect real data
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> dynamo_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string)
-STORED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
-TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mytable&#34;</span>,
-<span style="color:#e6db74">&#34;dynamodb.column.mapping&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hash:hash,range:range,data:data&#34;</span>);
-
-<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> hive_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string);
-
-<span style="color:#66d9ef">SET</span> dynamodb.throughput.<span style="color:#66d9ef">read</span>.percent<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">9</span>;
-
-<span style="color:#66d9ef">INSERT</span> OVERWRITE <span style="color:#66d9ef">TABLE</span> hive_table <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> dynamo_table;
-</code></pre></div><p>Example of the script to move data from dynamo to S3:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> dynamo_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string)
-STORED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
-TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mytable&#34;</span>,
-<span style="color:#e6db74">&#34;dynamodb.column.mapping&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hash:hash,range:range,data:data&#34;</span>);
-
-<span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> s3_table(hash string, range bigint, <span style="color:#66d9ef">data</span> string)
-<span style="color:#66d9ef">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;,&#39;</span>
-<span style="color:#66d9ef">LOCATION</span> <span style="color:#e6db74">&#39;s3://my-bucket-name/2015-01-24-dynamo-table-data/&#39;</span>;
-
-<span style="color:#66d9ef">INSERT</span> OVERWRITE <span style="color:#66d9ef">TABLE</span> s3_table <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> dynamo_table;
-
-</code></pre></div><h3 id="hive---timestamp-to-date-conversions">Hive - timestamp to date conversions</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Here you can drop/create an external table at any time - this will not affect real data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> dynamo_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string)
+</span></span><span style="display:flex;"><span>STORED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
+</span></span><span style="display:flex;"><span>TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mytable&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;dynamodb.column.mapping&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hash:hash,range:range,data:data&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> hive_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SET</span> dynamodb.throughput.<span style="color:#66d9ef">read</span>.percent<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">9</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> OVERWRITE <span style="color:#66d9ef">TABLE</span> hive_table <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> dynamo_table;
+</span></span></code></pre></div><p>Example of the script to move data from dynamo to S3:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> dynamo_table (hash string, range bigint, <span style="color:#66d9ef">data</span> string)
+</span></span><span style="display:flex;"><span>STORED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;org.apache.hadoop.hive.dynamodb.DynamoDBStorageHandler&#39;</span>
+</span></span><span style="display:flex;"><span>TBLPROPERTIES (<span style="color:#e6db74">&#34;dynamodb.table.name&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mytable&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;dynamodb.column.mapping&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hash:hash,range:range,data:data&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> s3_table(hash string, range bigint, <span style="color:#66d9ef">data</span> string)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span style="color:#66d9ef">BY</span> <span style="color:#e6db74">&#39;,&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">LOCATION</span> <span style="color:#e6db74">&#39;s3://my-bucket-name/2015-01-24-dynamo-table-data/&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> OVERWRITE <span style="color:#66d9ef">TABLE</span> s3_table <span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> dynamo_table;
+</span></span></code></pre></div><h3 id="hive---timestamp-to-date-conversions">Hive - timestamp to date conversions</h3>
 <p>Examples of some queries to convert the timestamp to date string:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- Convert timestamp to date in UTC+2 timezone
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp, from_unixtime(stamp, <span style="color:#e6db74">&#39;y-M-d Hⓜ️sZ+0200&#39;</span>) <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
-
-<span style="color:#75715e">-- Select data by date string
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">where</span> stamp <span style="color:#f92672">&gt;</span> unix_timestamp(<span style="color:#e6db74">&#39;2014-12-25 10:18:41+0200&#39;</span>) <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
-</code></pre></div><h3 id="execute-python-script-from-hive-script">Execute python script from Hive script</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- Convert timestamp to date in UTC+2 timezone
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp, from_unixtime(stamp, <span style="color:#e6db74">&#39;y-M-d Hⓜ️sZ+0200&#39;</span>) <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Select data by date string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> hash, stamp <span style="color:#66d9ef">from</span> hive_table <span style="color:#66d9ef">where</span> stamp <span style="color:#f92672">&gt;</span> unix_timestamp(<span style="color:#e6db74">&#39;2014-12-25 10:18:41+0200&#39;</span>) <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>;
+</span></span></code></pre></div><h3 id="execute-python-script-from-hive-script">Execute python script from Hive script</h3>
 <p>It is possible to transform data in Hive using external python script (see <a href="http://andreyfradkin.com/posts/2013/06/15/combining-hive-and-python/">here</a> and <a href="http://www.lichun.cc/blog/2012/06/wordcount-mapreduce-example-using-hive-on-local-and-emr/">here</a>).
 And using a fake table it is possible to run the python script from the hive script:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">--
-</span><span style="color:#75715e">-- Run python script to create test tables on dynamo.
-</span><span style="color:#75715e">-- Script should be uploaded to tapway-scripts/ on s3
-</span><span style="color:#75715e">--
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> empty_src (id string);
-<span style="color:#66d9ef">add</span> file s3:<span style="color:#f92672">//</span>tapway<span style="color:#f92672">-</span>scripts<span style="color:#f92672">/</span>hive.<span style="color:#66d9ef">copy</span>.test.py;
-<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">transform</span> (id) <span style="color:#66d9ef">using</span> <span style="color:#e6db74">&#39;hive.copy.test.py&#39;</span> <span style="color:#66d9ef">from</span> empty_src;
-</code></pre></div><h2 id="links">Links</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">--
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Run python script to create test tables on dynamo.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- Script should be uploaded to tapway-scripts/ on s3
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">--
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">EXISTS</span> empty_src (id string);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">add</span> file s3:<span style="color:#f92672">//</span>tapway<span style="color:#f92672">-</span>scripts<span style="color:#f92672">/</span>hive.<span style="color:#66d9ef">copy</span>.test.py;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#66d9ef">transform</span> (id) <span style="color:#66d9ef">using</span> <span style="color:#e6db74">&#39;hive.copy.test.py&#39;</span> <span style="color:#66d9ef">from</span> empty_src;
+</span></span></code></pre></div><h2 id="links">Links</h2>
 <p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual">Hive Language Manual</a></p>
 <p><a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF">Hive Operators and User-Defined Functions</a></p>
 <p><a href="http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EMR_Hive_Commands.html">DynamoDB Guide: Hive Command Examples for Exporting, Importing, and Querying Data in DynamoDB</a></p>

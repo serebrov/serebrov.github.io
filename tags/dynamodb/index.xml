@@ -38,7 +38,7 @@ Without the -sharedDB parameter the DB file name depends on connection parameter
       <guid>https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</guid>
       <description>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
 Now it is possible to run Hive commands in few following ways:
- Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.</description>
+Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below) Connect to Hue Hue is a Hadoop web interface.</description>
     </item>
     
   </channel>

@@ -3,21 +3,21 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Git error:
-Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
+Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively. The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
 Another case for the error is git rebase (error is expected, see below).
 The history looks like this:'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='git - your branch and &#39;origin/xxx&#39; have diverged error • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='Git error:
-Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
+Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively. The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
 Another case for the error is git rebase (error is expected, see below).
 The history looks like this:'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-02-13T00:00:00Z'/><meta property='article:modified_time' content='2012-02-13T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>git - your branch and &#39;origin/xxx&#39; have diverged error • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html'>
@@ -282,14 +282,14 @@ and have 1 and 1 different commit(s) each, respectively.
                         C  branch_xxx (your work)
 </code></pre><p>The solution depends on what has actually happened, the reason why the upstream state has changed.
 If someone else is also working on the same branch, the good way to solve it is to rebase the commit <code>C</code> on top of the remote state:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git rebase origin/branch_xxx 
-</code></pre></div><p>The history after the rebase will look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git rebase origin/branch_xxx 
+</span></span></code></pre></div><p>The history after the rebase will look like this:</p>
 <pre tabindex="0"><code>    ... o ---- o ---- A ---- B  origin/branch_xxx (upstream work)
                               \
                                C`  branch_xxx (your work)
 </code></pre><p>Another way to fix the issue is to merge the upstream branch state to local:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git merge origin/branch_xxx
-</code></pre></div><p>The history after will look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git merge origin/branch_xxx
+</span></span></code></pre></div><p>The history after will look like this:</p>
 <pre tabindex="0"><code>    ... o ---- o ---- A ---- C ---- B  --- [merge commit]
 </code></pre><h2 id="the-same-git-error-after-rebase">The same git error after rebase:</h2>
 <p>This happens if you rebase the branch which was previously pushed to the origin repository, for example, we start with a state like this:</p>
@@ -297,26 +297,26 @@ If someone else is also working on the same branch, the good way to solve it is 
                        \
                         C  branch_xxx, origin/branch_xxx
 </code></pre><p>Now we want to rebase branch_xxx against the master branch:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout master
-git pull
-git checkout branch_xxx
-git rebase master
-</code></pre></div><p>Now local state of the <code>mybranch</code> and <code>origin/mybranch</code> state will diverge.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout master
+</span></span><span style="display:flex;"><span>git pull
+</span></span><span style="display:flex;"><span>git checkout branch_xxx
+</span></span><span style="display:flex;"><span>git rebase master
+</span></span></code></pre></div><p>Now local state of the <code>mybranch</code> and <code>origin/mybranch</code> state will diverge.
 This is expected as rebase rewrites history, so after it you&rsquo;ll have different local and remote state:</p>
 <pre tabindex="0"><code>    ... o ---- o ---- A ---------------------- B  master, origin/master
                        \                        \
                         C  origin/branch_xxx     C` branch_xxx
-</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ git status
-Alias tip: g status
-On branch branch
-Your branch and <span style="color:#e6db74">&#39;origin/branch&#39;</span> have diverged,
-and have <span style="color:#ae81ff">1</span> and <span style="color:#ae81ff">1</span> different commits each, respectively.
-  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git pull&#34;</span> to merge the remote branch into yours<span style="color:#f92672">)</span>
-</code></pre></div><p>If you absolutely sure this is your case then you can force Git to push your changes:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git push -f origin branch_xxx
-</code></pre></div><h2 id="links">Links</h2>
+</code></pre><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git status
+</span></span><span style="display:flex;"><span>Alias tip: g status
+</span></span><span style="display:flex;"><span>On branch branch
+</span></span><span style="display:flex;"><span>Your branch and <span style="color:#e6db74">&#39;origin/branch&#39;</span> have diverged,
+</span></span><span style="display:flex;"><span>and have <span style="color:#ae81ff">1</span> and <span style="color:#ae81ff">1</span> different commits each, respectively.
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git pull&#34;</span> to merge the remote branch into yours<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>If you absolutely sure this is your case then you can force Git to push your changes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git push -f origin branch_xxx
+</span></span></code></pre></div><h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/34918268/should-i-rebase-master-onto-a-branch-thats-been-pushed/34946769#34946769">Should I rebase master onto a branch that&rsquo;s been pushed?</a></p>
-<p><a href="http://stackoverflow.com/questions/2452226/master-branch-and-origin-master-have-diverged-how-to-undiverge-branches">Stackoverflow - master branch and &lsquo;origin/master&rsquo; have diverged, how to &lsquo;undiverge&rsquo; branches'?</a></p>
+<p><a href="http://stackoverflow.com/questions/2452226/master-branch-and-origin-master-have-diverged-how-to-undiverge-branches">Stackoverflow - master branch and &lsquo;origin/master&rsquo; have diverged, how to &lsquo;undiverge&rsquo; branches&rsquo;?</a></p>
 <p><a href="http://stackoverflow.com/questions/11563319/git-rebase-basics">Stackoverflow - git rebase basics</a></p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">

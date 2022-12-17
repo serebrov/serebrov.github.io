@@ -13,7 +13,7 @@ NPM supports installing dependencies from github, but it is also good to have ve
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='node.js'><meta property='article:tag' content='npm'><meta property='article:published_time' content='2019-02-16T00:00:00Z'/><meta property='article:modified_time' content='2019-02-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Managing NPM packages on github • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html'>
@@ -271,9 +271,9 @@ So you can avoid cluttering npm registry with similar packages, creating confusi
 <!-- raw HTML omitted -->
 <h2 id="preparation">Preparation</h2>
 <p>Add build branch to keep the last published version of the package:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git checkout -b build
-git push -u origin HEAD
-</code></pre></div><p>The build branch can include some files that are normally excluded from git control, for example, results of the webpack build.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git checkout -b build
+</span></span><span style="display:flex;"><span>git push -u origin HEAD
+</span></span></code></pre></div><p>The build branch can include some files that are normally excluded from git control, for example, results of the webpack build.</p>
 <h2 id="workflow">Workflow</h2>
 <p>The workflow I use is this:</p>
 <ul>
@@ -298,8 +298,8 @@ git push -u origin HEAD
 <p>Now, the new release will appear on github under &ldquo;releases&rdquo;, for example <a href="https://github.com/serebrov/emoji-mart-vue/releases">https://github.com/serebrov/emoji-mart-vue/releases</a>.</p>
 <h2 id="use-the-package">Use the Package</h2>
 <p>Include package from github, in <code>package.json</code>:</p>
-<pre tabindex="0"><code>  &quot;dependencies&quot;: {
-    &quot;emoji-mart-vue&quot;: &quot;github:serebrov/emoji-mart-vue#3.1.1&quot;,
+<pre tabindex="0"><code>  &#34;dependencies&#34;: {
+    &#34;emoji-mart-vue&#34;: &#34;github:serebrov/emoji-mart-vue#3.1.1&#34;,
   }
 </code></pre><p>Note that we specify the tag (<code>#3.1.1</code> in the example above), so we can work on the package and release new versions (create new tags) and update the package version used by the main project when we want / need that.</p>
  <a href="https://stackexchange.com/users/261528">

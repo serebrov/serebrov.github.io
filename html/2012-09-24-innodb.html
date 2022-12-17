@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Below are some notes regarding the innodb transactions and locks. Most of them are just a copy-paste from innodb docs with my notes. Also there are some examples of custom-maid deadlocks.
 In the examples of MySQL operations different sessions are marked as (1) and (2), for example:
- create table child (id int(11) NOT NULL) ENGINE=InnoDB;  common operation, do it from any session   (1) start transaction;  do it in session #1   (2) start transaction;  do it in session #2    To get two (or more) sessions just launch several instances of mysql in different console windows.'>
+create table child (id int(11) NOT NULL) ENGINE=InnoDB; common operation, do it from any session (1) start transaction; do it in session #1 (2) start transaction; do it in session #2 To get two (or more) sessions just launch several instances of mysql in different console windows.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='innodb notes • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='Below are some notes regarding the innodb transactions and locks. Most of them are just a copy-paste from innodb docs with my notes. Also there are some examples of custom-maid deadlocks.
 In the examples of MySQL operations different sessions are marked as (1) and (2), for example:
- create table child (id int(11) NOT NULL) ENGINE=InnoDB;  common operation, do it from any session   (1) start transaction;  do it in session #1   (2) start transaction;  do it in session #2    To get two (or more) sessions just launch several instances of mysql in different console windows.'>
+create table child (id int(11) NOT NULL) ENGINE=InnoDB; common operation, do it from any session (1) start transaction; do it in session #1 (2) start transaction; do it in session #2 To get two (or more) sessions just launch several instances of mysql in different console windows.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-09-24-innodb.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='mysql'><meta property='article:published_time' content='2012-09-24T00:00:00Z'/><meta property='article:modified_time' content='2012-09-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>innodb notes • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-09-24-innodb.html'>

@@ -11,7 +11,7 @@
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2013-09-11T00:00:00Z'/><meta property='article:modified_time' content='2013-09-11T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html'>
@@ -285,103 +285,103 @@ Also we are going to make some changes to eb sources to make it understand relat
 <p>Just download <a href="http://aws.amazon.com/code/6752709412171743">eb tools</a> and extract somewhere inside your project.
 Or copy existing version into the project.</p>
 <p>Add a wrapper script to run the original eb tool:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#75715e">#!/bin/sh</span>
-
-    <span style="color:#75715e"># Run the eb tool from the root project directory as</span>
-    <span style="color:#75715e"># console/eb {parameters}</span>
-    <span style="color:#75715e"># Use linux python2.7 version</span>
-
-    SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
-
-    export PATH<span style="color:#f92672">=</span>$PATH:$SCRIPT_PATH/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
-    eb <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>
-</code></pre></div><p>Script should be on the same lever as the extracted directory.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#75715e">#!/bin/sh</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Run the eb tool from the root project directory as</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># console/eb {parameters}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Use linux python2.7 version</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    export PATH<span style="color:#f92672">=</span>$PATH:$SCRIPT_PATH/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
+</span></span><span style="display:flex;"><span>    eb <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>Script should be on the same lever as the extracted directory.
 For example I have:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    project_root/
-    | .ebextensions/
-    | .elasticbeanstalk/
-    | .git/
-    | application/
-    | console/
-    | | AWS-ElasticBeanstalk-CLI-2.5.1/
-    | | eb*
-    | | ...
-    | ...
-    | .gitignore
-</code></pre></div><p>So I launch the &lsquo;eb&rsquo; as &lsquo;console/eb parameters&rsquo; from the project root directory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    project_root/
+</span></span><span style="display:flex;"><span>    | .ebextensions/
+</span></span><span style="display:flex;"><span>    | .elasticbeanstalk/
+</span></span><span style="display:flex;"><span>    | .git/
+</span></span><span style="display:flex;"><span>    | application/
+</span></span><span style="display:flex;"><span>    | console/
+</span></span><span style="display:flex;"><span>    | | AWS-ElasticBeanstalk-CLI-2.5.1/
+</span></span><span style="display:flex;"><span>    | | eb*
+</span></span><span style="display:flex;"><span>    | | ...
+</span></span><span style="display:flex;"><span>    | ...
+</span></span><span style="display:flex;"><span>    | .gitignore
+</span></span></code></pre></div><p>So I launch the &rsquo;eb&rsquo; as &lsquo;console/eb parameters&rsquo; from the project root directory.</p>
 <h2 id="add-eb-configs-under-git-control">Add eb configs under git control</h2>
 <p>Add the EB configs under git control:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ git add -f .elasticbeanstalk
-</code></pre></div><h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ git add -f .elasticbeanstalk
+</span></span></code></pre></div><h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
 <p>For the 2.5.1 version I had to make two changes in the config file parser class.</p>
 <p>The file path is &hellip;/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utility/configfile_parser.py.</p>
 <p>And the changes are:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">41</span> - 47<span style="color:#f92672">]</span>
-    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
-        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
-        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
-        print <span style="color:#e6db74">&#39;Load sectioned config file: &#39;</span> + pathfilename
-
-        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
-            _RawConfigParser.readfp<span style="color:#f92672">(</span>self, input_file<span style="color:#f92672">)</span>
-
-    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">74</span> - 80<span style="color:#f92672">]</span>
-    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
-        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
-        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
-        print <span style="color:#e6db74">&#39;Load config file: &#39;</span> + pathfilename
-
-        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
-            config_pairs <span style="color:#f92672">=</span> input_file.read<span style="color:#f92672">()</span>
-</code></pre></div><p>Now you can use relative to project root paths in your configs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">41</span> - 47<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
+</span></span><span style="display:flex;"><span>        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#39;Load sectioned config file: &#39;</span> + pathfilename
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
+</span></span><span style="display:flex;"><span>            _RawConfigParser.readfp<span style="color:#f92672">(</span>self, input_file<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">74</span> - 80<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
+</span></span><span style="display:flex;"><span>        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#39;Load config file: &#39;</span> + pathfilename
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
+</span></span><span style="display:flex;"><span>            config_pairs <span style="color:#f92672">=</span> input_file.read<span style="color:#f92672">()</span>
+</span></span></code></pre></div><p>Now you can use relative to project root paths in your configs.</p>
 <h2 id="change-paths-in-configs-to-relative">Change paths in configs to relative</h2>
 <p>I had three absolute paths in my ./elasticbeanstalk/config:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
-    ..
-    AwsCredentialFile<span style="color:#f92672">=</span>/home/username/.elasticbeanstalk/aws_credential_file
-    ..
-
-    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
-    staging<span style="color:#f92672">=</span>staging
-    production<span style="color:#f92672">=</span>production
-
-    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
-    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.staging
-    ...
-
-    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
-    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.production
-    ..
-</code></pre></div><p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    ..
+</span></span><span style="display:flex;"><span>    AwsCredentialFile<span style="color:#f92672">=</span>/home/username/.elasticbeanstalk/aws_credential_file
+</span></span><span style="display:flex;"><span>    ..
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    staging<span style="color:#f92672">=</span>staging
+</span></span><span style="display:flex;"><span>    production<span style="color:#f92672">=</span>production
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.staging
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.production
+</span></span><span style="display:flex;"><span>    ..
+</span></span></code></pre></div><p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
 config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).</p>
 <p>Other two paths (for branch configs) can now be changed to relative:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
-    <span style="color:#75715e"># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
-    <span style="color:#75715e"># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
-    ...
-
-    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
-    staging<span style="color:#f92672">=</span>staging
-    production<span style="color:#f92672">=</span>production
-
-    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
-    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.staging
-    ...
-
-    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
-    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.production
-    ...
-</code></pre></div><h2 id="use-it">Use it</h2>
-<p>Make sure you are using the &lsquo;eb&rsquo; wrapper script from the root project directory.
-For example, for &lsquo;eb status&rsquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ cd project/root/dir
-    $ ./path/to/eb status
-    Load sectioned config file: project/root/dir/.elasticbeanstalk/config
-    Load config file: /home/user/.elasticbeanstalk/aws_credential_file
-    URL	: staging-jp48gay9nx.elasticbeanstalk.com
-    Status	: Ready
-    Health	: Green
-</code></pre></div><p>url: &ldquo;/html/</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    staging<span style="color:#f92672">=</span>staging
+</span></span><span style="display:flex;"><span>    production<span style="color:#f92672">=</span>production
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.staging
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.production
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div><h2 id="use-it">Use it</h2>
+<p>Make sure you are using the &rsquo;eb&rsquo; wrapper script from the root project directory.
+For example, for &rsquo;eb status&rsquo;:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ cd project/root/dir
+</span></span><span style="display:flex;"><span>    $ ./path/to/eb status
+</span></span><span style="display:flex;"><span>    Load sectioned config file: project/root/dir/.elasticbeanstalk/config
+</span></span><span style="display:flex;"><span>    Load config file: /home/user/.elasticbeanstalk/aws_credential_file
+</span></span><span style="display:flex;"><span>    URL	: staging-jp48gay9nx.elasticbeanstalk.com
+</span></span><span style="display:flex;"><span>    Status	: Ready
+</span></span><span style="display:flex;"><span>    Health	: Green
+</span></span></code></pre></div><p>url: &ldquo;/html/</p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
 </a>

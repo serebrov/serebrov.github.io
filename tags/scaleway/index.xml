@@ -14,7 +14,7 @@
       
       <guid>https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html</guid>
       <description>The purpose of this setup is:
- Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files  In this case I deploy to Scaleway, but same approach can be used for almost any cloud service.</description>
+Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files In this case I deploy to Scaleway, but same approach can be used for almost any cloud service.</description>
     </item>
     
   </channel>

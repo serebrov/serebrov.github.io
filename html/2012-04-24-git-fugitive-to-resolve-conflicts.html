@@ -13,7 +13,7 @@ git config --global mergetool.fugitive.cmd &#39;vim -f -c &#34;Gdiff&#34; &#34;$
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='vim'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-04-24T00:00:00Z'/><meta property='article:modified_time' content='2012-04-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>git - use vim with fugitive to resolve merge conflicts • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
@@ -266,9 +266,9 @@ One min read
 
   <div class="container entry-content custom">
     <p>To use fugitive as you mergetool you can use the following.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    git config --global mergetool.fugitive.cmd <span style="color:#e6db74">&#39;vim -f -c &#34;Gdiff&#34; &#34;$MERGED&#34;&#39;</span>
-    git config --global merge.tool fugitive
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    git config --global mergetool.fugitive.cmd <span style="color:#e6db74">&#39;vim -f -c &#34;Gdiff&#34; &#34;$MERGED&#34;&#39;</span>
+</span></span><span style="display:flex;"><span>    git config --global merge.tool fugitive
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <h2 id="links">Links</h2>
 <p><a href="http://stackoverflow.com/questions/7309707/my-git-mergetool-open-4not-3-windows-in-vimdiff">stackoverflow</a>
 <a href="http://vimcasts.org/episodes/fugitive-vim-resolving-merge-conflicts-with-vimdiff/">fugitive screencast</a></p>

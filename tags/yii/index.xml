@@ -14,7 +14,7 @@
       
       <guid>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</guid>
       <description>Assume we have an action &amp;ldquo;articles/get&amp;rdquo; which accepts optional parameters and we want to setup following URLs:
-articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft  We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
+articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
 In the code we have a single &amp;lsquo;article/get&amp;rsquo; action which allows us to get specific article (last revision) by name (&amp;lsquo;GET articles/my-article&amp;rsquo;) or id (&amp;lsquo;GET articles/33&amp;rsquo;).</description>
     </item>
     
@@ -51,7 +51,7 @@ class AppErrorHandler extends CErrorHandler { protected function handleException
       <guid>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</guid>
       <description>It seems that we have no perfect solution for class table inheritance (or multiple table inheritance) in yii (comparing to the very good one for single table inheritance).
 Possible solutions are:
- Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
+Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
     </item>
     
   </channel>

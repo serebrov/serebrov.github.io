@@ -15,7 +15,7 @@ Or, in other words: the subclass should behave the same way as the base class.'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='oop'><meta property='article:published_time' content='2016-02-18T00:00:00Z'/><meta property='article:modified_time' content='2016-02-18T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>OOP SOLID Principles &#34;L&#34; - Liskov Substitution Principle • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2016-02-18-oop-solid-l-liskov-substitution-principle.md'>
@@ -288,116 +288,114 @@ Then f(y) should be true for objects y of type S where S is a subtype of T.
 <h1 id="methods-signature-requirements">Methods Signature Requirements</h1>
 <p>Signature requirements are requirements for input argument types and return type of the class methods.</p>
 <p>Let&rsquo;s imagine we have following class hierarchy:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">   .------------.          .------------.          .-------------.
-   | LiveBeing  |          |   Animal   |&lt;|--------|     Cat     |
-   |------------|&lt;|--------|------------|          |-------------|
-   | + breeze() |          | + eat()    |&lt;|---.    | + mew()     |
-   &#39;------------&#39;          &#39;------------&#39;     |    &#39;-------------&#39;
-                                              |
-                                              |     .------------.
-                                              |     |    Dog     |
-                                              &#39;-----|------------|
-                                                    | + bark()   |
-                                                    &#39;------------&#39;
-</code></pre></div><p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>   .------------.          .------------.          .-------------.
+</span></span><span style="display:flex;"><span>   | LiveBeing  |          |   Animal   |&lt;|--------|     Cat     |
+</span></span><span style="display:flex;"><span>   |------------|&lt;|--------|------------|          |-------------|
+</span></span><span style="display:flex;"><span>   | + breeze() |          | + eat()    |&lt;|---.    | + mew()     |
+</span></span><span style="display:flex;"><span>   &#39;------------&#39;          &#39;------------&#39;     |    &#39;-------------&#39;
+</span></span><span style="display:flex;"><span>                                              |
+</span></span><span style="display:flex;"><span>                                              |     .------------.
+</span></span><span style="display:flex;"><span>                                              |     |    Dog     |
+</span></span><span style="display:flex;"><span>                                              &#39;-----|------------|
+</span></span><span style="display:flex;"><span>                                                    | + bark()   |
+</span></span><span style="display:flex;"><span>                                                    &#39;------------&#39;
+</span></span></code></pre></div><p>Here the <code>LiveBeing</code> is the base class which is inherited by <code>Animal</code> which in turn is inherited by <code>Cat</code> and <code>Dog</code>.</p>
 <p>I will use this hierarchy to explain the signature rules.</p>
 <h2 id="covariance-parent---child----of-return-types-in-the-subtype">Covariance (Parent -&gt; Child -&gt; &hellip;) of return types in the subtype</h2>
 <p>This rule means that the child class can override a method to return a more specific type (<code>Cat</code> instead of <code>Animal</code>).</p>
 <p>Of course, it can return the same type, but it can not return more generic type (like <code>LiveBeing</code> instead of <code>Animal</code>) and it can not return a completely different type (<code>House</code> instead of <code>Animal</code>).</p>
 <p>This rule is easy to understand and it feels natural.
 Here is an example in pseudo-code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
-  Animal findPet()
-      <span style="color:#66d9ef">return</span> new Animal()
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CatOwner</span> extends Owner
-  Cat findPet()
-      <span style="color:#75715e"># Covariance - subclass returns more specific type</span>
-      <span style="color:#66d9ef">return</span> new Cat()
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadOwner</span> extends Owner
-  LiveBeing findPet()
-      <span style="color:#75715e"># Contravariance - breaks the rule and returns more generic type</span>
-      <span style="color:#66d9ef">return</span> new LiveBeing()
-
-function doAction(Owner owner)
-    <span style="color:#75715e"># OK for Owner, we can put an Animal object into the `animal` variable.</span>
-    <span style="color:#75715e"># OK for CatOwner, we can put a Cat object into the `animal` variable.</span>
-    <span style="color:#75715e"># Problem for a BadOwner object, a LiveBeing object can not use be used</span>
-    <span style="color:#75715e"># the same way as Animal object.</span>
-    Animal animal <span style="color:#f92672">=</span> owner<span style="color:#f92672">-&gt;</span>findPet();
-    amimal<span style="color:#f92672">-&gt;</span>eat();
-</code></pre></div><p>The <code>doAction</code> function demonstrates a possible use case.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+</span></span><span style="display:flex;"><span>  Animal findPet()
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> new Animal()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CatOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  Cat findPet()
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Covariance - subclass returns more specific type</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> new Cat()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  LiveBeing findPet()
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e"># Contravariance - breaks the rule and returns more generic type</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> new LiveBeing()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(Owner owner)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># OK for Owner, we can put an Animal object into the `animal` variable.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># OK for CatOwner, we can put a Cat object into the `animal` variable.</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Problem for a BadOwner object, a LiveBeing object can not use be used</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># the same way as Animal object.</span>
+</span></span><span style="display:flex;"><span>    Animal animal <span style="color:#f92672">=</span> owner<span style="color:#f92672">-&gt;</span>findPet();
+</span></span><span style="display:flex;"><span>    amimal<span style="color:#f92672">-&gt;</span>eat();
+</span></span></code></pre></div><p>The <code>doAction</code> function demonstrates a possible use case.
 It is OK if <code>owner</code> is a <code>CatOwner</code>, because both <code>Animal</code> and <code>Cat</code> should behave the same.</p>
 <p>But the <code>BadOwner</code> returns a <code>LiveBeing</code> and it is a problem. There is no guarantee that <code>LiveBeing</code> object behaves the same as <code>Animal</code>.</p>
 <p>For example, if we call <code>animal-&gt;eat()</code> this will not work for the <code>LiveBeing</code> (it doesn&rsquo;t have such a method).</p>
 <h2 id="contravariance-child---parent----of-method-arguments-in-the-subtype">Contravariance (Child -&gt; Parent -&gt; &hellip;) of method arguments in the subtype</h2>
 <p>This means that a child class can override the method to accept a more generic argument type than the method in the base class (like accept the <code>LiveBeing</code> instead of <code>Animal</code>).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
-  void feed(Animal animal)
-    <span style="color:#f92672">...</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GoodOwner</span> extends Owner
-  <span style="color:#75715e"># Contravariance - subclass accepts more generic type</span>
-  void feed(LiveBeing being)
-    <span style="color:#f92672">...</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadCatOwner</span> extends Owner
-  void feed(Cat cat)
-    <span style="color:#f92672">...</span>
-
-function doAction(Owner owner)
-  owner<span style="color:#f92672">-&gt;</span>feed(new Dog) <span style="color:#75715e"># OK for Owner, he accepts any Animal, including the Dog</span>
-                       <span style="color:#75715e"># OK for GoodOwner, he accepts any LiveBeing, including the Dog</span>
-                       <span style="color:#75715e"># Problem for CatOwner, he doesn&#39;t expect the Dog</span>
-</code></pre></div><p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+</span></span><span style="display:flex;"><span>  void feed(Animal animal)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GoodOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Contravariance - subclass accepts more generic type</span>
+</span></span><span style="display:flex;"><span>  void feed(LiveBeing being)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadCatOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  void feed(Cat cat)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(Owner owner)
+</span></span><span style="display:flex;"><span>  owner<span style="color:#f92672">-&gt;</span>feed(new Dog) <span style="color:#75715e"># OK for Owner, he accepts any Animal, including the Dog</span>
+</span></span><span style="display:flex;"><span>                       <span style="color:#75715e"># OK for GoodOwner, he accepts any LiveBeing, including the Dog</span>
+</span></span><span style="display:flex;"><span>                       <span style="color:#75715e"># Problem for CatOwner, he doesn&#39;t expect the Dog</span>
+</span></span></code></pre></div><p>In practice, it may feel tempting to break this rule and define the class like <code>BadCatOwner</code> above.</p>
 <p>But, as we can see, the <code>BadCatOwner</code> breaks LSP and we can not use it in the same case where we can use the <code>Owner</code> object.</p>
 <p>Note that although using the more generic type in the subclass is OK in terms of method signature, it may be problematic logically:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
-  void feed(Animal animal)
-    animal<span style="color:#f92672">-&gt;</span>eat(this<span style="color:#f92672">-&gt;</span>findFood());
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GoodOwner</span> extends Owner
-  void feed(LiveBeing being)
-    <span style="color:#75715e"># Problem: LiveBeing doesn&#39;t have the `eat` method</span>
-    being<span style="color:#f92672">-&gt;</span>eat(this<span style="color:#f92672">-&gt;</span>findFood());
-
-</code></pre></div><p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method because <code>LiveBeing</code> doesn&rsquo;t have the <code>eat</code> method.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+</span></span><span style="display:flex;"><span>  void feed(Animal animal)
+</span></span><span style="display:flex;"><span>    animal<span style="color:#f92672">-&gt;</span>eat(this<span style="color:#f92672">-&gt;</span>findFood());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GoodOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  void feed(LiveBeing being)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Problem: LiveBeing doesn&#39;t have the `eat` method</span>
+</span></span><span style="display:flex;"><span>    being<span style="color:#f92672">-&gt;</span>eat(this<span style="color:#f92672">-&gt;</span>findFood());
+</span></span></code></pre></div><p>There is a problem here - the <code>GoodOnwer::feed</code> can not call the <code>being-&gt;eat()</code> method because <code>LiveBeing</code> doesn&rsquo;t have the <code>eat</code> method.</p>
 <p>And this way, <code>GoodOwner</code> also can not just forward the execution to the parent method with something like <code>parent::feed(being)</code>.</p>
 <p>By the way, if the method doesn&rsquo;t use parent implementation, it may <a href="http://stackoverflow.com/q/35070912/4612064">indicate the LSP violation</a> - potentially we can have a different behavior for this subtype than in the parent class.</p>
 <h2 id="exceptions-should-be-same-or-subtypes-of-the-base-method-exceptions">Exceptions should be same or subtypes of the base method exceptions</h2>
 <p>No new exceptions should be thrown by methods of the subtype, except where those exceptions are themselves subtypes of exceptions thrown by the methods of the parent type.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadFoodException</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadCatFoodException</span> extends BadFoodException
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LowQualityFoodException</span>
-
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
-  void feed(Animal animal, Food food)
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">not</span> this<span style="color:#f92672">-&gt;</span>isGoodFood(food))
-      throw BadFoodException()
-    <span style="color:#f92672">...</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadOwner</span> extends Owner
-  void feed(Animal animal, Food food)
-    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">not</span> this<span style="color:#f92672">-&gt;</span>isHighQualityFood(food))
-      throw LowQualityFoodException()
-    <span style="color:#f92672">...</span>
-
-function doAction(Owner owner)
-  <span style="color:#66d9ef">try</span>
-    owner<span style="color:#f92672">-&gt;</span>feed(new Dog, new SomeFood)
-  catch (BadFoodException error)
-    <span style="color:#75715e"># OK for Owner, it can raise BadFoodException</span>
-    <span style="color:#75715e"># OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)</span>
-    <span style="color:#75715e"># Problem for BadOwner, it can raise LowQualityFoodException and it will not be</span>
-    <span style="color:#75715e"># caught here</span>
-    <span style="color:#f92672">...</span>
-
-</code></pre></div><p>If we don&rsquo;t follow the rule about exception types, the client code written for the base class <code>Owner</code> will fail for the subclass <code>BadOwner</code> and this way we violate the <code>LSP</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadFoodException</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadCatFoodException</span> extends BadFoodException
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LowQualityFoodException</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Owner</span>
+</span></span><span style="display:flex;"><span>  void feed(Animal animal, Food food)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">not</span> this<span style="color:#f92672">-&gt;</span>isGoodFood(food))
+</span></span><span style="display:flex;"><span>      throw BadFoodException()
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BadOwner</span> extends Owner
+</span></span><span style="display:flex;"><span>  void feed(Animal animal, Food food)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">not</span> this<span style="color:#f92672">-&gt;</span>isHighQualityFood(food))
+</span></span><span style="display:flex;"><span>      throw LowQualityFoodException()
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(Owner owner)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">try</span>
+</span></span><span style="display:flex;"><span>    owner<span style="color:#f92672">-&gt;</span>feed(new Dog, new SomeFood)
+</span></span><span style="display:flex;"><span>  catch (BadFoodException error)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># OK for Owner, it can raise BadFoodException</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># OK for CatOwner, it can raise BadCatFoodException (subclass of BadFoodException)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Problem for BadOwner, it can raise LowQualityFoodException and it will not be</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># caught here</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>If we don&rsquo;t follow the rule about exception types, the client code written for the base class <code>Owner</code> will fail for the subclass <code>BadOwner</code> and this way we violate the <code>LSP</code>.</p>
 <h1 id="inheritance-requirements">Inheritance requirements</h1>
 <p>These requirements describe additional rules for inherited methods related to the <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by contract</a> concept. It defines the &ldquo;contract&rdquo; for each method which includes preconditions, postconditions and invariants:</p>
 <ul>
@@ -409,87 +407,86 @@ function doAction(Owner owner)
 <p>In most cases preconditions are expectations about method input arguments, also an object&rsquo;s internal state can be a part of the precondition.</p>
 <p>This is a more generic rule of the contravariance rule for method arguments. The contravariance rule says that subclass can accept more generic argument type (<code>LiveBeing</code> instead of <code>Animal</code>), this is a weaker precondition (subclass accepts a wider range of arguments).</p>
 <p>The same logic applies not only to the types of arguments but to the other kind of expectations as well, such as a range of the integer argument:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
-  void setHour(int hour)
-    <span style="color:#75715e"># hour should be between 0 and 23</span>
-    <span style="color:#66d9ef">assert</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> hour <span style="color:#f92672">and</span> hour <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">23</span>)
-    <span style="color:#f92672">...</span>
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheDay</span> extends The24Hours
-  void setHour (int hour)
-    <span style="color:#75715e"># breaks the rule and strengthens the precondition</span>
-    <span style="color:#75715e"># day hour should be between 8 and 16</span>
-    <span style="color:#66d9ef">assert</span> (<span style="color:#ae81ff">8</span> <span style="color:#f92672">&lt;=</span> hour <span style="color:#f92672">and</span> hour <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">16</span>)
-   <span style="color:#f92672">...</span>
-
-function doAction(The24Hours hours)
-  hours<span style="color:#f92672">-&gt;</span>setHour(<span style="color:#ae81ff">3</span>); <span style="color:#75715e"># OK for `The24Hours` object</span>
-                     <span style="color:#75715e"># Problem for `TheDay` - it will raise an error</span>
-</code></pre></div><p>So the stronger precondition in the child class broke the client code which worked for the parent class.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+</span></span><span style="display:flex;"><span>  void setHour(int hour)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># hour should be between 0 and 23</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;=</span> hour <span style="color:#f92672">and</span> hour <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">23</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheDay</span> extends The24Hours
+</span></span><span style="display:flex;"><span>  void setHour (int hour)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># breaks the rule and strengthens the precondition</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># day hour should be between 8 and 16</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> (<span style="color:#ae81ff">8</span> <span style="color:#f92672">&lt;=</span> hour <span style="color:#f92672">and</span> hour <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">16</span>)
+</span></span><span style="display:flex;"><span>   <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(The24Hours hours)
+</span></span><span style="display:flex;"><span>  hours<span style="color:#f92672">-&gt;</span>setHour(<span style="color:#ae81ff">3</span>); <span style="color:#75715e"># OK for `The24Hours` object</span>
+</span></span><span style="display:flex;"><span>                     <span style="color:#75715e"># Problem for `TheDay` - it will raise an error</span>
+</span></span></code></pre></div><p>So the stronger precondition in the child class broke the client code which worked for the parent class.</p>
 <p>At the same time, if we make the precondition weaker (or even remove it), the client code will work the same way as for parent class.</p>
 <h2 id="postconditions-cannot-be-weakened-in-a-subtype">Postconditions cannot be weakened in a subtype</h2>
 <p>Postconditions are usually expectations related to the method return value.</p>
 <p>Again, this the more generic rule similar to the covariance rule (method can return <code>Cat</code> instead of <code>Animal</code>), the postcondition is strengthened.</p>
 <p>An example of postcondition rule violation:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
-  number setHour(number hour)
-    <span style="color:#f92672">...</span>
-    <span style="color:#66d9ef">assert</span> (this<span style="color:#f92672">.</span>hour <span style="color:#f92672">is</span> integer)
-    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheTime</span> extends The24Hours
-  number setHour(number hour, number hourFraction)
-    this<span style="color:#f92672">.</span>hour <span style="color:#f92672">=</span> hour <span style="color:#f92672">+</span> hourFraction <span style="color:#f92672">/</span> <span style="color:#ae81ff">100</span>
-    <span style="color:#75715e"># the postcondition is weaker (float is a wider area than integer)</span>
-    <span style="color:#66d9ef">assert</span> (this<span style="color:#f92672">.</span>hour <span style="color:#f92672">is</span> float)
-    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
-
-function doAction(The24Hours hours)
-  int result <span style="color:#f92672">=</span> hours<span style="color:#f92672">-&gt;</span>setHour(<span style="color:#ae81ff">3</span>); <span style="color:#75715e"># OK for The24Hours</span>
-                                  <span style="color:#75715e"># Problem for TheTime, it returns float</span>
-</code></pre></div><p>So again, due to <code>LSP</code> violation, we can not use the child class instead of the parent.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+</span></span><span style="display:flex;"><span>  number setHour(number hour)
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> (this<span style="color:#f92672">.</span>hour <span style="color:#f92672">is</span> integer)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheTime</span> extends The24Hours
+</span></span><span style="display:flex;"><span>  number setHour(number hour, number hourFraction)
+</span></span><span style="display:flex;"><span>    this<span style="color:#f92672">.</span>hour <span style="color:#f92672">=</span> hour <span style="color:#f92672">+</span> hourFraction <span style="color:#f92672">/</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># the postcondition is weaker (float is a wider area than integer)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span> (this<span style="color:#f92672">.</span>hour <span style="color:#f92672">is</span> float)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(The24Hours hours)
+</span></span><span style="display:flex;"><span>  int result <span style="color:#f92672">=</span> hours<span style="color:#f92672">-&gt;</span>setHour(<span style="color:#ae81ff">3</span>); <span style="color:#75715e"># OK for The24Hours</span>
+</span></span><span style="display:flex;"><span>                                  <span style="color:#75715e"># Problem for TheTime, it returns float</span>
+</span></span></code></pre></div><p>So again, due to <code>LSP</code> violation, we can not use the child class instead of the parent.</p>
 <h2 id="invariants-of-the-parent-type-must-be-preserved-in-a-subtype">Invariants of the parent type must be preserved in a subtype</h2>
 <p>Invariant is something that is not changed during the method execution. It can be the whole or part of the object internal state:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
-  <span style="color:#75715e"># invariant: this.hour is not changed</span>
-  number getHour()
-    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheCounter</span> extends The24Hours
-  <span style="color:#75715e"># invariant violation: this.hour is changed</span>
-  number getHour()
-    result <span style="color:#f92672">=</span> this<span style="color:#f92672">.</span>hour
-    this<span style="color:#f92672">.</span>hour <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#66d9ef">return</span> result
-
-function doAction(The24Hours hours)
-  <span style="color:#66d9ef">if</span> (hours<span style="color:#f92672">-&gt;</span>getHour() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">12</span>)
-     <span style="color:#75715e"># OK for The24Hours</span>
-     <span style="color:#75715e"># Problem for TheTime, now getHour() can return value &gt; 12</span>
-     print <span style="color:#e6db74">&#39;First half of the day&#39;</span>, hours<span style="color:#f92672">-&gt;</span>getHour()
-</code></pre></div><h2 id="history-constraint-the-history-rule">History constraint (the &ldquo;history rule&rdquo;)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">The24Hours</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># invariant: this.hour is not changed</span>
+</span></span><span style="display:flex;"><span>  number getHour()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> this<span style="color:#f92672">.</span>hour
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TheCounter</span> extends The24Hours
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># invariant violation: this.hour is changed</span>
+</span></span><span style="display:flex;"><span>  number getHour()
+</span></span><span style="display:flex;"><span>    result <span style="color:#f92672">=</span> this<span style="color:#f92672">.</span>hour
+</span></span><span style="display:flex;"><span>    this<span style="color:#f92672">.</span>hour <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>function doAction(The24Hours hours)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (hours<span style="color:#f92672">-&gt;</span>getHour() <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e"># OK for The24Hours</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e"># Problem for TheTime, now getHour() can return value &gt; 12</span>
+</span></span><span style="display:flex;"><span>     print <span style="color:#e6db74">&#39;First half of the day&#39;</span>, hours<span style="color:#f92672">-&gt;</span>getHour()
+</span></span></code></pre></div><h2 id="history-constraint-the-history-rule">History constraint (the &ldquo;history rule&rdquo;)</h2>
 <p>The subtypes should not introduce new methods that will allow modifying the object state in a way that is not possible for the parent class.</p>
 <p>The internal object state should be modifiable only through their methods (encapsulation) and the client code can have some expectations as of the possible ways to modify the internal state.</p>
 <p>For example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Time</span>
-  <span style="color:#75715e"># it is immutable, once time is set, there is no way to change it</span>
-  constructor(int hour, int minute)
-  getTime()
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FlexibleTime</span> extends Time
-  <span style="color:#75715e"># violates the &#34;history&#34; rule</span>
-  <span style="color:#75715e"># it allows changing the object state</span>
-  <span style="color:#75715e"># but the clients who use Time can be broken due to this</span>
-  setTime(int hour, int minute)
-
-doAction(Time time)
-  print <span style="color:#e6db74">&#39;Now it is: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
-  doOtherAction(time)
-  <span style="color:#75715e"># OK for Time, it can not be changed, so value is the same</span>
-  <span style="color:#75715e"># Problem for FlexibleTime, the `doOtherAction` could change it</span>
-  print <span style="color:#e6db74">&#39;Now it is still: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
-
-</code></pre></div><h1 id="links">Links</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Time</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># it is immutable, once time is set, there is no way to change it</span>
+</span></span><span style="display:flex;"><span>  constructor(int hour, int minute)
+</span></span><span style="display:flex;"><span>  getTime()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FlexibleTime</span> extends Time
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># violates the &#34;history&#34; rule</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># it allows changing the object state</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># but the clients who use Time can be broken due to this</span>
+</span></span><span style="display:flex;"><span>  setTime(int hour, int minute)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>doAction(Time time)
+</span></span><span style="display:flex;"><span>  print <span style="color:#e6db74">&#39;Now it is: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
+</span></span><span style="display:flex;"><span>  doOtherAction(time)
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># OK for Time, it can not be changed, so value is the same</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># Problem for FlexibleTime, the `doOtherAction` could change it</span>
+</span></span><span style="display:flex;"><span>  print <span style="color:#e6db74">&#39;Now it is still: &#39;</span>, time<span style="color:#f92672">-&gt;</span>getTime()
+</span></span></code></pre></div><h1 id="links">Links</h1>
 <p><a href="https://en.wikipedia.org/wiki/Liskov_substitution_principle">Wikipedia:Liskov substitution principle</a></p>
 <p><a href="http://www.engr.mun.ca/~theo/Courses/sd/5895-downloads/sd-principles-3.ppt.pdf">Agile Design Principles: The Liskov Substitution Principle</a></p>
 <p><a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)#Inheritance_in_object-oriented_languages">Wikipedia: Covariance and contravariance</a></p>

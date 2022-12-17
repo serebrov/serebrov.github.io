@@ -5,19 +5,19 @@
 <meta name='description' content='I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
- Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.'>
+Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='AWS OpsWorks - setup mongodb ebs volume backups • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
- Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.'>
+Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='aws'><meta property='article:tag' content='mongodb'><meta property='article:published_time' content='2014-12-30T00:00:00Z'/><meta property='article:modified_time' content='2014-12-30T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>AWS OpsWorks - setup mongodb ebs volume backups • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html'>
@@ -293,7 +293,7 @@ In other cases it is necessary to <a href="http://docs.mongodb.org/ecosystem/tut
 I wanted a completely automated setup where I don&rsquo;t need to take manual steps like assigning tags to the volumes I need to backup.</p>
 <p>The process I have now does this:</p>
 <ul>
-<li>There is a special &lsquo;ec2-backup&rsquo; chef recipe which I assign to the instance (or instances) which volumes I need to backup</li>
+<li>There is a special &rsquo;ec2-backup&rsquo; chef recipe which I assign to the instance (or instances) which volumes I need to backup</li>
 <li>This recipe is added to the mongodb layer in OpsWorks, so every mongo instance will have it</li>
 <li>Recipes assigns &lsquo;MakeSnapshot&rsquo;=True tag to the instance</li>
 <li>Recipe also sets up cron jobs to perform daily, weekly and monthly backups</li>
@@ -301,90 +301,90 @@ I wanted a completely automated setup where I don&rsquo;t need to take manual st
 <li>Aws snapshot tool also sends results via SNS and I get backup notifications by email</li>
 </ul>
 <p>The recipe (<code>ec2-backup/recipes/default.rb</code>) looks like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">
-<span style="color:#75715e"># see https://github.com/stuart-warren/chef-aws-tag</span>
-
-<span style="color:#75715e"># Assign tag to the instance</span>
-include_recipe <span style="color:#e6db74">&#34;aws&#34;</span>
-tags <span style="color:#f92672">=</span> {
-  <span style="color:#e6db74">&#34;MakeSnapshot&#34;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;True&#34;</span>
-}
-aws_resource_tag node<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ec2&#39;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;instance_id&#39;</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">do</span>
-    tags(tags)
-    action <span style="color:#e6db74">:update</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Create directory where snapshot tool will be stored</span>
-directory <span style="color:#e6db74">&#34;/srv/backup&#34;</span> <span style="color:#66d9ef">do</span>
-  owner <span style="color:#e6db74">&#39;root&#39;</span>
-  group <span style="color:#e6db74">&#39;root&#39;</span>
-  mode <span style="color:#e6db74">&#39;0644&#39;</span>
-  action <span style="color:#e6db74">:create</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Copy the snapshot tool to /srv/backup</span>
-cookbook_file <span style="color:#e6db74">&#34;makesnapshots.py&#34;</span> <span style="color:#66d9ef">do</span>
-  path <span style="color:#e6db74">&#34;/srv/backup/makesnapshots.py&#34;</span>
-  action <span style="color:#e6db74">:create</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Copy the snapshot tool config to /srv/backup</span>
-cookbook_file <span style="color:#e6db74">&#34;config.py&#34;</span> <span style="color:#66d9ef">do</span>
-  path <span style="color:#e6db74">&#34;/srv/backup/config.py&#34;</span>
-  action <span style="color:#e6db74">:create</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Setup a cron job for daily backups</span>
-cron <span style="color:#e6db74">&#34;backup-daily&#34;</span> <span style="color:#66d9ef">do</span>
-  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
-  hour <span style="color:#e6db74">&#34;1&#34;</span>
-  minute <span style="color:#e6db74">&#34;30&#34;</span>
-  weekday <span style="color:#e6db74">&#39;1-6&#39;</span>
-  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py day 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Setup a cron job for weekly backups</span>
-cron <span style="color:#e6db74">&#34;backup-weekly&#34;</span> <span style="color:#66d9ef">do</span>
-  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
-  hour <span style="color:#e6db74">&#34;2&#34;</span>
-  minute <span style="color:#e6db74">&#34;30&#34;</span>
-  weekday <span style="color:#e6db74">&#39;7&#39;</span>
-  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py week 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
-<span style="color:#66d9ef">end</span>
-
-<span style="color:#75715e"># Setup a cron job for monthly backups</span>
-cron <span style="color:#e6db74">&#34;backup-monthly&#34;</span> <span style="color:#66d9ef">do</span>
-  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
-  hour <span style="color:#e6db74">&#34;3&#34;</span>
-  minute <span style="color:#e6db74">&#34;30&#34;</span>
-  day <span style="color:#e6db74">&#39;1&#39;</span>
-  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py month 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
-<span style="color:#66d9ef">end</span>
-</code></pre></div><p>Under the recipe files folder (<code>ec2-backup/files/default/</code>) I have a modified copy of the aws-snapshot-tool.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># see https://github.com/stuart-warren/chef-aws-tag</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Assign tag to the instance</span>
+</span></span><span style="display:flex;"><span>include_recipe <span style="color:#e6db74">&#34;aws&#34;</span>
+</span></span><span style="display:flex;"><span>tags <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;MakeSnapshot&#34;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;True&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>aws_resource_tag node<span style="color:#f92672">[</span><span style="color:#e6db74">&#39;ec2&#39;</span><span style="color:#f92672">][</span><span style="color:#e6db74">&#39;instance_id&#39;</span><span style="color:#f92672">]</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    tags(tags)
+</span></span><span style="display:flex;"><span>    action <span style="color:#e6db74">:update</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create directory where snapshot tool will be stored</span>
+</span></span><span style="display:flex;"><span>directory <span style="color:#e6db74">&#34;/srv/backup&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  owner <span style="color:#e6db74">&#39;root&#39;</span>
+</span></span><span style="display:flex;"><span>  group <span style="color:#e6db74">&#39;root&#39;</span>
+</span></span><span style="display:flex;"><span>  mode <span style="color:#e6db74">&#39;0644&#39;</span>
+</span></span><span style="display:flex;"><span>  action <span style="color:#e6db74">:create</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the snapshot tool to /srv/backup</span>
+</span></span><span style="display:flex;"><span>cookbook_file <span style="color:#e6db74">&#34;makesnapshots.py&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  path <span style="color:#e6db74">&#34;/srv/backup/makesnapshots.py&#34;</span>
+</span></span><span style="display:flex;"><span>  action <span style="color:#e6db74">:create</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy the snapshot tool config to /srv/backup</span>
+</span></span><span style="display:flex;"><span>cookbook_file <span style="color:#e6db74">&#34;config.py&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  path <span style="color:#e6db74">&#34;/srv/backup/config.py&#34;</span>
+</span></span><span style="display:flex;"><span>  action <span style="color:#e6db74">:create</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Setup a cron job for daily backups</span>
+</span></span><span style="display:flex;"><span>cron <span style="color:#e6db74">&#34;backup-daily&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
+</span></span><span style="display:flex;"><span>  hour <span style="color:#e6db74">&#34;1&#34;</span>
+</span></span><span style="display:flex;"><span>  minute <span style="color:#e6db74">&#34;30&#34;</span>
+</span></span><span style="display:flex;"><span>  weekday <span style="color:#e6db74">&#39;1-6&#39;</span>
+</span></span><span style="display:flex;"><span>  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py day 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Setup a cron job for weekly backups</span>
+</span></span><span style="display:flex;"><span>cron <span style="color:#e6db74">&#34;backup-weekly&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
+</span></span><span style="display:flex;"><span>  hour <span style="color:#e6db74">&#34;2&#34;</span>
+</span></span><span style="display:flex;"><span>  minute <span style="color:#e6db74">&#34;30&#34;</span>
+</span></span><span style="display:flex;"><span>  weekday <span style="color:#e6db74">&#39;7&#39;</span>
+</span></span><span style="display:flex;"><span>  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py week 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Setup a cron job for monthly backups</span>
+</span></span><span style="display:flex;"><span>cron <span style="color:#e6db74">&#34;backup-monthly&#34;</span> <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>  path <span style="color:#e6db74">&#34;/usr/local/bin:$PATH&#34;</span>
+</span></span><span style="display:flex;"><span>  hour <span style="color:#e6db74">&#34;3&#34;</span>
+</span></span><span style="display:flex;"><span>  minute <span style="color:#e6db74">&#34;30&#34;</span>
+</span></span><span style="display:flex;"><span>  day <span style="color:#e6db74">&#39;1&#39;</span>
+</span></span><span style="display:flex;"><span>  command <span style="color:#e6db74">&#34;cd /srv/backup &amp;&amp; /usr/bin/python makesnapshots.py month 2&gt;&amp;1 |/usr/bin/logger -t </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">CRON: makenapshot</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><p>Under the recipe files folder (<code>ec2-backup/files/default/</code>) I have a modified copy of the aws-snapshot-tool.
 The recipe folder layout is this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">├── Berksfile
-├── ec2-backup
-│   ├── files
-│   │   └── default
-│   │       ├── config.py
-│   │       ├── makesnapshots.py
-│   ├── metadata.rb
-│   └── recipes
-│       └── default.rb
-</code></pre></div><p>The <code>Berksfile</code> contains dependency info (only aws is relevant to ec2-backup recipe):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
-
-cookbook <span style="color:#e6db74">&#39;mongodb&#39;</span>
-cookbook <span style="color:#e6db74">&#39;aws&#39;</span>, <span style="color:#e6db74">&#39;&gt;= 0.2.4&#39;</span>
-</code></pre></div><p>My version of the makesnapshots.py is <a href="https://gist.github.com/serebrov/38f8c2d47c532243d05a">here</a>.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>├── Berksfile
+</span></span><span style="display:flex;"><span>├── ec2-backup
+</span></span><span style="display:flex;"><span>│   ├── files
+</span></span><span style="display:flex;"><span>│   │   └── default
+</span></span><span style="display:flex;"><span>│   │       ├── config.py
+</span></span><span style="display:flex;"><span>│   │       ├── makesnapshots.py
+</span></span><span style="display:flex;"><span>│   ├── metadata.rb
+</span></span><span style="display:flex;"><span>│   └── recipes
+</span></span><span style="display:flex;"><span>│       └── default.rb
+</span></span></code></pre></div><p>The <code>Berksfile</code> contains dependency info (only aws is relevant to ec2-backup recipe):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span>source <span style="color:#e6db74">&#39;https://supermarket.getchef.com&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cookbook <span style="color:#e6db74">&#39;mongodb&#39;</span>
+</span></span><span style="display:flex;"><span>cookbook <span style="color:#e6db74">&#39;aws&#39;</span>, <span style="color:#e6db74">&#39;&gt;= 0.2.4&#39;</span>
+</span></span></code></pre></div><p>My version of the makesnapshots.py is <a href="https://gist.github.com/serebrov/38f8c2d47c532243d05a">here</a>.
 My modification was to allow tagging instances instead of volumes.
 There is already a similar pull request in the <a href="https://github.com/evannuil/aws-snapshot-tool/pull/19">original repository</a> so I didn&rsquo;t submit my change back.
 There is also one new option in the config.py (see the full config example <a href="https://github.com/evannuil/aws-snapshot-tool/blob/559c1f6cf77b87c66c07b177451e76dcccc385fa/config.sample">here</a>):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#f92672">...</span>
-    <span style="color:#75715e"># Set to True to use intance tags, False - volume tags</span>
-    <span style="color:#e6db74">&#39;use_instance_tag&#39;</span>: <span style="color:#66d9ef">True</span>,
-    <span style="color:#f92672">...</span>
-</code></pre></div><p>That&rsquo;s all, now I have mongo data backups with email notifications.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Set to True to use intance tags, False - volume tags</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;use_instance_tag&#39;</span>: <span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">...</span>
+</span></span></code></pre></div><p>That&rsquo;s all, now I have mongo data backups with email notifications.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://docs.mongodb.org/ecosystem/tutorial/backup-and-restore-mongodb-on-amazon-ec2/">MongoDB documentation - backup and restore on Amazon EC2</a></p>
 <p><a href="https://github.com/alestic/ec2-consistent-snapshot">ec2-consistent-snapshot tool</a></p>

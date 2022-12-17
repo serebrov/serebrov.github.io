@@ -3,23 +3,23 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='To check whether jQuery is loaded to the page and verify minimum version:
-if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); }  Here a regular expression determines a required jQuery version -
-/[X-9]\.[Y-9].[Z-9]/  For example, for 1.3.1 use
-/[1-9]\.[3-9].[1-9]/  and for 1.2.3 use
-/[1-9]\.[2-9].[3-9]/  '>
+if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); } Here a regular expression determines a required jQuery version -
+/[X-9]\.[Y-9].[Z-9]/ For example, for 1.3.1 use
+/[1-9]\.[3-9].[1-9]/ and for 1.2.3 use
+/[1-9]\.[2-9].[3-9]/ '>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='jQuery - check minimal required version • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='To check whether jQuery is loaded to the page and verify minimum version:
-if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); }  Here a regular expression determines a required jQuery version -
-/[X-9]\.[Y-9].[Z-9]/  For example, for 1.3.1 use
-/[1-9]\.[3-9].[1-9]/  and for 1.2.3 use
-/[1-9]\.[2-9].[3-9]/  '>
+if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); } Here a regular expression determines a required jQuery version -
+/[X-9]\.[Y-9].[Z-9]/ For example, for 1.3.1 use
+/[1-9]\.[3-9].[1-9]/ and for 1.2.3 use
+/[1-9]\.[2-9].[3-9]/ '>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>jQuery - check minimal required version • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>

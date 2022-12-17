@@ -37,7 +37,7 @@ So the only way is to create a new table and migrate the existing data to it. Th
       <guid>https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</guid>
       <description>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
 Now it is possible to run Hive commands in few following ways:
- Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.</description>
+Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below) Connect to Hue Hue is a Hadoop web interface.</description>
     </item>
     
     <item>
@@ -47,7 +47,7 @@ Now it is possible to run Hive commands in few following ways:
       
       <guid>https://serebrov.github.io/html/2014-12-30-aws-opsworks-cmd-deployment.html</guid>
       <description>Below is a simple python script which performs application deployment using OpsWorks API library (boto). Script performs following steps
- Execute &amp;lsquo;update_custom_cookbooks&amp;rsquo; deployment command and wait for successful completion (or stop with an error) Execute &amp;lsquo;deploy&amp;rsquo; command and wait for completion  At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</description>
+Execute &amp;lsquo;update_custom_cookbooks&amp;rsquo; deployment command and wait for successful completion (or stop with an error) Execute &amp;lsquo;deploy&amp;rsquo; command and wait for completion At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</description>
     </item>
     
     <item>
@@ -59,7 +59,7 @@ Now it is possible to run Hive commands in few following ways:
       <description>I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
- Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
+Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
     </item>
     
     <item>
@@ -71,7 +71,7 @@ The relevant part from the mongodb docs:
       <description>Amazon OpsWorks provides a way to manage AWS resources using Chef recipes.
 Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server. It is similar to the php application + mysql setup described in the OpsWorks Getting Started guide.
 The OpsWorks setup includes:
- Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy  MongoDb setup is based on this blog post.</description>
+Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy MongoDb setup is based on this blog post.</description>
     </item>
     
     <item>
@@ -81,7 +81,7 @@ The OpsWorks setup includes:
       
       <guid>https://serebrov.github.io/html/2013-06-11-amazon-nosql-review.html</guid>
       <description>Amazon provides following NoSQL storage options:
- [SimpleDB] (http://aws.amazon.com/simpledb/) - Amazon SimpleDB is a highly available and flexible non-relational data store that offloads the work of database administration. Developers simply store and query data items via web services requests and Amazon SimpleDB does the rest. [DynamoDB] (http://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a fully-managed, high performance, NoSQL database service that is easy to set up, operate, and scale.  Amazon&amp;rsquo;s review of big data solutions Amazon&amp;rsquo;s review Big Data on AWS mentions only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data management.</description>
+[SimpleDB] (http://aws.amazon.com/simpledb/) - Amazon SimpleDB is a highly available and flexible non-relational data store that offloads the work of database administration. Developers simply store and query data items via web services requests and Amazon SimpleDB does the rest. [DynamoDB] (http://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a fully-managed, high performance, NoSQL database service that is easy to set up, operate, and scale. Amazon&amp;rsquo;s review of big data solutions Amazon&amp;rsquo;s review Big Data on AWS mentions only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data management.</description>
     </item>
     
     <item>
@@ -91,9 +91,9 @@ The OpsWorks setup includes:
       
       <guid>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</guid>
       <description>Enable mbstring function overloading mode and set default encoding for string functions to utf-8 in php.ini:
-mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7  These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
+mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7 These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
 Default encoding can also be set using mb_internal_encoding function:
-mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as argument in mbstring function:</description>
+mb_internal_encoding(&#39;UTF-8&#39;); Or encoding can be set explicitly as argument in mbstring function:</description>
     </item>
     
     <item>
@@ -103,8 +103,8 @@ mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as arg
       
       <guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid>
       <description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
- Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani  The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
- base library (jquery, etc) application core:  manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&#39; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
+Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
+base library (jquery, etc) application core: manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&amp;rsquo; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
     </item>
     
     <item>
@@ -115,7 +115,7 @@ mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as arg
       <guid>https://serebrov.github.io/html/2012-12-09-google-chrome-window-manager.html</guid>
       <description>A list of extensions to manage position of chrome tabs / windows and to create splits. Descriptions are original texts from extension pages.
 Tabs Outliner Next Generation Session/Windows/Tabs Manager and Too_Many_Open_Tabs Solution That Really Works.
- Ultimate overview for all of your open, and not so open (read further), browser windows and tabs, in a resizable vertical side view, with a Tree Style Tab feature. A KILLER FEATURE – Has the unique ability to close and preserve “in place” any tab or window, without removing them from the original context in the tree.</description>
+Ultimate overview for all of your open, and not so open (read further), browser windows and tabs, in a resizable vertical side view, with a Tree Style Tab feature. A KILLER FEATURE – Has the unique ability to close and preserve “in place” any tab or window, without removing them from the original context in the tree.</description>
     </item>
     
     <item>
@@ -149,7 +149,7 @@ Possible solution is to add some special handling to $.ajax &amp;lsquo;success&a
       <guid>https://serebrov.github.io/html/2012-09-24-innodb.html</guid>
       <description>Below are some notes regarding the innodb transactions and locks. Most of them are just a copy-paste from innodb docs with my notes. Also there are some examples of custom-maid deadlocks.
 In the examples of MySQL operations different sessions are marked as (1) and (2), for example:
- create table child (id int(11) NOT NULL) ENGINE=InnoDB;  common operation, do it from any session   (1) start transaction;  do it in session #1   (2) start transaction;  do it in session #2    To get two (or more) sessions just launch several instances of mysql in different console windows.</description>
+create table child (id int(11) NOT NULL) ENGINE=InnoDB; common operation, do it from any session (1) start transaction; do it in session #1 (2) start transaction; do it in session #2 To get two (or more) sessions just launch several instances of mysql in different console windows.</description>
     </item>
     
     <item>
@@ -159,7 +159,7 @@ In the examples of MySQL operations different sessions are marked as (1) and (2)
       
       <guid>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</guid>
       <description>Assume we have an action &amp;ldquo;articles/get&amp;rdquo; which accepts optional parameters and we want to setup following URLs:
-articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft  We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
+articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
 In the code we have a single &amp;lsquo;article/get&amp;rsquo; action which allows us to get specific article (last revision) by name (&amp;lsquo;GET articles/my-article&amp;rsquo;) or id (&amp;lsquo;GET articles/33&amp;rsquo;).</description>
     </item>
     
@@ -193,7 +193,7 @@ def send_keys(self, *value): &amp;#34;&amp;#34;&amp;#34;Simulates typing into th
       <description>This can be necessary for example for selector like #id &amp;gt; li:visible.
 If you will try to do webdriver.find_element_by_css_selector you will get an error message &amp;ldquo;The given selector #id &amp;gt; li:visible is either invalid or does not result in a WebElement.&amp;rdquo;
 The workaround is to use jQuery to find element. It can be done with this code (python):
-script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&amp;quot; element = webdriver.execute_script(script);  </description>
+script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&amp;quot; element = webdriver.execute_script(script); </description>
     </item>
     
     <item>
@@ -205,7 +205,7 @@ script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&am
       <description>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.
 Fortunately it is easy to do with javascript.
 Here is example of a JS code to set the cookie:
-document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&amp;quot;;  And here is python code version (assume you have set &amp;lsquo;cookie&amp;rsquo; and &amp;lsquo;domain&amp;rsquo; variables:</description>
+document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&amp;quot;; And here is python code version (assume you have set &amp;lsquo;cookie&amp;rsquo; and &amp;lsquo;domain&amp;rsquo; variables:</description>
     </item>
     
     <item>
@@ -214,8 +214,8 @@ document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost
       <pubDate>Tue, 24 Jul 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html</guid>
-      <description>The &amp;lsquo;executeScript&amp;rsquo; method of the webdriver receives additional &amp;lsquo;arguments&amp;rsquo; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
-event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(arguments[0]).trigger(&#39;&amp;quot;+event+&amp;quot;&#39;)&amp;quot; webdriver.execute_script(script, web_element)  Links Stackoverflow question</description>
+      <description>The &amp;rsquo;executeScript&amp;rsquo; method of the webdriver receives additional &amp;lsquo;arguments&amp;rsquo; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
+event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(arguments[0]).trigger(&#39;&amp;quot;+event+&amp;quot;&#39;)&amp;quot; webdriver.execute_script(script, web_element) Links Stackoverflow question</description>
     </item>
     
     <item>
@@ -252,8 +252,8 @@ class AContext { private $_state; protected function setState(AState $state) { $
       
       <guid>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</guid>
       <description>Error when trying to access phpmyadmin (in Chrome):
-Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.  The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
-php_flag eaccelerator.enable 0  </description>
+Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data. The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
+php_flag eaccelerator.enable 0 </description>
     </item>
     
     <item>
@@ -263,8 +263,8 @@ php_flag eaccelerator.enable 0  </description>
       
       <guid>https://serebrov.github.io/html/2012-12-17-unit-speed-mysql-to-mem.html</guid>
       <description>There are several ways to speedup slow unit tests which interact with database:
- Refactor code and tests and do not interact with db in unit tests Use sqlite db in memory instead of MySql Use MySql MEMORY engine Move MySql data to memory  It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
- stop mysql move /var/lib/mysql to /dev/shm/mysql link /var/lib/mysql to /dev/shm/mysql start mysql  In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.</description>
+Refactor code and tests and do not interact with db in unit tests Use sqlite db in memory instead of MySql Use MySql MEMORY engine Move MySql data to memory It is better to try other listed approaches and I think of last method as of quick temporary hack, but here it is:
+stop mysql move /var/lib/mysql to /dev/shm/mysql link /var/lib/mysql to /dev/shm/mysql start mysql In Ubuntu there is also a problem with apparmor which will not allow mysql to read from /dev/shm.</description>
     </item>
     
     <item>
@@ -285,7 +285,7 @@ class AppErrorHandler extends CErrorHandler { protected function handleException
       
       <guid>https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html</guid>
       <description>Problem: selenium fails to start Firefox with following error:
-&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;  In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
+&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39; In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
 It is because x_ignore_nofocus library tries to load 32bit version of the libX11 instead of 64bit.</description>
     </item>
     
@@ -309,7 +309,7 @@ sudo apt-get install x11vnc Run tests on virtual display Start xvbf (virtual dis
       <guid>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</guid>
       <description>It seems that we have no perfect solution for class table inheritance (or multiple table inheritance) in yii (comparing to the very good one for single table inheritance).
 Possible solutions are:
- Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
+Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
     </item>
     
     <item>

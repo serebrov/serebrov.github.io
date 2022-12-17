@@ -13,7 +13,7 @@ Note: the confusing part is that log with two dots only shows changes on one bra
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2012-10-01T00:00:00Z'/><meta property='article:modified_time' content='2012-10-01T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>git - viewing changes - diff and log • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html'>
@@ -275,38 +275,38 @@ See the section below on how to see only new changes on the branch.</p>
                 E ---- F  branch
 </code></pre><h3 id="list-of-new-commits-on-both-branches-log-with-three-dots">List of new commits on both branches (log with three dots):</h3>
 <!-- raw HTML omitted -->
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log master...branch
-
-commit F
-commit D
-commit E
-commit C
-
-<span style="color:#75715e"># With --left-right it shows additional markers for commits</span>
-git log --left-right master...branch
-commit &gt; F
-commit &lt; D
-commit &gt; E
-commit &lt; C
-</code></pre></div><h3 id="diff-with-two-dots-master-commits-shown-as-removed-changes-branch-commits---as-added">Diff with two dots, <code>master</code> commits shown as removed changes, <code>branch</code> commits - as added:</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff master..branch
--changes from C,D
-+changes from E,F
-
-<span style="color:#75715e"># Same is without dots</span>
-git diff master branch
--changes from C,D
-+changes from E,F
-</code></pre></div><h3 id="diff-with-two-dots-branch-commits-are-shown-as-removed-changes-master-commits-as-added">Diff with two dots, <code>branch</code> commits are shown as removed changes, <code>master</code> commits as added:</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff branch..master
-+changes from C,D
--changes from E,F
-
-<span style="color:#75715e"># Same is without dots</span>
-git diff branch master
-+changes from C,D
--changes from E,F
-</code></pre></div><h2 id="diff-and-log-between-two-branches-only-branch-changes">Diff and log between two branches (only branch changes)</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log master...branch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>commit F
+</span></span><span style="display:flex;"><span>commit D
+</span></span><span style="display:flex;"><span>commit E
+</span></span><span style="display:flex;"><span>commit C
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># With --left-right it shows additional markers for commits</span>
+</span></span><span style="display:flex;"><span>git log --left-right master...branch
+</span></span><span style="display:flex;"><span>commit &gt; F
+</span></span><span style="display:flex;"><span>commit &lt; D
+</span></span><span style="display:flex;"><span>commit &gt; E
+</span></span><span style="display:flex;"><span>commit &lt; C
+</span></span></code></pre></div><h3 id="diff-with-two-dots-master-commits-shown-as-removed-changes-branch-commits---as-added">Diff with two dots, <code>master</code> commits shown as removed changes, <code>branch</code> commits - as added:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git diff master..branch
+</span></span><span style="display:flex;"><span>-changes from C,D
+</span></span><span style="display:flex;"><span>+changes from E,F
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Same is without dots</span>
+</span></span><span style="display:flex;"><span>git diff master branch
+</span></span><span style="display:flex;"><span>-changes from C,D
+</span></span><span style="display:flex;"><span>+changes from E,F
+</span></span></code></pre></div><h3 id="diff-with-two-dots-branch-commits-are-shown-as-removed-changes-master-commits-as-added">Diff with two dots, <code>branch</code> commits are shown as removed changes, <code>master</code> commits as added:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git diff branch..master
+</span></span><span style="display:flex;"><span>+changes from C,D
+</span></span><span style="display:flex;"><span>-changes from E,F
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Same is without dots</span>
+</span></span><span style="display:flex;"><span>git diff branch master
+</span></span><span style="display:flex;"><span>+changes from C,D
+</span></span><span style="display:flex;"><span>-changes from E,F
+</span></span></code></pre></div><h2 id="diff-and-log-between-two-branches-only-branch-changes">Diff and log between two branches (only branch changes)</h2>
 <p>Often, we want to only see changes on the branch, without seeing what has changed on master (or on another base branch).</p>
 <p>In this case, we can use <code>git log</code> with two dots to get the list of changes and <code>git log -p</code> to see the diff (while <code>git diff</code> with two dots will still show changes from the base branch, so is not suitable for this task).</p>
 <p>For example, we have a history like this:</p>
@@ -314,39 +314,39 @@ git diff branch master
                \
                 E ---- F  branch
 </code></pre><h3 id="list-of-new-commits-on-branch-log-with-two-dots">List of new commits on <code>branch</code> (log with two dots):</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log master..branch
-F
-E
-</code></pre></div><h3 id="list-of-new-commits-on-branch-cherry">List of new commits on <code>branch</code> (cherry):</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git cherry master
-+ F
-+ E
-
-git cherry -v master
-+ F commit message
-+ E commit message
-</code></pre></div><p>The <code>git cherry</code> command provides a more compact output with the list of new commits on the <code>branch</code> comparing to <code>master</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log master..branch
+</span></span><span style="display:flex;"><span>F
+</span></span><span style="display:flex;"><span>E
+</span></span></code></pre></div><h3 id="list-of-new-commits-on-branch-cherry">List of new commits on <code>branch</code> (cherry):</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git cherry master
+</span></span><span style="display:flex;"><span>+ F
+</span></span><span style="display:flex;"><span>+ E
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git cherry -v master
+</span></span><span style="display:flex;"><span>+ F commit message
+</span></span><span style="display:flex;"><span>+ E commit message
+</span></span></code></pre></div><p>The <code>git cherry</code> command provides a more compact output with the list of new commits on the <code>branch</code> comparing to <code>master</code>.</p>
 <h3 id="list-of-new-commits-on-master-log-with-two-dots">List of new commits on <code>master</code> (log with two dots):</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log branch..master
-D
-C
-</code></pre></div><h3 id="diff-only-new-commits-on-branch-log-with-two-dots-and--p-or-diff-with-three-dots">Diff, only new commits on <code>branch</code> (log with two dots and <code>-p</code> or diff with three dots):</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log -p master..branch
-+changes from F
-+changes from E
-
-git diff master...branch
-+changes from E
-+changes from F
-</code></pre></div><h3 id="diff-only-new-commits-on-master-log-with-two-dots-and--p-or-diff-with-tree-dots">Diff, only new commits on <code>master</code> (log with two dots and <code>-p</code> or diff with tree dots):</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log -p branch..master
-+changes from D
-+changes from C
-
-git diff branch...master
-+changes from C
-+changes from D
-</code></pre></div><h2 id="git-diff-and-log-inconsistency">Git diff and log inconsistency</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log branch..master
+</span></span><span style="display:flex;"><span>D
+</span></span><span style="display:flex;"><span>C
+</span></span></code></pre></div><h3 id="diff-only-new-commits-on-branch-log-with-two-dots-and--p-or-diff-with-three-dots">Diff, only new commits on <code>branch</code> (log with two dots and <code>-p</code> or diff with three dots):</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log -p master..branch
+</span></span><span style="display:flex;"><span>+changes from F
+</span></span><span style="display:flex;"><span>+changes from E
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git diff master...branch
+</span></span><span style="display:flex;"><span>+changes from E
+</span></span><span style="display:flex;"><span>+changes from F
+</span></span></code></pre></div><h3 id="diff-only-new-commits-on-master-log-with-two-dots-and--p-or-diff-with-tree-dots">Diff, only new commits on <code>master</code> (log with two dots and <code>-p</code> or diff with tree dots):</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log -p branch..master
+</span></span><span style="display:flex;"><span>+changes from D
+</span></span><span style="display:flex;"><span>+changes from C
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>git diff branch...master
+</span></span><span style="display:flex;"><span>+changes from C
+</span></span><span style="display:flex;"><span>+changes from D
+</span></span></code></pre></div><h2 id="git-diff-and-log-inconsistency">Git diff and log inconsistency</h2>
 <p>In the sections above we can see that git diff and git log with three and two dots seem to behave inconsistently:</p>
 <ul>
 <li><code>git log master..branch</code> - only new commits on <code>branch</code></li>
@@ -380,41 +380,41 @@ It is more consistent and easier to remember - less dots (two) - less changes (o
 </ul>
 <h2 id="diff-staged-changes">Diff staged changes</h2>
 <p>Show staged changes - added to index, but not commited yet:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git diff --cached
-<span style="color:#75715e"># or</span>
-git diff --staged
-</code></pre></div><h2 id="diff-pulled-changes">Diff pulled changes</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git diff --cached
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># or</span>
+</span></span><span style="display:flex;"><span>git diff --staged
+</span></span></code></pre></div><h2 id="diff-pulled-changes">Diff pulled changes</h2>
 <p>Show diff of changes pulled from upstream:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git pull origin
-git diff @<span style="color:#f92672">{</span>1<span style="color:#f92672">}</span>..
-</code></pre></div><p>Here <code>@</code> means <code>HEAD</code> and <code>@{1}</code> means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with <code>git reflog</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git pull origin
+</span></span><span style="display:flex;"><span>git diff @<span style="color:#f92672">{</span>1<span style="color:#f92672">}</span>..
+</span></span></code></pre></div><p>Here <code>@</code> means <code>HEAD</code> and <code>@{1}</code> means &ldquo;prior value of the HEAD&rdquo;, the list of prior values can be seen with <code>git reflog</code>.</p>
 <h2 id="log-without-merge-commits">Log without merge commits</h2>
 <p>To show the log without merge commits use <code>--no-merges</code> flag:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --no-merges
-</code></pre></div><h2 id="log-without-another-branch-commits">Log without another branch commits</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log --no-merges
+</span></span></code></pre></div><h2 id="log-without-another-branch-commits">Log without another branch commits</h2>
 <p>To exclude commits on <code>master</code> (or another) branch, use <code>--not</code> flag:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log contrib --not master <span style="color:#75715e"># or git log contrib ^master</span>
-</code></pre></div><p>To exclude both commits on <code>master</code> commits and merge commits:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log contrib ^master --no-merges
-</code></pre></div><p>What was added in remote branch, but not in local:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log origin/featureA ^featureA
-</code></pre></div><p>Note: these three commands are equivalent:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log refA..refB
-git log ^refA refB
-git log refB --not refA
-</code></pre></div><p>Show all commits that are reachable from <code>refA</code> or <code>refB</code> but not from the <code>refC</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log refA refB ^refC
-git log refA refB --not refC
-</code></pre></div><h2 id="git-log-formatting">Git log formatting</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log contrib --not master <span style="color:#75715e"># or git log contrib ^master</span>
+</span></span></code></pre></div><p>To exclude both commits on <code>master</code> commits and merge commits:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log contrib ^master --no-merges
+</span></span></code></pre></div><p>What was added in remote branch, but not in local:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log origin/featureA ^featureA
+</span></span></code></pre></div><p>Note: these three commands are equivalent:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log refA..refB
+</span></span><span style="display:flex;"><span>git log ^refA refB
+</span></span><span style="display:flex;"><span>git log refB --not refA
+</span></span></code></pre></div><p>Show all commits that are reachable from <code>refA</code> or <code>refB</code> but not from the <code>refC</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log refA refB ^refC
+</span></span><span style="display:flex;"><span>git log refA refB --not refC
+</span></span></code></pre></div><h2 id="git-log-formatting">Git log formatting</h2>
 <p>Log with diff (p), only last two entries:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log -p -2
-</code></pre></div><p>One line log:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --pretty<span style="color:#f92672">=</span>oneline
-</code></pre></div><p>Log with graph:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --pretty<span style="color:#f92672">=</span>format:<span style="color:#e6db74">&#34;%h %s&#34;</span> --graph
-</code></pre></div><p>Format log:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git log --pretty<span style="color:#f92672">=</span>format:<span style="color:#e6db74">&#34;%h - %an, %ar : %s&#34;</span>
-</code></pre></div><p>Log formatting options:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log -p -2
+</span></span></code></pre></div><p>One line log:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log --pretty<span style="color:#f92672">=</span>oneline
+</span></span></code></pre></div><p>Log with graph:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log --pretty<span style="color:#f92672">=</span>format:<span style="color:#e6db74">&#34;%h %s&#34;</span> --graph
+</span></span></code></pre></div><p>Format log:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git log --pretty<span style="color:#f92672">=</span>format:<span style="color:#e6db74">&#34;%h - %an, %ar : %s&#34;</span>
+</span></span></code></pre></div><p>Log formatting options:</p>
 <pre tabindex="0"><code>%H  Commit hash
 %h  Abbreviated commit hash
 %T  Tree hash

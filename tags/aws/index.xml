@@ -26,7 +26,7 @@ The confusing part was a note in the AWS Config management console:</description
       <guid>https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html</guid>
       <description>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
 For example:
- www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog  CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.</description>
+www.myapp.com -&amp;gt; unbounce.com (landing pages) www.myapp.com/app -&amp;gt; single page app hosted on S3 www.myapp.com/blog -&amp;gt; wordpress blog CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.</description>
     </item>
     
     <item>
@@ -93,7 +93,7 @@ Update: logging to the same stream from multiple sources is not recommended and 
       
       <guid>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</guid>
       <description>CloudWatch Logs is an AWS service to collect and monitor system and application logs. On the top level setup is this:
- install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue)  All the configuration can be done using the Elastic Beanstalk config.</description>
+install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue) All the configuration can be done using the Elastic Beanstalk config.</description>
     </item>
     
     <item>
@@ -138,7 +138,7 @@ Without the -sharedDB parameter the DB file name depends on connection parameter
       <guid>https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html</guid>
       <description>First you need the EMR cluster running and you should have ssh connection to the master instance like described in the getting started tutorial.
 Now it is possible to run Hive commands in few following ways:
- Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below)  Connect to Hue Hue is a Hadoop web interface.</description>
+Connect via ssh, launch hive and run commands interactively Create a script file with commands, upload it to S3 and launch as a ERM &amp;lsquo;Hive program&amp;rsquo; step Run it from Hue web-interface (see below) Connect to Hue Hue is a Hadoop web interface.</description>
     </item>
     
     <item>
@@ -148,7 +148,7 @@ Now it is possible to run Hive commands in few following ways:
       
       <guid>https://serebrov.github.io/html/2014-12-30-aws-opsworks-cmd-deployment.html</guid>
       <description>Below is a simple python script which performs application deployment using OpsWorks API library (boto). Script performs following steps
- Execute &amp;lsquo;update_custom_cookbooks&amp;rsquo; deployment command and wait for successful completion (or stop with an error) Execute &amp;lsquo;deploy&amp;rsquo; command and wait for completion  At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</description>
+Execute &amp;lsquo;update_custom_cookbooks&amp;rsquo; deployment command and wait for successful completion (or stop with an error) Execute &amp;lsquo;deploy&amp;rsquo; command and wait for completion At the top there are aws configuration parameters (aws_access_key, aws_secret_key) - these can be left empty if the script is launched on the AWS instance which has IAM role assigned.</description>
     </item>
     
     <item>
@@ -160,7 +160,7 @@ Now it is possible to run Hive commands in few following ways:
       <description>I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
- Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
+Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
     </item>
     
     <item>
@@ -172,7 +172,7 @@ The relevant part from the mongodb docs:
       <description>Amazon OpsWorks provides a way to manage AWS resources using Chef recipes.
 Here I describe a simple setup of the single-instance node.js app with single-node MongoDB server. It is similar to the php application + mysql setup described in the OpsWorks Getting Started guide.
 The OpsWorks setup includes:
- Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy  MongoDb setup is based on this blog post.</description>
+Stack - a container for the deployment process we will setup Two Layers - node.js app and MongoDB Two Instances - one EC2 instance for node app and another for mongo One Application - this is the code we will deploy MongoDb setup is based on this blog post.</description>
     </item>
     
     <item>
@@ -183,7 +183,7 @@ The OpsWorks setup includes:
       <guid>https://serebrov.github.io/html/2013-10-22-elastic-beanstalk-cron-and-db.html</guid>
       <description>Problem I have a console command in php which needs an access to DB. The command need to be launched via cron.
 The DB connection string looks like like this
-&#39;connectionString&#39; =&amp;gt; &#39;mysql:host=&#39;.$_SERVER[&#39;RDS_HOSTNAME&#39;].&#39;;port=&#39;.$_SERVER[&#39;RDS_PORT&#39;].&#39;;dbname=&#39;.$_SERVER[&#39;RDS_DB_NAME&#39;],  where RDS_xxx parameters come from environment variables.
+&#39;connectionString&#39; =&amp;gt; &#39;mysql:host=&#39;.$_SERVER[&#39;RDS_HOSTNAME&#39;].&#39;;port=&#39;.$_SERVER[&#39;RDS_PORT&#39;].&#39;;dbname=&#39;.$_SERVER[&#39;RDS_DB_NAME&#39;], where RDS_xxx parameters come from environment variables.
 The problem is that cron launches the command with a clean environment (there are no RDS_xx variables). So the command fails to access the database.
 Solution Solution is to set the required environment variables before launching the command and this can be done with &amp;lsquo;/opt/elasticbeanstal/support/envvars&amp;rsquo; script:</description>
     </item>
@@ -204,7 +204,7 @@ Solution Solution is to set the required environment variables before launching 
       
       <guid>https://serebrov.github.io/html/2013-06-11-amazon-nosql-review.html</guid>
       <description>Amazon provides following NoSQL storage options:
- [SimpleDB] (http://aws.amazon.com/simpledb/) - Amazon SimpleDB is a highly available and flexible non-relational data store that offloads the work of database administration. Developers simply store and query data items via web services requests and Amazon SimpleDB does the rest. [DynamoDB] (http://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a fully-managed, high performance, NoSQL database service that is easy to set up, operate, and scale.  Amazon&amp;rsquo;s review of big data solutions Amazon&amp;rsquo;s review Big Data on AWS mentions only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data management.</description>
+[SimpleDB] (http://aws.amazon.com/simpledb/) - Amazon SimpleDB is a highly available and flexible non-relational data store that offloads the work of database administration. Developers simply store and query data items via web services requests and Amazon SimpleDB does the rest. [DynamoDB] (http://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a fully-managed, high performance, NoSQL database service that is easy to set up, operate, and scale. Amazon&amp;rsquo;s review of big data solutions Amazon&amp;rsquo;s review Big Data on AWS mentions only DynamoDB and Elastic Map Reduce (based on Hadoop) as tools for big data management.</description>
     </item>
     
   </channel>

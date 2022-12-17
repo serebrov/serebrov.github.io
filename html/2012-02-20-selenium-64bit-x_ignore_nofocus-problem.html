@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Problem: selenium fails to start Firefox with following error:
-&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;  In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
+&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39; In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
 It is because x_ignore_nofocus library tries to load 32bit version of the libX11 instead of 64bit.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='selenium - problem with loading x_ignore_nofocus.so • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='Problem: selenium fails to start Firefox with following error:
-&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;  In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
+&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39; In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
 It is because x_ignore_nofocus library tries to load 32bit version of the libX11 instead of 64bit.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='selenium'><meta property='article:published_time' content='2012-02-20T00:00:00Z'/><meta property='article:modified_time' content='2012-02-20T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>selenium - problem with loading x_ignore_nofocus.so • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html'>
@@ -277,17 +277,17 @@ The problem itself is known and there is <a href="http://code.google.com/p/selen
 <!-- raw HTML omitted -->
 <p>It is because <code>x_ignore_nofocus</code> library tries to load 32bit version of the <code>libX11</code> instead of 64bit.
 In my system there are following versions of <code>libX11</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ find / | grep libX11.so.6
-    /usr/lib64/libX11.so.6       &lt;-- symbolic link to <span style="color:#e6db74">`</span>libX11.so.6.3.0<span style="color:#e6db74">&#39;
-</span><span style="color:#e6db74">    /usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped
-</span><span style="color:#e6db74">    /usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;</span>
-    /usr/lib/libX11.so.6.3.0    &lt;-- ELF 32-bit LSB shared object, Intel 80386, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, stripped
-</code></pre></div><p>At the right side (after &ldquo;&lt;&ndash;&quot;) is an output of <code>file /usr/libX/libX11.so.6xxx</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ find / | grep libX11.so.6
+</span></span><span style="display:flex;"><span>    /usr/lib64/libX11.so.6       &lt;-- symbolic link to <span style="color:#e6db74">`</span>libX11.so.6.3.0<span style="color:#e6db74">&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    /usr/lib64/libX11.so.6.3.0 &lt;-- ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, stripped
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    /usr/lib/libX11.so.6          &lt;-- symbolic link to `libX11.so.6.3.0&#39;</span>
+</span></span><span style="display:flex;"><span>    /usr/lib/libX11.so.6.3.0    &lt;-- ELF 32-bit LSB shared object, Intel 80386, version <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>SYSV<span style="color:#f92672">)</span>, dynamically linked, stripped
+</span></span></code></pre></div><p>At the right side (after &ldquo;&lt;&ndash;&rdquo;) is an output of <code>file /usr/libX/libX11.so.6xxx</code>.</p>
 <h2 id="solution">Solution</h2>
 <p>Change symbolic link <code>/usr/lib/libX11.so.6</code> to point to the 64-bit version <code>/usr/lib64/libX11.so.6.3.0</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">    $ mv /usr/lib/libX11.so.6 /usr/lib/libX11.so.6.bak
-    $ ln -s /usr/lib64/libX11.so.6.3.0 /usr/lib/libX11.so.6
-</code></pre></div><p>After that selenium started to work.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ mv /usr/lib/libX11.so.6 /usr/lib/libX11.so.6.bak
+</span></span><span style="display:flex;"><span>    $ ln -s /usr/lib64/libX11.so.6.3.0 /usr/lib/libX11.so.6
+</span></span></code></pre></div><p>After that selenium started to work.</p>
 <h2 id="links">Links</h2>
 <p><a href="http://code.google.com/p/selenium/issues/detail?id=2852">bug report</a>.</p>
  <a href="https://stackexchange.com/users/261528">

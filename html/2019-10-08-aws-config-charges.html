@@ -15,7 +15,7 @@ The confusing part was a note in the AWS Config management console:'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2019-10-08T00:00:00Z'/><meta property='article:modified_time' content='2019-10-08T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>AWS Config - Unexpected Charges and Data Analysis • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-10-08-aws-config-charges.html'>
@@ -303,43 +303,43 @@ The guide on how to get and query the collected data (its on S3) can be found <a
 </ul>
 <p>The table can be created using from query editor.
 First, create the database:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DATABASE</span> s3data
-</code></pre></div><p>Then, create the table for AWS Config data:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> awsconfig (
-         fileversion string,
-         configSnapshotId string,
-         configurationitems ARRAY <span style="color:#f92672">&lt;</span> STRUCT <span style="color:#f92672">&lt;</span> configurationItemVersion : STRING,
-         configurationItemCaptureTime : STRING,
-         configurationStateId : BIGINT,
-         awsAccountId : STRING,
-         configurationItemStatus : STRING,
-         resourceType : STRING,
-         resourceId : STRING,
-         resourceName : STRING,
-         ARN : STRING,
-         awsRegion : STRING,
-         availabilityZone : STRING,
-         configurationStateMd5Hash : STRING,
-         resourceCreationTime : STRING <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span> 
-)
-<span style="color:#66d9ef">ROW</span> FORMAT SERDE <span style="color:#e6db74">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span> <span style="color:#66d9ef">LOCATION</span> <span style="color:#e6db74">&#39;s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1/&#39;</span>
-</code></pre></div><p>Replace the <code>LOCATION</code> path with actual path on S3.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DATABASE</span> s3data
+</span></span></code></pre></div><p>Then, create the table for AWS Config data:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> awsconfig (
+</span></span><span style="display:flex;"><span>         fileversion string,
+</span></span><span style="display:flex;"><span>         configSnapshotId string,
+</span></span><span style="display:flex;"><span>         configurationitems ARRAY <span style="color:#f92672">&lt;</span> STRUCT <span style="color:#f92672">&lt;</span> configurationItemVersion : STRING,
+</span></span><span style="display:flex;"><span>         configurationItemCaptureTime : STRING,
+</span></span><span style="display:flex;"><span>         configurationStateId : BIGINT,
+</span></span><span style="display:flex;"><span>         awsAccountId : STRING,
+</span></span><span style="display:flex;"><span>         configurationItemStatus : STRING,
+</span></span><span style="display:flex;"><span>         resourceType : STRING,
+</span></span><span style="display:flex;"><span>         resourceId : STRING,
+</span></span><span style="display:flex;"><span>         resourceName : STRING,
+</span></span><span style="display:flex;"><span>         ARN : STRING,
+</span></span><span style="display:flex;"><span>         awsRegion : STRING,
+</span></span><span style="display:flex;"><span>         availabilityZone : STRING,
+</span></span><span style="display:flex;"><span>         configurationStateMd5Hash : STRING,
+</span></span><span style="display:flex;"><span>         resourceCreationTime : STRING <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span> 
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ROW</span> FORMAT SERDE <span style="color:#e6db74">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span> <span style="color:#66d9ef">LOCATION</span> <span style="color:#e6db74">&#39;s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1/&#39;</span>
+</span></span></code></pre></div><p>Replace the <code>LOCATION</code> path with actual path on S3.
 Now we can query the <code>awsconfig</code> table to see how many and which items were created, for example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">  <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime,
-         <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">result</span>.configurationitemcapturetime) <span style="color:#66d9ef">AS</span> NumberOfChanges
-    <span style="color:#66d9ef">FROM</span> (
-          <span style="color:#66d9ef">SELECT</span> regexp_replace(
-                    configurationItem.configurationItemCaptureTime, <span style="color:#e6db74">&#39;(.+)(T.+)&#39;</span>, <span style="color:#e6db74">&#39;$1&#39;</span>
-                 ) <span style="color:#66d9ef">AS</span> configurationitemcapturetime
-            <span style="color:#66d9ef">FROM</span> s3data.awsconfig
-           <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
-           <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
-             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
-       ) <span style="color:#66d9ef">result</span>
-<span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
-<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
-</code></pre></div><p>The above will show number of configuration items created per day.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>  <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime,
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">result</span>.configurationitemcapturetime) <span style="color:#66d9ef">AS</span> NumberOfChanges
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> (
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">SELECT</span> regexp_replace(
+</span></span><span style="display:flex;"><span>                    configurationItem.configurationItemCaptureTime, <span style="color:#e6db74">&#39;(.+)(T.+)&#39;</span>, <span style="color:#e6db74">&#39;$1&#39;</span>
+</span></span><span style="display:flex;"><span>                 ) <span style="color:#66d9ef">AS</span> configurationitemcapturetime
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">FROM</span> s3data.awsconfig
+</span></span><span style="display:flex;"><span>           <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
+</span></span><span style="display:flex;"><span>           <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
+</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
+</span></span><span style="display:flex;"><span>       ) <span style="color:#66d9ef">result</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
+</span></span></code></pre></div><p>The above will show number of configuration items created per day.
 The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</code> and join it to access the columns inside JSON.</p>
 <pre tabindex="0"><code>    capturetime    NumberOfChanges
 1   2019-10-01     4279
@@ -351,25 +351,25 @@ The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</
 7   2019-10-07     9
 8   2019-10-08     2
 </code></pre><p>This is how to get a data sample:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> configurationItem.configurationItemVersion,
-       configurationItem.configurationItemCaptureTime <span style="color:#66d9ef">as</span> fullTime,
-       configurationItem.configurationStateId,
-       configurationItem.awsAccountId,
-       configurationItem.configurationItemStatus,
-       configurationItem.resourceType,
-       configurationItem.resourceId,
-       configurationItem.resourceName,
-       configurationItem.aRN,
-       configurationItem.awsRegion,
-       configurationItem.availabilityZone,
-       configurationItem.configurationStateMd5Hash,
-       configurationItem.resourceCreationTime
-  <span style="color:#66d9ef">FROM</span> s3data.awsconfig
- <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
- <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
-   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
-</code></pre></div><pre tabindex="0"><code>   capturetime ... configurationitemstatus resourcetype         ... resourcename                      ...
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> configurationItem.configurationItemVersion,
+</span></span><span style="display:flex;"><span>       configurationItem.configurationItemCaptureTime <span style="color:#66d9ef">as</span> fullTime,
+</span></span><span style="display:flex;"><span>       configurationItem.configurationStateId,
+</span></span><span style="display:flex;"><span>       configurationItem.awsAccountId,
+</span></span><span style="display:flex;"><span>       configurationItem.configurationItemStatus,
+</span></span><span style="display:flex;"><span>       configurationItem.resourceType,
+</span></span><span style="display:flex;"><span>       configurationItem.resourceId,
+</span></span><span style="display:flex;"><span>       configurationItem.resourceName,
+</span></span><span style="display:flex;"><span>       configurationItem.aRN,
+</span></span><span style="display:flex;"><span>       configurationItem.awsRegion,
+</span></span><span style="display:flex;"><span>       configurationItem.availabilityZone,
+</span></span><span style="display:flex;"><span>       configurationItem.configurationStateMd5Hash,
+</span></span><span style="display:flex;"><span>       configurationItem.resourceCreationTime
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">FROM</span> s3data.awsconfig
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
+</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
+</span></span></code></pre></div><pre tabindex="0"><code>   capturetime ... configurationitemstatus resourcetype         ... resourcename                      ...
 1  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-28-10-23
 2  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-29-10-24
 3  2019-10-07      ResourceDiscovered      AWS::RDS::DBSnapshot     rds:db-wordpress-2019-10-07-10-23
@@ -379,20 +379,20 @@ The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</
 7  2019-10-07      OK                      AWS::RDS::DBInstance     db-production
 8  2019-10-07      OK                      AWS::RDS::DBInstance     db-wordpress
 </code></pre><p>And this query fetches data grouped by resource type, name and status:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">  <span style="color:#66d9ef">SELECT</span> configurationItem.resourceType,
-         configurationItem.resourceName,
-         configurationItem.configurationItemStatus,
-         <span style="color:#66d9ef">COUNT</span>(configurationItem.resourceId) <span style="color:#66d9ef">AS</span> NumberOfChanges
-    <span style="color:#66d9ef">FROM</span> s3data.awsconfig
-   <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
-   <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-07T%&#39;</span>
-     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-08T%&#39;</span>
-<span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> configurationItem.resourceType
-         , configurationItem.resourceName
-         , configurationItem.configurationItemStatus
-<span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> NumberOfChanges <span style="color:#66d9ef">DESC</span>
-</code></pre></div><pre tabindex="0"><code>    resourcetype            resourcename                        configurationitemstatus  NumberOfChanges
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>  <span style="color:#66d9ef">SELECT</span> configurationItem.resourceType,
+</span></span><span style="display:flex;"><span>         configurationItem.resourceName,
+</span></span><span style="display:flex;"><span>         configurationItem.configurationItemStatus,
+</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">COUNT</span>(configurationItem.resourceId) <span style="color:#66d9ef">AS</span> NumberOfChanges
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> s3data.awsconfig
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-07T%&#39;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-08T%&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> configurationItem.resourceType
+</span></span><span style="display:flex;"><span>         , configurationItem.resourceName
+</span></span><span style="display:flex;"><span>         , configurationItem.configurationItemStatus
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> NumberOfChanges <span style="color:#66d9ef">DESC</span>
+</span></span></code></pre></div><pre tabindex="0"><code>    resourcetype            resourcename                        configurationitemstatus  NumberOfChanges
 1   AWS::RDS::DBInstance    db-wordpress                        OK                       2
 2   AWS::RDS::DBInstance    db-production                       OK                       2
 3   AWS::RDS::DBSnapshot    rds:db-production-2019-10-07-10-18  ResourceDiscovered       1

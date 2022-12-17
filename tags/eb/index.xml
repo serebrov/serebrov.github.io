@@ -36,7 +36,7 @@ Update: logging to the same stream from multiple sources is not recommended and 
       
       <guid>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</guid>
       <description>CloudWatch Logs is an AWS service to collect and monitor system and application logs. On the top level setup is this:
- install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue)  All the configuration can be done using the Elastic Beanstalk config.</description>
+install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue) All the configuration can be done using the Elastic Beanstalk config.</description>
     </item>
     
     <item>

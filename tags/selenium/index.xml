@@ -27,7 +27,7 @@ def send_keys(self, *value): &amp;#34;&amp;#34;&amp;#34;Simulates typing into th
       <description>This can be necessary for example for selector like #id &amp;gt; li:visible.
 If you will try to do webdriver.find_element_by_css_selector you will get an error message &amp;ldquo;The given selector #id &amp;gt; li:visible is either invalid or does not result in a WebElement.&amp;rdquo;
 The workaround is to use jQuery to find element. It can be done with this code (python):
-script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&amp;quot; element = webdriver.execute_script(script);  </description>
+script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&amp;quot; element = webdriver.execute_script(script); </description>
     </item>
     
     <item>
@@ -39,7 +39,7 @@ script = &amp;quot;return $(&#39;&amp;quot;+selector+&amp;quot;&#39;).get(0);&am
       <description>To set the php session cookie we can use the addcookie (or python version add_cookie) method of the webdriver. But it accepts only name and value and does not allow to set additional cookie parameters like domain, path, etc.
 Fortunately it is easy to do with javascript.
 Here is example of a JS code to set the cookie:
-document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&amp;quot;;  And here is python code version (assume you have set &amp;lsquo;cookie&amp;rsquo; and &amp;lsquo;domain&amp;rsquo; variables:</description>
+document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost.com; path=/&amp;quot;; And here is python code version (assume you have set &amp;lsquo;cookie&amp;rsquo; and &amp;lsquo;domain&amp;rsquo; variables:</description>
     </item>
     
     <item>
@@ -48,8 +48,8 @@ document.cookie = &amp;quot;PHPSESSID=9ojofgkb21nujvhulvgq4drh06; domain=.myhost
       <pubDate>Tue, 24 Jul 2012 00:00:00 +0000</pubDate>
       
       <guid>https://serebrov.github.io/html/2012-07-24-selenium-webdriver-trigger-event-via-jquery.html</guid>
-      <description>The &amp;lsquo;executeScript&amp;rsquo; method of the webdriver receives additional &amp;lsquo;arguments&amp;rsquo; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
-event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(arguments[0]).trigger(&#39;&amp;quot;+event+&amp;quot;&#39;)&amp;quot; webdriver.execute_script(script, web_element)  Links Stackoverflow question</description>
+      <description>The &amp;rsquo;executeScript&amp;rsquo; method of the webdriver receives additional &amp;lsquo;arguments&amp;rsquo; variable and we can pass WebElement instances to the script. So trigger an event on the elemen can be done like this (python):
+event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(arguments[0]).trigger(&#39;&amp;quot;+event+&amp;quot;&#39;)&amp;quot; webdriver.execute_script(script, web_element) Links Stackoverflow question</description>
     </item>
     
     <item>
@@ -59,7 +59,7 @@ event = &#39;click&#39; #or &#39;hover&#39; or any other script = &amp;quot;$(ar
       
       <guid>https://serebrov.github.io/html/2012-02-20-selenium-64bit-x_ignore_nofocus-problem.html</guid>
       <description>Problem: selenium fails to start Firefox with following error:
-&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39;  In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
+&#39;The browser appears to have exited before we could connect. The output was: Failed to dlopen /usr/lib/libX11.so.6\ndlerror says: /usr/lib/libX11.so.6: wrong ELF class: ELFCLASS32\n&#39; In my case it was reproduced on the 64 bit machine with Amazon Linux AMI. The problem itself is known and there is an issue in selenium tracker.
 It is because x_ignore_nofocus library tries to load 32bit version of the libX11 instead of 64bit.</description>
     </item>
     

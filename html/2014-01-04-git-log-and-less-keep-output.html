@@ -19,7 +19,7 @@ export LESS=-iXFR Options we set for less:'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='git'><meta property='article:published_time' content='2014-01-04T00:00:00Z'/><meta property='article:modified_time' content='2014-01-04T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>How to keep git log and less output on the screen • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html'>
@@ -274,10 +274,10 @@ One min read
     <p>When <code>git</code> uses <code>less</code> as pager the output of commands like <code>git log</code> disappears from the console screen when you exit from less.</p>
 <p>This is not convenient in many cases so here is how to fix this.</p>
 <p>Just for git commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git config --global --replace-all core.pager <span style="color:#e6db74">&#34;less -iXFR&#34;</span>
-</code></pre></div><p>For <code>less</code> command, globally (including git) - add to your shell profile (<code>.bashrc</code>, <code>.zshrc</code>, etc):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">export LESS<span style="color:#f92672">=</span>-iXFR
-</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git config --global --replace-all core.pager <span style="color:#e6db74">&#34;less -iXFR&#34;</span>
+</span></span></code></pre></div><p>For <code>less</code> command, globally (including git) - add to your shell profile (<code>.bashrc</code>, <code>.zshrc</code>, etc):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export LESS<span style="color:#f92672">=</span>-iXFR
+</span></span></code></pre></div><!-- raw HTML omitted -->
 <p>Options we set for <code>less</code>:</p>
 <ul>
 <li>-i - ignore case when searching (but respect case if search term contains uppercase letters)</li>

@@ -14,9 +14,9 @@
       
       <guid>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</guid>
       <description>Enable mbstring function overloading mode and set default encoding for string functions to utf-8 in php.ini:
-mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7  These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
+mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7 These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
 Default encoding can also be set using mb_internal_encoding function:
-mb_internal_encoding(&#39;UTF-8&#39;);  Or encoding can be set explicitly as argument in mbstring function:</description>
+mb_internal_encoding(&#39;UTF-8&#39;); Or encoding can be set explicitly as argument in mbstring function:</description>
     </item>
     
     <item>
@@ -51,8 +51,8 @@ class AContext { private $_state; protected function setState(AState $state) { $
       
       <guid>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</guid>
       <description>Error when trying to access phpmyadmin (in Chrome):
-Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data.  The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
-php_flag eaccelerator.enable 0  </description>
+Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data. The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
+php_flag eaccelerator.enable 0 </description>
     </item>
     
   </channel>

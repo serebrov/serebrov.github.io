@@ -24,7 +24,7 @@ git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp
       
       <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
       <description>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
- Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words:  Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word)    Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description>
+Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words: Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word) Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description>
     </item>
     
   </channel>

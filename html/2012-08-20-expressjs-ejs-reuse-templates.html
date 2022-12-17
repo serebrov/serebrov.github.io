@@ -13,7 +13,7 @@ For now I found two ways to do it. First way is to send a request from the clien
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='ejs'><meta property='article:tag' content='express.js'><meta property='article:tag' content='node.js'><meta property='article:published_time' content='2012-08-20T00:00:00Z'/><meta property='article:modified_time' content='2012-08-20T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>express.js and ejs - reuse template on server and client • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html'>
@@ -270,61 +270,61 @@ if (!doNotTrack) {
 <!-- raw HTML omitted -->
 <h2 id="dynamically-get-a-template-from-the-server-and-render-it">Dynamically get a template from the server and render it</h2>
 <p>To be able to load a template from a file we need to put shared templates (used both on the sever and the client) under the &ldquo;public&rdquo; folder. Assume we have &ldquo;public/tpl/template.ejs&rdquo;.</p>
-<p>Render on the server (this code will be inside of a parent view which uses &lsquo;template.ejs&rsquo; as partial):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">    &lt;div class=&#34;dataItems&#34;&gt;
-    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
-        &lt;%- partial(&#39;../public/tpl/template&#39;, {data: dataItems[i]}) %&gt;
-    &lt;% } %&gt;
-    &lt;/div&gt;
-</code></pre></div><p>Render on the client (you need to include client version of ejs.js into the page):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">insertTemplate</span>(<span style="color:#a6e22e">data</span>) {
-        <span style="color:#a6e22e">getTemplate</span>(<span style="color:#e6db74">&#39;/tpl/template.ejs&#39;</span>, <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">renderTemplate</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">tpl</span>) {
-        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) {
-            <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">err</span>;
-        }
-        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">tpl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;ejs&#39;</span>).<span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">tpl</span>, {<span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">data</span>});
-        <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">tpl</span>).<span style="color:#a6e22e">prependTo</span>(<span style="color:#e6db74">&#39;div.dataItems&#39;</span>);
-        });
-    }
-    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getTemplate</span>(<span style="color:#a6e22e">file</span>, <span style="color:#a6e22e">callback</span>) {
-        <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>(<span style="color:#a6e22e">file</span>, {
-            <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;GET&#39;</span>,
-            <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">textStatus</span>, <span style="color:#a6e22e">xhr</span>) {
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">callback</span>(<span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">data</span>);
-            },
-            <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">xhr</span>, <span style="color:#a6e22e">textStatus</span>, <span style="color:#a6e22e">error</span>) {
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">error</span>);
-            }
-        });
-    }
-</code></pre></div><p>Here the &lsquo;getTemplate&rsquo; function will load a template from the file on the server and return its contents. To reduce server load it could be enhanced to cache already loaded templates.</p>
+<p>Render on the server (this code will be inside of a parent view which uses &rsquo;template.ejs&rsquo; as partial):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>    &lt;div class=&#34;dataItems&#34;&gt;
+</span></span><span style="display:flex;"><span>    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
+</span></span><span style="display:flex;"><span>        &lt;%- partial(&#39;../public/tpl/template&#39;, {data: dataItems[i]}) %&gt;
+</span></span><span style="display:flex;"><span>    &lt;% } %&gt;
+</span></span><span style="display:flex;"><span>    &lt;/div&gt;
+</span></span></code></pre></div><p>Render on the client (you need to include client version of ejs.js into the page):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">insertTemplate</span>(<span style="color:#a6e22e">data</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">getTemplate</span>(<span style="color:#e6db74">&#39;/tpl/template.ejs&#39;</span>, <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">renderTemplate</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">tpl</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">err</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">tpl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;ejs&#39;</span>).<span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">tpl</span>, {<span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">data</span>});
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">tpl</span>).<span style="color:#a6e22e">prependTo</span>(<span style="color:#e6db74">&#39;div.dataItems&#39;</span>);
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getTemplate</span>(<span style="color:#a6e22e">file</span>, <span style="color:#a6e22e">callback</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>(<span style="color:#a6e22e">file</span>, {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;GET&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">textStatus</span>, <span style="color:#a6e22e">xhr</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">callback</span>(<span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">data</span>);
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">error</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">xhr</span>, <span style="color:#a6e22e">textStatus</span>, <span style="color:#a6e22e">error</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">error</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Here the &lsquo;getTemplate&rsquo; function will load a template from the file on the server and return its contents. To reduce server load it could be enhanced to cache already loaded templates.</p>
 <h2 id="prepare-a-template-on-the-server-and-use-it-on-the-client">Prepare a Template on the Server and Use it on the Client</h2>
 <p>With this method we do not need to put the template into the public folder. Assume we have our template in <code>views/_template.ejs</code>. Before rendering the view we put this template into the variable:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">templates</span> <span style="color:#f92672">=</span> {
-        <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;fs&#39;</span>).<span style="color:#a6e22e">readFileSync</span>(<span style="color:#e6db74">&#39;./views/_template.ejs&#39;</span>, <span style="color:#e6db74">&#39;utf-8&#39;</span>)
-    };
-    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;myview&#39;</span>, {
-        <span style="color:#75715e">// …,
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">templates</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">templates</span>
-    });
-</code></pre></div><p>The server-side rendering will be usual use of partial. Another thing we need to do inside the view is to convert &lsquo;templates&rsquo; view variable into client-side javascript variable.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">    &lt;div class=&#34;dataItems&#34;&gt;
-    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
-        &lt;%- partial(&#39;_template&#39;, {data: dataItems[i]}) %&gt;
-    &lt;% } %&gt;
-    &lt;/div&gt;
-
-    &lt;script type=&#34;text/javascript&#34;&gt;
-        jQuery(document).ready(function(){
-        //save templates to variable
-        window.templates = &lt;%-JSON.stringify(templates)%&gt;;
-        });
-    &lt;/script&gt;
-</code></pre></div><p>Now to render the template on the client:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">tplData</span> <span style="color:#f92672">=</span> {...};
-    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">html</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;ejs&#39;</span>).<span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">templates</span>.<span style="color:#a6e22e">template</span>, {<span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">tplData</span>});
-    <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">html</span>).<span style="color:#a6e22e">prependTo</span>(<span style="color:#e6db74">&#39;div.dataItems&#39;</span>);
-</code></pre></div><h2 id="links">Links</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">templates</span> <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;fs&#39;</span>).<span style="color:#a6e22e">readFileSync</span>(<span style="color:#e6db74">&#39;./views/_template.ejs&#39;</span>, <span style="color:#e6db74">&#39;utf-8&#39;</span>)
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">render</span>(<span style="color:#e6db74">&#39;myview&#39;</span>, {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// …,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">templates</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">templates</span>
+</span></span><span style="display:flex;"><span>    });
+</span></span></code></pre></div><p>The server-side rendering will be usual use of partial. Another thing we need to do inside the view is to convert &rsquo;templates&rsquo; view variable into client-side javascript variable.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>    &lt;div class=&#34;dataItems&#34;&gt;
+</span></span><span style="display:flex;"><span>    &lt;% for (var i=0; i &lt; dataItems.length; i++) { %&gt;
+</span></span><span style="display:flex;"><span>        &lt;%- partial(&#39;_template&#39;, {data: dataItems[i]}) %&gt;
+</span></span><span style="display:flex;"><span>    &lt;% } %&gt;
+</span></span><span style="display:flex;"><span>    &lt;/div&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    &lt;script type=&#34;text/javascript&#34;&gt;
+</span></span><span style="display:flex;"><span>        jQuery(document).ready(function(){
+</span></span><span style="display:flex;"><span>        //save templates to variable
+</span></span><span style="display:flex;"><span>        window.templates = &lt;%-JSON.stringify(templates)%&gt;;
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    &lt;/script&gt;
+</span></span></code></pre></div><p>Now to render the template on the client:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">tplData</span> <span style="color:#f92672">=</span> {...};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">html</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;ejs&#39;</span>).<span style="color:#a6e22e">render</span>(<span style="color:#a6e22e">templates</span>.<span style="color:#a6e22e">template</span>, {<span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">tplData</span>});
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">$</span>(<span style="color:#a6e22e">html</span>).<span style="color:#a6e22e">prependTo</span>(<span style="color:#e6db74">&#39;div.dataItems&#39;</span>);
+</span></span></code></pre></div><h2 id="links">Links</h2>
 <p><a href="https://github.com/visionmedia/ejs/issues/52">Discussion in the ejs issue tracker</a></p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">

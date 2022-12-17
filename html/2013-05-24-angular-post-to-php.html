@@ -17,7 +17,7 @@ $data = file_get_contents(&#34;php://input&#34;); $postData = json_decode($data)
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='php'><meta property='article:tag' content='angularjs'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Angular.js POST data to PHP • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html'>
@@ -275,17 +275,17 @@ So if you do a POST request to a PHP code then the <code>$_POST</code> superglob
 <!-- raw HTML omitted -->
 <h2 id="server-side-solution">Server-side solution</h2>
 <p>On the server you can parse input and then decode data from json:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">    $data <span style="color:#f92672">=</span> <span style="color:#a6e22e">file_get_contents</span>(<span style="color:#e6db74">&#34;php://input&#34;</span>);
-    $postData <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>($data);
-</code></pre></div><h2 id="client-side-solution">Client-side solution</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span>    $data <span style="color:#f92672">=</span> <span style="color:#a6e22e">file_get_contents</span>(<span style="color:#e6db74">&#34;php://input&#34;</span>);
+</span></span><span style="display:flex;"><span>    $postData <span style="color:#f92672">=</span> <span style="color:#a6e22e">json_decode</span>($data);
+</span></span></code></pre></div><h2 id="client-side-solution">Client-side solution</h2>
 <p>On the client side the data can be sent in a way PHP expects it:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">    <span style="color:#a6e22e">$http</span>({
-        <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span><span style="color:#a6e22e">url</span>
-        <span style="color:#a6e22e">data</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">param</span>(<span style="color:#a6e22e">data</span>),
-        <span style="color:#a6e22e">method</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;POST&#39;</span>,
-        <span style="color:#a6e22e">headers</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#39;Content-Type&#39;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span>}
-    }).<span style="color:#a6e22e">success</span>(<span style="color:#a6e22e">callback</span>);
-</code></pre></div><p>Here we set the &lsquo;Content-Type&rsquo; header and encode data using jQuery&rsquo;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>    <span style="color:#a6e22e">$http</span>({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">url</span><span style="color:#f92672">:</span><span style="color:#a6e22e">url</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">data</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">param</span>(<span style="color:#a6e22e">data</span>),
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">method</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;POST&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">headers</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#39;Content-Type&#39;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#39;application/x-www-form-urlencoded; charset=UTF-8&#39;</span>}
+</span></span><span style="display:flex;"><span>    }).<span style="color:#a6e22e">success</span>(<span style="color:#a6e22e">callback</span>);
+</span></span></code></pre></div><p>Here we set the &lsquo;Content-Type&rsquo; header and encode data using jQuery&rsquo;s <a href="http://api.jquery.com/jQuery.param/">$.param</a>.
 This also can be done for all requests as described <a href="http://stackoverflow.com/questions/12190166/angularjs-any-way-for-http-post-to-send-request-parameters-instead-of-json">on stackoverflow</a>.</p>
  <a href="https://stackexchange.com/users/261528">
 <img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">

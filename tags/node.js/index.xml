@@ -24,7 +24,7 @@ NPM supports installing dependencies from github, but it is also good to have ve
       
       <guid>https://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</guid>
       <description>To debug mocha test with node inspector use the delay before test:
-beforeEach(function(done) { //start mocha as  //mocha -t 10000 --debug  setTimeout(function() { done(); }, 5000); }); This way there are 5 seconds to start the node inspector and set a breakpoint. Mocha should be lauched as this:
+beforeEach(function(done) { //start mocha as //mocha -t 10000 --debug setTimeout(function() { done(); }, 5000); }); This way there are 5 seconds to start the node inspector and set a breakpoint. Mocha should be lauched as this:
 $ mocha -t 10000 --debug Same approach can be used not only for tests but for any short-living node app - just wrap the startup code into the setTimeout() call.</description>
     </item>
     
@@ -36,7 +36,7 @@ $ mocha -t 10000 --debug Same approach can be used not only for tests but for an
       <guid>https://serebrov.github.io/html/2013-12-02-node-core-module-source.html</guid>
       <description>It is possible to ask node to show its core module source.
 For example, we want to check the source of the readFileSunc() method:
-$ node &amp;gt; fs = require(&#39;fs&#39;); &amp;gt; fs.writeFileSync(&#39;fs.js&#39;, fs.toString()) &amp;gt; fs.writeFileSync(&#39;fs.readFileSync.js&#39;, fs.readFileSync.toString()) [Ctrl-C][Ctrl-C]  Now check the fs.readFileSync.js file in the current folder.
+$ node &amp;gt; fs = require(&#39;fs&#39;); &amp;gt; fs.writeFileSync(&#39;fs.js&#39;, fs.toString()) &amp;gt; fs.writeFileSync(&#39;fs.readFileSync.js&#39;, fs.readFileSync.toString()) [Ctrl-C][Ctrl-C] Now check the fs.readFileSync.js file in the current folder.
 Also on some systems source code of core node modules is in the /usr/lib/nodejs/.
 And another (less interesting) way to get core module source - is to look for it in the node github repository:</description>
     </item>

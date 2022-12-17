@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
 For example:
- www.myapp.com -&gt; unbounce.com (landing pages) www.myapp.com/app -&gt; single page app hosted on S3 www.myapp.com/blog -&gt; wordpress blog  CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.'>
+www.myapp.com -&gt; unbounce.com (landing pages) www.myapp.com/app -&gt; single page app hosted on S3 www.myapp.com/blog -&gt; wordpress blog CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.'>
 <meta name='theme-color' content='#44ccff'>
 
 <meta property='og:title' content='Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path • vim, git, aws and other three-letter words'>
 <meta property='og:description' content='AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.
 For example:
- www.myapp.com -&gt; unbounce.com (landing pages) www.myapp.com/app -&gt; single page app hosted on S3 www.myapp.com/blog -&gt; wordpress blog  CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.'>
+www.myapp.com -&gt; unbounce.com (landing pages) www.myapp.com/app -&gt; single page app hosted on S3 www.myapp.com/blog -&gt; wordpress blog CloudFront Setup Structure CloudFront distribution is an entry point which we assign a root domain name (www.'>
 <meta property='og:url' content='https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2019-06-16T00:00:00Z'/><meta property='article:modified_time' content='2019-06-16T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.92.1" />
+<meta name="generator" content="Hugo 0.104.3" />
 
   <title>Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2019-06-16-multi-origin-cloudfront-setup.html'>
@@ -270,13 +270,13 @@ if (!doNotTrack) {
     <p>AWS CloudFront allows to have multiple origins for the distribution and, along with lambda@edge functions, that makes it possible to use CloudFront as an entry point to route the requests to different services based on the request path.</p>
 <p>For example:</p>
 <ul>
-<li><a href="http://www.myapp.com">www.myapp.com</a> -&gt; unbounce.com (landing pages)</li>
-<li><a href="http://www.myapp.com/app">www.myapp.com/app</a> -&gt; single page app hosted on S3</li>
-<li><a href="http://www.myapp.com/blog">www.myapp.com/blog</a> -&gt; wordpress blog</li>
+<li><a href="https://www.myapp.com">www.myapp.com</a> -&gt; unbounce.com (landing pages)</li>
+<li><a href="https://www.myapp.com/app">www.myapp.com/app</a> -&gt; single page app hosted on S3</li>
+<li><a href="https://www.myapp.com/blog">www.myapp.com/blog</a> -&gt; wordpress blog</li>
 </ul>
 <!-- raw HTML omitted -->
 <h1 id="cloudfront-setup-structure">CloudFront Setup Structure</h1>
-<p>CloudFront <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html">distribution</a> is an entry point which we assign a root domain name (<a href="http://www.myapp.com">www.myapp.com</a>).</p>
+<p>CloudFront <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html">distribution</a> is an entry point which we assign a root domain name (<a href="https://www.myapp.com">www.myapp.com</a>).</p>
 <p>The distribution can have one or more origins (these are the our services - landing page, S3 app, wordpress, etc).</p>
 <p>And each origins has behaviors - rules defining how CloudFront will work for the specific request path:</p>
 <ul>
@@ -329,36 +329,35 @@ The app is accessible from the sub-path (<code>myapp.com/app</code>) and should 
 SLACK_HOOK=https://hooks.slack.com/services/XXX/YYY/aaabbbccc
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-if [[ $APP_ENV == &quot;develop&quot; ]]; then
+if [[ $APP_ENV == &#34;develop&#34; ]]; then
     CLOUDFRONT_DISTRIBUTION=EEE88888888888
     AWS_BUCKET=dev.myapp.com
-elif [[ $APP_ENV == &quot;production&quot; ]]; then
+elif [[ $APP_ENV == &#34;production&#34; ]]; then
     CLOUDFRONT_DISTRIBUTION=EEE9999999999
     AWS_BUCKET=app.myapp.com
 else
-    echo &quot;Unknown environment ${APP_ENV}&quot;
+    echo &#34;Unknown environment ${APP_ENV}&#34;
     exit 1
 fi
 
-echo &quot;Deploying ${GIT_BRANCH} to ${AWS_BUCKET} with options ${AWS_CLI_OPTS}&quot;
+echo &#34;Deploying ${GIT_BRANCH} to ${AWS_BUCKET} with options ${AWS_CLI_OPTS}&#34;
 aws s3 sync --delete dist/ s3://${AWS_BUCKET}/app/ ${AWS_CLI_OPTS}
 
 # Invalidate app on CloudFront
 aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths /app/* ${AWS_CLI_OPTS}
 
 if [ $? -eq 0 ]; then
-    echo 'Deployment: OK'
+    echo &#39;Deployment: OK&#39;
     curl -s -X POST $SLACK_HOOK \
-    -H &quot;content-type:application/json&quot; \
-    -d '{&quot;text&quot;:&quot;[frontend] Branch `'&quot;${GIT_BRANCH}&quot;'` was successfully deployed to `'&quot;${AWS_BUCKET}&quot;'` bucket.&quot;}'
+    -H &#34;content-type:application/json&#34; \
+    -d &#39;{&#34;text&#34;:&#34;[frontend] Branch `&#39;&#34;${GIT_BRANCH}&#34;&#39;` was successfully deployed to `&#39;&#34;${AWS_BUCKET}&#34;&#39;` bucket.&#34;}&#39;
 else
-    echo 'Deployment: FAILED'
+    echo &#39;Deployment: FAILED&#39;
     exit $?
     curl -s -X POST $SLACK_HOOK \
-    -H &quot;content-type:application/json&quot; \
-    -d '{&quot;text&quot;:&quot;[frontend] Branch `'&quot;${GIT_BRANCH}&quot;'` deployment to `'&quot;${AWS_BUCKET}&quot;'` bucket FAILED.&quot;}'
+    -H &#34;content-type:application/json&#34; \
+    -d &#39;{&#34;text&#34;:&#34;[frontend] Branch `&#39;&#34;${GIT_BRANCH}&#34;&#39;` deployment to `&#39;&#34;${AWS_BUCKET}&#34;&#39;` bucket FAILED.&#34;}&#39;
 fi
-
 </code></pre><p>I&rsquo;ve used similar setup for Angular and Vue applications, it should work well for other frameworks too.</p>
 <p>In a single-origin setup (no other services, and the distribution only used for single page app), it is also useful to:</p>
 <ul>
@@ -427,13 +426,13 @@ And it means that we lose the ability to redirect failing requests to <code>inde
 <p>In a single-origin CloudFront distribution this issue can be solved by setting the default object for the distribution to <code>index.html</code> and also adding &ldquo;Error pages&rdquo; for 404 and 403 that would also point to <code>index.html</code>.</p>
 <p>For a &ldquo;mutli-origin&rdquo; setup a solution is to add lambda@edge function for the &ldquo;Origin Response&rdquo; event and replace 403 / 404 errors with <code>index.html</code> content.</p>
 <p>The Lambda function code (<a href="https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/">source</a>) looks like this:</p>
-<pre tabindex="0"><code>'use strict';
+<pre tabindex="0"><code>&#39;use strict&#39;;
 
 // Source - https://andrewlock.net/using-lambda-at-edge-to-handle-angular-client-side-routing-with-s3-and-cloudfront/
 
-const http = require('https');
+const http = require(&#39;https&#39;);
 
-const indexPage = 'index.html';
+const indexPage = &#39;index.html&#39;;
 
 exports.handler = async (event, context, callback) =&gt; {
     const cf = event.Records[0].cf;
@@ -443,8 +442,8 @@ exports.handler = async (event, context, callback) =&gt; {
 
     // Only replace 403 and 404 requests typically received
     // when loading a page for a SPA that uses client-side routing
-    const doReplace = request.method === 'GET'
-                    &amp;&amp; (statusCode == '403' || statusCode == '404');
+    const doReplace = request.method === &#39;GET&#39;
+                    &amp;&amp; (statusCode == &#39;403&#39; || statusCode == &#39;404&#39;);
 
     const result = doReplace 
         ? await generateResponseAndLog(cf, request, indexPage, response)
@@ -461,7 +460,7 @@ async function generateResponseAndLog(cf, request, indexPage, originalResponse){
     const indexPath = `/${appPath}/${indexPage}`;
 
     const response = await generateResponse(domain, indexPath, request, originalResponse);
-    // console.log('response: ' + JSON.stringify(response));
+    // console.log(&#39;response: &#39; + JSON.stringify(response));
     return response;
 }
 
@@ -472,30 +471,30 @@ async function generateResponse(domain, path, request, originalResponse){
 
         const headers = s3Response.headers || 
             {
-                'content-type': [{ value: 'text/html;charset=UTF-8' }]
+                &#39;content-type&#39;: [{ value: &#39;text/html;charset=UTF-8&#39; }]
             };
 
         const responseHeaders = wrapAndFilterHeaders(headers, originalResponse.headers || {})
 
         // Debug headers to see the original requested URL vs the index file request.
-        // responseHeaders['x-lambda-request-uri'] = [{value: request.uri}]
-        // responseHeaders['x-lambda-hostname'] = [{value: domain}]
-        // responseHeaders['x-lambda-path'] = [{value: path}]
-        // responseHeaders['x-lambda-response-status'] = [{value: String(s3Response.status)}]
+        // responseHeaders[&#39;x-lambda-request-uri&#39;] = [{value: request.uri}]
+        // responseHeaders[&#39;x-lambda-hostname&#39;] = [{value: domain}]
+        // responseHeaders[&#39;x-lambda-path&#39;] = [{value: path}]
+        // responseHeaders[&#39;x-lambda-response-status&#39;] = [{value: String(s3Response.status)}]
 
         return {
-            status: '200',
+            status: &#39;200&#39;,
             headers: responseHeaders,
             body: s3Response.body
         };
     } catch (error) {
         console.log(error)
         return {
-            status: '500',
+            status: &#39;500&#39;,
             headers:{
-                'content-type': [{ value: 'text/plain' }]
+                &#39;content-type&#39;: [{ value: &#39;text/plain&#39; }]
             },
-            body: 'An error occurred loading the page'
+            body: &#39;An error occurred loading the page&#39;
         };
     }
 }
@@ -507,12 +506,12 @@ function httpGet(params) {
             let result = {
                 status: resp.statusCode,
                 headers: resp.headers,
-                body: ''
+                body: &#39;&#39;
             };
-            resp.on('data', (chunk) =&gt; { result.body += chunk; });
-            resp.on('end', () =&gt; { resolve(result); });
-        }).on('error', (err) =&gt; {
-            console.log(`Couldn't fetch ${params.hostname}${params.path} : ${err.message}`);
+            resp.on(&#39;data&#39;, (chunk) =&gt; { result.body += chunk; });
+            resp.on(&#39;end&#39;, () =&gt; { resolve(result); });
+        }).on(&#39;error&#39;, (err) =&gt; {
+            console.log(`Couldn&#39;t fetch ${params.hostname}${params.path} : ${err.message}`);
             reject(err, null);
         });
     });
@@ -521,14 +520,14 @@ function httpGet(params) {
 // Get the app path segment e.g. candidates.app, employers.client etc
 function getAppPath(path){
     if(!path){
-        return '';
+        return &#39;&#39;;
     }
 
-    if(path[0] === '/'){
+    if(path[0] === &#39;/&#39;){
         path = path.slice(1);
     }
 
-    const segments = path.split('/');
+    const segments = path.split(&#39;/&#39;);
 
     // will always have at least one segment (may be empty)
     return segments[0];
@@ -537,11 +536,11 @@ function getAppPath(path){
 // Cloudfront requires header values to be wrapped in an array
 function wrapAndFilterHeaders(headers, originalHeaders){
     const allowedHeaders = [
-        'content-type',
-        'content-length',
-        'last-modified',
-        'date',
-        'etag'
+        &#39;content-type&#39;,
+        &#39;content-length&#39;,
+        &#39;last-modified&#39;,
+        &#39;date&#39;,
+        &#39;etag&#39;
     ];
 
     const responseHeaders = originalHeaders;
@@ -556,7 +555,7 @@ function wrapAndFilterHeaders(headers, originalHeaders){
             var header = headers[propName];
 
             if (Array.isArray(header)){
-                // assume already 'wrapped' format
+                // assume already &#39;wrapped&#39; format
                 responseHeaders[propName] = header;
             } else {
                 // fix to required format
@@ -571,7 +570,7 @@ function wrapAndFilterHeaders(headers, originalHeaders){
 </code></pre><h1 id="lambda-code-cloudfrontredirecttotrailingslash">Lambda Code: CloudFrontRedirectToTrailingSlash</h1>
 <p>This function is used for wordpress setup to redirect <code>www.myapp.com/blog</code> requests to <code>www.myapp.com/blog/</code> (add trailing slash which triggers index.php loading from the folder).</p>
 <p>The Lambda function code (<a href="https://www.barelyknown.com/posts/add-trailing-slash-to-cloudfront-request">source</a>):</p>
-<pre tabindex="0"><code>const path = require('path');
+<pre tabindex="0"><code>const path = require(&#39;path&#39;);
 exports.handler = async (event) =&gt; {
   const { request } = event.Records[0].cf;
   const { uri } = request;
@@ -580,7 +579,7 @@ exports.handler = async (event) =&gt; {
     return request;
   }
   const last_character = uri.slice(-1);
-  if (last_character === &quot;/&quot;) {
+  if (last_character === &#34;/&#34;) {
     return request;
   }
   const newUri = `${uri}/`;
@@ -594,7 +593,7 @@ exports.handler = async (event) =&gt; {
 <p>By default this request returns <code>200 OK</code> with <code>application/x-directory</code> content type and empty body.</p>
 <p>The Lambda function adds <code>index.html</code> to these requests (so the request becomes <code>www.myapp.com/app/index.html</code>).</p>
 <p>The lambda function code (<a href="https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/">source</a>):</p>
-<pre tabindex="0"><code>'use strict';
+<pre tabindex="0"><code>&#39;use strict&#39;;
 
 // Source: https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/
 //
@@ -608,12 +607,12 @@ exports.handler = (event, context, callback) =&gt; {
     // Extract the URI from the request
     var olduri = request.uri;
 
-    // Match any '/' that occurs at the end of a URI. Replace it with a default index
-    var newuri = olduri.replace(/\/$/, '\/index.html');
+    // Match any &#39;/&#39; that occurs at the end of a URI. Replace it with a default index
+    var newuri = olduri.replace(/\/$/, &#39;\/index.html&#39;);
 
     // Log the URI as received by CloudFront and the new URI to be used to fetch from origin
-    console.log(&quot;Old URI: &quot; + olduri);
-    console.log(&quot;New URI: &quot; + newuri);
+    console.log(&#34;Old URI: &#34; + olduri);
+    console.log(&#34;New URI: &#34; + newuri);
 
     // Replace the received URI with the URI that includes the index page
     request.uri = newuri;
@@ -626,7 +625,7 @@ exports.handler = (event, context, callback) =&gt; {
 In this case, the <code>app.myapp.com</code> requests should be forwared to <code>www.myapp.com/app</code>.</p>
 <p>Note: in the next section there is another solution for the same problem, based on S3 static website hosting feature.</p>
 <p>With Lambda function, the redirect can be done by attaching a function to the old CloudFront distribution behavior, the &ldquo;Viewer Request&rdquo; event:</p>
-<pre tabindex="0"><code>const path = require('path');
+<pre tabindex="0"><code>const path = require(&#39;path&#39;);
 exports.handler = async (event) =&gt; {
   const { request } = event.Records[0].cf;
   const { uri } = request;
@@ -635,25 +634,24 @@ exports.handler = async (event) =&gt; {
 
   let responseHeaders = {
       location: [{
-          key: 'Location',
+          key: &#39;Location&#39;,
           value: newUri,
       }],
   }
   // Debug headers to see the original requested URL vs the index file request.
-  responseHeaders['x-lambda-request-uri'] = [{value: request.uri}]
-  responseHeaders['x-lambda-redirect-url'] = [{value: newUri}]
+  responseHeaders[&#39;x-lambda-request-uri&#39;] = [{value: request.uri}]
+  responseHeaders[&#39;x-lambda-redirect-url&#39;] = [{value: newUri}]
 
   /*
    * Generate HTTP redirect response with 302 status code and Location header.
    */
   const response = {
-      status: '302',
-      statusDescription: 'Found',
+      status: &#39;302&#39;,
+      statusDescription: &#39;Found&#39;,
       headers: responseHeaders,
   };
   return response;
 };
-
 </code></pre><h2 id="another-way-to-redirect-requests-to-the-new-location-with-s3-static-website">Another Way to Redirect Requests to the new Location with S3 Static Website</h2>
 <p>This is another solution to the problem described above: redirect requests from the old location (such as <code>app.myapp.com</code> to new <code>www.myapp.com/www</code>).</p>
 <p>This method is described in <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/tutorial-redirecting-dns-queries.html">AWS docs</a>.</p>

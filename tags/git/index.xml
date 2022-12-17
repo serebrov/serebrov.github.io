@@ -25,7 +25,7 @@ git cherry-pick START^..END References How to cherry-pick a range of commits and
       <guid>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</guid>
       <description>Git allows joining unrelated repositories via remotes which, in turn, allows moving files and change history between them.
 Some cases when this might be needed:
- Extract part of a big repository into a separate repository, preserving change history Splitting big repository to a set of smaller repositories Merge smaller repository into a bigger one (merge in library from the external repository)  Preserving the history has an important effect: after we do the change, for example, extract a part of a bigger repository into a separate repository, we can continue moving changes between them (merge updates from the big repository to the small one and back).</description>
+Extract part of a big repository into a separate repository, preserving change history Splitting big repository to a set of smaller repositories Merge smaller repository into a bigger one (merge in library from the external repository) Preserving the history has an important effect: after we do the change, for example, extract a part of a bigger repository into a separate repository, we can continue moving changes between them (merge updates from the big repository to the small one and back).</description>
     </item>
     
     <item>
@@ -118,7 +118,7 @@ $ su git git@localname$ cd ~ git@localname$ mkdir .ssh For each user who need an
 git branch -a --no-merged (or git branch -a --no-merged master) Branches that were merged with feature:
 git branch -a --merged feature Branches that were merged not with feature:
 git branch -a --no-merged feature Reference The git-branch(1) command:
- with --contains flag shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit).</description>
+with --contains flag shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit). with --merged shows only branches merged into the named commit (i.</description>
     </item>
     
     <item>
@@ -141,7 +141,7 @@ Note: the confusing part is that log with two dots only shows changes on one bra
 Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):
 git log --all --format=%H FILENAME | while read f; do git branch --contains $f; done | sort -u Manually inspect:
 gitk --all --date-order -- FILENAME Find all changes to FILENAME not merged to master:
-git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -v master | while read br; do git cherry master $br | while read x h; do if [ &amp;#34;`git log -n 1 --format=%H $h-- FILENAME`&amp;#34; = &amp;#34;$h&amp;#34; ]; then echo $br; fi; done; done | sort -u </description>
+git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -v master | while read br; do git cherry master $br | while read x h; do if [ &amp;#34;`git log -n 1 --format=%H $h -- FILENAME`&amp;#34; = &amp;#34;$h&amp;#34; ]; then echo $br; fi; done; done | sort -u </description>
     </item>
     
     <item>
@@ -152,7 +152,7 @@ git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -
       <guid>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</guid>
       <description>Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit (or X commits) after git pull origin master.
 The sequence:
- Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.”  The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).</description>
+Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.” The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).</description>
     </item>
     
     <item>
@@ -219,7 +219,7 @@ Color highlighted diffs with git, svn and cvs</description>
       
       <guid>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</guid>
       <description>Git error:
-Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively.  The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
+Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively. The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
 Another case for the error is git rebase (error is expected, see below).
 The history looks like this:</description>
     </item>
