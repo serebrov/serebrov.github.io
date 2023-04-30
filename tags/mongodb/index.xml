@@ -1,23 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>mongodb on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/mongodb/</link>
-    <description>Recent content in mongodb on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 30 Dec 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/mongodb/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>AWS OpsWorks - setup mongodb ebs volume backups</title>
-      <link>https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</link>
-      <pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</guid>
-      <description>I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mongodb on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/mongodb/</link><description>Recent content in mongodb on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 30 Dec 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/mongodb/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS OpsWorks - setup mongodb ebs volume backups</title><link>https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</link><pubDate>Tue, 30 Dec 2014 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2014-12-30-aws-ebs-mongo-backups.html</guid><description>I described how to setup mongodb on EC2 using OpsWorks and here is how to setup mongo data backups.
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 The relevant part from the mongodb docs:
-Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description>
-    </item>
-    
-  </channel>
-</rss>
+Backup with --journal The journal file allows for roll forward recovery. The journal files are located in the dbpath directory so will be snapshotted at the same time as the database files.</description></item></channel></rss>

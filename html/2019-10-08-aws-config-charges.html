@@ -1,347 +1,55 @@
-<!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month. And I didn&rsquo;t even remember if I enabled and configured it.
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month. And I didn&rsquo;t even remember if I enabled and configured it.
 I could not get any details from AWS Cost Explorer besides that charges are in the same region where our app is running.
-The confusing part was a note in the AWS Config management console:'>
-<meta name='theme-color' content='#44ccff'>
-
-<meta property='og:title' content='AWS Config - Unexpected Charges and Data Analysis • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month. And I didn&rsquo;t even remember if I enabled and configured it.
+The confusing part was a note in the AWS Config management console:"><meta name=theme-color content="#44ccff"><meta property="og:title" content="AWS Config - Unexpected Charges and Data Analysis • vim, git, aws and other three-letter words"><meta property="og:description" content="I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month. And I didn&rsquo;t even remember if I enabled and configured it.
 I could not get any details from AWS Cost Explorer besides that charges are in the same region where our app is running.
-The confusing part was a note in the AWS Config management console:'>
-<meta property='og:url' content='https://serebrov.github.io/html/2019-10-08-aws-config-charges.html'>
-<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2019-10-08T00:00:00Z'/><meta property='article:modified_time' content='2019-10-08T00:00:00Z'/><meta name='twitter:card' content='summary'>
-
-<meta name="generator" content="Hugo 0.111.3">
-
-  <title>AWS Config - Unexpected Charges and Data Analysis • vim, git, aws and other three-letter words</title>
-  <link rel='canonical' href='https://serebrov.github.io/html/2019-10-08-aws-config-charges.html'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
-:root{--color-accent:#44ccff;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-58056088-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-note has-sidebar'>
-
-  <div class='site'><div id='sidebar' class='sidebar'>
-  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
-
-  <div class='container'><section class='widget widget-about sep-after'>
-  <header>
-    
-    <div class='logo'>
-      <a href='/'>
-        <img src='/images/logo.jpg'>
-      </a>
-    </div>
-    
-    <h2 class='title site-title '>
-      <a href='/'>
-      vim, git, aws and other three-letter words
-      </a>
-    </h2>
-    <div class='desc'>
-    Software Development Notes
-    </div>
-  </header>
-
-</section>
-<section class='widget widget-search sep-after'>
-  <header>
-    <h4 class='title widget-title'>Search</h4>
-  </header>
-
-  <form action='/search' id='search-form' class='search-form'>
-    <label>
-      <span class='screen-reader-text'>Search</span>
-      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
-    </label></form>
-
-</section>
-<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
-    <div class='container'>
-      <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item has-current'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
-  <a href='/archive/'>Archive</a></li></ul>
-    </div>
-  </nav>
-
-</section><section class='widget widget-taxonomy_cloud sep-after'>
-  <header>
-    <h4 class='title widget-title'>Tags</h4>
-  </header>
-
-  <div class='container list-container'>
-  <ul class='list taxonomy-cloud no-shuffle'><li>
-        <a href='/tags/android/' style='font-size:1em'>android</a>
-      </li><li>
-        <a href='/tags/angularjs/' style='font-size:1.1052631578947367em'>angularjs</a>
-      </li><li>
-        <a href='/tags/aws/' style='font-size:1.894736842105263em'>aws</a>
-      </li><li>
-        <a href='/tags/celery/' style='font-size:1em'>celery</a>
-      </li><li>
-        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
-      </li><li>
-        <a href='/tags/cw-logs/' style='font-size:1.0526315789473684em'>cw-logs</a>
-      </li><li>
-        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
-      </li><li>
-        <a href='/tags/docker/' style='font-size:1em'>docker</a>
-      </li><li>
-        <a href='/tags/drone/' style='font-size:1em'>drone</a>
-      </li><li>
-        <a href='/tags/dynamodb/' style='font-size:1.1052631578947367em'>dynamodb</a>
-      </li><li>
-        <a href='/tags/eb/' style='font-size:1.1578947368421053em'>eb</a>
-      </li><li>
-        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
-      </li><li>
-        <a href='/tags/emr/' style='font-size:1.0526315789473684em'>emr</a>
-      </li><li>
-        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
-      </li><li>
-        <a href='/tags/git/' style='font-size:2em'>git</a>
-      </li><li>
-        <a href='/tags/hive/' style='font-size:1em'>hive</a>
-      </li><li>
-        <a href='/tags/jquery/' style='font-size:1.1052631578947367em'>jquery</a>
-      </li><li>
-        <a href='/tags/js/' style='font-size:1.1052631578947367em'>js</a>
-      </li><li>
-        <a href='/tags/kbd/' style='font-size:1.0526315789473684em'>kbd</a>
-      </li><li>
-        <a href='/tags/linux/' style='font-size:1em'>linux</a>
-      </li><li>
-        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
-      </li><li>
-        <a href='/tags/mysql/' style='font-size:1.0526315789473684em'>mysql</a>
-      </li><li>
-        <a href='/tags/node.js/' style='font-size:1.1578947368421053em'>node.js</a>
-      </li><li>
-        <a href='/tags/npm/' style='font-size:1em'>npm</a>
-      </li><li>
-        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
-      </li><li>
-        <a href='/tags/oop/' style='font-size:1em'>oop</a>
-      </li><li>
-        <a href='/tags/php/' style='font-size:1.1578947368421053em'>php</a>
-      </li><li>
-        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
-      </li><li>
-        <a href='/tags/python/' style='font-size:1.1052631578947367em'>python</a>
-      </li><li>
-        <a href='/tags/rds/' style='font-size:1em'>rds</a>
-      </li><li>
-        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
-      </li><li>
-        <a href='/tags/selenium/' style='font-size:1.3157894736842106em'>selenium</a>
-      </li><li>
-        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
-      </li><li>
-        <a href='/tags/typing/' style='font-size:1em'>typing</a>
-      </li><li>
-        <a href='/tags/vim/' style='font-size:1.0526315789473684em'>vim</a>
-      </li><li>
-        <a href='/tags/vr/' style='font-size:1em'>vr</a>
-      </li><li>
-        <a href='/tags/vue/' style='font-size:1em'>vue</a>
-      </li><li>
-        <a href='/tags/yii/' style='font-size:1.1578947368421053em'>yii</a>
-      </li><li>
-        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
-      </li></ul>
-</div>
-
-
-</section>
-</div>
-
-  <div class='sidebar-overlay'></div>
-</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
-    <a class='screen-reader-text' href='#content'>Skip to Content</a>
-
-<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
-  <span class='screen-reader-text'>Toggle Sidebar</span>
-  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="3" y1="12" x2="21" y2="12" />
-  <line x1="3" y1="6" x2="21" y2="6" />
-  <line x1="3" y1="18" x2="21" y2="18" />
-  
-</svg>
-</span>
-  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="18" y1="6" x2="6" y2="18" />
-  <line x1="6" y1="6" x2="18" y2="18" />
-  
-</svg>
-</span>
-</button>
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item current'>
-        <a aria-current='page' href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
-      </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>AWS Config - Unexpected Charges and Data Analysis</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2019-10-08T00:00:00Z'>2019, Oct 08</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-4 mins read
-</span>
-
-
-  
-  
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class="container entry-content custom">
-    <p>I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month.
-And I didn&rsquo;t even remember if I enabled and configured it.</p>
-<p>I could not get any details from AWS Cost Explorer besides that charges are in the same region where our app is running.</p>
-<!-- raw HTML omitted -->
-<p>The confusing part was a note in the AWS Config management console:</p>
-<blockquote>
-<p>Why am I seeing this page?
+The confusing part was a note in the AWS Config management console:"><meta property="og:url" content="https://serebrov.github.io/html/2019-10-08-aws-config-charges.html"><meta property="og:site_name" content="vim, git, aws and other three-letter words"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:tag" content="aws"><meta property="article:published_time" content="2019-10-08T00:00:00Z"><meta property="article:modified_time" content="2019-10-08T00:00:00Z"><meta name=twitter:card content="summary"><meta name=generator content="Hugo 0.111.3"><title>AWS Config - Unexpected Charges and Data Analysis • vim, git, aws and other three-letter words</title><link rel=canonical href=https://serebrov.github.io/html/2019-10-08-aws-config-charges.html><link rel=icon href=/favicon.ico><link rel=stylesheet href=/assets/css/main.6a060eb7.css><link rel=stylesheet href=/css/custom.css><style>:root{--color-accent:#44ccff}</style><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-58056088-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></head><body class='page type-note has-sidebar'><div class=site><div id=sidebar class=sidebar><a class=screen-reader-text href=#main-menu>Skip to Main Menu</a><div class=container><section class='widget widget-about sep-after'><header><div class=logo><a href=/><img src=/images/logo.jpg></a></div><h2 class='title site-title'><a href=/>vim, git, aws and other three-letter words</a></h2><div class=desc>Software Development Notes</div></header></section><section class='widget widget-search sep-after'><header><h4 class='title widget-title'>Search</h4></header><form action=/search id=search-form class=search-form><label><span class=screen-reader-text>Search</span>
+<input id=search-term class=search-term type=search name=q placeholder=Search&mldr;></label></form></section><section class='widget widget-sidebar_menu sep-after'><nav id=sidebar-menu class='menu sidebar-menu' aria-label='Sidebar Menu'><div class=container><ul><li class=item><a href=/>Home</a></li><li class='item has-current'><a href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav></section><section class='widget widget-taxonomy_cloud sep-after'><header><h4 class='title widget-title'>Tags</h4></header><div class='container list-container'><ul class='list taxonomy-cloud no-shuffle'><li><a href=/tags/android/ style=font-size:1em>android</a></li><li><a href=/tags/angularjs/ style=font-size:1.1052631578947367em>angularjs</a></li><li><a href=/tags/aws/ style=font-size:1.894736842105263em>aws</a></li><li><a href=/tags/celery/ style=font-size:1em>celery</a></li><li><a href=/tags/chrome/ style=font-size:1em>chrome</a></li><li><a href=/tags/cw-logs/ style=font-size:1.0526315789473684em>cw-logs</a></li><li><a href=/tags/disqus/ style=font-size:1em>disqus</a></li><li><a href=/tags/docker/ style=font-size:1em>docker</a></li><li><a href=/tags/drone/ style=font-size:1em>drone</a></li><li><a href=/tags/dynamodb/ style=font-size:1.1052631578947367em>dynamodb</a></li><li><a href=/tags/eb/ style=font-size:1.1578947368421053em>eb</a></li><li><a href=/tags/ejs/ style=font-size:1em>ejs</a></li><li><a href=/tags/emr/ style=font-size:1.0526315789473684em>emr</a></li><li><a href=/tags/express.js/ style=font-size:1em>express.js</a></li><li><a href=/tags/git/ style=font-size:2em>git</a></li><li><a href=/tags/hive/ style=font-size:1em>hive</a></li><li><a href=/tags/jquery/ style=font-size:1.1052631578947367em>jquery</a></li><li><a href=/tags/js/ style=font-size:1.1052631578947367em>js</a></li><li><a href=/tags/kbd/ style=font-size:1.0526315789473684em>kbd</a></li><li><a href=/tags/linux/ style=font-size:1em>linux</a></li><li><a href=/tags/mongodb/ style=font-size:1em>mongodb</a></li><li><a href=/tags/mysql/ style=font-size:1.0526315789473684em>mysql</a></li><li><a href=/tags/node.js/ style=font-size:1.1578947368421053em>node.js</a></li><li><a href=/tags/npm/ style=font-size:1em>npm</a></li><li><a href=/tags/oauth/ style=font-size:1em>oauth</a></li><li><a href=/tags/oop/ style=font-size:1em>oop</a></li><li><a href=/tags/php/ style=font-size:1.1578947368421053em>php</a></li><li><a href=/tags/postgresql/ style=font-size:1em>postgresql</a></li><li><a href=/tags/python/ style=font-size:1.1052631578947367em>python</a></li><li><a href=/tags/rds/ style=font-size:1em>rds</a></li><li><a href=/tags/scaleway/ style=font-size:1em>scaleway</a></li><li><a href=/tags/selenium/ style=font-size:1.3157894736842106em>selenium</a></li><li><a href=/tags/ssh/ style=font-size:1em>ssh</a></li><li><a href=/tags/typing/ style=font-size:1em>typing</a></li><li><a href=/tags/vim/ style=font-size:1.0526315789473684em>vim</a></li><li><a href=/tags/vr/ style=font-size:1em>vr</a></li><li><a href=/tags/vue/ style=font-size:1em>vue</a></li><li><a href=/tags/yii/ style=font-size:1.1578947368421053em>yii</a></li><li><a href=/tags/zeromq/ style=font-size:1em>zeromq</a></li></ul></div></section></div><div class=sidebar-overlay></div></div><div class=main><nav id=main-menu class='menu main-menu' aria-label='Main Menu'><div class=container><a class=screen-reader-text href=#content>Skip to Content</a>
+<button id=sidebar-toggler class=sidebar-toggler aria-controls=sidebar>
+<span class=screen-reader-text>Toggle Sidebar</span>
+<span class=open><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span><span class=close><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button><ul><li class=item><a href=/>Home</a></li><li class='item current'><a aria-current=page href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav><div class=header-widgets><div class=container></div></div><header id=header class='header site-header'><div class='container sep-after'><div class=header-info><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p></div></div></header><main id=content><article lang=en class=entry><header class='header entry-header'><div class='container sep-after'><div class=header-info><h1 class=title>AWS Config - Unexpected Charges and Data Analysis</h1></div><div class=entry-meta><span class=posted-on><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class=screen-reader-text>Posted on</span>
+<time class=entry-date datetime=2019-10-08T00:00:00Z>2019, Oct 08</time></span>
+<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>4 mins read</span></div></div></header><div class="container entry-content custom"><p>I started seeing an increased charge in billing for AWS Config service in one of the accounts, it increased from around $5 to $100 per month.
+And I didn&rsquo;t even remember if I enabled and configured it.</p><p>I could not get any details from AWS Cost Explorer besides that charges are in the same region where our app is running.</p><p>The confusing part was a note in the AWS Config management console:</p><blockquote><p>Why am I seeing this page?
 You can now use Config Rules to check configurations recorded by AWS Config. These steps will update your settings and permissions to use Config Rules.
-To use AWS Config without Config Rules, click here. When you are ready to try Config Rules, update your settings by referring to our documentation.</p>
-</blockquote>
-<p>So it even looked like we didn&rsquo;t configure AWS Config at all and the questions I had were:</p>
-<ol>
-<li>
-<p>Why are we charged for AWS Config?</p>
-</li>
-<li>
-<p>Can we disable it?</p>
-</li>
-<li>
-<p>How can we access the results of AWS Config? (We were charged for something, which might be useful - how to access this data?)</p>
-</li>
-</ol>
-<p>The <a href="https://aws.amazon.com/config/pricing/">AWS Config pricing</a> page was also a bit misleading - what caught my eye was the table with rule evaluation prices (and I didn&rsquo;t have any rules defined).</p>
-<p>Only after reading through the examples, I found that they also use some &ldquo;configuration items&rdquo; to calculate the price, not only rules evaluations.
-The thing I missed was at the very top: <code>You pay $0.003 per configuration item recorded in your AWS account per AWS Region.</code> (I jumped over this part initially right into the rules pricing table).</p>
-<p>It appears, that AWS Config was enabled and some automation in our account caused the large number of configuration items (changes to the configuration) to be recorded.
-The guide on how to get and query the collected data (its on S3) can be found <a href="https://aws.amazon.com/premiumsupport/knowledge-center/retrieve-aws-config-items-per-month/">here</a>.</p>
-<p>The procedure is following:</p>
-<ul>
-<li>Go to AWS Config settings, check the bucket name</li>
-<li>Go to S3, find that bucket and go into it to get the path to the logs</li>
-<li>The path will be something like this: <code>s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1</code></li>
-<li>Go to <a href="https://console.aws.amazon.com/athena/home">AWS Athena</a>, create external table and query the data</li>
-</ul>
-<p>The table can be created using from query editor.
-First, create the database:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">DATABASE</span> s3data
-</span></span></code></pre></div><p>Then, create the table for AWS Config data:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">EXTERNAL</span> <span style="color:#66d9ef">TABLE</span> awsconfig (
-</span></span><span style="display:flex;"><span>         fileversion string,
-</span></span><span style="display:flex;"><span>         configSnapshotId string,
-</span></span><span style="display:flex;"><span>         configurationitems ARRAY <span style="color:#f92672">&lt;</span> STRUCT <span style="color:#f92672">&lt;</span> configurationItemVersion : STRING,
-</span></span><span style="display:flex;"><span>         configurationItemCaptureTime : STRING,
-</span></span><span style="display:flex;"><span>         configurationStateId : BIGINT,
-</span></span><span style="display:flex;"><span>         awsAccountId : STRING,
-</span></span><span style="display:flex;"><span>         configurationItemStatus : STRING,
-</span></span><span style="display:flex;"><span>         resourceType : STRING,
-</span></span><span style="display:flex;"><span>         resourceId : STRING,
-</span></span><span style="display:flex;"><span>         resourceName : STRING,
-</span></span><span style="display:flex;"><span>         ARN : STRING,
-</span></span><span style="display:flex;"><span>         awsRegion : STRING,
-</span></span><span style="display:flex;"><span>         availabilityZone : STRING,
-</span></span><span style="display:flex;"><span>         configurationStateMd5Hash : STRING,
-</span></span><span style="display:flex;"><span>         resourceCreationTime : STRING <span style="color:#f92672">&gt;</span> <span style="color:#f92672">&gt;</span> 
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ROW</span> FORMAT SERDE <span style="color:#e6db74">&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span> <span style="color:#66d9ef">LOCATION</span> <span style="color:#e6db74">&#39;s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1/&#39;</span>
+To use AWS Config without Config Rules, click here. When you are ready to try Config Rules, update your settings by referring to our documentation.</p></blockquote><p>So it even looked like we didn&rsquo;t configure AWS Config at all and the questions I had were:</p><ol><li><p>Why are we charged for AWS Config?</p></li><li><p>Can we disable it?</p></li><li><p>How can we access the results of AWS Config? (We were charged for something, which might be useful - how to access this data?)</p></li></ol><p>The <a href=https://aws.amazon.com/config/pricing/>AWS Config pricing</a> page was also a bit misleading - what caught my eye was the table with rule evaluation prices (and I didn&rsquo;t have any rules defined).</p><p>Only after reading through the examples, I found that they also use some &ldquo;configuration items&rdquo; to calculate the price, not only rules evaluations.
+The thing I missed was at the very top: <code>You pay $0.003 per configuration item recorded in your AWS account per AWS Region.</code> (I jumped over this part initially right into the rules pricing table).</p><p>It appears, that AWS Config was enabled and some automation in our account caused the large number of configuration items (changes to the configuration) to be recorded.
+The guide on how to get and query the collected data (its on S3) can be found <a href=https://aws.amazon.com/premiumsupport/knowledge-center/retrieve-aws-config-items-per-month/>here</a>.</p><p>The procedure is following:</p><ul><li>Go to AWS Config settings, check the bucket name</li><li>Go to S3, find that bucket and go into it to get the path to the logs</li><li>The path will be something like this: <code>s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1</code></li><li>Go to <a href=https://console.aws.amazon.com/athena/home>AWS Athena</a>, create external table and query the data</li></ul><p>The table can be created using from query editor.
+First, create the database:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>CREATE</span> <span style=color:#66d9ef>DATABASE</span> s3data
+</span></span></code></pre></div><p>Then, create the table for AWS Config data:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>CREATE</span> <span style=color:#66d9ef>EXTERNAL</span> <span style=color:#66d9ef>TABLE</span> awsconfig (
+</span></span><span style=display:flex><span>         fileversion string,
+</span></span><span style=display:flex><span>         configSnapshotId string,
+</span></span><span style=display:flex><span>         configurationitems ARRAY <span style=color:#f92672>&lt;</span> STRUCT <span style=color:#f92672>&lt;</span> configurationItemVersion : STRING,
+</span></span><span style=display:flex><span>         configurationItemCaptureTime : STRING,
+</span></span><span style=display:flex><span>         configurationStateId : BIGINT,
+</span></span><span style=display:flex><span>         awsAccountId : STRING,
+</span></span><span style=display:flex><span>         configurationItemStatus : STRING,
+</span></span><span style=display:flex><span>         resourceType : STRING,
+</span></span><span style=display:flex><span>         resourceId : STRING,
+</span></span><span style=display:flex><span>         resourceName : STRING,
+</span></span><span style=display:flex><span>         ARN : STRING,
+</span></span><span style=display:flex><span>         awsRegion : STRING,
+</span></span><span style=display:flex><span>         availabilityZone : STRING,
+</span></span><span style=display:flex><span>         configurationStateMd5Hash : STRING,
+</span></span><span style=display:flex><span>         resourceCreationTime : STRING <span style=color:#f92672>&gt;</span> <span style=color:#f92672>&gt;</span> 
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>ROW</span> FORMAT SERDE <span style=color:#e6db74>&#39;org.apache.hive.hcatalog.data.JsonSerDe&#39;</span> <span style=color:#66d9ef>LOCATION</span> <span style=color:#e6db74>&#39;s3://aws-config-bucket-123456789123/AWSLogs/123456789123/Config/us-east-1/&#39;</span>
 </span></span></code></pre></div><p>Replace the <code>LOCATION</code> path with actual path on S3.
-Now we can query the <code>awsconfig</code> table to see how many and which items were created, for example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>  <span style="color:#66d9ef">SELECT</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime,
-</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">count</span>(<span style="color:#66d9ef">result</span>.configurationitemcapturetime) <span style="color:#66d9ef">AS</span> NumberOfChanges
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> (
-</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">SELECT</span> regexp_replace(
-</span></span><span style="display:flex;"><span>                    configurationItem.configurationItemCaptureTime, <span style="color:#e6db74">&#39;(.+)(T.+)&#39;</span>, <span style="color:#e6db74">&#39;$1&#39;</span>
-</span></span><span style="display:flex;"><span>                 ) <span style="color:#66d9ef">AS</span> configurationitemcapturetime
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">FROM</span> s3data.awsconfig
-</span></span><span style="display:flex;"><span>           <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
-</span></span><span style="display:flex;"><span>           <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
-</span></span><span style="display:flex;"><span>             <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
-</span></span><span style="display:flex;"><span>       ) <span style="color:#66d9ef">result</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">result</span>.configurationitemcapturetime
+Now we can query the <code>awsconfig</code> table to see how many and which items were created, for example:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>  <span style=color:#66d9ef>SELECT</span> <span style=color:#66d9ef>result</span>.configurationitemcapturetime,
+</span></span><span style=display:flex><span>         <span style=color:#66d9ef>count</span>(<span style=color:#66d9ef>result</span>.configurationitemcapturetime) <span style=color:#66d9ef>AS</span> NumberOfChanges
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>FROM</span> (
+</span></span><span style=display:flex><span>          <span style=color:#66d9ef>SELECT</span> regexp_replace(
+</span></span><span style=display:flex><span>                    configurationItem.configurationItemCaptureTime, <span style=color:#e6db74>&#39;(.+)(T.+)&#39;</span>, <span style=color:#e6db74>&#39;$1&#39;</span>
+</span></span><span style=display:flex><span>                 ) <span style=color:#66d9ef>AS</span> configurationitemcapturetime
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>FROM</span> s3data.awsconfig
+</span></span><span style=display:flex><span>           <span style=color:#66d9ef>CROSS</span> <span style=color:#66d9ef>JOIN</span> <span style=color:#66d9ef>UNNEST</span>(configurationitems) <span style=color:#66d9ef>AS</span> t(configurationItem)
+</span></span><span style=display:flex><span>           <span style=color:#66d9ef>WHERE</span> <span style=color:#e6db74>&#34;$path&#34;</span> <span style=color:#66d9ef>LIKE</span> <span style=color:#e6db74>&#39;%ConfigHistory%&#39;</span>
+</span></span><span style=display:flex><span>             <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&gt;=</span> <span style=color:#e6db74>&#39;2019-10-01T%&#39;</span>
+</span></span><span style=display:flex><span>             <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&lt;=</span> <span style=color:#e6db74>&#39;2019-10-10T%&#39;</span>
+</span></span><span style=display:flex><span>       ) <span style=color:#66d9ef>result</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>GROUP</span> <span style=color:#66d9ef>BY</span> <span style=color:#66d9ef>result</span>.configurationitemcapturetime
+</span></span><span style=display:flex><span><span style=color:#66d9ef>ORDER</span> <span style=color:#66d9ef>BY</span> <span style=color:#66d9ef>result</span>.configurationitemcapturetime
 </span></span></code></pre></div><p>The above will show number of configuration items created per day.
-The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</code> and join it to access the columns inside JSON.</p>
-<pre tabindex="0"><code>    capturetime    NumberOfChanges
+The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</code> and join it to access the columns inside JSON.</p><pre tabindex=0><code>    capturetime    NumberOfChanges
 1   2019-10-01     4279
 2   2019-10-02     4254
 3   2019-10-03     4307
@@ -350,26 +58,25 @@ The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</
 6   2019-10-06     7
 7   2019-10-07     9
 8   2019-10-08     2
-</code></pre><p>This is how to get a data sample:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> configurationItem.configurationItemVersion,
-</span></span><span style="display:flex;"><span>       configurationItem.configurationItemCaptureTime <span style="color:#66d9ef">as</span> fullTime,
-</span></span><span style="display:flex;"><span>       configurationItem.configurationStateId,
-</span></span><span style="display:flex;"><span>       configurationItem.awsAccountId,
-</span></span><span style="display:flex;"><span>       configurationItem.configurationItemStatus,
-</span></span><span style="display:flex;"><span>       configurationItem.resourceType,
-</span></span><span style="display:flex;"><span>       configurationItem.resourceId,
-</span></span><span style="display:flex;"><span>       configurationItem.resourceName,
-</span></span><span style="display:flex;"><span>       configurationItem.aRN,
-</span></span><span style="display:flex;"><span>       configurationItem.awsRegion,
-</span></span><span style="display:flex;"><span>       configurationItem.availabilityZone,
-</span></span><span style="display:flex;"><span>       configurationItem.configurationStateMd5Hash,
-</span></span><span style="display:flex;"><span>       configurationItem.resourceCreationTime
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">FROM</span> s3data.awsconfig
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-01T%&#39;</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-10T%&#39;</span>
-</span></span></code></pre></div><pre tabindex="0"><code>   capturetime ... configurationitemstatus resourcetype         ... resourcename                      ...
+</code></pre><p>This is how to get a data sample:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#66d9ef>SELECT</span> configurationItem.configurationItemVersion,
+</span></span><span style=display:flex><span>       configurationItem.configurationItemCaptureTime <span style=color:#66d9ef>as</span> fullTime,
+</span></span><span style=display:flex><span>       configurationItem.configurationStateId,
+</span></span><span style=display:flex><span>       configurationItem.awsAccountId,
+</span></span><span style=display:flex><span>       configurationItem.configurationItemStatus,
+</span></span><span style=display:flex><span>       configurationItem.resourceType,
+</span></span><span style=display:flex><span>       configurationItem.resourceId,
+</span></span><span style=display:flex><span>       configurationItem.resourceName,
+</span></span><span style=display:flex><span>       configurationItem.aRN,
+</span></span><span style=display:flex><span>       configurationItem.awsRegion,
+</span></span><span style=display:flex><span>       configurationItem.availabilityZone,
+</span></span><span style=display:flex><span>       configurationItem.configurationStateMd5Hash,
+</span></span><span style=display:flex><span>       configurationItem.resourceCreationTime
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>FROM</span> s3data.awsconfig
+</span></span><span style=display:flex><span> <span style=color:#66d9ef>CROSS</span> <span style=color:#66d9ef>JOIN</span> <span style=color:#66d9ef>UNNEST</span>(configurationitems) <span style=color:#66d9ef>AS</span> t(configurationItem)
+</span></span><span style=display:flex><span> <span style=color:#66d9ef>WHERE</span> <span style=color:#e6db74>&#34;$path&#34;</span> <span style=color:#66d9ef>LIKE</span> <span style=color:#e6db74>&#39;%ConfigHistory%&#39;</span>
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&gt;=</span> <span style=color:#e6db74>&#39;2019-10-01T%&#39;</span>
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&lt;=</span> <span style=color:#e6db74>&#39;2019-10-10T%&#39;</span>
+</span></span></code></pre></div><pre tabindex=0><code>   capturetime ... configurationitemstatus resourcetype         ... resourcename                      ...
 1  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-28-10-23
 2  2019-10-07      ResourceDeleted         AWS::RDS::DBSnapshot     rds:db-wordpress-2019-09-29-10-24
 3  2019-10-07      ResourceDiscovered      AWS::RDS::DBSnapshot     rds:db-wordpress-2019-10-07-10-23
@@ -378,21 +85,20 @@ The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</
 6  2019-10-07      OK                      AWS::RDS::DBInstance     db-wordpress
 7  2019-10-07      OK                      AWS::RDS::DBInstance     db-production
 8  2019-10-07      OK                      AWS::RDS::DBInstance     db-wordpress
-</code></pre><p>And this query fetches data grouped by resource type, name and status:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>  <span style="color:#66d9ef">SELECT</span> configurationItem.resourceType,
-</span></span><span style="display:flex;"><span>         configurationItem.resourceName,
-</span></span><span style="display:flex;"><span>         configurationItem.configurationItemStatus,
-</span></span><span style="display:flex;"><span>         <span style="color:#66d9ef">COUNT</span>(configurationItem.resourceId) <span style="color:#66d9ef">AS</span> NumberOfChanges
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">FROM</span> s3data.awsconfig
-</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">CROSS</span> <span style="color:#66d9ef">JOIN</span> <span style="color:#66d9ef">UNNEST</span>(configurationitems) <span style="color:#66d9ef">AS</span> t(configurationItem)
-</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">WHERE</span> <span style="color:#e6db74">&#34;$path&#34;</span> <span style="color:#66d9ef">LIKE</span> <span style="color:#e6db74">&#39;%ConfigHistory%&#39;</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&gt;=</span> <span style="color:#e6db74">&#39;2019-10-07T%&#39;</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#66d9ef">AND</span> configurationItem.configurationItemCaptureTime <span style="color:#f92672">&lt;=</span> <span style="color:#e6db74">&#39;2019-10-08T%&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> configurationItem.resourceType
-</span></span><span style="display:flex;"><span>         , configurationItem.resourceName
-</span></span><span style="display:flex;"><span>         , configurationItem.configurationItemStatus
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> NumberOfChanges <span style="color:#66d9ef">DESC</span>
-</span></span></code></pre></div><pre tabindex="0"><code>    resourcetype            resourcename                        configurationitemstatus  NumberOfChanges
+</code></pre><p>And this query fetches data grouped by resource type, name and status:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span>  <span style=color:#66d9ef>SELECT</span> configurationItem.resourceType,
+</span></span><span style=display:flex><span>         configurationItem.resourceName,
+</span></span><span style=display:flex><span>         configurationItem.configurationItemStatus,
+</span></span><span style=display:flex><span>         <span style=color:#66d9ef>COUNT</span>(configurationItem.resourceId) <span style=color:#66d9ef>AS</span> NumberOfChanges
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>FROM</span> s3data.awsconfig
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>CROSS</span> <span style=color:#66d9ef>JOIN</span> <span style=color:#66d9ef>UNNEST</span>(configurationitems) <span style=color:#66d9ef>AS</span> t(configurationItem)
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>WHERE</span> <span style=color:#e6db74>&#34;$path&#34;</span> <span style=color:#66d9ef>LIKE</span> <span style=color:#e6db74>&#39;%ConfigHistory%&#39;</span>
+</span></span><span style=display:flex><span>     <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&gt;=</span> <span style=color:#e6db74>&#39;2019-10-07T%&#39;</span>
+</span></span><span style=display:flex><span>     <span style=color:#66d9ef>AND</span> configurationItem.configurationItemCaptureTime <span style=color:#f92672>&lt;=</span> <span style=color:#e6db74>&#39;2019-10-08T%&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>GROUP</span> <span style=color:#66d9ef>BY</span> configurationItem.resourceType
+</span></span><span style=display:flex><span>         , configurationItem.resourceName
+</span></span><span style=display:flex><span>         , configurationItem.configurationItemStatus
+</span></span><span style=display:flex><span><span style=color:#66d9ef>ORDER</span> <span style=color:#66d9ef>BY</span> NumberOfChanges <span style=color:#66d9ef>DESC</span>
+</span></span></code></pre></div><pre tabindex=0><code>    resourcetype            resourcename                        configurationitemstatus  NumberOfChanges
 1   AWS::RDS::DBInstance    db-wordpress                        OK                       2
 2   AWS::RDS::DBInstance    db-production                       OK                       2
 3   AWS::RDS::DBSnapshot    rds:db-production-2019-10-07-10-18  ResourceDiscovered       1
@@ -400,147 +106,6 @@ The <code>configurationitems</code> field is a JSON object, so we <code>UNNEST</
 5   AWS::RDS::DBSnapshot    rds:db-production-2019-09-28-10-18  ResourceDeleted          1
 6   AWS::RDS::DBSnapshot    rds:db-wordpress-2019-09-29-10-24   ResourceDeleted          1
 7   AWS::RDS::DBSnapshot    rds:db-wordpress-2019-09-28-10-23   ResourceDeleted          1
-</code></pre><p>Using these queries, it should be possible to get an idea of what is happening, in my case it was misbehaving ElasticBeanstalk environment with bad health that was constantly re-creating all the resources.</p>
- <a href="https://stackexchange.com/users/261528">
-<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
-</a>
-
-</div>
-<div class="popup">
-    <div class="close">close</div>
-    <div class="download">
-        <a href="" target="_blank">Download (<span class="name"></span>)</a>
-    </div>
-    <div class="popup-content"></div>
-</div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/aws/'>aws</a></div>
-
-  </div>
-</footer>
-
-
-</article>
-
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Git Hook to Add Issue Number to Commit Message</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/html/2020-01-21-touch-typing.html'>
-        <span class='screen-reader-text'>Next post: </span>Touch Typing Tutors and Games<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-<section id='comments' class='comments'>
-  <div class='container sep-before'>
-    <div class='comments-area'><div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io\/html\/2019-10-08-aws-config-charges.html"; 
-        
-        
-    };
-    (function () {
-        
-        var d = document,
-            s = d.createElement("script");
-        s.src = "https://serebrov.disqus.com/embed.js";
-        s.setAttribute("data-timestamp", +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript
-    >Please enable JavaScript to view the
-    <a href="https://disqus.com/?ref_noscript"
-        >comments powered by Disqus.</a
-    ></noscript
->
-</div>
-  </div>
-</section>
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
-    <ul><li>
-        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-  
-</svg>
-</a>
-      </li><li>
-        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-  <polyline points="22,6 12,13 2,6"/>
-  
-</svg>
-</a>
-      </li></ul>
-  </nav>
-</section><div class='copyright'>
-  <p> &copy; 2020-2023 Boris Serebrov </p>
-</div>
-
-        </div>
-      </footer>
-
-    </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/jquery.min.js'></script><script src='/js/custom.js'></script>
-
-
-</body>
-
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</code></pre><p>Using these queries, it should be possible to get an idea of what is happening, in my case it was misbehaving ElasticBeanstalk environment with bad health that was constantly re-creating all the resources.</p><a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/aws/>aws</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
+<span class=screen-reader-text>Previous post: </span>Git Hook to Add Issue Number to Commit Message</a></div><div class='next-entry sep-before'><a href=/html/2020-01-21-touch-typing.html><span class=screen-reader-text>Next post: </span>Touch Typing Tutors and Games<span aria-hidden=true>Next<svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg></span></a></div></div></nav><section id=comments class=comments><div class='container sep-before'><div class=comments-area><div id=disqus_thread></div><script>var disqus_config=function(){this.page.url="http://serebrov.github.io/html/2019-10-08-aws-config-charges.html"};(function(){var e=document,t=e.createElement("script");t.src="https://serebrov.disqus.com/embed.js",t.setAttribute("data-timestamp",+new Date),(e.head||e.body).appendChild(t)})()</script><noscript>Please enable JavaScript to view the
+<a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></section></main><footer id=footer class=footer><div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'><ul><li><a href=https://github.com/serebrov target=_blank rel=noopener><span class=screen-reader-text>Open Github account in new tab</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li><li><a href=mailto:serebrov@gmail.com target=_blank rel=noopener><span class=screen-reader-text>Contact via Email</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></li></ul></nav></section><div class=copyright><p>&copy; 2020-2023 Boris Serebrov</p></div></div></footer></div></div><script>window.__assets_js_src="/assets/js/"</script><script src=https://serebrov.github.io/assets/js/main.67d669ac.js></script><script src=/js/jquery.min.js></script><script src=/js/custom.js></script></body></html>

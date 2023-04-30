@@ -1,55 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>node.js on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/node.js/</link>
-    <description>Recent content in node.js on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/node.js/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Managing NPM packages on github</title>
-      <link>https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</link>
-      <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</guid>
-      <description>Sometimes it is simpler to keep the package on github, for example, if you have a fork of a published package with some private changes. So you can avoid cluttering npm registry with similar packages, creating confusing for other people.
-NPM supports installing dependencies from github, but it is also good to have versioning for your package so you can use it exactly as other packages, develop it independently and upgrade the dependency for the main project in a controlled way.</description>
-    </item>
-    
-    <item>
-      <title>Node.js - how to debug mocha test with node inspector</title>
-      <link>https://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</link>
-      <pubDate>Mon, 02 Dec 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</guid>
-      <description>To debug mocha test with node inspector use the delay before test:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>node.js on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/node.js/</link><description>Recent content in node.js on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/node.js/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing NPM packages on github</title><link>https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</link><pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2019-02-16-manage-npm-packages-on-github.html</guid><description>Sometimes it is simpler to keep the package on github, for example, if you have a fork of a published package with some private changes. So you can avoid cluttering npm registry with similar packages, creating confusing for other people.
+NPM supports installing dependencies from github, but it is also good to have versioning for your package so you can use it exactly as other packages, develop it independently and upgrade the dependency for the main project in a controlled way.</description></item><item><title>Node.js - how to debug mocha test with node inspector</title><link>https://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</link><pubDate>Mon, 02 Dec 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-12-02-node-debug-mocha.html</guid><description>To debug mocha test with node inspector use the delay before test:
 beforeEach(function(done) { //start mocha as //mocha -t 10000 --debug setTimeout(function() { done(); }, 5000); }); This way there are 5 seconds to start the node inspector and set a breakpoint. Mocha should be lauched as this:
-$ mocha -t 10000 --debug Same approach can be used not only for tests but for any short-living node app - just wrap the startup code into the setTimeout() call.</description>
-    </item>
-    
-    <item>
-      <title>Node.js - how to get core module source</title>
-      <link>https://serebrov.github.io/html/2013-12-02-node-core-module-source.html</link>
-      <pubDate>Mon, 02 Dec 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-12-02-node-core-module-source.html</guid>
-      <description>It is possible to ask node to show its core module source.
+$ mocha -t 10000 --debug Same approach can be used not only for tests but for any short-living node app - just wrap the startup code into the setTimeout() call.</description></item><item><title>Node.js - how to get core module source</title><link>https://serebrov.github.io/html/2013-12-02-node-core-module-source.html</link><pubDate>Mon, 02 Dec 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-12-02-node-core-module-source.html</guid><description>It is possible to ask node to show its core module source.
 For example, we want to check the source of the readFileSunc() method:
-$ node &amp;gt; fs = require(&#39;fs&#39;); &amp;gt; fs.writeFileSync(&#39;fs.js&#39;, fs.toString()) &amp;gt; fs.writeFileSync(&#39;fs.readFileSync.js&#39;, fs.readFileSync.toString()) [Ctrl-C][Ctrl-C] Now check the fs.readFileSync.js file in the current folder.
+$ node &amp;gt; fs = require('fs'); &amp;gt; fs.writeFileSync('fs.js', fs.toString()) &amp;gt; fs.writeFileSync('fs.readFileSync.js', fs.readFileSync.toString()) [Ctrl-C][Ctrl-C] Now check the fs.readFileSync.js file in the current folder.
 Also on some systems source code of core node modules is in the /usr/lib/nodejs/.
-And another (less interesting) way to get core module source - is to look for it in the node github repository:</description>
-    </item>
-    
-    <item>
-      <title>express.js and ejs - reuse template on server and client</title>
-      <link>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</link>
-      <pubDate>Mon, 20 Aug 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</guid>
-      <description>ejs has a client-side support but documentation and examples do not describe how to reuse the same template on the server and on the client side.
-For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</description>
-    </item>
-    
-  </channel>
-</rss>
+And another (less interesting) way to get core module source - is to look for it in the node github repository:</description></item><item><title>express.js and ejs - reuse template on server and client</title><link>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</link><pubDate>Mon, 20 Aug 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-08-20-expressjs-ejs-reuse-templates.html</guid><description>ejs has a client-side support but documentation and examples do not describe how to reuse the same template on the server and on the client side.
+For now I found two ways to do it. First way is to send a request from the client, get a template from a file and render it. And the second - put a template into the page when render it on the server and then just use the template on the client.</description></item></channel></rss>

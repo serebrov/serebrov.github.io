@@ -1,58 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>yii on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/yii/</link>
-    <description>Recent content in yii on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 13 Sep 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/yii/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Yii url rules - optional parameters</title>
-      <link>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</link>
-      <pubDate>Thu, 13 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</guid>
-      <description>Assume we have an action &amp;ldquo;articles/get&amp;rdquo; which accepts optional parameters and we want to setup following URLs:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>yii on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/yii/</link><description>Recent content in yii on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 13 Sep 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/yii/index.xml" rel="self" type="application/rss+xml"/><item><title>Yii url rules - optional parameters</title><link>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</link><pubDate>Thu, 13 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-09-13-yii-url-rules-optional-parameters.html</guid><description>Assume we have an action &amp;ldquo;articles/get&amp;rdquo; which accepts optional parameters and we want to setup following URLs:
 articles/[article id or name] articles/[article id or name]/draft articles/[article id or name]/revisions/99 articles/[article id or name]/revisions/98/draft articles/revisions/[revision id] articles/revisions/[revision id]/draft We have a list of articles and each article has several revisions. Also each revision can have draft and published version.
-In the code we have a single &amp;lsquo;article/get&amp;rsquo; action which allows us to get specific article (last revision) by name (&amp;lsquo;GET articles/my-article&amp;rsquo;) or id (&amp;lsquo;GET articles/33&amp;rsquo;).</description>
-    </item>
-    
-    <item>
-      <title>GImport yii extension</title>
-      <link>https://serebrov.github.io/html/2012-10-10-gimport.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-10-10-gimport.html</guid>
-      <description>GImport yii extension implements recursive import of directories with caching.
+In the code we have a single &amp;lsquo;article/get&amp;rsquo; action which allows us to get specific article (last revision) by name (&amp;lsquo;GET articles/my-article&amp;rsquo;) or id (&amp;lsquo;GET articles/33&amp;rsquo;).</description></item><item><title>GImport yii extension</title><link>https://serebrov.github.io/html/2012-10-10-gimport.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-10-10-gimport.html</guid><description>GImport yii extension implements recursive import of directories with caching.
 Import is performed recursively for specified path alias. Classes found are cached, so the import process can be slow only first time.
 Basic usage example:
 $importer = new GImport; $importer-&amp;gt;add(&amp;#39;modules.myModule.*&amp;#39;); This code will import all clasees from modules/myModule/ directory.
 GImport can also be configured as application component. Add following code into the application config:
-return array( ... &amp;#39;preload&amp;#39; =&amp;gt; array(&amp;#39;log&amp;#39;, &amp;#39;import&amp;#39;), .</description>
-    </item>
-    
-    <item>
-      <title>yii - catch and log MySQL deadlock errors</title>
-      <link>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</link>
-      <pubDate>Wed, 28 Mar 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</guid>
-      <description>This method allows to log InnoDB monitor output when deadlock error occured. This way we will have much more useful data to find and fix deadlock.
+return array( ... &amp;#39;preload&amp;#39; =&amp;gt; array(&amp;#39;log&amp;#39;, &amp;#39;import&amp;#39;), .</description></item><item><title>yii - catch and log MySQL deadlock errors</title><link>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</link><pubDate>Wed, 28 Mar 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-03-28-yii-catch-and-log-deadlocks.html</guid><description>This method allows to log InnoDB monitor output when deadlock error occured. This way we will have much more useful data to find and fix deadlock.
 Extend error handler class:
-class AppErrorHandler extends CErrorHandler { protected function handleException($exception) { /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]: * Serialization failure: 1213 Deadlock found when trying to get lock; * try restarting transaction. The SQL statement executed was: * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1) */ //can we check $exception-&amp;gt;getCode() ?</description>
-    </item>
-    
-    <item>
-      <title>yii - class table inheritance</title>
-      <link>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</link>
-      <pubDate>Wed, 01 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</guid>
-      <description>It seems that we have no perfect solution for class table inheritance (or multiple table inheritance) in yii (comparing to the very good one for single table inheritance).
+class AppErrorHandler extends CErrorHandler { protected function handleException($exception) { /* CDbCommand failed to execute the SQL statement: SQLSTATE[40001]: * Serialization failure: 1213 Deadlock found when trying to get lock; * try restarting transaction. The SQL statement executed was: * INSERT INTO `table_name` (`id`, `name`) VALUES (:yp0, :yp1) */ //can we check $exception-&amp;gt;getCode() ?</description></item><item><title>yii - class table inheritance</title><link>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</link><pubDate>Wed, 01 Feb 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-02-01-yii-class-table-inheritance.html</guid><description>It seems that we have no perfect solution for class table inheritance (or multiple table inheritance) in yii (comparing to the very good one for single table inheritance).
 Possible solutions are:
-Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description>
-    </item>
-    
-  </channel>
-</rss>
+Add support for class table inheritance to the active record class. There are some implementations of this method (see here and here for examples). But I do not like this approach because it is too complex to implement it properly and to make it work for all possible active record usages.</description></item></channel></rss>

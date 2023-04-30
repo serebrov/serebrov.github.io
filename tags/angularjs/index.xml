@@ -1,46 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>angularjs on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/angularjs/</link>
-    <description>Recent content in angularjs on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 24 May 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/angularjs/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Angular.js and SEO - pre-render content on the server</title>
-      <link>https://serebrov.github.io/html/2013-05-24-angular-seo.html</link>
-      <pubDate>Fri, 24 May 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-05-24-angular-seo.html</guid>
-      <description>With angular.js you have an HTML which looks like this:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>angularjs on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/angularjs/</link><description>Recent content in angularjs on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 24 May 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/angularjs/index.xml" rel="self" type="application/rss+xml"/><item><title>Angular.js and SEO - pre-render content on the server</title><link>https://serebrov.github.io/html/2013-05-24-angular-seo.html</link><pubDate>Fri, 24 May 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-05-24-angular-seo.html</guid><description>With angular.js you have an HTML which looks like this:
 &amp;lt;span&amp;gt;{{variableValue}}&amp;lt;/span&amp;gt; &amp;lt;ul&amp;gt; &amp;lt;li ng-repeat=&amp;#34;item in items&amp;#34; ng-bind=&amp;#34;item.name&amp;#34;&amp;gt;&amp;lt;/li&amp;gt; &amp;lt;/ul&amp;gt; The simple way to make this content SEO-friendly is to pre-render data on the server and then allow angular to do it&amp;rsquo;s job on the client.
 For simple variables there is ng-bind. And for lists there is ng-include. Here is the example from above with pre-rendered content:
-&amp;lt;span ng-bind=&amp;#34;variableValue&amp;#34;&amp;gt;Static indexed value&amp;lt;/span&amp;gt; &amp;lt;ul ng-include=&amp;#34;&amp;#39;your/dynamic/list&amp;#39;&amp;#34;&amp;gt; &amp;lt;li&amp;gt;seo-friendly item1&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;seo-friendly item2&amp;lt;/li&amp;gt; &amp;lt;/ul&amp;gt; &amp;lt;script type=&amp;#34;text/ng-template&amp;#34; id=&amp;#34;your/dynamic/list&amp;#34;&amp;gt; &amp;lt;li ng-repeat=&amp;#34;item in items&amp;#34; ng-bind=&amp;#34;item.</description>
-    </item>
-    
-    <item>
-      <title>Want Scalable Application Architecture? Check AngularJS.</title>
-      <link>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</link>
-      <pubDate>Mon, 18 Mar 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid>
-      <description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
+&amp;lt;span ng-bind=&amp;#34;variableValue&amp;#34;&amp;gt;Static indexed value&amp;lt;/span&amp;gt; &amp;lt;ul ng-include=&amp;#34;&amp;#39;your/dynamic/list&amp;#39;&amp;#34;&amp;gt; &amp;lt;li&amp;gt;seo-friendly item1&amp;lt;/li&amp;gt; &amp;lt;li&amp;gt;seo-friendly item2&amp;lt;/li&amp;gt; &amp;lt;/ul&amp;gt; &amp;lt;script type=&amp;#34;text/ng-template&amp;#34; id=&amp;#34;your/dynamic/list&amp;#34;&amp;gt; &amp;lt;li ng-repeat=&amp;#34;item in items&amp;#34; ng-bind=&amp;#34;item.</description></item><item><title>Want Scalable Application Architecture? Check AngularJS.</title><link>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</link><pubDate>Mon, 18 Mar 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-03-18-js-scalable-architecture.html</guid><description>The Scalable JavaScript Application Architecture is a presentation by Nicholas Zakas where he suggests a flexible and scalable architecture for JavaScript applications. Here are other related resources:
 Presentation summary Presentation slides Patterns For Large-Scale JavaScript Application Architecture by Addy Osmani The presentation is interesting but it also leaves many open questions. In short, the architecture contains following application layers:
-base library (jquery, etc) application core: manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&amp;rsquo; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description>
-    </item>
-    
-    <item>
-      <title>Angular.js POST data to PHP</title>
-      <link>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</guid>
-      <description>By default angular.js sends all data in json. So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.
+base library (jquery, etc) application core: manages modules (register modules, tell when to start and when to stop) handle errors (like wrap all modules&amp;rsquo; methods into try/catch and log errors) enable inter-module communication should be extensible (error handling, ajax wrapper, general utilites, anything!</description></item><item><title>Angular.js POST data to PHP</title><link>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</guid><description>By default angular.js sends all data in json. So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.
 This can be solved in two ways - on the client side or on the server side.
 Server-side solution On the server you can parse input and then decode data from json:
-$data = file_get_contents(&amp;#34;php://input&amp;#34;); $postData = json_decode($data); Client-side solution On the client side the data can be sent in a way PHP expects it:</description>
-    </item>
-    
-  </channel>
-</rss>
+$data = file_get_contents(&amp;#34;php://input&amp;#34;); $postData = json_decode($data); Client-side solution On the client side the data can be sent in a way PHP expects it:</description></item></channel></rss>

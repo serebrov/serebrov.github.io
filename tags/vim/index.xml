@@ -1,31 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>vim on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/vim/</link>
-    <description>Recent content in vim on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 24 Apr 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/vim/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>git - use vim with fugitive to resolve merge conflicts</title>
-      <link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link>
-      <pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid>
-      <description>To use fugitive as you mergetool you can use the following.
-git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description>
-    </item>
-    
-    <item>
-      <title>vim - replace a word with yanked text</title>
-      <link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid>
-      <description>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
-Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words: Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word) Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>vim on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/vim/</link><description>Recent content in vim on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 24 Apr 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/vim/index.xml" rel="self" type="application/rss+xml"/><item><title>git - use vim with fugitive to resolve merge conflicts</title><link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link><pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid><description>To use fugitive as you mergetool you can use the following.
+git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description></item><item><title>vim - replace a word with yanked text</title><link>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-04-03-vim-replace-word-with-yanked-text.html</guid><description>To replace a word (or other text) with a text from the clipboard, select the new text and then paste clipboard version over:
+Yank inner word: yiw Move cursor to another word Select it and paste over: viwp If you need to replace more words: Option 1: gvy to reselect and copy pasted word then do viwp on another word Option 2: use viw&amp;quot;0p on another word, here &amp;quot;0p will paste from 0 register (the default register will contain previously replaced word) Deleting, changing and yanking text copies the affected text to the unnamed register (&amp;quot;&amp;quot;).</description></item></channel></rss>

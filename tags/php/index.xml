@@ -1,59 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>php on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/php/</link>
-    <description>Recent content in php on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/php/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>PHP - utf-8 strings handling</title>
-      <link>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</link>
-      <pubDate>Sat, 23 Mar 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</guid>
-      <description>Enable mbstring function overloading mode and set default encoding for string functions to utf-8 in php.ini:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>php on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/php/</link><description>Recent content in php on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 23 Mar 2013 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/php/index.xml" rel="self" type="application/rss+xml"/><item><title>PHP - utf-8 strings handling</title><link>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</link><pubDate>Sat, 23 Mar 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-03-23-php-utf-8-strings.html</guid><description>Enable mbstring function overloading mode and set default encoding for string functions to utf-8 in php.ini:
 mbstring.internal_encoding = UTF-8 mbstring.func_overload = 7 These settings allow us to use &amp;ldquo;usual&amp;rdquo; php string functions like substr() for utf-8 strings. It is not recommended to set function overloading in per-directory context (via Apache config or in the .htaccess).
 Default encoding can also be set using mb_internal_encoding function:
-mb_internal_encoding(&#39;UTF-8&#39;); Or encoding can be set explicitly as argument in mbstring function:</description>
-    </item>
-    
-    <item>
-      <title>Angular.js POST data to PHP</title>
-      <link>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</guid>
-      <description>By default angular.js sends all data in json. So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.
+mb_internal_encoding('UTF-8'); Or encoding can be set explicitly as argument in mbstring function:</description></item><item><title>Angular.js POST data to PHP</title><link>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</guid><description>By default angular.js sends all data in json. So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.
 This can be solved in two ways - on the client side or on the server side.
 Server-side solution On the server you can parse input and then decode data from json:
-$data = file_get_contents(&amp;#34;php://input&amp;#34;); $postData = json_decode($data); Client-side solution On the client side the data can be sent in a way PHP expects it:</description>
-    </item>
-    
-    <item>
-      <title>PHP - friend a class via extend</title>
-      <link>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</guid>
-      <description>C++ allows to declare one class as a friend of another one.
+$data = file_get_contents(&amp;#34;php://input&amp;#34;); $postData = json_decode($data); Client-side solution On the client side the data can be sent in a way PHP expects it:</description></item><item><title>PHP - friend a class via extend</title><link>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md</guid><description>C++ allows to declare one class as a friend of another one.
 This can be useful if you want to keep some details of class protected, but available for another particular (friend) class.
 For example this can be used in State pattern to keep setState method of context class protected.
 To emulate this in PHP we can inherit state class from context class:
-class AContext { private $_state; protected function setState(AState $state) { $this-&amp;gt;_state = $state; } public function request() { $this-&amp;gt;_state-&amp;gt;handle(); } } abstract class AState extends AContext { private $_owner; public function __construct(AContext $owner) { $this-&amp;gt;_owner = $owner; } protected function getOwner() { return $this-&amp;gt;_owner; } abstract function handle(); } class AConcreteState extends AState { public function handle() { .</description>
-    </item>
-    
-    <item>
-      <title>phpmyadmin and eaccelerator problem</title>
-      <link>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</guid>
-      <description>Error when trying to access phpmyadmin (in Chrome):
+class AContext { private $_state; protected function setState(AState $state) { $this-&amp;gt;_state = $state; } public function request() { $this-&amp;gt;_state-&amp;gt;handle(); } } abstract class AState extends AContext { private $_owner; public function __construct(AContext $owner) { $this-&amp;gt;_owner = $owner; } protected function getOwner() { return $this-&amp;gt;_owner; } abstract function handle(); } class AConcreteState extends AState { public function handle() { .</description></item><item><title>phpmyadmin and eaccelerator problem</title><link>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-10-09-phpmyadmin-and-eaccelerator-problem.html</guid><description>Error when trying to access phpmyadmin (in Chrome):
 Error 324 (net::ERR_EMPTY_RESPONSE): The server closed the connection without sending any data. The easiest way to fix I found is to disable eaccelerator in .htaccess (create it in the phpmyadmin root folder and add this line:
-php_flag eaccelerator.enable 0 </description>
-    </item>
-    
-  </channel>
-</rss>
+php_flag eaccelerator.enable 0</description></item></channel></rss>

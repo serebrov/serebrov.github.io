@@ -1,22 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>android on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/android/</link>
-    <description>Recent content in android on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Tue, 24 Jan 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/android/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Andriod - moblie network problem after BusyBox update</title>
-      <link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link>
-      <pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid>
-      <description>I have LG p500 (Optimus One), rooted with original ROM.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>android on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/android/</link><description>Recent content in android on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 24 Jan 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/android/index.xml" rel="self" type="application/rss+xml"/><item><title>Andriod - moblie network problem after BusyBox update</title><link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link><pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid><description>I have LG p500 (Optimus One), rooted with original ROM.
 After update to BusyBox 1.20.1 my moblie GPRS network became broken. I got network indicator (E with two arrows), but can not access network.
-I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&amp;rsquo;t help. I did a factory reset - also didn&amp;rsquo;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</description>
-    </item>
-    
-  </channel>
-</rss>
+I suspected that this was someting with dns settings, but did not find any solution. I uninstalled busybox, but this didn&amp;rsquo;t help. I did a factory reset - also didn&amp;rsquo;t help. Actually I thought factory reset wil return my device to the original state, but then noticed that I still have root and busybox.</description></item></channel></rss>

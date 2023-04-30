@@ -1,527 +1,99 @@
-<!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='By default Elastic Beanstalk console tool (eb) adds config files to .gitignore. If there are manual changes to EB configs it can be complex to manually sync these changes between different machines / different users. Of cause it is possible to add config files to git repository but there are also several parameters in the main config which are absolute paths to local files. This way it makes configs not useful for other users (except for the case when different users have exactly the same files layout).'>
-<meta name='theme-color' content='#44ccff'>
-
-<meta property='og:title' content='Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='By default Elastic Beanstalk console tool (eb) adds config files to .gitignore. If there are manual changes to EB configs it can be complex to manually sync these changes between different machines / different users. Of cause it is possible to add config files to git repository but there are also several parameters in the main config which are absolute paths to local files. This way it makes configs not useful for other users (except for the case when different users have exactly the same files layout).'>
-<meta property='og:url' content='https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html'>
-<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:published_time' content='2013-09-11T00:00:00Z'/><meta property='article:modified_time' content='2013-09-11T00:00:00Z'/><meta name='twitter:card' content='summary'>
-
-<meta name="generator" content="Hugo 0.111.3">
-
-  <title>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words</title>
-  <link rel='canonical' href='https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
-:root{--color-accent:#44ccff;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-58056088-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-note has-sidebar'>
-
-  <div class='site'><div id='sidebar' class='sidebar'>
-  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
-
-  <div class='container'><section class='widget widget-about sep-after'>
-  <header>
-    
-    <div class='logo'>
-      <a href='/'>
-        <img src='/images/logo.jpg'>
-      </a>
-    </div>
-    
-    <h2 class='title site-title '>
-      <a href='/'>
-      vim, git, aws and other three-letter words
-      </a>
-    </h2>
-    <div class='desc'>
-    Software Development Notes
-    </div>
-  </header>
-
-</section>
-<section class='widget widget-search sep-after'>
-  <header>
-    <h4 class='title widget-title'>Search</h4>
-  </header>
-
-  <form action='/search' id='search-form' class='search-form'>
-    <label>
-      <span class='screen-reader-text'>Search</span>
-      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
-    </label></form>
-
-</section>
-<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
-    <div class='container'>
-      <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item has-current'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
-  <a href='/archive/'>Archive</a></li></ul>
-    </div>
-  </nav>
-
-</section><section class='widget widget-taxonomy_cloud sep-after'>
-  <header>
-    <h4 class='title widget-title'>Tags</h4>
-  </header>
-
-  <div class='container list-container'>
-  <ul class='list taxonomy-cloud no-shuffle'><li>
-        <a href='/tags/android/' style='font-size:1em'>android</a>
-      </li><li>
-        <a href='/tags/angularjs/' style='font-size:1.1052631578947367em'>angularjs</a>
-      </li><li>
-        <a href='/tags/aws/' style='font-size:1.894736842105263em'>aws</a>
-      </li><li>
-        <a href='/tags/celery/' style='font-size:1em'>celery</a>
-      </li><li>
-        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
-      </li><li>
-        <a href='/tags/cw-logs/' style='font-size:1.0526315789473684em'>cw-logs</a>
-      </li><li>
-        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
-      </li><li>
-        <a href='/tags/docker/' style='font-size:1em'>docker</a>
-      </li><li>
-        <a href='/tags/drone/' style='font-size:1em'>drone</a>
-      </li><li>
-        <a href='/tags/dynamodb/' style='font-size:1.1052631578947367em'>dynamodb</a>
-      </li><li>
-        <a href='/tags/eb/' style='font-size:1.1578947368421053em'>eb</a>
-      </li><li>
-        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
-      </li><li>
-        <a href='/tags/emr/' style='font-size:1.0526315789473684em'>emr</a>
-      </li><li>
-        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
-      </li><li>
-        <a href='/tags/git/' style='font-size:2em'>git</a>
-      </li><li>
-        <a href='/tags/hive/' style='font-size:1em'>hive</a>
-      </li><li>
-        <a href='/tags/jquery/' style='font-size:1.1052631578947367em'>jquery</a>
-      </li><li>
-        <a href='/tags/js/' style='font-size:1.1052631578947367em'>js</a>
-      </li><li>
-        <a href='/tags/kbd/' style='font-size:1.0526315789473684em'>kbd</a>
-      </li><li>
-        <a href='/tags/linux/' style='font-size:1em'>linux</a>
-      </li><li>
-        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
-      </li><li>
-        <a href='/tags/mysql/' style='font-size:1.0526315789473684em'>mysql</a>
-      </li><li>
-        <a href='/tags/node.js/' style='font-size:1.1578947368421053em'>node.js</a>
-      </li><li>
-        <a href='/tags/npm/' style='font-size:1em'>npm</a>
-      </li><li>
-        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
-      </li><li>
-        <a href='/tags/oop/' style='font-size:1em'>oop</a>
-      </li><li>
-        <a href='/tags/php/' style='font-size:1.1578947368421053em'>php</a>
-      </li><li>
-        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
-      </li><li>
-        <a href='/tags/python/' style='font-size:1.1052631578947367em'>python</a>
-      </li><li>
-        <a href='/tags/rds/' style='font-size:1em'>rds</a>
-      </li><li>
-        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
-      </li><li>
-        <a href='/tags/selenium/' style='font-size:1.3157894736842106em'>selenium</a>
-      </li><li>
-        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
-      </li><li>
-        <a href='/tags/typing/' style='font-size:1em'>typing</a>
-      </li><li>
-        <a href='/tags/vim/' style='font-size:1.0526315789473684em'>vim</a>
-      </li><li>
-        <a href='/tags/vr/' style='font-size:1em'>vr</a>
-      </li><li>
-        <a href='/tags/vue/' style='font-size:1em'>vue</a>
-      </li><li>
-        <a href='/tags/yii/' style='font-size:1.1578947368421053em'>yii</a>
-      </li><li>
-        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
-      </li></ul>
-</div>
-
-
-</section>
-</div>
-
-  <div class='sidebar-overlay'></div>
-</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
-    <a class='screen-reader-text' href='#content'>Skip to Content</a>
-
-<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
-  <span class='screen-reader-text'>Toggle Sidebar</span>
-  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="3" y1="12" x2="21" y2="12" />
-  <line x1="3" y1="6" x2="21" y2="6" />
-  <line x1="3" y1="18" x2="21" y2="18" />
-  
-</svg>
-</span>
-  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="18" y1="6" x2="6" y2="18" />
-  <line x1="6" y1="6" x2="18" y2="18" />
-  
-</svg>
-</span>
-</button>
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item current'>
-        <a aria-current='page' href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
-      </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2013-09-11T00:00:00Z'>2013, Sep 11</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-3 mins read
-</span>
-
-
-  
-  
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class="container entry-content custom">
-    <p>By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="By default Elastic Beanstalk console tool (eb) adds config files to .gitignore. If there are manual changes to EB configs it can be complex to manually sync these changes between different machines / different users. Of cause it is possible to add config files to git repository but there are also several parameters in the main config which are absolute paths to local files. This way it makes configs not useful for other users (except for the case when different users have exactly the same files layout)."><meta name=theme-color content="#44ccff"><meta property="og:title" content="Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words"><meta property="og:description" content="By default Elastic Beanstalk console tool (eb) adds config files to .gitignore. If there are manual changes to EB configs it can be complex to manually sync these changes between different machines / different users. Of cause it is possible to add config files to git repository but there are also several parameters in the main config which are absolute paths to local files. This way it makes configs not useful for other users (except for the case when different users have exactly the same files layout)."><meta property="og:url" content="https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html"><meta property="og:site_name" content="vim, git, aws and other three-letter words"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:tag" content="aws"><meta property="article:published_time" content="2013-09-11T00:00:00Z"><meta property="article:modified_time" content="2013-09-11T00:00:00Z"><meta name=twitter:card content="summary"><meta name=generator content="Hugo 0.111.3"><title>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs) • vim, git, aws and other three-letter words</title><link rel=canonical href=https://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html><link rel=icon href=/favicon.ico><link rel=stylesheet href=/assets/css/main.6a060eb7.css><link rel=stylesheet href=/css/custom.css><style>:root{--color-accent:#44ccff}</style><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-58056088-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></head><body class='page type-note has-sidebar'><div class=site><div id=sidebar class=sidebar><a class=screen-reader-text href=#main-menu>Skip to Main Menu</a><div class=container><section class='widget widget-about sep-after'><header><div class=logo><a href=/><img src=/images/logo.jpg></a></div><h2 class='title site-title'><a href=/>vim, git, aws and other three-letter words</a></h2><div class=desc>Software Development Notes</div></header></section><section class='widget widget-search sep-after'><header><h4 class='title widget-title'>Search</h4></header><form action=/search id=search-form class=search-form><label><span class=screen-reader-text>Search</span>
+<input id=search-term class=search-term type=search name=q placeholder=Search&mldr;></label></form></section><section class='widget widget-sidebar_menu sep-after'><nav id=sidebar-menu class='menu sidebar-menu' aria-label='Sidebar Menu'><div class=container><ul><li class=item><a href=/>Home</a></li><li class='item has-current'><a href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav></section><section class='widget widget-taxonomy_cloud sep-after'><header><h4 class='title widget-title'>Tags</h4></header><div class='container list-container'><ul class='list taxonomy-cloud no-shuffle'><li><a href=/tags/android/ style=font-size:1em>android</a></li><li><a href=/tags/angularjs/ style=font-size:1.1052631578947367em>angularjs</a></li><li><a href=/tags/aws/ style=font-size:1.894736842105263em>aws</a></li><li><a href=/tags/celery/ style=font-size:1em>celery</a></li><li><a href=/tags/chrome/ style=font-size:1em>chrome</a></li><li><a href=/tags/cw-logs/ style=font-size:1.0526315789473684em>cw-logs</a></li><li><a href=/tags/disqus/ style=font-size:1em>disqus</a></li><li><a href=/tags/docker/ style=font-size:1em>docker</a></li><li><a href=/tags/drone/ style=font-size:1em>drone</a></li><li><a href=/tags/dynamodb/ style=font-size:1.1052631578947367em>dynamodb</a></li><li><a href=/tags/eb/ style=font-size:1.1578947368421053em>eb</a></li><li><a href=/tags/ejs/ style=font-size:1em>ejs</a></li><li><a href=/tags/emr/ style=font-size:1.0526315789473684em>emr</a></li><li><a href=/tags/express.js/ style=font-size:1em>express.js</a></li><li><a href=/tags/git/ style=font-size:2em>git</a></li><li><a href=/tags/hive/ style=font-size:1em>hive</a></li><li><a href=/tags/jquery/ style=font-size:1.1052631578947367em>jquery</a></li><li><a href=/tags/js/ style=font-size:1.1052631578947367em>js</a></li><li><a href=/tags/kbd/ style=font-size:1.0526315789473684em>kbd</a></li><li><a href=/tags/linux/ style=font-size:1em>linux</a></li><li><a href=/tags/mongodb/ style=font-size:1em>mongodb</a></li><li><a href=/tags/mysql/ style=font-size:1.0526315789473684em>mysql</a></li><li><a href=/tags/node.js/ style=font-size:1.1578947368421053em>node.js</a></li><li><a href=/tags/npm/ style=font-size:1em>npm</a></li><li><a href=/tags/oauth/ style=font-size:1em>oauth</a></li><li><a href=/tags/oop/ style=font-size:1em>oop</a></li><li><a href=/tags/php/ style=font-size:1.1578947368421053em>php</a></li><li><a href=/tags/postgresql/ style=font-size:1em>postgresql</a></li><li><a href=/tags/python/ style=font-size:1.1052631578947367em>python</a></li><li><a href=/tags/rds/ style=font-size:1em>rds</a></li><li><a href=/tags/scaleway/ style=font-size:1em>scaleway</a></li><li><a href=/tags/selenium/ style=font-size:1.3157894736842106em>selenium</a></li><li><a href=/tags/ssh/ style=font-size:1em>ssh</a></li><li><a href=/tags/typing/ style=font-size:1em>typing</a></li><li><a href=/tags/vim/ style=font-size:1.0526315789473684em>vim</a></li><li><a href=/tags/vr/ style=font-size:1em>vr</a></li><li><a href=/tags/vue/ style=font-size:1em>vue</a></li><li><a href=/tags/yii/ style=font-size:1.1578947368421053em>yii</a></li><li><a href=/tags/zeromq/ style=font-size:1em>zeromq</a></li></ul></div></section></div><div class=sidebar-overlay></div></div><div class=main><nav id=main-menu class='menu main-menu' aria-label='Main Menu'><div class=container><a class=screen-reader-text href=#content>Skip to Content</a>
+<button id=sidebar-toggler class=sidebar-toggler aria-controls=sidebar>
+<span class=screen-reader-text>Toggle Sidebar</span>
+<span class=open><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span><span class=close><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button><ul><li class=item><a href=/>Home</a></li><li class='item current'><a aria-current=page href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav><div class=header-widgets><div class=container></div></div><header id=header class='header site-header'><div class='container sep-after'><div class=header-info><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p></div></div></header><main id=content><article lang=en class=entry><header class='header entry-header'><div class='container sep-after'><div class=header-info><h1 class=title>Elastic Beanstalk - deploy from different machines / by different users (or how to get rid of absolute paths in configs)</h1></div><div class=entry-meta><span class=posted-on><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class=screen-reader-text>Posted on</span>
+<time class=entry-date datetime=2013-09-11T00:00:00Z>2013, Sep 11</time></span>
+<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>3 mins read</span></div></div></header><div class="container entry-content custom"><p>By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
 If there are manual changes to EB configs it can be complex to manually sync these changes
 between different machines / different users.
 Of cause it is possible to add config files to git repository but there are also several
 parameters in the main config which are absolute paths to local files.
 This way it makes configs not useful for other users (except for the case when different
 users have exactly the same files layout).
-Here is how this problem can be fixed:</p>
-<ol>
-<li>Add eb tools under git control</li>
-<li>Add eb configs under git control</li>
-<li>Patch eb tools to accept relative file paths</li>
-<li>Change paths in configs to relative</li>
-</ol>
-<p>Below are details for each step.</p>
-<!-- raw HTML omitted -->
-<h2 id="add-eb-tools-under-git-control">Add eb tools under git control</h2>
-<p>This is necessary because we want all users to have the same tools version.
-Also we are going to make some changes to eb sources to make it understand relative paths.</p>
-<p>Just download <a href="http://aws.amazon.com/code/6752709412171743">eb tools</a> and extract somewhere inside your project.
-Or copy existing version into the project.</p>
-<p>Add a wrapper script to run the original eb tool:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#75715e">#!/bin/sh</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Run the eb tool from the root project directory as</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># console/eb {parameters}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Use linux python2.7 version</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    export PATH<span style="color:#f92672">=</span>$PATH:$SCRIPT_PATH/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
-</span></span><span style="display:flex;"><span>    eb <span style="color:#e6db74">&#34;</span>$@<span style="color:#e6db74">&#34;</span>
+Here is how this problem can be fixed:</p><ol><li>Add eb tools under git control</li><li>Add eb configs under git control</li><li>Patch eb tools to accept relative file paths</li><li>Change paths in configs to relative</li></ol><p>Below are details for each step.</p><h2 id=add-eb-tools-under-git-control>Add eb tools under git control</h2><p>This is necessary because we want all users to have the same tools version.
+Also we are going to make some changes to eb sources to make it understand relative paths.</p><p>Just download <a href=http://aws.amazon.com/code/6752709412171743>eb tools</a> and extract somewhere inside your project.
+Or copy existing version into the project.</p><p>Add a wrapper script to run the original eb tool:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    <span style=color:#75715e>#!/bin/sh</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Run the eb tool from the root project directory as</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># console/eb {parameters}</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Use linux python2.7 version</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    export PATH<span style=color:#f92672>=</span>$PATH:$SCRIPT_PATH/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7
+</span></span><span style=display:flex><span>    eb <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span>
 </span></span></code></pre></div><p>Script should be on the same lever as the extracted directory.
-For example I have:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    project_root/
-</span></span><span style="display:flex;"><span>    | .ebextensions/
-</span></span><span style="display:flex;"><span>    | .elasticbeanstalk/
-</span></span><span style="display:flex;"><span>    | .git/
-</span></span><span style="display:flex;"><span>    | application/
-</span></span><span style="display:flex;"><span>    | console/
-</span></span><span style="display:flex;"><span>    | | AWS-ElasticBeanstalk-CLI-2.5.1/
-</span></span><span style="display:flex;"><span>    | | eb*
-</span></span><span style="display:flex;"><span>    | | ...
-</span></span><span style="display:flex;"><span>    | ...
-</span></span><span style="display:flex;"><span>    | .gitignore
-</span></span></code></pre></div><p>So I launch the &rsquo;eb&rsquo; as &lsquo;console/eb parameters&rsquo; from the project root directory.</p>
-<h2 id="add-eb-configs-under-git-control">Add eb configs under git control</h2>
-<p>Add the EB configs under git control:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ git add -f .elasticbeanstalk
-</span></span></code></pre></div><h2 id="patch-eb-tools-to-accept-relative-file-paths">Patch eb tools to accept relative file paths</h2>
-<p>For the 2.5.1 version I had to make two changes in the config file parser class.</p>
-<p>The file path is &hellip;/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utility/configfile_parser.py.</p>
-<p>And the changes are:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">41</span> - 47<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
-</span></span><span style="display:flex;"><span>        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
-</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#39;Load sectioned config file: &#39;</span> + pathfilename
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
-</span></span><span style="display:flex;"><span>            _RawConfigParser.readfp<span style="color:#f92672">(</span>self, input_file<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>Lines <span style="color:#ae81ff">74</span> - 80<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    def read<span style="color:#f92672">(</span>self, pathfilename<span style="color:#f92672">)</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#seb: expand path to allow using homedir and relative paths</span>
-</span></span><span style="display:flex;"><span>        pathfilename <span style="color:#f92672">=</span> os.path.realpath<span style="color:#f92672">(</span>os.path.expanduser<span style="color:#f92672">(</span>pathfilename<span style="color:#f92672">))</span>
-</span></span><span style="display:flex;"><span>        print <span style="color:#e6db74">&#39;Load config file: &#39;</span> + pathfilename
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        with codecs.open<span style="color:#f92672">(</span>pathfilename, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span>ServiceDefault.CHAR_CODEC<span style="color:#f92672">)</span> as input_file:
-</span></span><span style="display:flex;"><span>            config_pairs <span style="color:#f92672">=</span> input_file.read<span style="color:#f92672">()</span>
-</span></span></code></pre></div><p>Now you can use relative to project root paths in your configs.</p>
-<h2 id="change-paths-in-configs-to-relative">Change paths in configs to relative</h2>
-<p>I had three absolute paths in my ./elasticbeanstalk/config:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    ..
-</span></span><span style="display:flex;"><span>    AwsCredentialFile<span style="color:#f92672">=</span>/home/username/.elasticbeanstalk/aws_credential_file
-</span></span><span style="display:flex;"><span>    ..
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    staging<span style="color:#f92672">=</span>staging
-</span></span><span style="display:flex;"><span>    production<span style="color:#f92672">=</span>production
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.staging
-</span></span><span style="display:flex;"><span>    ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>/path/to/project/.elasticbeanstalk/optionsettings.production
-</span></span><span style="display:flex;"><span>    ..
+For example I have:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    project_root/
+</span></span><span style=display:flex><span>    | .ebextensions/
+</span></span><span style=display:flex><span>    | .elasticbeanstalk/
+</span></span><span style=display:flex><span>    | .git/
+</span></span><span style=display:flex><span>    | application/
+</span></span><span style=display:flex><span>    | console/
+</span></span><span style=display:flex><span>    | | AWS-ElasticBeanstalk-CLI-2.5.1/
+</span></span><span style=display:flex><span>    | | eb*
+</span></span><span style=display:flex><span>    | | ...
+</span></span><span style=display:flex><span>    | ...
+</span></span><span style=display:flex><span>    | .gitignore
+</span></span></code></pre></div><p>So I launch the &rsquo;eb&rsquo; as &lsquo;console/eb parameters&rsquo; from the project root directory.</p><h2 id=add-eb-configs-under-git-control>Add eb configs under git control</h2><p>Add the EB configs under git control:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    $ git add -f .elasticbeanstalk
+</span></span></code></pre></div><h2 id=patch-eb-tools-to-accept-relative-file-paths>Patch eb tools to accept relative file paths</h2><p>For the 2.5.1 version I had to make two changes in the config file parser class.</p><p>The file path is &mldr;/AWS-ElasticBeanstalk-CLI-2.5.1/eb/linux/python2.7/lib/utility/configfile_parser.py.</p><p>And the changes are:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    <span style=color:#f92672>[</span>Lines <span style=color:#ae81ff>41</span> - 47<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    def read<span style=color:#f92672>(</span>self, pathfilename<span style=color:#f92672>)</span>:
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#seb: expand path to allow using homedir and relative paths</span>
+</span></span><span style=display:flex><span>        pathfilename <span style=color:#f92672>=</span> os.path.realpath<span style=color:#f92672>(</span>os.path.expanduser<span style=color:#f92672>(</span>pathfilename<span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#39;Load sectioned config file: &#39;</span> + pathfilename
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        with codecs.open<span style=color:#f92672>(</span>pathfilename, <span style=color:#e6db74>&#39;r&#39;</span>, encoding<span style=color:#f92672>=</span>ServiceDefault.CHAR_CODEC<span style=color:#f92672>)</span> as input_file:
+</span></span><span style=display:flex><span>            _RawConfigParser.readfp<span style=color:#f92672>(</span>self, input_file<span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>Lines <span style=color:#ae81ff>74</span> - 80<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    def read<span style=color:#f92672>(</span>self, pathfilename<span style=color:#f92672>)</span>:
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#seb: expand path to allow using homedir and relative paths</span>
+</span></span><span style=display:flex><span>        pathfilename <span style=color:#f92672>=</span> os.path.realpath<span style=color:#f92672>(</span>os.path.expanduser<span style=color:#f92672>(</span>pathfilename<span style=color:#f92672>))</span>
+</span></span><span style=display:flex><span>        print <span style=color:#e6db74>&#39;Load config file: &#39;</span> + pathfilename
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        with codecs.open<span style=color:#f92672>(</span>pathfilename, <span style=color:#e6db74>&#39;r&#39;</span>, encoding<span style=color:#f92672>=</span>ServiceDefault.CHAR_CODEC<span style=color:#f92672>)</span> as input_file:
+</span></span><span style=display:flex><span>            config_pairs <span style=color:#f92672>=</span> input_file.read<span style=color:#f92672>()</span>
+</span></span></code></pre></div><p>Now you can use relative to project root paths in your configs.</p><h2 id=change-paths-in-configs-to-relative>Change paths in configs to relative</h2><p>I had three absolute paths in my ./elasticbeanstalk/config:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    <span style=color:#f92672>[</span>global<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    ..
+</span></span><span style=display:flex><span>    AwsCredentialFile<span style=color:#f92672>=</span>/home/username/.elasticbeanstalk/aws_credential_file
+</span></span><span style=display:flex><span>    ..
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branches<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    staging<span style=color:#f92672>=</span>staging
+</span></span><span style=display:flex><span>    production<span style=color:#f92672>=</span>production
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branch:staging<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    OptionSettingFile<span style=color:#f92672>=</span>/path/to/project/.elasticbeanstalk/optionsettings.staging
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branch:production<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    OptionSettingFile<span style=color:#f92672>=</span>/path/to/project/.elasticbeanstalk/optionsettings.production
+</span></span><span style=display:flex><span>    ..
 </span></span></code></pre></div><p>Path to aws credential file can be easily fixed by just removing it - eb tools will use
-config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).</p>
-<p>Other two paths (for branch configs) can now be changed to relative:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    <span style="color:#f92672">[</span>global<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
-</span></span><span style="display:flex;"><span>    ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branches<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    staging<span style="color:#f92672">=</span>staging
-</span></span><span style="display:flex;"><span>    production<span style="color:#f92672">=</span>production
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:staging<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.staging
-</span></span><span style="display:flex;"><span>    ...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>branch:production<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>    OptionSettingFile<span style="color:#f92672">=</span>./.elasticbeanstalk/optionsettings.production
-</span></span><span style="display:flex;"><span>    ...
-</span></span></code></pre></div><h2 id="use-it">Use it</h2>
-<p>Make sure you are using the &rsquo;eb&rsquo; wrapper script from the root project directory.
-For example, for &rsquo;eb status&rsquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>    $ cd project/root/dir
-</span></span><span style="display:flex;"><span>    $ ./path/to/eb status
-</span></span><span style="display:flex;"><span>    Load sectioned config file: project/root/dir/.elasticbeanstalk/config
-</span></span><span style="display:flex;"><span>    Load config file: /home/user/.elasticbeanstalk/aws_credential_file
-</span></span><span style="display:flex;"><span>    URL	: staging-jp48gay9nx.elasticbeanstalk.com
-</span></span><span style="display:flex;"><span>    Status	: Ready
-</span></span><span style="display:flex;"><span>    Health	: Green
-</span></span></code></pre></div><p>url: &ldquo;/html/</p>
- <a href="https://stackexchange.com/users/261528">
-<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
-</a>
-
-</div>
-<div class="popup">
-    <div class="close">close</div>
-    <div class="download">
-        <a href="" target="_blank">Download (<span class="name"></span>)</a>
-    </div>
-    <div class="popup-content"></div>
-</div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/aws/'>aws</a></div>
-
-  </div>
-</footer>
-
-
-</article>
-
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/html/2013-06-14-git-server-setup.html'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>How to setup git server on ubuntu with push email notifications</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/html/2013-10-22-elastic-beanstalk-cron-and-db.html'>
-        <span class='screen-reader-text'>Next post: </span>Elastic Beanstalk - cron command and RDS DB access<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-<section id='comments' class='comments'>
-  <div class='container sep-before'>
-    <div class='comments-area'><div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io\/html\/2013-09-11-elastic-beanstalk-configs.html"; 
-        
-        
-    };
-    (function () {
-        
-        var d = document,
-            s = d.createElement("script");
-        s.src = "https://serebrov.disqus.com/embed.js";
-        s.setAttribute("data-timestamp", +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript
-    >Please enable JavaScript to view the
-    <a href="https://disqus.com/?ref_noscript"
-        >comments powered by Disqus.</a
-    ></noscript
->
-</div>
-  </div>
-</section>
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
-    <ul><li>
-        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-  
-</svg>
-</a>
-      </li><li>
-        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-  <polyline points="22,6 12,13 2,6"/>
-  
-</svg>
-</a>
-      </li></ul>
-  </nav>
-</section><div class='copyright'>
-  <p> &copy; 2020-2023 Boris Serebrov </p>
-</div>
-
-        </div>
-      </footer>
-
-    </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/jquery.min.js'></script><script src='/js/custom.js'></script>
-
-
-</body>
-
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).</p><p>Other two paths (for branch configs) can now be changed to relative:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    <span style=color:#f92672>[</span>global<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Default credential file path (recognized by both eb tool and git aws.push tool)</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># AwsCredentialFile=~/.elasticbeanstalk/aws_credential_file</span>
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branches<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    staging<span style=color:#f92672>=</span>staging
+</span></span><span style=display:flex><span>    production<span style=color:#f92672>=</span>production
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branch:staging<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    OptionSettingFile<span style=color:#f92672>=</span>./.elasticbeanstalk/optionsettings.staging
+</span></span><span style=display:flex><span>    ...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>[</span>branch:production<span style=color:#f92672>]</span>
+</span></span><span style=display:flex><span>    OptionSettingFile<span style=color:#f92672>=</span>./.elasticbeanstalk/optionsettings.production
+</span></span><span style=display:flex><span>    ...
+</span></span></code></pre></div><h2 id=use-it>Use it</h2><p>Make sure you are using the &rsquo;eb&rsquo; wrapper script from the root project directory.
+For example, for &rsquo;eb status&rsquo;:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>    $ cd project/root/dir
+</span></span><span style=display:flex><span>    $ ./path/to/eb status
+</span></span><span style=display:flex><span>    Load sectioned config file: project/root/dir/.elasticbeanstalk/config
+</span></span><span style=display:flex><span>    Load config file: /home/user/.elasticbeanstalk/aws_credential_file
+</span></span><span style=display:flex><span>    URL	: staging-jp48gay9nx.elasticbeanstalk.com
+</span></span><span style=display:flex><span>    Status	: Ready
+</span></span><span style=display:flex><span>    Health	: Green
+</span></span></code></pre></div><p>url: &ldquo;/html/</p><a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/aws/>aws</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2013-06-14-git-server-setup.html><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
+<span class=screen-reader-text>Previous post: </span>How to setup git server on ubuntu with push email notifications</a></div><div class='next-entry sep-before'><a href=/html/2013-10-22-elastic-beanstalk-cron-and-db.html><span class=screen-reader-text>Next post: </span>Elastic Beanstalk - cron command and RDS DB access<span aria-hidden=true>Next<svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg></span></a></div></div></nav><section id=comments class=comments><div class='container sep-before'><div class=comments-area><div id=disqus_thread></div><script>var disqus_config=function(){this.page.url="http://serebrov.github.io/html/2013-09-11-elastic-beanstalk-configs.html"};(function(){var e=document,t=e.createElement("script");t.src="https://serebrov.disqus.com/embed.js",t.setAttribute("data-timestamp",+new Date),(e.head||e.body).appendChild(t)})()</script><noscript>Please enable JavaScript to view the
+<a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></section></main><footer id=footer class=footer><div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'><ul><li><a href=https://github.com/serebrov target=_blank rel=noopener><span class=screen-reader-text>Open Github account in new tab</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li><li><a href=mailto:serebrov@gmail.com target=_blank rel=noopener><span class=screen-reader-text>Contact via Email</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></li></ul></nav></section><div class=copyright><p>&copy; 2020-2023 Boris Serebrov</p></div></div></footer></div></div><script>window.__assets_js_src="/assets/js/"</script><script src=https://serebrov.github.io/assets/js/main.67d669ac.js></script><script src=/js/jquery.min.js></script><script src=/js/custom.js></script></body></html>
