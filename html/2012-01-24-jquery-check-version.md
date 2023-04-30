@@ -17,9 +17,9 @@ if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jque
 /[1-9]\.[2-9].[3-9]/ '>
 <meta property='og:url' content='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='jquery'><meta property='article:published_time' content='2012-01-24T00:00:00Z'/><meta property='article:modified_time' content='2012-01-24T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.104.3" />
+<meta name="generator" content="Hugo 0.111.3">
 
   <title>jQuery - check minimal required version • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-01-24-jquery-check-version.md'>
@@ -44,7 +44,7 @@ if (!doNotTrack) {
   
 
 </head>
-<body class='page type-posts has-sidebar'>
+<body class='page type-archive has-sidebar'>
 
   <div class='site'><div id='sidebar' class='sidebar'>
   <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
@@ -84,8 +84,8 @@ if (!doNotTrack) {
 <section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
     <div class='container'>
       <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item has-current'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/'>Home</a></li><li class='item'>
+  <a href='/posts/'>Posts</a></li><li class='item has-current'>
   <a href='/archive/'>Archive</a></li></ul>
     </div>
   </nav>
@@ -206,10 +206,10 @@ if (!doNotTrack) {
 </button>
     <ul><li class='item'>
         <a href='/'>Home</a>
-      </li><li class='item current'>
-        <a aria-current='page' href='/posts/'>Posts</a>
       </li><li class='item'>
-        <a href='/archive/'>Archive</a>
+        <a href='/posts/'>Posts</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/archive/'>Archive</a>
       </li></ul>
   </div>
 </nav><div class='header-widgets'>
@@ -318,9 +318,19 @@ One min read
 </article>
 
 <nav class='entry-nav'>
-  <div class='container'><div class='next-entry sep-before'>
-      <a href='/html/2012-01-24-jquery-check-version.html'>
-        <span class='screen-reader-text'>Next post: </span>git - checkout and track remote branch<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/2012-02-20-selenium-python-webdriver-not-safe-setters.html'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>selenium - python Firefox webdriver - unsafe setters in firefox_profile.py</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/html/2012-04-24-git-fugitive-to-resolve-conflicts.html'>
+        <span class='screen-reader-text'>Next post: </span>Andriod - moblie network problem after BusyBox update<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -384,7 +394,7 @@ One min read
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2020-2022 Boris Serebrov </p>
+  <p> &copy; 2020-2023 Boris Serebrov </p>
 </div>
 
         </div>

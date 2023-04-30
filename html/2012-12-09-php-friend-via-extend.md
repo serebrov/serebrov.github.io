@@ -19,7 +19,7 @@ class AContext { private $_state; protected function setState(AState $state) { $
 <meta property='og:site_name' content='vim, git, aws and other three-letter words'>
 <meta property='og:type' content='article'><meta property='article:section' content='archive'><meta property='article:tag' content='php'><meta property='article:published_time' content='2012-04-03T00:00:00Z'/><meta property='article:modified_time' content='2012-04-03T00:00:00Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.104.3" />
+<meta name="generator" content="Hugo 0.111.3">
 
   <title>PHP - friend a class via extend • vim, git, aws and other three-letter words</title>
   <link rel='canonical' href='https://serebrov.github.io/html/2012-12-09-php-friend-via-extend.md'>
@@ -421,7 +421,7 @@ One min read
       </li></ul>
   </nav>
 </section><div class='copyright'>
-  <p> &copy; 2020-2022 Boris Serebrov </p>
+  <p> &copy; 2020-2023 Boris Serebrov </p>
 </div>
 
         </div>

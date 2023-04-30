@@ -478,18 +478,6 @@ git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp
     </item>
     
     <item>
-      <title>Angular.js POST data to PHP</title>
-      <link>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-05-24-angular-post-to-php.html</guid>
-      <description>By default angular.js sends all data in json. So if you do a POST request to a PHP code then the $_POST superglobal will not be populated.
-This can be solved in two ways - on the client side or on the server side.
-Server-side solution On the server you can parse input and then decode data from json:
-$data = file_get_contents(&amp;#34;php://input&amp;#34;); $postData = json_decode($data); Client-side solution On the client side the data can be sent in a way PHP expects it:</description>
-    </item>
-    
-    <item>
       <title>git - remove already deleted files</title>
       <link>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</link>
       <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
@@ -565,19 +553,6 @@ The history looks like this:</description>
       
       <guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.html</guid>
       <description>#creates and checks out &amp;#34;feature&amp;#34; branch that tracks &amp;#34;origin/feature&amp;#34; $ git checkout -t origin/feature Links A few git tips you didn&amp;rsquo;t know about</description>
-    </item>
-    
-    <item>
-      <title>jQuery - check minimal required version</title>
-      <link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</link>
-      <pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</guid>
-      <description>To check whether jQuery is loaded to the page and verify minimum version:
-if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); } Here a regular expression determines a required jQuery version -
-/[X-9]\.[Y-9].[Z-9]/ For example, for 1.3.1 use
-/[1-9]\.[3-9].[1-9]/ and for 1.2.3 use
-/[1-9]\.[2-9].[3-9]/ </description>
     </item>
     
   </channel>
