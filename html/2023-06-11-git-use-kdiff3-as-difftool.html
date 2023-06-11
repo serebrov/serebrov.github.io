@@ -15,7 +15,7 @@ git config --global mergetool.kdiff3.cmd 'kdiff3 &#34;$LOCAL&#34; &#34;$REMOTE&#
 </span></span></code></pre></div><p>Alternatively, edit the <code>~/.gitconfig</code> and add settings there:</p><pre tabindex=0><code>[mergetool &#34;kdiff3&#34;]
 	cmd = kdiff3 $LOCAL $REMOTE $BASE -o $MERGED
 [diff &#34;kdiff3&#34;]
-  cmd = kdiff3 $LOCAL $REMOTE
+	cmd = kdiff3 $LOCAL $REMOTE
 [merge]
 	tool = kdiff3
 [diff]
