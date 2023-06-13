@@ -1,0 +1,62 @@
+.search-results li {
+    height: 2.5em;
+    height: auto;
+    min-height: 2.5em;
+    border: none;
+    border-bottom: 1px dashed;
+}
+
+pre {
+    font-size: 0.9em;
+}
+
+.all-posts-link {
+    padding-top: 10px;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 90vh;
+    width: 90%;
+    margin-left: -45%;
+    margin-top: -45vh;
+    padding: 7px 10px 35px 25px;
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    cursor: default;
+    display: none;
+    text-align: left;
+    z-index: 99999;
+    background: lightgrey;
+}
+.popup p,
+.popup.div {
+    border-bottom: 1px solid #efefef;
+    margin: 8px 0;
+    padding-bottom: 8px;
+}
+.popup-content {
+    white-space: pre;
+    clear: both;
+    position: absolute;
+    top: 40px;
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    overflow-y: scroll;
+    /* height: 100%; */
+    /* margin-top: 40px; */
+    background: white;
+    padding: 10px;
+    font-family: courier;
+    font-size: 0.85em;
+}
+.popup .close {
+    float: right;
+    cursor: pointer;
+}
+.popup .download {
+    float: left;
+}
