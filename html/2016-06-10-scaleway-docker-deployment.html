@@ -1,326 +1,849 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="The purpose of this setup is:
-Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files In this case I deploy to Scaleway, but same approach can be used for almost any cloud service."><meta name=theme-color content="#44ccff"><meta property="og:title" content="Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server • vim, git, aws and other three-letter words"><meta property="og:description" content="The purpose of this setup is:
-Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files In this case I deploy to Scaleway, but same approach can be used for almost any cloud service."><meta property="og:url" content="https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html"><meta property="og:site_name" content="vim, git, aws and other three-letter words"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:tag" content="docker"><meta property="article:tag" content="scaleway"><meta property="article:published_time" content="2016-06-10T00:00:00Z"><meta property="article:modified_time" content="2016-06-10T00:00:00Z"><meta name=twitter:card content="summary"><meta name=generator content="Hugo 0.111.3"><title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server • vim, git, aws and other three-letter words</title><link rel=canonical href=https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html><link rel=icon href=/favicon.ico><link rel=stylesheet href=/assets/css/main.6a060eb7.css><link rel=stylesheet href=/css/custom.css><style>:root{--color-accent:#44ccff}</style><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-58056088-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></head><body class='page type-post has-sidebar'><div class=site><div id=sidebar class=sidebar><a class=screen-reader-text href=#main-menu>Skip to Main Menu</a><div class=container><section class='widget widget-about sep-after'><header><div class=logo><a href=/><img src=/images/logo.jpg></a></div><h2 class='title site-title'><a href=/>vim, git, aws and other three-letter words</a></h2><div class=desc>Software Development Notes</div></header></section><section class='widget widget-search sep-after'><header><h4 class='title widget-title'>Search</h4></header><form action=/search id=search-form class=search-form><label><span class=screen-reader-text>Search</span>
-<input id=search-term class=search-term type=search name=q placeholder=Search&mldr;></label></form></section><section class='widget widget-sidebar_menu sep-after'><nav id=sidebar-menu class='menu sidebar-menu' aria-label='Sidebar Menu'><div class=container><ul><li class=item><a href=/>Home</a></li><li class='item has-current'><a href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav></section><section class='widget widget-taxonomy_cloud sep-after'><header><h4 class='title widget-title'>Tags</h4></header><div class='container list-container'><ul class='list taxonomy-cloud no-shuffle'><li><a href=/tags/android/ style=font-size:1em>android</a></li><li><a href=/tags/angularjs/ style=font-size:1.1em>angularjs</a></li><li><a href=/tags/aws/ style=font-size:1.85em>aws</a></li><li><a href=/tags/bash/ style=font-size:1em>bash</a></li><li><a href=/tags/celery/ style=font-size:1em>celery</a></li><li><a href=/tags/chrome/ style=font-size:1em>chrome</a></li><li><a href=/tags/cmd/ style=font-size:1em>cmd</a></li><li><a href=/tags/cw-logs/ style=font-size:1.05em>cw-logs</a></li><li><a href=/tags/disqus/ style=font-size:1em>disqus</a></li><li><a href=/tags/docker/ style=font-size:1.05em>docker</a></li><li><a href=/tags/drone/ style=font-size:1em>drone</a></li><li><a href=/tags/dynamodb/ style=font-size:1.1em>dynamodb</a></li><li><a href=/tags/eb/ style=font-size:1.15em>eb</a></li><li><a href=/tags/ejs/ style=font-size:1em>ejs</a></li><li><a href=/tags/emr/ style=font-size:1.05em>emr</a></li><li><a href=/tags/express.js/ style=font-size:1em>express.js</a></li><li><a href=/tags/git/ style=font-size:2em>git</a></li><li><a href=/tags/hive/ style=font-size:1em>hive</a></li><li><a href=/tags/jquery/ style=font-size:1.1em>jquery</a></li><li><a href=/tags/js/ style=font-size:1.1em>js</a></li><li><a href=/tags/json/ style=font-size:1em>json</a></li><li><a href=/tags/kbd/ style=font-size:1.05em>kbd</a></li><li><a href=/tags/linux/ style=font-size:1em>linux</a></li><li><a href=/tags/mongodb/ style=font-size:1em>mongodb</a></li><li><a href=/tags/mysql/ style=font-size:1.05em>mysql</a></li><li><a href=/tags/node.js/ style=font-size:1.2em>node.js</a></li><li><a href=/tags/npm/ style=font-size:1em>npm</a></li><li><a href=/tags/oauth/ style=font-size:1em>oauth</a></li><li><a href=/tags/oop/ style=font-size:1em>oop</a></li><li><a href=/tags/php/ style=font-size:1.15em>php</a></li><li><a href=/tags/postgresql/ style=font-size:1em>postgresql</a></li><li><a href=/tags/python/ style=font-size:1.1em>python</a></li><li><a href=/tags/rds/ style=font-size:1em>rds</a></li><li><a href=/tags/scaleway/ style=font-size:1em>scaleway</a></li><li><a href=/tags/selenium/ style=font-size:1.3em>selenium</a></li><li><a href=/tags/ssh/ style=font-size:1em>ssh</a></li><li><a href=/tags/typing/ style=font-size:1em>typing</a></li><li><a href=/tags/vim/ style=font-size:1.05em>vim</a></li><li><a href=/tags/vr/ style=font-size:1em>vr</a></li><li><a href=/tags/vue/ style=font-size:1em>vue</a></li><li><a href=/tags/web/ style=font-size:1em>web</a></li><li><a href=/tags/yii/ style=font-size:1.15em>yii</a></li><li><a href=/tags/zeromq/ style=font-size:1em>zeromq</a></li></ul></div></section></div><div class=sidebar-overlay></div></div><div class=main><nav id=main-menu class='menu main-menu' aria-label='Main Menu'><div class=container><a class=screen-reader-text href=#content>Skip to Content</a>
-<button id=sidebar-toggler class=sidebar-toggler aria-controls=sidebar>
-<span class=screen-reader-text>Toggle Sidebar</span>
-<span class=open><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span><span class=close><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button><ul><li class=item><a href=/>Home</a></li><li class='item current'><a aria-current=page href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav><div class=header-widgets><div class=container></div></div><header id=header class='header site-header'><div class='container sep-after'><div class=header-info><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p></div></div></header><main id=content><article lang=en class=entry><header class='header entry-header'><div class='container sep-after'><div class=header-info><h1 class=title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</h1></div><div class=entry-meta><span class=posted-on><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class=screen-reader-text>Posted on</span>
-<time class=entry-date datetime=2016-06-10T00:00:00Z>2016, Jun 10</time></span>
-<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>13 mins read</span></div></div></header><div class="container entry-content custom"><p>The purpose of this setup is:</p><ul><li>Setup multiple web apps with different dependencies on the same server</li><li>Link all apps to the same MySQL server</li><li>Manage uploaded files for web apps in the single place (so it is easy to backup them)</li><li>Automatically deploy and update apps on the remote server</li><li>Run the same setup locally, so development environment is very close to production</li><li>Setup backups for MySQL databases and for uploaded files</li></ul><p>In this case I deploy to <a href=https://scaleway.com>Scaleway</a>, but same approach can be used for almost any cloud service.</p><h2 id=cloud-server>Cloud Server</h2><p>First, you need the cloud server with one of operation systems, <a href=https://docs.docker.com/machine/drivers/os-base/>supported by Docker Machine</a> with SSH access.
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='The purpose of this setup is:
+Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files In this case I deploy to Scaleway, but same approach can be used for almost any cloud service.'>
+<meta name='theme-color' content='#44ccff'>
+
+<meta property='og:title' content='Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server • vim, git, aws and other three-letter words'>
+<meta property='og:description' content='The purpose of this setup is:
+Setup multiple web apps with different dependencies on the same server Link all apps to the same MySQL server Manage uploaded files for web apps in the single place (so it is easy to backup them) Automatically deploy and update apps on the remote server Run the same setup locally, so development environment is very close to production Setup backups for MySQL databases and for uploaded files In this case I deploy to Scaleway, but same approach can be used for almost any cloud service.'>
+<meta property='og:url' content='https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html'>
+<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
+<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='docker'><meta property='article:tag' content='scaleway'><meta property='article:published_time' content='2016-06-10T00:00:00Z'/><meta property='article:modified_time' content='2016-06-10T00:00:00Z'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.118.2">
+
+  <title>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server • vim, git, aws and other three-letter words</title>
+  <link rel='canonical' href='https://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
+:root{--color-accent:#44ccff;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-58056088-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg'>
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+      <a href='/'>
+      vim, git, aws and other three-letter words
+      </a>
+    </h2>
+    <div class='desc'>
+    Software Development Notes
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-search sep-after'>
+  <header>
+    <h4 class='title widget-title'>Search</h4>
+  </header>
+
+  <form action='/search' id='search-form' class='search-form'>
+    <label>
+      <span class='screen-reader-text'>Search</span>
+      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
+    </label></form>
+
+</section>
+<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/'>Home</a></li><li class='item has-current'>
+  <a href='/posts/'>Posts</a></li><li class='item'>
+  <a href='/archive/'>Archive</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Tags</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/android/' style='font-size:1em'>android</a>
+      </li><li>
+        <a href='/tags/angularjs/' style='font-size:1.1em'>angularjs</a>
+      </li><li>
+        <a href='/tags/aws/' style='font-size:1.85em'>aws</a>
+      </li><li>
+        <a href='/tags/bash/' style='font-size:1em'>bash</a>
+      </li><li>
+        <a href='/tags/celery/' style='font-size:1em'>celery</a>
+      </li><li>
+        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
+      </li><li>
+        <a href='/tags/cmd/' style='font-size:1em'>cmd</a>
+      </li><li>
+        <a href='/tags/cw-logs/' style='font-size:1.05em'>cw-logs</a>
+      </li><li>
+        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
+      </li><li>
+        <a href='/tags/docker/' style='font-size:1.05em'>docker</a>
+      </li><li>
+        <a href='/tags/drone/' style='font-size:1em'>drone</a>
+      </li><li>
+        <a href='/tags/dynamodb/' style='font-size:1.1em'>dynamodb</a>
+      </li><li>
+        <a href='/tags/eb/' style='font-size:1.15em'>eb</a>
+      </li><li>
+        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
+      </li><li>
+        <a href='/tags/emr/' style='font-size:1.05em'>emr</a>
+      </li><li>
+        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:2em'>git</a>
+      </li><li>
+        <a href='/tags/hive/' style='font-size:1em'>hive</a>
+      </li><li>
+        <a href='/tags/jquery/' style='font-size:1.1em'>jquery</a>
+      </li><li>
+        <a href='/tags/js/' style='font-size:1.1em'>js</a>
+      </li><li>
+        <a href='/tags/json/' style='font-size:1em'>json</a>
+      </li><li>
+        <a href='/tags/kbd/' style='font-size:1.05em'>kbd</a>
+      </li><li>
+        <a href='/tags/linux/' style='font-size:1em'>linux</a>
+      </li><li>
+        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
+      </li><li>
+        <a href='/tags/mysql/' style='font-size:1.05em'>mysql</a>
+      </li><li>
+        <a href='/tags/node.js/' style='font-size:1.2em'>node.js</a>
+      </li><li>
+        <a href='/tags/npm/' style='font-size:1em'>npm</a>
+      </li><li>
+        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
+      </li><li>
+        <a href='/tags/oop/' style='font-size:1em'>oop</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1.15em'>php</a>
+      </li><li>
+        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.1em'>python</a>
+      </li><li>
+        <a href='/tags/rds/' style='font-size:1em'>rds</a>
+      </li><li>
+        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
+      </li><li>
+        <a href='/tags/selenium/' style='font-size:1.3em'>selenium</a>
+      </li><li>
+        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
+      </li><li>
+        <a href='/tags/typing/' style='font-size:1em'>typing</a>
+      </li><li>
+        <a href='/tags/vim/' style='font-size:1.05em'>vim</a>
+      </li><li>
+        <a href='/tags/vr/' style='font-size:1em'>vr</a>
+      </li><li>
+        <a href='/tags/vue/' style='font-size:1em'>vue</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/yii/' style='font-size:1.15em'>yii</a>
+      </li><li>
+        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Toggle Sidebar</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item current'>
+        <a aria-current='page' href='/posts/'>Posts</a>
+      </li><li class='item'>
+        <a href='/archive/'>Archive</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Setup Automatic Deployment, Updates and Backups of Multiple Web Applications with Docker on the Scaleway Server</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2016-06-10T00:00:00Z'>2016, Jun 10</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+13 mins read
+</span>
+
+
+  
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class="container entry-content custom">
+    <p>The purpose of this setup is:</p>
+<ul>
+<li>Setup multiple web apps with different dependencies on the same server</li>
+<li>Link all apps to the same MySQL server</li>
+<li>Manage uploaded files for web apps in the single place (so it is easy to backup them)</li>
+<li>Automatically deploy and update apps on the remote server</li>
+<li>Run the same setup locally, so development environment is very close to production</li>
+<li>Setup backups for MySQL databases and for uploaded files</li>
+</ul>
+<p>In this case I deploy to <a href="https://scaleway.com">Scaleway</a>, but same approach can be used for almost any cloud service.</p>
+<!-- raw HTML omitted -->
+<h2 id="cloud-server">Cloud Server</h2>
+<p>First, you need the cloud server with one of operation systems, <a href="https://docs.docker.com/machine/drivers/os-base/">supported by Docker Machine</a> with SSH access.
 I used Scaleway&rsquo;s VC1S server with Ubuntu 14.04.
-You also need to install <a href=https://docs.docker.com/engine/installation/linux/ubuntulinux/>Docker Engine</a> and <a href=https://docs.docker.com/machine/install-machine/>Docker Machine</a> locally.</p><h2 id=docker-machine---setup-docker-remotely>Docker Machine - setup Docker remotely</h2><p>Next step is to setup the Docker on the server, this is done with <code>docker-machine create</code> command:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>SSH_HOST<span style=color:#f92672>=</span>111.222.333.44
-</span></span><span style=display:flex><span>SSH_USER<span style=color:#f92672>=</span>root
-</span></span><span style=display:flex><span>SSH_KEY<span style=color:#f92672>=</span>~/.ssh/id_rsa_scaleway
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>docker-machine create --driver generic <span style=color:#ae81ff>\
-</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span> --generic-ip-address $SSH_HOST <span style=color:#ae81ff>\
-</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span> --generic-ssh-user $SSH_USER <span style=color:#ae81ff>\
-</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span> --generic-ssh-key $SSH_KEY <span style=color:#ae81ff>\
-</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span> scaleway
-</span></span></code></pre></div><p>To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).</p><p>Here I have used the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href=https://docs.docker.com/machine/drivers/>AWS, Digital Ocean, etc</a>.
-Note: Scaleway has the <a href=https://github.com/scaleway/docker-machine-driver-scaleway>Docker Machine plugin</a>, using it you can do even more and automatically launch the new instance during the setup.</p><p>Check the full setup script <a href=/scaleway-docker/init-docker.sh>here</a>, on Scaleway I also had to create loopback devices because docker setup failed with <code>[graphdriver] prior storage driver \"devicemapper\" failed: loopback attach failed</code>.</p><p>If something goes wrong during the setup, run <code>docker-machine rm scaleway</code>, fix the problem and run the setup again.</p><h2 id=deployment-setup>Deployment setup</h2><p>This project is responsible for deployment of the web applications to the remote host.</p><h3 id=projects-layout>Projects layout</h3><p>There are several web applications which I want do deploy, each packaged into the docker container.</p><p>On the filesystem they reside in the same <code>~/web</code> folder along with the <code>web-deploy</code> project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>in ~/web $
-</span></span><span style=display:flex><span>projecta.com/
-</span></span><span style=display:flex><span>   Dockerfile
-</span></span><span style=display:flex><span>   config/
-</span></span><span style=display:flex><span>   db/
-</span></span><span style=display:flex><span>   www/
-</span></span><span style=display:flex><span>projectb.com/
-</span></span><span style=display:flex><span>   Dockerfile
-</span></span><span style=display:flex><span>   config/
-</span></span><span style=display:flex><span>   db/
-</span></span><span style=display:flex><span>   www/
-</span></span><span style=display:flex><span>projectc.com/
-</span></span><span style=display:flex><span>   Dockerfile
-</span></span><span style=display:flex><span>   app/
-</span></span><span style=display:flex><span>   config/
-</span></span><span style=display:flex><span>   db/
-</span></span><span style=display:flex><span>   ...
-</span></span><span style=display:flex><span>web-deploy/
-</span></span></code></pre></div><p>The typical Dockerfile for the php application looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>FROM php:5.6-apache
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>RUN apt-get update &amp;&amp; \
-</span></span><span style=display:flex><span>  apt-get install -y msmtp wget &amp;&amp; \
-</span></span><span style=display:flex><span>  apt-get clean
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>RUN apt-get update &amp;&amp; apt-get install -y \
-</span></span><span style=display:flex><span>        libfreetype6-dev \
-</span></span><span style=display:flex><span>        libjpeg62-turbo-dev \
-</span></span><span style=display:flex><span>        libmcrypt-dev \
-</span></span><span style=display:flex><span>        libpng12-dev \
-</span></span><span style=display:flex><span>    &amp;&amp; docker-php-ext-install -j$(nproc) iconv mcrypt \
-</span></span><span style=display:flex><span>    &amp;&amp; docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-</span></span><span style=display:flex><span>    &amp;&amp; docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mysql mysqli
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>COPY config/msmtprc /etc/msmtprc
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>RUN echo &#39;sendmail_path = &#34;/usr/bin/msmtp -t -i&#34;&#39; &gt; /usr/local/etc/php/conf.d/mail.ini
-</span></span><span style=display:flex><span>RUN a2enmod expires &amp;&amp; a2enmod rewrite
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>COPY www/ /var/www/html/
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>VOLUME /var/www/html/files
-</span></span></code></pre></div><p>This container is based on the official <a href=https://hub.docker.com/_/php/>php image</a>.
+You also need to install <a href="https://docs.docker.com/engine/installation/linux/ubuntulinux/">Docker Engine</a> and <a href="https://docs.docker.com/machine/install-machine/">Docker Machine</a> locally.</p>
+<h2 id="docker-machine---setup-docker-remotely">Docker Machine - setup Docker remotely</h2>
+<p>Next step is to setup the Docker on the server, this is done with <code>docker-machine create</code> command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>SSH_HOST<span style="color:#f92672">=</span>111.222.333.44
+</span></span><span style="display:flex;"><span>SSH_USER<span style="color:#f92672">=</span>root
+</span></span><span style="display:flex;"><span>SSH_KEY<span style="color:#f92672">=</span>~/.ssh/id_rsa_scaleway
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker-machine create --driver generic <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --generic-ip-address $SSH_HOST <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --generic-ssh-user $SSH_USER <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --generic-ssh-key $SSH_KEY <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> scaleway
+</span></span></code></pre></div><p>To make it work, it is necessary to open the 2375 port on the server. On Scaleway it is done via security group configuration. After changing the security group, it is necessary to reboot the server (stop / run via Archive option or Hard reboot).</p>
+<p>Here I have used the <code>generic</code> docker machine driver, there are also specific drivers for popular cloud providers - <a href="https://docs.docker.com/machine/drivers/">AWS, Digital Ocean, etc</a>.
+Note: Scaleway has the <a href="https://github.com/scaleway/docker-machine-driver-scaleway">Docker Machine plugin</a>, using it you can do even more and automatically launch the new instance during the setup.</p>
+<p>Check the full setup script <a href="/scaleway-docker/init-docker.sh">here</a>, on Scaleway I also had to create loopback devices because docker setup failed with <code>[graphdriver] prior storage driver \&quot;devicemapper\&quot; failed: loopback attach failed</code>.</p>
+<p>If something goes wrong during the setup, run <code>docker-machine rm scaleway</code>, fix the problem and run the setup again.</p>
+<h2 id="deployment-setup">Deployment setup</h2>
+<p>This project is responsible for deployment of the web applications to the remote host.</p>
+<h3 id="projects-layout">Projects layout</h3>
+<p>There are several web applications which I want do deploy, each packaged into the docker container.</p>
+<p>On the filesystem they reside in the same <code>~/web</code> folder along with the <code>web-deploy</code> project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>in ~/web $
+</span></span><span style="display:flex;"><span>projecta.com/
+</span></span><span style="display:flex;"><span>   Dockerfile
+</span></span><span style="display:flex;"><span>   config/
+</span></span><span style="display:flex;"><span>   db/
+</span></span><span style="display:flex;"><span>   www/
+</span></span><span style="display:flex;"><span>projectb.com/
+</span></span><span style="display:flex;"><span>   Dockerfile
+</span></span><span style="display:flex;"><span>   config/
+</span></span><span style="display:flex;"><span>   db/
+</span></span><span style="display:flex;"><span>   www/
+</span></span><span style="display:flex;"><span>projectc.com/
+</span></span><span style="display:flex;"><span>   Dockerfile
+</span></span><span style="display:flex;"><span>   app/
+</span></span><span style="display:flex;"><span>   config/
+</span></span><span style="display:flex;"><span>   db/
+</span></span><span style="display:flex;"><span>   ...
+</span></span><span style="display:flex;"><span>web-deploy/
+</span></span></code></pre></div><p>The typical Dockerfile for the php application looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>FROM php:5.6-apache
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN apt-get update &amp;&amp; \
+</span></span><span style="display:flex;"><span>  apt-get install -y msmtp wget &amp;&amp; \
+</span></span><span style="display:flex;"><span>  apt-get clean
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN apt-get update &amp;&amp; apt-get install -y \
+</span></span><span style="display:flex;"><span>        libfreetype6-dev \
+</span></span><span style="display:flex;"><span>        libjpeg62-turbo-dev \
+</span></span><span style="display:flex;"><span>        libmcrypt-dev \
+</span></span><span style="display:flex;"><span>        libpng12-dev \
+</span></span><span style="display:flex;"><span>    &amp;&amp; docker-php-ext-install -j$(nproc) iconv mcrypt \
+</span></span><span style="display:flex;"><span>    &amp;&amp; docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+</span></span><span style="display:flex;"><span>    &amp;&amp; docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mysql mysqli
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COPY config/msmtprc /etc/msmtprc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN echo &#39;sendmail_path = &#34;/usr/bin/msmtp -t -i&#34;&#39; &gt; /usr/local/etc/php/conf.d/mail.ini
+</span></span><span style="display:flex;"><span>RUN a2enmod expires &amp;&amp; a2enmod rewrite
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COPY www/ /var/www/html/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>VOLUME /var/www/html/files
+</span></span></code></pre></div><p>This container is based on the official <a href="https://hub.docker.com/_/php/">php image</a>.
 To make the php <code>mail</code> function work, I also setup <code>msmtp</code> and configure php to use it.
-The example of the msmtp configuration file is <a href=/scaleway-docker/msmtprc>here</a>.</p><p>On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch &ldquo;Block SMTP&rdquo; from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).</p><p>Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span># re-use image which we already use
-</span></span><span style=display:flex><span>FROM php:5.6-apache
-</span></span><span style=display:flex><span>MAINTAINER serebrov@gmail.com
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>RUN DEBIAN_FRONTEND=noninteractive apt-get update \
-</span></span><span style=display:flex><span>    &amp;&amp; apt-get install -y ruby libruby \
-</span></span><span style=display:flex><span>    libapache2-mod-passenger ruby-dev \
-</span></span><span style=display:flex><span>    libmysqlclient-dev libmagickcore-dev libmagickwand-dev \
-</span></span><span style=display:flex><span>    build-essential \
-</span></span><span style=display:flex><span>    apache2 ruby-passenger \
-</span></span><span style=display:flex><span>    &amp;&amp; gem install bundler
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>WORKDIR /var/www/redmine/
-</span></span><span style=display:flex><span>COPY ./ /var/www/redmine/
-</span></span><span style=display:flex><span>COPY config_prod/*.yml /var/www/redmine/config/
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>RUN bundle install
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>COPY config_prod/redmine.conf /etc/apache2/sites-available
-</span></span><span style=display:flex><span>RUN chown -R www-data:www-data /var/www/redmine
-</span></span><span style=display:flex><span>RUN a2enmod passenger
-</span></span><span style=display:flex><span>RUN a2ensite redmine
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>VOLUME /var/www/redmine/files
+The example of the msmtp configuration file is <a href="/scaleway-docker/msmtprc">here</a>.</p>
+<p>On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch &ldquo;Block SMTP&rdquo; from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).</p>
+<p>Here is also an example of the ruby-on-rails application (Redmine) Dockerfile:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># re-use image which we already use
+</span></span><span style="display:flex;"><span>FROM php:5.6-apache
+</span></span><span style="display:flex;"><span>MAINTAINER serebrov@gmail.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN DEBIAN_FRONTEND=noninteractive apt-get update \
+</span></span><span style="display:flex;"><span>    &amp;&amp; apt-get install -y ruby libruby \
+</span></span><span style="display:flex;"><span>    libapache2-mod-passenger ruby-dev \
+</span></span><span style="display:flex;"><span>    libmysqlclient-dev libmagickcore-dev libmagickwand-dev \
+</span></span><span style="display:flex;"><span>    build-essential \
+</span></span><span style="display:flex;"><span>    apache2 ruby-passenger \
+</span></span><span style="display:flex;"><span>    &amp;&amp; gem install bundler
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>WORKDIR /var/www/redmine/
+</span></span><span style="display:flex;"><span>COPY ./ /var/www/redmine/
+</span></span><span style="display:flex;"><span>COPY config_prod/*.yml /var/www/redmine/config/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>RUN bundle install
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COPY config_prod/redmine.conf /etc/apache2/sites-available
+</span></span><span style="display:flex;"><span>RUN chown -R www-data:www-data /var/www/redmine
+</span></span><span style="display:flex;"><span>RUN a2enmod passenger
+</span></span><span style="display:flex;"><span>RUN a2ensite redmine
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>VOLUME /var/www/redmine/files
 </span></span></code></pre></div><p>This container is based on the same base official php container as php applications just to reuse the already downloaded layers.
-Ruby application is running under apache with mod passenger.</p><h2 id=the-web-deploy-project>The web deploy project</h2><p>The <code>web-deploy</code> project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>in ~/web $
-</span></span><span style=display:flex><span>projecta.com/
-</span></span><span style=display:flex><span>projectb.com/
-</span></span><span style=display:flex><span>projectc.com/
-</span></span><span style=display:flex><span>   ...
-</span></span><span style=display:flex><span>web-deploy/
-</span></span><span style=display:flex><span>  deploy.sh
-</span></span><span style=display:flex><span>  init-docker.sh
-</span></span><span style=display:flex><span>  init-db-files.sh
-</span></span><span style=display:flex><span>  mysql-cli.sh
-</span></span><span style=display:flex><span>  utils.sh
-</span></span><span style=display:flex><span>  /haproxy
-</span></span><span style=display:flex><span>    Dockerfile
-</span></span><span style=display:flex><span>    build.sh
-</span></span><span style=display:flex><span>    haproxy.cfg
-</span></span><span style=display:flex><span>    mycompany.pem
-</span></span><span style=display:flex><span>  /mysql
-</span></span><span style=display:flex><span>    dumps/
-</span></span><span style=display:flex><span>      load-dumps.sh
-</span></span><span style=display:flex><span>      projecta.sql
-</span></span><span style=display:flex><span>      projectb.sql
-</span></span><span style=display:flex><span>      projectc.sql
-</span></span><span style=display:flex><span>    Dockerfile
-</span></span><span style=display:flex><span>    build.sh
-</span></span><span style=display:flex><span>    init-db.sh
-</span></span><span style=display:flex><span>  /build
-</span></span><span style=display:flex><span>    projecta.com.sh
-</span></span><span style=display:flex><span>    projectb.com.sh
-</span></span><span style=display:flex><span>    projectc.com.sh
-</span></span></code></pre></div><p>Top level scripts include:</p><ul><li><a href=/scaleway-docker/deploy.sh>web-deploy/deploy.sh</a> - deploy all apps locally or to the remote instance</li><li><a href=/scaleway-docker/init-docker.sh>web-deploy/init-docker.sh</a> - use it for initial server setup (only needed once, for the new server)</li><li><a href=/scaleway-docker/init-db-files.sh>web-deploy/init-db-files.sh</a> - uploads files and database dumps to remote server and then goes over dumps in mysql/dump and drops/creates databases and loads dumps, also users <a href=/scaleway-docker/init-db.sh>web-deploy/mysql/init-db.sh</a> and <a href=/scaleway-docker/load-dumps.sh>web-deploy/mysql/dumps/load-dumps.sh</a>, dump files should be under <code>web-deploy/mysql/dumps</code></li><li><a href=/scaleway-docker/mysql-cli.sh>web-deploy/mysql-cli.sh</a> can be user to start the MySQL client for the MySQL container</li></ul><p>The <code>deploy.sh</code> script uses docker-machine to build and run the containers on the remote server.
-There are several modes it can be used it:</p><ul><li><code>./deploy.sh</code> - deploy (or update) all projects locally</li><li><code>./deploy.sh local projecta.com</code> - deploy only projecta.com locally</li><li><code>./deploy.sh production</code> - deploy only projecta.com on the remote server</li><li><code>./deploy.sh production projecta.com</code> - deploy only projecta.com on the remote server</li></ul><p>The script looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>set -e
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
-</span></span><span style=display:flex><span>ENVIRONMENT<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;local&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> !<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>    ENVIRONMENT<span style=color:#f92672>=</span>$1
-</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
-</span></span><span style=display:flex><span>    echo Environment name is not specified, using <span style=color:#e6db74>&#39;local&#39;</span>.
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$2<span style=color:#e6db74>&#34;</span> !<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># deploy only the specified project</span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># for example ./deploy.sh production projecta.com</span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># will run ./build/projecta.com</span>
-</span></span><span style=display:flex><span>    PROJECTS<span style=color:#f92672>=</span>$SCRIPT_PATH/build/$2.sh
-</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e># deploy all projects</span>
-</span></span><span style=display:flex><span>    PROJECTS<span style=color:#f92672>=</span>$SCRIPT_PATH/build/*.sh
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Deploy </span>$PROJECTS<span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>read -p <span style=color:#e6db74>&#34;Do you want to continue? &#34;</span> -n <span style=color:#ae81ff>1</span> -r
-</span></span><span style=display:flex><span>echo    <span style=color:#75715e># (optional) move to a new line</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> ! $REPLY <span style=color:#f92672>=</span>~ ^<span style=color:#f92672>[</span>Yy<span style=color:#f92672>]</span>$ <span style=color:#f92672>]]</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>1</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># add mysql and haproxy, always update them</span>
-</span></span><span style=display:flex><span>PROJECTS<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$SCRIPT_PATH<span style=color:#e6db74>/mysql/build.sh &#34;</span>$PROJECTS<span style=color:#e6db74>&#34; </span>$SCRIPT_PATH<span style=color:#e6db74>/haproxy/build.sh&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$ENVIRONMENT<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;production&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>  eval <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>docker-machine env scaleway<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>  docker-machine ip scaleway
-</span></span><span style=display:flex><span>  set +a
-</span></span><span style=display:flex><span>  export | grep DOCKER
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> project in $PROJECTS
-</span></span><span style=display:flex><span><span style=color:#66d9ef>do</span>
-</span></span><span style=display:flex><span>    echo <span style=color:#e6db74>&#39;Project: &#39;</span> $project
-</span></span><span style=display:flex><span>    $project $ENVIRONMENT
-</span></span><span style=display:flex><span><span style=color:#66d9ef>done</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$ENVIRONMENT<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;production&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>  set +a
-</span></span><span style=display:flex><span>  export | grep DOCKER
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>docker ps
-</span></span></code></pre></div><p>Internally, the <code>deploy.sh</code> script goes over the scripts under <code>/build</code> sub-folder with build scripts and executes them to create or update docker containers.</p><p>The build script looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>set -e
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
-</span></span><span style=display:flex><span>APP_NAME<span style=color:#f92672>=</span>projecta
-</span></span><span style=display:flex><span>CONTAINER_NAME<span style=color:#f92672>=</span>$APP_NAME-docker
-</span></span><span style=display:flex><span>PORT<span style=color:#f92672>=</span><span style=color:#ae81ff>8091</span>
-</span></span><span style=display:flex><span>source $SCRIPT_PATH/../utils.sh
-</span></span><span style=display:flex><span>SRC<span style=color:#f92672>=</span>$SCRIPT_PATH/../../projecta.com
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># if we are running locally, the container will use sources from the host filesystem</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># (we create the volume pointing to /html)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># for production, we will copy the sources into the container</span>
-</span></span><span style=display:flex><span>ENVIRONMENT<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;local&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> !<span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>    ENVIRONMENT<span style=color:#f92672>=</span>$1
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>ENV_DOCKER_OPTS<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$ENVIRONMENT<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;local&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
-</span></span><span style=display:flex><span>  ENV_DOCKER_OPTS<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;-v </span><span style=color:#66d9ef>$(</span>realpath $SRC<span style=color:#66d9ef>)</span><span style=color:#e6db74>/html:/var/www/html&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
-</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Environment: </span>$ENVIRONMENT<span style=color:#e6db74>&#34;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># go to the source folder, where Dockerfile is</span>
-</span></span><span style=display:flex><span>cd $SRC
-</span></span><span style=display:flex><span><span style=color:#75715e># remove the image if it already exists</span>
-</span></span><span style=display:flex><span>docker_rm_app_image $APP_NAME
-</span></span><span style=display:flex><span><span style=color:#75715e># rebuild the image</span>
-</span></span><span style=display:flex><span>docker build -t $CONTAINER_NAME .
-</span></span><span style=display:flex><span><span style=color:#75715e># start the container</span>
-</span></span><span style=display:flex><span>docker run -d -p $PORT:80 -v /var/web/projecta.com/files:/var/www/html/data/upload --name $APP_NAME --link web-mysql:mysql --restart always $ENV_DOCKER_OPTS $CONTAINER_NAME
-</span></span><span style=display:flex><span><span style=color:#75715e># initially files belong to the root user of the host OS</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># make them available to containter&#39;s www-data user</span>
-</span></span><span style=display:flex><span>docker exec $APP_NAME sh -c <span style=color:#e6db74>&#39;chown -R www-data:www-data /var/www/html/files&#39;</span>
-</span></span></code></pre></div><p>Few interesting things happen here:</p><ul><li>This project will use port 8091 on the host machine (can be accessed as localhost:8091), this port also will be mentioned in the HAProxy config to redirect requests to this app based on the requested domain name</li><li>For local deployment the container will use source files from the host machine folder, so we can edit them directly without having to login to container, this is very convenient for local development</li><li>The web application files will be stored in the volume, which is available on the host machine at /var/web/projecta.com/files</li><li>The problem with permissions to the shared volume is solved by running <code>chown</code> from within the container (apache runs as www-data and after creation the files folder will belong to root user)</li><li>This build script is used both for local and remote deployment, the remote part is handled by Docker Machine which allows to run docker commands against the remote host (this is handled in the <code>deploy.sh</code> script)</li></ul><p>Note: the <code>docker_rm_app_image</code> function from the build script is defined in the <a href=/scaleway-docker/utils.sh>utils.sh script</a>.</p><p>The <code>web-deploy</code> project also includes setup for HAProxy and MySQL containers.</p><h2 id=haproxy-setup>HAProxy setup</h2><p>This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point on the server. Requests to port 80 are reverse-proxied to other containers.
-The Dockerfile is simple:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>FROM haproxy:1.5
-</span></span><span style=display:flex><span>COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
-</span></span><span style=display:flex><span># this is needed to setup ssl for one of projects
-</span></span><span style=display:flex><span>COPY ./mycompany.pem /etc/ssl/certs/
-</span></span></code></pre></div><p>The configuration file (web-deploy/haproxy/haproxy.cfg) looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>global
-</span></span><span style=display:flex><span>    log /dev/log local2
-</span></span><span style=display:flex><span>    maxconn     2048
-</span></span><span style=display:flex><span>    tune.ssl.default-dh-param 2048
-</span></span><span style=display:flex><span>    #debug
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>defaults
-</span></span><span style=display:flex><span>    log     global
-</span></span><span style=display:flex><span>    option  dontlognull
-</span></span><span style=display:flex><span>    mode http
-</span></span><span style=display:flex><span>    option forwardfor
-</span></span><span style=display:flex><span>    option http-server-close
-</span></span><span style=display:flex><span>    timeout connect 5000ms
-</span></span><span style=display:flex><span>    timeout client 50000ms
-</span></span><span style=display:flex><span>    timeout server 50000s
-</span></span><span style=display:flex><span>    stats enable
-</span></span><span style=display:flex><span>    stats auth haadimn:ZyXuuXYZ
-</span></span><span style=display:flex><span>    stats uri /haproxyStats
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>frontend http-in
-</span></span><span style=display:flex><span>    bind *:80
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    # Define hosts based on domain names
-</span></span><span style=display:flex><span>    acl host_projecta hdr(host) -i projecta.com
-</span></span><span style=display:flex><span>    acl host_projecta hdr(host) -i www.projecta.com
-</span></span><span style=display:flex><span>    # this name is used for local testing
-</span></span><span style=display:flex><span>    acl host_projecta hdr(host) -i www.projecta.local
-</span></span><span style=display:flex><span>    acl host_projectb hdr(host) -i projectb.com
-</span></span><span style=display:flex><span>    acl host_projectb hdr(host) -i www.projectb.com
-</span></span><span style=display:flex><span>    # handle sub-domains (use hdr_end here, not hdr)
-</span></span><span style=display:flex><span>    acl host_projectc hdr_end(host) -i projectc.com
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    # redirect projectd to https
-</span></span><span style=display:flex><span>    redirect scheme https if host_projectd !{ ssl_fc }
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    ## figure out backend to use based on domainname
-</span></span><span style=display:flex><span>    use_backend projecta if host_projecta
-</span></span><span style=display:flex><span>    use_backend projectb if host_projectb
-</span></span><span style=display:flex><span>    use_backend projectc if host_projectc
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>frontend https-in
-</span></span><span style=display:flex><span>    bind *:443 ssl crt /etc/ssl/certs/mycompany.pem
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    # Define hosts based on domain names
-</span></span><span style=display:flex><span>    acl host_projectd hdr(host) -i projectd.com
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    use_backend projectd if host_projectd
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>backend projecta
-</span></span><span style=display:flex><span>    balance roundrobin
-</span></span><span style=display:flex><span>    server srv_pawnshop-soft-ru 127.0.0.1:8091
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>backend projectb
-</span></span><span style=display:flex><span>    balance roundrobin
-</span></span><span style=display:flex><span>    server srv_pawnshop-soft-kz 127.0.0.1:8092
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>backend projectc
-</span></span><span style=display:flex><span>    balance roundrobin
-</span></span><span style=display:flex><span>    server srv_lombard 127.0.0.1:8093
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>backend projectd
-</span></span><span style=display:flex><span>    balance roundrobin
-</span></span><span style=display:flex><span>    server srv_redmine 127.0.0.1:8100
-</span></span></code></pre></div><p>And the build script (web-deploy/haproxy/build.sh) is this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>export | grep DOCKER
-</span></span><span style=display:flex><span>docker-machine ip scaleway
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
-</span></span><span style=display:flex><span>APP_NAME<span style=color:#f92672>=</span>web-haproxy
-</span></span><span style=display:flex><span>CONTAINER_NAME<span style=color:#f92672>=</span>web-haproxy-docker
-</span></span><span style=display:flex><span>source $SCRIPT_PATH/../utils.sh
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>pushd $SCRIPT_PATH
-</span></span><span style=display:flex><span>docker_rm_app_image $APP_NAME
-</span></span><span style=display:flex><span>docker build -t $CONTAINER_NAME .
-</span></span><span style=display:flex><span>docker run -d --restart always --net<span style=color:#f92672>=</span>host -p 80:80 -p 443:443 -v /dev/log:/dev/log --name $APP_NAME $CONTAINER_NAME
-</span></span><span style=display:flex><span>popd
-</span></span></code></pre></div><p>The HAProxy container is launched with <code>--net=host</code> option, so it can directly access all the ports exposed by other containers.</p><p>The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
-See the config file and <a href=https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04>this post</a> for more information.</p><p>The HAProxy stats are available via <a href=http://hostname.com/haproxyStats>http://hostname.com/haproxyStats</a>. Login and password are set in the config file (haproxy.cfg, see the <code>stats auth</code> line in <code>defaults</code> section).</p><p>Some hints to to debug problems with HAProxy setup:</p><ul><li>Uncomment &lsquo;debug&rsquo; in the config file</li><li>Check &lsquo;docker logs web-haproxy&rsquo;</li><li>Check system log (/var/log/syslog), with the configuration above the HAProxy container will log to host&rsquo;s system log (see <a href=https://github.com/dockerfile/haproxy/issues/3>https://github.com/dockerfile/haproxy/issues/3</a>)</li></ul><h2 id=mysql-setup>MySql setup</h2><p>The MySql container (it is under web-deploy/mysql folder) also has a simple Dockerfile:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>FROM mysql:5.6
-</span></span><span style=display:flex><span>ENV MYSQL_ROOT_PASSWORD=myrootpassword
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>VOLUME /var/www/mysql
-</span></span></code></pre></div><p>The build script looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
-</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
-</span></span><span style=display:flex><span>APP_NAME<span style=color:#f92672>=</span>web-mysql
-</span></span><span style=display:flex><span>CONTAINER_NAME<span style=color:#f92672>=</span>$APP_NAME-docker
-</span></span><span style=display:flex><span>source $SCRIPT_PATH/../utils.sh
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>pushd $SCRIPT_PATH
-</span></span><span style=display:flex><span>docker_rm_app_image $APP_NAME
-</span></span><span style=display:flex><span>docker build -t $CONTAINER_NAME .
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>docker run -d -v /var/web/mysql-data:/var/lib/mysql --restart always --name $APP_NAME $CONTAINER_NAME
-</span></span><span style=display:flex><span>popd
+Ruby application is running under apache with mod passenger.</p>
+<h2 id="the-web-deploy-project">The web deploy project</h2>
+<p>The <code>web-deploy</code> project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>in ~/web $
+</span></span><span style="display:flex;"><span>projecta.com/
+</span></span><span style="display:flex;"><span>projectb.com/
+</span></span><span style="display:flex;"><span>projectc.com/
+</span></span><span style="display:flex;"><span>   ...
+</span></span><span style="display:flex;"><span>web-deploy/
+</span></span><span style="display:flex;"><span>  deploy.sh
+</span></span><span style="display:flex;"><span>  init-docker.sh
+</span></span><span style="display:flex;"><span>  init-db-files.sh
+</span></span><span style="display:flex;"><span>  mysql-cli.sh
+</span></span><span style="display:flex;"><span>  utils.sh
+</span></span><span style="display:flex;"><span>  /haproxy
+</span></span><span style="display:flex;"><span>    Dockerfile
+</span></span><span style="display:flex;"><span>    build.sh
+</span></span><span style="display:flex;"><span>    haproxy.cfg
+</span></span><span style="display:flex;"><span>    mycompany.pem
+</span></span><span style="display:flex;"><span>  /mysql
+</span></span><span style="display:flex;"><span>    dumps/
+</span></span><span style="display:flex;"><span>      load-dumps.sh
+</span></span><span style="display:flex;"><span>      projecta.sql
+</span></span><span style="display:flex;"><span>      projectb.sql
+</span></span><span style="display:flex;"><span>      projectc.sql
+</span></span><span style="display:flex;"><span>    Dockerfile
+</span></span><span style="display:flex;"><span>    build.sh
+</span></span><span style="display:flex;"><span>    init-db.sh
+</span></span><span style="display:flex;"><span>  /build
+</span></span><span style="display:flex;"><span>    projecta.com.sh
+</span></span><span style="display:flex;"><span>    projectb.com.sh
+</span></span><span style="display:flex;"><span>    projectc.com.sh
+</span></span></code></pre></div><p>Top level scripts include:</p>
+<ul>
+<li><a href="/scaleway-docker/deploy.sh">web-deploy/deploy.sh</a> - deploy all apps locally or to the remote instance</li>
+<li><a href="/scaleway-docker/init-docker.sh">web-deploy/init-docker.sh</a> - use it for initial server setup (only needed once, for the new server)</li>
+<li><a href="/scaleway-docker/init-db-files.sh">web-deploy/init-db-files.sh</a> - uploads files and database dumps to remote server and then goes over dumps in mysql/dump and drops/creates databases and loads dumps, also users <a href="/scaleway-docker/init-db.sh">web-deploy/mysql/init-db.sh</a> and <a href="/scaleway-docker/load-dumps.sh">web-deploy/mysql/dumps/load-dumps.sh</a>, dump files should be under <code>web-deploy/mysql/dumps</code></li>
+<li><a href="/scaleway-docker/mysql-cli.sh">web-deploy/mysql-cli.sh</a> can be user to start the MySQL client for the MySQL container</li>
+</ul>
+<p>The <code>deploy.sh</code> script uses docker-machine to build and run the containers on the remote server.
+There are several modes it can be used it:</p>
+<ul>
+<li><code>./deploy.sh</code> - deploy (or update) all projects locally</li>
+<li><code>./deploy.sh local projecta.com</code> - deploy only projecta.com locally</li>
+<li><code>./deploy.sh production</code> - deploy only projecta.com on the remote server</li>
+<li><code>./deploy.sh production projecta.com</code> - deploy only projecta.com on the remote server</li>
+</ul>
+<p>The script looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set -e
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>ENVIRONMENT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;local&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    ENVIRONMENT<span style="color:#f92672">=</span>$1
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    echo Environment name is not specified, using <span style="color:#e6db74">&#39;local&#39;</span>.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># deploy only the specified project</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># for example ./deploy.sh production projecta.com</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># will run ./build/projecta.com</span>
+</span></span><span style="display:flex;"><span>    PROJECTS<span style="color:#f92672">=</span>$SCRIPT_PATH/build/$2.sh
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># deploy all projects</span>
+</span></span><span style="display:flex;"><span>    PROJECTS<span style="color:#f92672">=</span>$SCRIPT_PATH/build/*.sh
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Deploy </span>$PROJECTS<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>read -p <span style="color:#e6db74">&#34;Do you want to continue? &#34;</span> -n <span style="color:#ae81ff">1</span> -r
+</span></span><span style="display:flex;"><span>echo    <span style="color:#75715e"># (optional) move to a new line</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> ! $REPLY <span style="color:#f92672">=</span>~ ^<span style="color:#f92672">[</span>Yy<span style="color:#f92672">]</span>$ <span style="color:#f92672">]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    exit <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># add mysql and haproxy, always update them</span>
+</span></span><span style="display:flex;"><span>PROJECTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$SCRIPT_PATH<span style="color:#e6db74">/mysql/build.sh &#34;</span>$PROJECTS<span style="color:#e6db74">&#34; </span>$SCRIPT_PATH<span style="color:#e6db74">/haproxy/build.sh&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$ENVIRONMENT<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;production&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>  eval <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>docker-machine env scaleway<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>  docker-machine ip scaleway
+</span></span><span style="display:flex;"><span>  set +a
+</span></span><span style="display:flex;"><span>  export | grep DOCKER
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> project in $PROJECTS
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#39;Project: &#39;</span> $project
+</span></span><span style="display:flex;"><span>    $project $ENVIRONMENT
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$ENVIRONMENT<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;production&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>  set +a
+</span></span><span style="display:flex;"><span>  export | grep DOCKER
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker ps
+</span></span></code></pre></div><p>Internally, the <code>deploy.sh</code> script goes over the scripts under <code>/build</code> sub-folder with build scripts and executes them to create or update docker containers.</p>
+<p>The build script looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set -e
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>APP_NAME<span style="color:#f92672">=</span>projecta
+</span></span><span style="display:flex;"><span>CONTAINER_NAME<span style="color:#f92672">=</span>$APP_NAME-docker
+</span></span><span style="display:flex;"><span>PORT<span style="color:#f92672">=</span><span style="color:#ae81ff">8091</span>
+</span></span><span style="display:flex;"><span>source $SCRIPT_PATH/../utils.sh
+</span></span><span style="display:flex;"><span>SRC<span style="color:#f92672">=</span>$SCRIPT_PATH/../../projecta.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># if we are running locally, the container will use sources from the host filesystem</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># (we create the volume pointing to /html)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># for production, we will copy the sources into the container</span>
+</span></span><span style="display:flex;"><span>ENVIRONMENT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;local&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    ENVIRONMENT<span style="color:#f92672">=</span>$1
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>ENV_DOCKER_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$ENVIRONMENT<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;local&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>  ENV_DOCKER_OPTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;-v </span><span style="color:#66d9ef">$(</span>realpath $SRC<span style="color:#66d9ef">)</span><span style="color:#e6db74">/html:/var/www/html&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;Environment: </span>$ENVIRONMENT<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># go to the source folder, where Dockerfile is</span>
+</span></span><span style="display:flex;"><span>cd $SRC
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># remove the image if it already exists</span>
+</span></span><span style="display:flex;"><span>docker_rm_app_image $APP_NAME
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># rebuild the image</span>
+</span></span><span style="display:flex;"><span>docker build -t $CONTAINER_NAME .
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># start the container</span>
+</span></span><span style="display:flex;"><span>docker run -d -p $PORT:80 -v /var/web/projecta.com/files:/var/www/html/data/upload --name $APP_NAME --link web-mysql:mysql --restart always $ENV_DOCKER_OPTS $CONTAINER_NAME
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># initially files belong to the root user of the host OS</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># make them available to containter&#39;s www-data user</span>
+</span></span><span style="display:flex;"><span>docker exec $APP_NAME sh -c <span style="color:#e6db74">&#39;chown -R www-data:www-data /var/www/html/files&#39;</span>
+</span></span></code></pre></div><p>Few interesting things happen here:</p>
+<ul>
+<li>This project will use port 8091 on the host machine (can be accessed as localhost:8091), this port also will be mentioned in the HAProxy config to redirect requests to this app based on the requested domain name</li>
+<li>For local deployment the container will use source files from the host machine folder, so we can edit them directly without having to login to container, this is very convenient for local development</li>
+<li>The web application files will be stored in the volume, which is available on the host machine at /var/web/projecta.com/files</li>
+<li>The problem with permissions to the shared volume is solved by running <code>chown</code> from within the container (apache runs as www-data and after creation the files folder will belong to root user)</li>
+<li>This build script is used both for local and remote deployment, the remote part is handled by Docker Machine which allows to run docker commands against the remote host (this is handled in the <code>deploy.sh</code> script)</li>
+</ul>
+<p>Note: the <code>docker_rm_app_image</code> function from the build script is defined in the <a href="/scaleway-docker/utils.sh">utils.sh script</a>.</p>
+<p>The <code>web-deploy</code> project also includes setup for HAProxy and MySQL containers.</p>
+<h2 id="haproxy-setup">HAProxy setup</h2>
+<p>This container (resides in the web-deploy/haproxy) runs HAProxy and it serves as main entry point on the server. Requests to port 80 are reverse-proxied to other containers.
+The Dockerfile is simple:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>FROM haproxy:1.5
+</span></span><span style="display:flex;"><span>COPY ./haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+</span></span><span style="display:flex;"><span># this is needed to setup ssl for one of projects
+</span></span><span style="display:flex;"><span>COPY ./mycompany.pem /etc/ssl/certs/
+</span></span></code></pre></div><p>The configuration file (web-deploy/haproxy/haproxy.cfg) looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>global
+</span></span><span style="display:flex;"><span>    log /dev/log local2
+</span></span><span style="display:flex;"><span>    maxconn     2048
+</span></span><span style="display:flex;"><span>    tune.ssl.default-dh-param 2048
+</span></span><span style="display:flex;"><span>    #debug
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>defaults
+</span></span><span style="display:flex;"><span>    log     global
+</span></span><span style="display:flex;"><span>    option  dontlognull
+</span></span><span style="display:flex;"><span>    mode http
+</span></span><span style="display:flex;"><span>    option forwardfor
+</span></span><span style="display:flex;"><span>    option http-server-close
+</span></span><span style="display:flex;"><span>    timeout connect 5000ms
+</span></span><span style="display:flex;"><span>    timeout client 50000ms
+</span></span><span style="display:flex;"><span>    timeout server 50000s
+</span></span><span style="display:flex;"><span>    stats enable
+</span></span><span style="display:flex;"><span>    stats auth haadimn:ZyXuuXYZ
+</span></span><span style="display:flex;"><span>    stats uri /haproxyStats
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>frontend http-in
+</span></span><span style="display:flex;"><span>    bind *:80
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Define hosts based on domain names
+</span></span><span style="display:flex;"><span>    acl host_projecta hdr(host) -i projecta.com
+</span></span><span style="display:flex;"><span>    acl host_projecta hdr(host) -i www.projecta.com
+</span></span><span style="display:flex;"><span>    # this name is used for local testing
+</span></span><span style="display:flex;"><span>    acl host_projecta hdr(host) -i www.projecta.local
+</span></span><span style="display:flex;"><span>    acl host_projectb hdr(host) -i projectb.com
+</span></span><span style="display:flex;"><span>    acl host_projectb hdr(host) -i www.projectb.com
+</span></span><span style="display:flex;"><span>    # handle sub-domains (use hdr_end here, not hdr)
+</span></span><span style="display:flex;"><span>    acl host_projectc hdr_end(host) -i projectc.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # redirect projectd to https
+</span></span><span style="display:flex;"><span>    redirect scheme https if host_projectd !{ ssl_fc }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ## figure out backend to use based on domainname
+</span></span><span style="display:flex;"><span>    use_backend projecta if host_projecta
+</span></span><span style="display:flex;"><span>    use_backend projectb if host_projectb
+</span></span><span style="display:flex;"><span>    use_backend projectc if host_projectc
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>frontend https-in
+</span></span><span style="display:flex;"><span>    bind *:443 ssl crt /etc/ssl/certs/mycompany.pem
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    # Define hosts based on domain names
+</span></span><span style="display:flex;"><span>    acl host_projectd hdr(host) -i projectd.com
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    use_backend projectd if host_projectd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>backend projecta
+</span></span><span style="display:flex;"><span>    balance roundrobin
+</span></span><span style="display:flex;"><span>    server srv_pawnshop-soft-ru 127.0.0.1:8091
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>backend projectb
+</span></span><span style="display:flex;"><span>    balance roundrobin
+</span></span><span style="display:flex;"><span>    server srv_pawnshop-soft-kz 127.0.0.1:8092
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>backend projectc
+</span></span><span style="display:flex;"><span>    balance roundrobin
+</span></span><span style="display:flex;"><span>    server srv_lombard 127.0.0.1:8093
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>backend projectd
+</span></span><span style="display:flex;"><span>    balance roundrobin
+</span></span><span style="display:flex;"><span>    server srv_redmine 127.0.0.1:8100
+</span></span></code></pre></div><p>And the build script (web-deploy/haproxy/build.sh) is this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>export | grep DOCKER
+</span></span><span style="display:flex;"><span>docker-machine ip scaleway
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>APP_NAME<span style="color:#f92672">=</span>web-haproxy
+</span></span><span style="display:flex;"><span>CONTAINER_NAME<span style="color:#f92672">=</span>web-haproxy-docker
+</span></span><span style="display:flex;"><span>source $SCRIPT_PATH/../utils.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pushd $SCRIPT_PATH
+</span></span><span style="display:flex;"><span>docker_rm_app_image $APP_NAME
+</span></span><span style="display:flex;"><span>docker build -t $CONTAINER_NAME .
+</span></span><span style="display:flex;"><span>docker run -d --restart always --net<span style="color:#f92672">=</span>host -p 80:80 -p 443:443 -v /dev/log:/dev/log --name $APP_NAME $CONTAINER_NAME
+</span></span><span style="display:flex;"><span>popd
+</span></span></code></pre></div><p>The HAProxy container is launched with <code>--net=host</code> option, so it can directly access all the ports exposed by other containers.</p>
+<p>The HAProxy also handles SSL (HTTPS) connections. For one of projects it redirects http to https.
+See the config file and <a href="https://www.digitalocean.com/community/tutorials/how-to-implement-ssl-termination-with-haproxy-on-ubuntu-14-04">this post</a> for more information.</p>
+<p>The HAProxy stats are available via <a href="http://hostname.com/haproxyStats">http://hostname.com/haproxyStats</a>. Login and password are set in the config file (haproxy.cfg, see the <code>stats auth</code> line in <code>defaults</code> section).</p>
+<p>Some hints to to debug problems with HAProxy setup:</p>
+<ul>
+<li>Uncomment &lsquo;debug&rsquo; in the config file</li>
+<li>Check &lsquo;docker logs web-haproxy&rsquo;</li>
+<li>Check system log (/var/log/syslog), with the configuration above the HAProxy container will log to host&rsquo;s system log (see <a href="https://github.com/dockerfile/haproxy/issues/3">https://github.com/dockerfile/haproxy/issues/3</a>)</li>
+</ul>
+<h2 id="mysql-setup">MySql setup</h2>
+<p>The MySql container (it is under web-deploy/mysql folder) also has a simple Dockerfile:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>FROM mysql:5.6
+</span></span><span style="display:flex;"><span>ENV MYSQL_ROOT_PASSWORD=myrootpassword
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>VOLUME /var/www/mysql
+</span></span></code></pre></div><p>The build script looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
+</span></span><span style="display:flex;"><span>APP_NAME<span style="color:#f92672">=</span>web-mysql
+</span></span><span style="display:flex;"><span>CONTAINER_NAME<span style="color:#f92672">=</span>$APP_NAME-docker
+</span></span><span style="display:flex;"><span>source $SCRIPT_PATH/../utils.sh
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pushd $SCRIPT_PATH
+</span></span><span style="display:flex;"><span>docker_rm_app_image $APP_NAME
+</span></span><span style="display:flex;"><span>docker build -t $CONTAINER_NAME .
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>docker run -d -v /var/web/mysql-data:/var/lib/mysql --restart always --name $APP_NAME $CONTAINER_NAME
+</span></span><span style="display:flex;"><span>popd
 </span></span></code></pre></div><p>The data folder is mapped to the host machine to /var/web/mysql-data.
-The app containers which need the database are linked to this container.</p><h2 id=useful-docker-commands>Useful Docker Commands</h2><p>Some useful commands to view and manage Docker containers:</p><ul><li>Information about docker <code>docker info</code></li><li>List running containers: <code>docker ps</code></li><li>Information about specific container <code>docker inspect {appname}</code></li><li>View application logs <code>docker logs {appname}</code></li><li>Restart application <code>docker restart {appname}</code></li><li>Run shell inside the container: <code>docker exec -it {appname} bash # replace {appname} with name from docker ps</code></li><li>Run the command inside the container (in this case - backup mysql databases): <code>docker exec web-mysql sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' | gzip -9 > all-databases.sql.gz</code></li></ul><h2 id=cron-in-docker-and-backups-on-scaleway>Cron in Docker and Backups on Scaleway</h2><p>There are few options to run cron with docker:</p><ul><li>Run cron on the host machine (cronjobs can interact with containers via <code>docker exec ...</code>)</li><li>Run separate container with cron (cronjobs can interact with other containers via network or shared volumes)</li><li>Run multiple processes inside application containers (application and cron) usind supervisor or runit, for example, see <a href=http://phusion.github.io/baseimage-docker/>http://phusion.github.io/baseimage-docker/</a>.</li><li>Run multiple processes via <code>CMD</code> instruction in the Dockerfile (for example, see <a href=http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html>http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html</a>)</li></ul><p>Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.</p><p>The <a href=/scaleway-docker/init-db-files.sh>web-deploy/init-db-files.sh</a> script contains code to setup cron, here is the related part:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>  docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd
-</span></span><span style=display:flex><span>  docker-machine scp -r ./config/web-cron scaleway:/etc/cron.d/
-</span></span><span style=display:flex><span>  docker-machine scp -r ./config/.s3cfg scaleway:/root
+The app containers which need the database are linked to this container.</p>
+<h2 id="useful-docker-commands">Useful Docker Commands</h2>
+<p>Some useful commands to view and manage Docker containers:</p>
+<ul>
+<li>Information about docker <code>docker info</code></li>
+<li>List running containers: <code>docker ps</code></li>
+<li>Information about specific container <code>docker inspect {appname}</code></li>
+<li>View application logs <code>docker logs {appname}</code></li>
+<li>Restart application <code>docker restart {appname}</code></li>
+<li>Run shell inside the container: <code>docker exec -it {appname} bash  # replace {appname} with name from docker ps</code></li>
+<li>Run the command inside the container (in this case - backup mysql databases): <code>docker exec web-mysql sh -c 'exec mysqldump --all-databases -uroot -p&quot;$MYSQL_ROOT_PASSWORD&quot;' | gzip -9 &gt; all-databases.sql.gz</code></li>
+</ul>
+<h2 id="cron-in-docker-and-backups-on-scaleway">Cron in Docker and Backups on Scaleway</h2>
+<p>There are few options to run cron with docker:</p>
+<ul>
+<li>Run cron on the host machine (cronjobs can interact with containers via <code>docker exec ...</code>)</li>
+<li>Run separate container with cron (cronjobs can interact with other containers via network or shared volumes)</li>
+<li>Run multiple processes inside application containers (application and cron) usind supervisor or runit, for example, see <a href="http://phusion.github.io/baseimage-docker/">http://phusion.github.io/baseimage-docker/</a>.</li>
+<li>Run multiple processes via <code>CMD</code> instruction in the Dockerfile (for example, see <a href="http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html">http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html</a>)</li>
+</ul>
+<p>Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.</p>
+<p>The <a href="/scaleway-docker/init-db-files.sh">web-deploy/init-db-files.sh</a> script contains code to setup cron, here is the related part:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>  docker-machine ssh scaleway apt-get install -y postfix mutt s3cmd
+</span></span><span style="display:flex;"><span>  docker-machine scp -r ./config/web-cron scaleway:/etc/cron.d/
+</span></span><span style="display:flex;"><span>  docker-machine scp -r ./config/.s3cfg scaleway:/root
 </span></span></code></pre></div><p>The <code>postfix</code> and <code>mutt</code> are need for cron to send local emails about jobs. You can check these mails by ssh&rsquo;ing to the server and running mutt.
 The <code>s3cmd</code> is used to backup databases and files from the shared storage to S3.
-The <code>.s3cfg</code> contains credentials for <a href=http://s3tools.org/s3cmd>s3cmd</a>, it can be generated by running <code>s3cmd --configure</code>.</p><p>Backups are very important, because at the moment Scaleway does not provide highly reliable hardware (no RAID disks, see <a href=https://community.scaleway.com/t/i-have-questions-about-scaleway/891/2>this thread</a>).
-And to <a href=https://www.scaleway.com/docs/backup-your-data-with-snapshots/>make a snapshot</a>, you need to archive the instance (it takes few minutes), make the snapshot and launch the instance again, so there is a noticeable down-time period.
-So I used cron to backup files and databases to Amazon&rsquo;s S3.</p><p>Note: Scaleway has storage which is compatible to S3, called <a href=https://www.scaleway.com/features/sis/>SIS</a>, but at the moment it is not available (at least in my account).
+The <code>.s3cfg</code> contains credentials for <a href="http://s3tools.org/s3cmd">s3cmd</a>, it can be generated by running <code>s3cmd --configure</code>.</p>
+<p>Backups are very important, because at the moment Scaleway does not provide highly reliable hardware (no RAID disks, see <a href="https://community.scaleway.com/t/i-have-questions-about-scaleway/891/2">this thread</a>).
+And to <a href="https://www.scaleway.com/docs/backup-your-data-with-snapshots/">make a snapshot</a>, you need to archive the instance (it takes few minutes), make the snapshot and launch the instance again, so there is a noticeable down-time period.
+So I used cron to backup files and databases to Amazon&rsquo;s S3.</p>
+<p>Note: Scaleway has storage which is compatible to S3, called <a href="https://www.scaleway.com/features/sis/">SIS</a>, but at the moment it is not available (at least in my account).
 When I try to create bucket from the command line it returns <code>S3 error: 400 (TooManyBuckets): You have attempted to create more buckets than allowed</code>.
-And the note in the Scaleway UI states &ldquo;We&rsquo;re currently scaling up our SIS infrastructure to handle the load generated by all our new users. All new bucket creation are currently forbidden to preserve the service quality for current SIS users.&rdquo;.</p><p>The cron file to perform backups looks this way:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span># In the case of problems, cron sends local email, can be checked with mutt
-</span></span><span style=display:flex><span># (it requires apt-get install postfix mutt)
-</span></span><span style=display:flex><span># Also check cron messages in /var/log/syslog
-</span></span><span style=display:flex><span># update geolite database
-</span></span><span style=display:flex><span># Note: docker exec should not have -t (tty) option, there is no tty, -i is also not needed
-</span></span><span style=display:flex><span>0 1 * * Sun root docker exec projecta /var/www/service/cron-update-geoip-db.sh
-</span></span><span style=display:flex><span># backup all databases to s3
-</span></span><span style=display:flex><span>0 5 * * *   root docker exec web-mysql sh -c &#39;exec mysqldump --all-databases -uroot -p&#34;$MYSQL_ROOT_PASSWORD&#34;&#39; | gzip -9 &gt; all-databases.sql.gz &amp;&amp; s3cmd put all-databases.sql.gz s3://myweb-backup/$(date +\%Y-\%m-\%d-\%H-\%M-\%S)-all-databases.sql.gz &amp;&amp; rm all-databases.sql.gz
-</span></span><span style=display:flex><span>0 6 * * *   root s3cmd sync /var/web s3://myweb-backup/storage/
-</span></span></code></pre></div><p>The command to backup mysql databases does few things:</p><ul><li>Run <code>mysqldump</code> inside the MySQL container via <code>docker exec</code></li><li>Pipe the result to <code>gzip</code> to archive it</li><li>Put the archive to S3, add a timestamp to the file name</li></ul><p>And since all application containers map their files folders under host&rsquo;s <code>/var/web</code>, I simply sync this folder to my S3 bucket.</p><h2 id=conclusion>Conclusion</h2><p>As we can see, Docker can be successfully used not only to isolate application dependencies, but, along with Docker Machine, also to deploy and update applications on the remote server.</p><p>I don&rsquo;t recommend using the approach above for serious production setups, but it can be useful for small / personal projects.</p><p>Update: now it could be easier to use <a href=https://docs.docker.com/engine/swarm/>docker swarm mode</a> to build the system like described above.</p><a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/docker/>docker</a>, <a class=tag href=/tags/scaleway/>scaleway</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2016-02-18-oop-solid-l-liskov-substitution-principle.md><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
-<span class=screen-reader-text>Previous post: </span>OOP SOLID Principles "L" - Liskov Substitution Principle</a></div><div class='next-entry sep-before'><a href=/html/2016-07-03-simple-git-workflow.html><span class=screen-reader-text>Next post: </span>Simple Git Workflow<span aria-hidden=true>Next<svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg></span></a></div></div></nav><section id=comments class=comments><div class='container sep-before'><div class=comments-area><div id=disqus_thread></div><script>var disqus_config=function(){this.page.url="http://serebrov.github.io/html/2016-06-10-scaleway-docker-deployment.html"};(function(){var e=document,t=e.createElement("script");t.src="https://serebrov.disqus.com/embed.js",t.setAttribute("data-timestamp",+new Date),(e.head||e.body).appendChild(t)})()</script><noscript>Please enable JavaScript to view the
-<a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></section></main><footer id=footer class=footer><div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'><ul><li><a href=https://github.com/serebrov target=_blank rel=noopener><span class=screen-reader-text>Open Github account in new tab</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li><li><a href=mailto:serebrov@gmail.com target=_blank rel=noopener><span class=screen-reader-text>Contact via Email</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></li></ul></nav></section><div class=copyright><p>&copy; 2020-2023 Boris Serebrov</p></div></div></footer></div></div><script>window.__assets_js_src="/assets/js/"</script><script src=https://serebrov.github.io/assets/js/main.67d669ac.js></script><script src=/js/jquery.min.js></script><script src=/js/custom.js></script></body></html>
+And the note in the Scaleway UI states &ldquo;We&rsquo;re currently scaling up our SIS infrastructure to handle the load generated by all our new users. All new bucket creation are currently forbidden to preserve the service quality for current SIS users.&rdquo;.</p>
+<p>The cron file to perform backups looks this way:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span># In the case of problems, cron sends local email, can be checked with mutt
+</span></span><span style="display:flex;"><span># (it requires apt-get install postfix mutt)
+</span></span><span style="display:flex;"><span># Also check cron messages in /var/log/syslog
+</span></span><span style="display:flex;"><span># update geolite database
+</span></span><span style="display:flex;"><span># Note: docker exec should not have -t (tty) option, there is no tty, -i is also not needed
+</span></span><span style="display:flex;"><span>0 1 * * Sun root docker exec projecta /var/www/service/cron-update-geoip-db.sh
+</span></span><span style="display:flex;"><span># backup all databases to s3
+</span></span><span style="display:flex;"><span>0 5 * * *   root docker exec web-mysql sh -c &#39;exec mysqldump --all-databases -uroot -p&#34;$MYSQL_ROOT_PASSWORD&#34;&#39; | gzip -9 &gt; all-databases.sql.gz &amp;&amp; s3cmd put all-databases.sql.gz s3://myweb-backup/$(date +\%Y-\%m-\%d-\%H-\%M-\%S)-all-databases.sql.gz &amp;&amp; rm all-databases.sql.gz
+</span></span><span style="display:flex;"><span>0 6 * * *   root s3cmd sync /var/web s3://myweb-backup/storage/
+</span></span></code></pre></div><p>The command to backup mysql databases does few things:</p>
+<ul>
+<li>Run <code>mysqldump</code> inside the MySQL container via <code>docker exec</code></li>
+<li>Pipe the result to <code>gzip</code> to archive it</li>
+<li>Put the archive to S3, add a timestamp to the file name</li>
+</ul>
+<p>And since all application containers map their files folders under host&rsquo;s <code>/var/web</code>, I simply sync this folder to my S3 bucket.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>As we can see, Docker can be successfully used not only to isolate application dependencies, but, along with Docker Machine, also to deploy and update applications on the remote server.</p>
+<p>I don&rsquo;t recommend using the approach above for serious production setups, but it can be useful for small / personal projects.</p>
+<p>Update: now it could be easier to use <a href="https://docs.docker.com/engine/swarm/">docker swarm mode</a> to build the system like described above.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+ <a href="https://stackexchange.com/users/261528">
+<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
+</a>
+
+</div>
+<div class="popup">
+    <div class="close">close</div>
+    <div class="download">
+        <a href="" target="_blank">Download (<span class="name"></span>)</a>
+    </div>
+    <div class="popup-content"></div>
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/docker/'>docker</a>, <a class='tag' href='/tags/scaleway/'>scaleway</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/html/2016-02-18-oop-solid-l-liskov-substitution-principle.md'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>OOP SOLID Principles &#34;L&#34; - Liskov Substitution Principle</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/html/2016-07-03-simple-git-workflow.html'>
+        <span class='screen-reader-text'>Next post: </span>Simple Git Workflow<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+<section id='comments' class='comments'>
+  <div class='container sep-before'>
+    <div class='comments-area'><div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = "http://serebrov.github.io\/html\/2016-06-10-scaleway-docker-deployment.html"; 
+        
+        
+    };
+    (function () {
+        
+        var d = document,
+            s = d.createElement("script");
+        s.src = "https://serebrov.disqus.com/embed.js";
+        s.setAttribute("data-timestamp", +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript
+    >Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript"
+        >comments powered by Disqus.</a
+    ></noscript
+>
+</div>
+  </div>
+</section>
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
+    <ul><li>
+        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><div class='copyright'>
+  <p> &copy; 2020-2023 Boris Serebrov </p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/jquery.min.js'></script><script src='/js/custom.js'></script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

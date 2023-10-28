@@ -1,3 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>web on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/web/</link><description>Recent content in web on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 13 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/web/index.xml" rel="self" type="application/rss+xml"/><item><title>How to inspect extension `chrome.storage` in Chrome DevTools</title><link>https://serebrov.github.io/html/2023-06-13-chrome-extension-inspect-storage.html</link><pubDate>Tue, 13 Jun 2023 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2023-06-13-chrome-extension-inspect-storage.html</guid><description>The extension storage is not displayed under the &amp;ldquo;Application&amp;rdquo; tab in Chrome DevTools, but it is possible to access the extension storage using a javascript console, here is how:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on vim, git, aws and other three-letter words</title>
+    <link>https://serebrov.github.io/tags/web/</link>
+    <description>Recent content in web on vim, git, aws and other three-letter words</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 13 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to inspect extension `chrome.storage` in Chrome DevTools</title>
+      <link>https://serebrov.github.io/html/2023-06-13-chrome-extension-inspect-storage.html</link>
+      <pubDate>Tue, 13 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://serebrov.github.io/html/2023-06-13-chrome-extension-inspect-storage.html</guid>
+      <description>The extension storage is not displayed under the &amp;ldquo;Application&amp;rdquo; tab in Chrome DevTools, but it is possible to access the extension storage using a javascript console, here is how:
 it is possible to access it via the javascript console:
-Open some web page, open Chrome DevTools In the javascript console, select the extension context (the drop-down with &amp;ldquo;top&amp;rdquo; in it) Use chrome.storage.local to access the local storage The chrome.storage.local is a StorageArea object and it has methods to get and set values.</description></item></channel></rss>
+Open some web page, open Chrome DevTools In the javascript console, select the extension context (the drop-down with &amp;ldquo;top&amp;rdquo; in it) Use chrome.storage.local to access the local storage The chrome.storage.local is a StorageArea object and it has methods to get and set values.</description>
+    </item>
+    
+  </channel>
+</rss>
