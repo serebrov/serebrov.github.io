@@ -1,54 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>eb on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/eb/</link>
-    <description>Recent content in eb on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/eb/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>How to set up Drone CI on EC2 instance via Elastic Beanstalk</title>
-      <link>https://serebrov.github.io/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html</link>
-      <pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html</guid>
-      <description>Drone CI is a Continuous Integration platform. It uses Docker containers to run tests for your application hosted on github.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>eb on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/eb/</link><description>Recent content in eb on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 05 Jul 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/eb/index.xml" rel="self" type="application/rss+xml"/><item><title>How to set up Drone CI on EC2 instance via Elastic Beanstalk</title><link>https://serebrov.github.io/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html</link><pubDate>Sun, 05 Jul 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html</guid><description>Drone CI is a Continuous Integration platform. It uses Docker containers to run tests for your application hosted on github.
 It not complex to set up the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
-Drone CI setup First you&amp;rsquo;ll need to create a drone configuration file, .</description>
-    </item>
-    
-    <item>
-      <title>CloudWatch Logs - how to log data from multiple instances to the single stream</title>
-      <link>https://serebrov.github.io/html/2015-06-17-cloudwatch-logs-single-stream.html</link>
-      <pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-06-17-cloudwatch-logs-single-stream.html</guid>
-      <description>After using CloudWatch Logs for some time I found that it is very inconvenient to have one stream per instance. The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.
+Drone CI setup First you&amp;rsquo;ll need to create a drone configuration file, .</description></item><item><title>CloudWatch Logs - how to log data from multiple instances to the single stream</title><link>https://serebrov.github.io/html/2015-06-17-cloudwatch-logs-single-stream.html</link><pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-06-17-cloudwatch-logs-single-stream.html</guid><description>After using CloudWatch Logs for some time I found that it is very inconvenient to have one stream per instance. The Logs UI is really complex to use - I need to remember instance names, open the log group I need and then go into each instance logs one-by-one to check them.
 A more convenient alternative is to use one stream like error_log for all instances.
-Update: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine).</description>
-    </item>
-    
-    <item>
-      <title>Elastic Beanstalk - how to setup CloudWatch Logs</title>
-      <link>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</link>
-      <pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</guid>
-      <description>CloudWatch Logs is an AWS service to collect and monitor system and application logs. On the top level setup is this:
-install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue) All the configuration can be done using the Elastic Beanstalk config.</description>
-    </item>
-    
-    <item>
-      <title>Elastic Beanstalk - python application server structure and celery installation</title>
-      <link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link>
-      <pubDate>Thu, 02 Apr 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</guid>
-      <description>Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
+Update: logging to the same stream from multiple sources is not recommended and may cause duplicate records (although in my case this is fine).</description></item><item><title>Elastic Beanstalk - how to setup CloudWatch Logs</title><link>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</link><pubDate>Wed, 20 May 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-05-20-cloudwatch-setup.html</guid><description>CloudWatch Logs is an AWS service to collect and monitor system and application logs. On the top level setup is this:
+install CloudWatch agent to collect logs data and send to CloudWatch Logs service define log metric filters to extract useful data, like number of all errors or information about some specific events create alarms for metrics to get notifications about logs make sure that the instance role has permissions to push logs to CloudWatch (see comments for details about this issue) All the configuration can be done using the Elastic Beanstalk config.</description></item><item><title>Elastic Beanstalk - python application server structure and celery installation</title><link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link><pubDate>Thu, 02 Apr 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</guid><description>Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
 Source folder structure is this:
-bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.</description>
-    </item>
-    
-  </channel>
-</rss>
+bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.</description></item></channel></rss>

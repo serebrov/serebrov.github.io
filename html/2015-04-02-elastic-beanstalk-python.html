@@ -1,285 +1,15 @@
-<!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
 Source folder structure is this:
-bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.'>
-<meta name='theme-color' content='#44ccff'>
-
-<meta property='og:title' content='Elastic Beanstalk - python application server structure and celery installation • vim, git, aws and other three-letter words'>
-<meta property='og:description' content='Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
+bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log."><meta name=theme-color content="#44ccff"><meta property="og:title" content="Elastic Beanstalk - python application server structure and celery installation • vim, git, aws and other three-letter words"><meta property="og:description" content="Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
 Source folder structure is this:
-bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.'>
-<meta property='og:url' content='https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html'>
-<meta property='og:site_name' content='vim, git, aws and other three-letter words'>
-<meta property='og:type' content='article'><meta property='article:section' content='posts'><meta property='article:tag' content='aws'><meta property='article:tag' content='eb'><meta property='article:tag' content='python'><meta property='article:tag' content='celery'><meta property='article:tag' content='zeromq'><meta property='article:published_time' content='2015-04-02T00:00:00Z'/><meta property='article:modified_time' content='2015-04-02T00:00:00Z'/><meta name='twitter:card' content='summary'>
-
-<meta name="generator" content="Hugo 0.118.2">
-
-  <title>Elastic Beanstalk - python application server structure and celery installation • vim, git, aws and other three-letter words</title>
-  <link rel='canonical' href='https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/css/custom.css'><style>
-:root{--color-accent:#44ccff;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-58056088-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-note has-sidebar'>
-
-  <div class='site'><div id='sidebar' class='sidebar'>
-  <a class='screen-reader-text' href='#main-menu'>Skip to Main Menu</a>
-
-  <div class='container'><section class='widget widget-about sep-after'>
-  <header>
-    
-    <div class='logo'>
-      <a href='/'>
-        <img src='/images/logo.jpg'>
-      </a>
-    </div>
-    
-    <h2 class='title site-title '>
-      <a href='/'>
-      vim, git, aws and other three-letter words
-      </a>
-    </h2>
-    <div class='desc'>
-    Software Development Notes
-    </div>
-  </header>
-
-</section>
-<section class='widget widget-search sep-after'>
-  <header>
-    <h4 class='title widget-title'>Search</h4>
-  </header>
-
-  <form action='/search' id='search-form' class='search-form'>
-    <label>
-      <span class='screen-reader-text'>Search</span>
-      <input id='search-term' class='search-term' type='search' name='q' placeholder='Search&hellip;'>
-    </label></form>
-
-</section>
-<section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Sidebar Menu'>
-    <div class='container'>
-      <ul><li class='item'>
-  <a href='/'>Home</a></li><li class='item has-current'>
-  <a href='/posts/'>Posts</a></li><li class='item'>
-  <a href='/archive/'>Archive</a></li></ul>
-    </div>
-  </nav>
-
-</section><section class='widget widget-taxonomy_cloud sep-after'>
-  <header>
-    <h4 class='title widget-title'>Tags</h4>
-  </header>
-
-  <div class='container list-container'>
-  <ul class='list taxonomy-cloud no-shuffle'><li>
-        <a href='/tags/android/' style='font-size:1em'>android</a>
-      </li><li>
-        <a href='/tags/angularjs/' style='font-size:1.1em'>angularjs</a>
-      </li><li>
-        <a href='/tags/aws/' style='font-size:1.85em'>aws</a>
-      </li><li>
-        <a href='/tags/bash/' style='font-size:1em'>bash</a>
-      </li><li>
-        <a href='/tags/celery/' style='font-size:1em'>celery</a>
-      </li><li>
-        <a href='/tags/chrome/' style='font-size:1em'>chrome</a>
-      </li><li>
-        <a href='/tags/cmd/' style='font-size:1em'>cmd</a>
-      </li><li>
-        <a href='/tags/cw-logs/' style='font-size:1.05em'>cw-logs</a>
-      </li><li>
-        <a href='/tags/disqus/' style='font-size:1em'>disqus</a>
-      </li><li>
-        <a href='/tags/docker/' style='font-size:1.05em'>docker</a>
-      </li><li>
-        <a href='/tags/drone/' style='font-size:1em'>drone</a>
-      </li><li>
-        <a href='/tags/dynamodb/' style='font-size:1.1em'>dynamodb</a>
-      </li><li>
-        <a href='/tags/eb/' style='font-size:1.15em'>eb</a>
-      </li><li>
-        <a href='/tags/ejs/' style='font-size:1em'>ejs</a>
-      </li><li>
-        <a href='/tags/emr/' style='font-size:1.05em'>emr</a>
-      </li><li>
-        <a href='/tags/express.js/' style='font-size:1em'>express.js</a>
-      </li><li>
-        <a href='/tags/git/' style='font-size:2em'>git</a>
-      </li><li>
-        <a href='/tags/hive/' style='font-size:1em'>hive</a>
-      </li><li>
-        <a href='/tags/jquery/' style='font-size:1.1em'>jquery</a>
-      </li><li>
-        <a href='/tags/js/' style='font-size:1.1em'>js</a>
-      </li><li>
-        <a href='/tags/json/' style='font-size:1em'>json</a>
-      </li><li>
-        <a href='/tags/kbd/' style='font-size:1.05em'>kbd</a>
-      </li><li>
-        <a href='/tags/linux/' style='font-size:1em'>linux</a>
-      </li><li>
-        <a href='/tags/mongodb/' style='font-size:1em'>mongodb</a>
-      </li><li>
-        <a href='/tags/mysql/' style='font-size:1.05em'>mysql</a>
-      </li><li>
-        <a href='/tags/node.js/' style='font-size:1.2em'>node.js</a>
-      </li><li>
-        <a href='/tags/npm/' style='font-size:1em'>npm</a>
-      </li><li>
-        <a href='/tags/oauth/' style='font-size:1em'>oauth</a>
-      </li><li>
-        <a href='/tags/oop/' style='font-size:1em'>oop</a>
-      </li><li>
-        <a href='/tags/php/' style='font-size:1.15em'>php</a>
-      </li><li>
-        <a href='/tags/postgresql/' style='font-size:1em'>postgresql</a>
-      </li><li>
-        <a href='/tags/python/' style='font-size:1.1em'>python</a>
-      </li><li>
-        <a href='/tags/rds/' style='font-size:1em'>rds</a>
-      </li><li>
-        <a href='/tags/scaleway/' style='font-size:1em'>scaleway</a>
-      </li><li>
-        <a href='/tags/selenium/' style='font-size:1.3em'>selenium</a>
-      </li><li>
-        <a href='/tags/ssh/' style='font-size:1em'>ssh</a>
-      </li><li>
-        <a href='/tags/typing/' style='font-size:1em'>typing</a>
-      </li><li>
-        <a href='/tags/vim/' style='font-size:1.05em'>vim</a>
-      </li><li>
-        <a href='/tags/vr/' style='font-size:1em'>vr</a>
-      </li><li>
-        <a href='/tags/vue/' style='font-size:1em'>vue</a>
-      </li><li>
-        <a href='/tags/web/' style='font-size:1em'>web</a>
-      </li><li>
-        <a href='/tags/yii/' style='font-size:1.15em'>yii</a>
-      </li><li>
-        <a href='/tags/zeromq/' style='font-size:1em'>zeromq</a>
-      </li></ul>
-</div>
-
-
-</section>
-</div>
-
-  <div class='sidebar-overlay'></div>
-</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
-    <a class='screen-reader-text' href='#content'>Skip to Content</a>
-
-<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
-  <span class='screen-reader-text'>Toggle Sidebar</span>
-  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="3" y1="12" x2="21" y2="12" />
-  <line x1="3" y1="6" x2="21" y2="6" />
-  <line x1="3" y1="18" x2="21" y2="18" />
-  
-</svg>
-</span>
-  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="18" y1="6" x2="6" y2="18" />
-  <line x1="6" y1="6" x2="18" y2="18" />
-  
-</svg>
-</span>
-</button>
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item current'>
-        <a aria-current='page' href='/posts/'>Posts</a>
-      </li><li class='item'>
-        <a href='/archive/'>Archive</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
-      </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Elastic Beanstalk - python application server structure and celery installation</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2015-04-02T00:00:00Z'>2015, Apr 02</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-6 mins read
-</span>
-
-
-  
-  
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class="container entry-content custom">
-    <p>Elastic beanstalk python application is deployed under <code>/opt/python/</code>.
-The application is running under Apache web server.</p>
-<!-- raw HTML omitted -->
-<p>Source folder structure is this:</p>
-<pre tabindex="0"><code>bin
+bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log."><meta property="og:url" content="https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html"><meta property="og:site_name" content="vim, git, aws and other three-letter words"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:tag" content="aws"><meta property="article:tag" content="eb"><meta property="article:tag" content="python"><meta property="article:tag" content="celery"><meta property="article:tag" content="zeromq"><meta property="article:published_time" content="2015-04-02T00:00:00Z"><meta property="article:modified_time" content="2015-04-02T00:00:00Z"><meta name=twitter:card content="summary"><meta name=generator content="Hugo 0.111.3"><title>Elastic Beanstalk - python application server structure and celery installation • vim, git, aws and other three-letter words</title><link rel=canonical href=https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html><link rel=icon href=/favicon.ico><link rel=stylesheet href=/assets/css/main.6a060eb7.css><link rel=stylesheet href=/css/custom.css><style>:root{--color-accent:#44ccff}</style><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-58056088-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></head><body class='page type-note has-sidebar'><div class=site><div id=sidebar class=sidebar><a class=screen-reader-text href=#main-menu>Skip to Main Menu</a><div class=container><section class='widget widget-about sep-after'><header><div class=logo><a href=/><img src=/images/logo.jpg></a></div><h2 class='title site-title'><a href=/>vim, git, aws and other three-letter words</a></h2><div class=desc>Software Development Notes</div></header></section><section class='widget widget-search sep-after'><header><h4 class='title widget-title'>Search</h4></header><form action=/search id=search-form class=search-form><label><span class=screen-reader-text>Search</span>
+<input id=search-term class=search-term type=search name=q placeholder=Search&mldr;></label></form></section><section class='widget widget-sidebar_menu sep-after'><nav id=sidebar-menu class='menu sidebar-menu' aria-label='Sidebar Menu'><div class=container><ul><li class=item><a href=/>Home</a></li><li class='item has-current'><a href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav></section><section class='widget widget-taxonomy_cloud sep-after'><header><h4 class='title widget-title'>Tags</h4></header><div class='container list-container'><ul class='list taxonomy-cloud no-shuffle'><li><a href=/tags/android/ style=font-size:1em>android</a></li><li><a href=/tags/angularjs/ style=font-size:1.1em>angularjs</a></li><li><a href=/tags/aws/ style=font-size:1.85em>aws</a></li><li><a href=/tags/bash/ style=font-size:1em>bash</a></li><li><a href=/tags/celery/ style=font-size:1em>celery</a></li><li><a href=/tags/chrome/ style=font-size:1em>chrome</a></li><li><a href=/tags/cmd/ style=font-size:1em>cmd</a></li><li><a href=/tags/cw-logs/ style=font-size:1.05em>cw-logs</a></li><li><a href=/tags/disqus/ style=font-size:1em>disqus</a></li><li><a href=/tags/docker/ style=font-size:1.05em>docker</a></li><li><a href=/tags/drone/ style=font-size:1em>drone</a></li><li><a href=/tags/dynamodb/ style=font-size:1.1em>dynamodb</a></li><li><a href=/tags/eb/ style=font-size:1.15em>eb</a></li><li><a href=/tags/ejs/ style=font-size:1em>ejs</a></li><li><a href=/tags/emr/ style=font-size:1.05em>emr</a></li><li><a href=/tags/express.js/ style=font-size:1em>express.js</a></li><li><a href=/tags/git/ style=font-size:2em>git</a></li><li><a href=/tags/hive/ style=font-size:1em>hive</a></li><li><a href=/tags/jquery/ style=font-size:1.1em>jquery</a></li><li><a href=/tags/js/ style=font-size:1.1em>js</a></li><li><a href=/tags/json/ style=font-size:1em>json</a></li><li><a href=/tags/kbd/ style=font-size:1.05em>kbd</a></li><li><a href=/tags/linux/ style=font-size:1em>linux</a></li><li><a href=/tags/mongodb/ style=font-size:1em>mongodb</a></li><li><a href=/tags/mysql/ style=font-size:1.05em>mysql</a></li><li><a href=/tags/node.js/ style=font-size:1.2em>node.js</a></li><li><a href=/tags/npm/ style=font-size:1em>npm</a></li><li><a href=/tags/oauth/ style=font-size:1em>oauth</a></li><li><a href=/tags/oop/ style=font-size:1em>oop</a></li><li><a href=/tags/php/ style=font-size:1.15em>php</a></li><li><a href=/tags/postgresql/ style=font-size:1em>postgresql</a></li><li><a href=/tags/python/ style=font-size:1.1em>python</a></li><li><a href=/tags/rds/ style=font-size:1em>rds</a></li><li><a href=/tags/scaleway/ style=font-size:1em>scaleway</a></li><li><a href=/tags/selenium/ style=font-size:1.3em>selenium</a></li><li><a href=/tags/ssh/ style=font-size:1em>ssh</a></li><li><a href=/tags/typing/ style=font-size:1em>typing</a></li><li><a href=/tags/vim/ style=font-size:1.05em>vim</a></li><li><a href=/tags/vr/ style=font-size:1em>vr</a></li><li><a href=/tags/vue/ style=font-size:1em>vue</a></li><li><a href=/tags/web/ style=font-size:1em>web</a></li><li><a href=/tags/yii/ style=font-size:1.15em>yii</a></li><li><a href=/tags/zeromq/ style=font-size:1em>zeromq</a></li></ul></div></section></div><div class=sidebar-overlay></div></div><div class=main><nav id=main-menu class='menu main-menu' aria-label='Main Menu'><div class=container><a class=screen-reader-text href=#content>Skip to Content</a>
+<button id=sidebar-toggler class=sidebar-toggler aria-controls=sidebar>
+<span class=screen-reader-text>Toggle Sidebar</span>
+<span class=open><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span><span class=close><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button><ul><li class=item><a href=/>Home</a></li><li class='item current'><a aria-current=page href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav><div class=header-widgets><div class=container></div></div><header id=header class='header site-header'><div class='container sep-after'><div class=header-info><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p></div></div></header><main id=content><article lang=en class=entry><header class='header entry-header'><div class='container sep-after'><div class=header-info><h1 class=title>Elastic Beanstalk - python application server structure and celery installation</h1></div><div class=entry-meta><span class=posted-on><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class=screen-reader-text>Posted on</span>
+<time class=entry-date datetime=2015-04-02T00:00:00Z>2015, Apr 02</time></span>
+<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>6 mins read</span></div></div></header><div class="container entry-content custom"><p>Elastic beanstalk python application is deployed under <code>/opt/python/</code>.
+The application is running under Apache web server.</p><p>Source folder structure is this:</p><pre tabindex=0><code>bin
   httpdlaunch - a tool script to set environment variables and launch httpd
 bundle        - dir with app source code, used during updates
 current       - symlink to the recent source code version under bundle
@@ -288,29 +18,13 @@ current       - symlink to the recent source code version under bundle
 etc           - supervisord config
 log           - supervisord logs
 run           - virtual environments
-</code></pre><p>Apache logs, deployment logs and system messages log are under <code>/var/log</code>.</p>
-<p>Another important directory is <code>/opt/elasticbeanstalk</code> - here there are EB tool scripts and app server restart hooks.</p>
-<p>Apache is managed by <a href="http://supervisord.org/">supervisord</a>, to check the status run this command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
-</span></span></code></pre></div><p>And you can restart apache like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
-</span></span></code></pre></div><h3 id="how-to-launch-python-application-manually">How to launch python application manually</h3>
-<p>I have a <a href="http://flask.pocoo.org/">flask</a> application and usually it is started as <code>python application.py</code>.
-To run it on the server instance you need to init virtual environment and set environment variables first:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>source /opt/python/run/venv/bin/activate <span style="color:#f92672">&amp;&amp;</span> source /opt/python/current/env
-</span></span></code></pre></div><p>Now you can start the application manually:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /opt/python/current/app
-</span></span><span style="display:flex;"><span>python application.py
-</span></span></code></pre></div><p>Or start flask shell with <code>flask shell</code>.</p>
-<h3 id="how-to-install-celery">How to install celery</h3>
-<p><a href="http://www.celeryproject.org/">Celery</a> is a distributed task queue.</p>
-<p>Our requirements are following:</p>
-<ul>
-<li>the celery application should be launched automatically when new version is deployed to Elastic Beanstalk</li>
-<li>the celery application should be watched by supervisord and restarted in the case of failure</li>
-</ul>
-<p>The final project structure will be this:</p>
-<pre tabindex="0"><code>  .ebextensions/               - elastic beanstal configs
+</code></pre><p>Apache logs, deployment logs and system messages log are under <code>/var/log</code>.</p><p>Another important directory is <code>/opt/elasticbeanstalk</code> - here there are EB tool scripts and app server restart hooks.</p><p>Apache is managed by <a href=http://supervisord.org/>supervisord</a>, to check the status run this command:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf status
+</span></span></code></pre></div><p>And you can restart apache like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo /usr/local/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart httpd
+</span></span></code></pre></div><h3 id=how-to-launch-python-application-manually>How to launch python application manually</h3><p>I have a <a href=http://flask.pocoo.org/>flask</a> application and usually it is started as <code>python application.py</code>.
+To run it on the server instance you need to init virtual environment and set environment variables first:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>source /opt/python/run/venv/bin/activate <span style=color:#f92672>&amp;&amp;</span> source /opt/python/current/env
+</span></span></code></pre></div><p>Now you can start the application manually:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd /opt/python/current/app
+</span></span><span style=display:flex><span>python application.py
+</span></span></code></pre></div><p>Or start flask shell with <code>flask shell</code>.</p><h3 id=how-to-install-celery>How to install celery</h3><p><a href=http://www.celeryproject.org/>Celery</a> is a distributed task queue.</p><p>Our requirements are following:</p><ul><li>the celery application should be launched automatically when new version is deployed to Elastic Beanstalk</li><li>the celery application should be watched by supervisord and restarted in the case of failure</li></ul><p>The final project structure will be this:</p><pre tabindex=0><code>  .ebextensions/               - elastic beanstal configs
     myapp.config               - main config
     deploy.sh                  - deployment script, launched from main config
     utils.sh                   - utility functions for deployment script
@@ -322,333 +36,175 @@ To run it on the server instance you need to init virtual environment and set en
   celery.py                    - celery application
   application.py               - main application
   requirements.txt             - project requirements for pip
-</code></pre><p>First, add the following line to the requirements.txt in the root folder of your project (these requirements will be installed with pip automatically):</p>
-<pre tabindex="0"><code>...
+</code></pre><p>First, add the following line to the requirements.txt in the root folder of your project (these requirements will be installed with pip automatically):</p><pre tabindex=0><code>...
 Celery==3.1.17
-</code></pre><p>Note that the version number can be different, 3.1.17 is just an actual version at the moment of writing.</p>
-<p>Then create a main celery application file. In my case, this is <code>celery.py</code> file in the root folder.
-Here I don&rsquo;t describe the celery application file content - do whatever you need from celery here.</p>
-<p>Now modify the elasticbeanstalk config (.elasticbeanstak/myapp.config) to include the deployment script:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>container_commands:
-</span></span><span style="display:flex;"><span>  004-start-container-commands:
-</span></span><span style="display:flex;"><span>    command: logger <span style="color:#e6db74">&#34;Start deploy script&#34;</span> -t <span style="color:#e6db74">&#34;DEPLOY&#34;</span>
-</span></span><span style="display:flex;"><span>  005-command:
-</span></span><span style="display:flex;"><span>    command: chmod +x .ebextensions/deploy.sh
-</span></span><span style="display:flex;"><span>  006-deploy:
-</span></span><span style="display:flex;"><span>    command: .ebextensions/deploy.sh 2&gt;&amp;<span style="color:#ae81ff">1</span> | /usr/bin/logger -t <span style="color:#e6db74">&#34;DEPLOY&#34;</span> ; test <span style="color:#e6db74">${</span>PIPESTATUS[0]<span style="color:#e6db74">}</span> -eq <span style="color:#ae81ff">0</span>
-</span></span><span style="display:flex;"><span>  200-end-container-commands:
-</span></span><span style="display:flex;"><span>    command: logger <span style="color:#e6db74">&#34;End container commands&#34;</span> -t <span style="color:#e6db74">&#34;DEPLOY&#34;</span>
-</span></span></code></pre></div><p>Here we configure ElasticBeanstalk to launch the custom deployment script.</p>
-<p>In general I find the approach with shell script for beanstalk configuration to be much more convenient than the standard way to put shell script code to the text config file.
-More details about this method can be found in the great <a href="http://www.hudku.com/blog/innocuous-looking-evil-devil/">Innocuous looking Evil Devil</a> article. Check also <a href="http://www.hudku.com/blog/tag/elastic-beanstalk">related posts</a>.</p>
-<p>This deployment script <code>.ebextensions/deploy.sh</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set -e
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>source $SCRIPT_PATH/utils.sh
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Check for leader: see utils.sh</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> is_leader; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>  echo <span style="color:#e6db74">&#34;Start leader deploy&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>  echo <span style="color:#e6db74">&#34;Start non-leader deploy&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># copy celery app config</span>
-</span></span><span style="display:flex;"><span>copy_ext $SCRIPT_PATH/files/celeryd.conf /opt/python/etc/celeryd.conf <span style="color:#ae81ff">0755</span> root root
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># copy restart hook to different hooks folders</span>
-</span></span><span style="display:flex;"><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/appdeploy/enact/99_restart_services.sh <span style="color:#ae81ff">0755</span> root root
-</span></span><span style="display:flex;"><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/configdeploy/enact/99_restart_services.sh <span style="color:#ae81ff">0755</span> root root
-</span></span><span style="display:flex;"><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/restartappserver/enact/99_restart_services.sh <span style="color:#ae81ff">0755</span> root root
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># include celeryd.conf into the supervisord.conf</span>
-</span></span><span style="display:flex;"><span>script_add_line /opt/python/etc/supervisord.conf <span style="color:#e6db74">&#34;include&#34;</span> <span style="color:#e6db74">&#34;[include]&#34;</span>
-</span></span><span style="display:flex;"><span>script_add_line /opt/python/etc/supervisord.conf <span style="color:#e6db74">&#34;celeryd.conf&#34;</span> <span style="color:#e6db74">&#34;files=celeryd.conf &#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Reread the supervisord config</span>
-</span></span><span style="display:flex;"><span>supervisorctl -c /opt/python/etc/supervisord.conf reread
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Update supervisord in cache without restarting all services</span>
-</span></span><span style="display:flex;"><span>supervisorctl -c /opt/python/etc/supervisord.conf update
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Start/Restart celeryd through supervisord</span>
-</span></span><span style="display:flex;"><span>supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
+</code></pre><p>Note that the version number can be different, 3.1.17 is just an actual version at the moment of writing.</p><p>Then create a main celery application file. In my case, this is <code>celery.py</code> file in the root folder.
+Here I don&rsquo;t describe the celery application file content - do whatever you need from celery here.</p><p>Now modify the elasticbeanstalk config (.elasticbeanstak/myapp.config) to include the deployment script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>container_commands:
+</span></span><span style=display:flex><span>  004-start-container-commands:
+</span></span><span style=display:flex><span>    command: logger <span style=color:#e6db74>&#34;Start deploy script&#34;</span> -t <span style=color:#e6db74>&#34;DEPLOY&#34;</span>
+</span></span><span style=display:flex><span>  005-command:
+</span></span><span style=display:flex><span>    command: chmod +x .ebextensions/deploy.sh
+</span></span><span style=display:flex><span>  006-deploy:
+</span></span><span style=display:flex><span>    command: .ebextensions/deploy.sh 2&gt;&amp;<span style=color:#ae81ff>1</span> | /usr/bin/logger -t <span style=color:#e6db74>&#34;DEPLOY&#34;</span> ; test <span style=color:#e6db74>${</span>PIPESTATUS[0]<span style=color:#e6db74>}</span> -eq <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>  200-end-container-commands:
+</span></span><span style=display:flex><span>    command: logger <span style=color:#e6db74>&#34;End container commands&#34;</span> -t <span style=color:#e6db74>&#34;DEPLOY&#34;</span>
+</span></span></code></pre></div><p>Here we configure ElasticBeanstalk to launch the custom deployment script.</p><p>In general I find the approach with shell script for beanstalk configuration to be much more convenient than the standard way to put shell script code to the text config file.
+More details about this method can be found in the great <a href=http://www.hudku.com/blog/innocuous-looking-evil-devil/>Innocuous looking Evil Devil</a> article. Check also <a href=http://www.hudku.com/blog/tag/elastic-beanstalk>related posts</a>.</p><p>This deployment script <code>.ebextensions/deploy.sh</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>set -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>source $SCRIPT_PATH/utils.sh
+</span></span><span style=display:flex><span><span style=color:#75715e># Check for leader: see utils.sh</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> is_leader; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>  echo <span style=color:#e6db74>&#34;Start leader deploy&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>  echo <span style=color:#e6db74>&#34;Start non-leader deploy&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># copy celery app config</span>
+</span></span><span style=display:flex><span>copy_ext $SCRIPT_PATH/files/celeryd.conf /opt/python/etc/celeryd.conf <span style=color:#ae81ff>0755</span> root root
+</span></span><span style=display:flex><span><span style=color:#75715e># copy restart hook to different hooks folders</span>
+</span></span><span style=display:flex><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/appdeploy/enact/99_restart_services.sh <span style=color:#ae81ff>0755</span> root root
+</span></span><span style=display:flex><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/configdeploy/enact/99_restart_services.sh <span style=color:#ae81ff>0755</span> root root
+</span></span><span style=display:flex><span>copy_ext $SCRIPT_PATH/files/99_restart_services.sh /opt/elasticbeanstalk/hooks/restartappserver/enact/99_restart_services.sh <span style=color:#ae81ff>0755</span> root root
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># include celeryd.conf into the supervisord.conf</span>
+</span></span><span style=display:flex><span>script_add_line /opt/python/etc/supervisord.conf <span style=color:#e6db74>&#34;include&#34;</span> <span style=color:#e6db74>&#34;[include]&#34;</span>
+</span></span><span style=display:flex><span>script_add_line /opt/python/etc/supervisord.conf <span style=color:#e6db74>&#34;celeryd.conf&#34;</span> <span style=color:#e6db74>&#34;files=celeryd.conf &#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Reread the supervisord config</span>
+</span></span><span style=display:flex><span>supervisorctl -c /opt/python/etc/supervisord.conf reread
+</span></span><span style=display:flex><span><span style=color:#75715e># Update supervisord in cache without restarting all services</span>
+</span></span><span style=display:flex><span>supervisorctl -c /opt/python/etc/supervisord.conf update
+</span></span><span style=display:flex><span><span style=color:#75715e># Start/Restart celeryd through supervisord</span>
+</span></span><span style=display:flex><span>supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
 </span></span></code></pre></div><p>A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
 So in any case we need to modify the main supervisord config.
-The script above does this by adding a following lines to it:</p>
-<pre tabindex="0"><code>[include]
+The script above does this by adding a following lines to it:</p><pre tabindex=0><code>[include]
 ; it is possible to include multiple files, names should be separated by space
 files=celeryd.conf
-</code></pre><p>The <code>celeryd.conf</code> is copied into the same folder where supervisord.conf resides.</p>
-<p>The <code>.ebextensions/utils.sh</code> script contains additional functions used by deployment script:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set -e
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SCRIPT_PATH<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $0<span style="color:#e6db74">`</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># An error exit function</span>
-</span></span><span style="display:flex;"><span>error_exit<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> 1&gt;&amp;<span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>    exit <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Copy + chmod + chown</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># copy_ext source target 0755 user:group</span>
-</span></span><span style="display:flex;"><span>copy_ext<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#cp + chmod + chown</span>
-</span></span><span style="display:flex;"><span>    local source<span style="color:#f92672">=</span>$1
-</span></span><span style="display:flex;"><span>    local target<span style="color:#f92672">=</span>$2
-</span></span><span style="display:flex;"><span>    local permission<span style="color:#f92672">=</span>$3
-</span></span><span style="display:flex;"><span>    local user<span style="color:#f92672">=</span>$4
-</span></span><span style="display:flex;"><span>    local group<span style="color:#f92672">=</span>$5
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ! cp $source $target; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>        error_exit <span style="color:#e6db74">&#34;Can not copy </span><span style="color:#e6db74">${</span>source<span style="color:#e6db74">}</span><span style="color:#e6db74"> to </span><span style="color:#e6db74">${</span>target<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ! chmod -R $permission $target; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>        error_exit <span style="color:#e6db74">&#34;Can not do chmod </span><span style="color:#e6db74">${</span>permission<span style="color:#e6db74">}</span><span style="color:#e6db74"> for </span><span style="color:#e6db74">${</span>target<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ! chown $user:$group $target; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>        error_exit <span style="color:#e6db74">&#34;Can not do chown </span><span style="color:#e6db74">${</span>user<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>group<span style="color:#e6db74">}</span><span style="color:#e6db74"> for </span><span style="color:#e6db74">${</span>target<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>    echo <span style="color:#e6db74">&#34;cp_ext: </span><span style="color:#e6db74">${</span>source<span style="color:#e6db74">}</span><span style="color:#e6db74"> -&gt; </span><span style="color:#e6db74">${</span>target<span style="color:#e6db74">}</span><span style="color:#e6db74"> chmod </span><span style="color:#e6db74">${</span>permission<span style="color:#e6db74">}</span><span style="color:#e6db74"> &amp; chown </span><span style="color:#e6db74">${</span>user<span style="color:#e6db74">}</span><span style="color:#e6db74">:</span><span style="color:#e6db74">${</span>group<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>is_leader<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Check for leader: /opt/elasticbeanstalk/bin/leader-test.sh:</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># use as</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># if is_leader; then</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#    dosmth</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># else</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#    doelse</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># fi</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> <span style="color:#e6db74">&#34;</span>$EB_IS_COMMAND_LEADER<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;true&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># to be used in if&#39;s, so &#39;0&#39; means true (like for script exit code - 0 is success)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#return 0</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#more clear (true returns 0)</span>
-</span></span><span style="display:flex;"><span>        true
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># to be used in if&#39;s, so &#39;1&#39; means false</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#return 1</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#more clear (false returns non zero)</span>
-</span></span><span style="display:flex;"><span>        false
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>script_add_line<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    local target_file<span style="color:#f92672">=</span>$1
-</span></span><span style="display:flex;"><span>    local check_text<span style="color:#f92672">=</span>$2
-</span></span><span style="display:flex;"><span>    local add_text<span style="color:#f92672">=</span>$3
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> grep -q <span style="color:#e6db74">&#34;</span>$check_text<span style="color:#e6db74">&#34;</span> <span style="color:#e6db74">&#34;</span>$target_file<span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Modification </span><span style="color:#e6db74">${</span>check_text<span style="color:#e6db74">}</span><span style="color:#e6db74"> found in </span><span style="color:#e6db74">${</span>target_file<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">${</span>add_text<span style="color:#e6db74">}</span> &gt;&gt; <span style="color:#e6db74">${</span>target_file<span style="color:#e6db74">}</span>
-</span></span><span style="display:flex;"><span>        echo <span style="color:#e6db74">&#34;Modification </span><span style="color:#e6db74">${</span>add_text<span style="color:#e6db74">}</span><span style="color:#e6db74"> added to </span><span style="color:#e6db74">${</span>target_file<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span></code></pre></div><p>The celeryd.conf in <code>.ebextensions/files/celeryd.conf</code> is a supervisord config:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[program:celeryd]</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">command</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/current/app/scripts/celeryd</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">directory</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/current/app</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">user</span><span style="color:#f92672">=</span><span style="color:#e6db74">wsgi</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">numprocs</span><span style="color:#f92672">=</span><span style="color:#e6db74">1</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stdout_logfile</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/log/celery-worker.log</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stderr_logfile</span><span style="color:#f92672">=</span><span style="color:#e6db74">/opt/python/log/celery-worker.log</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">autostart</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">autorestart</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">startsecs</span><span style="color:#f92672">=</span><span style="color:#e6db74">10</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; Need to wait for currently executing tasks to finish at shutdown.</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; Increase this if you have very long running tasks.</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stopwaitsecs</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">60</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; When resorting to send SIGKILL to the program to terminate it</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; send SIGKILL to its whole process group instead,</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; taking care of its children as well.</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">killasgroup</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; if rabbitmq is supervised, set its priority higher</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; so it starts first</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">; priority=998</span>
-</span></span></code></pre></div><p>Restart hook <code>.ebextensions/files/99_restart_services.sh</code> restarts celery application when application server is reloaded or restarted:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>set -xe
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># check if we already have the celeryd service</span>
-</span></span><span style="display:flex;"><span>/usr/bin/supervisorctl -c /opt/python/etc/supervisord.conf status | grep celeryd
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> $? <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
-</span></span><span style="display:flex;"><span>  /usr/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>eventHelper.py --msg <span style="color:#e6db74">&#34;Application server successfully restarted.&#34;</span> --severity INFO
-</span></span></code></pre></div><p>Finally the script under <code>scripts/celeryd</code> is used to set environment variables, activate virtual environment and run celery application:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>source /opt/python/current/env
-</span></span><span style="display:flex;"><span>source /opt/python/run/venv/bin/activate
-</span></span><span style="display:flex;"><span>cd /opt/python/current/app
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Note: exec is important here - this way supervisord will control</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># the python script and not the bash script</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># See also: http://sortedaffairs.tumblr.com/post/49113594655/managing-virtualenv-apps-with-supervisor</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
-</span></span><span style="display:flex;"><span>exec /opt/python/run/venv/bin/celery worker -A tasks --loglevel<span style="color:#f92672">=</span>INFO
+</code></pre><p>The <code>celeryd.conf</code> is copied into the same folder where supervisord.conf resides.</p><p>The <code>.ebextensions/utils.sh</code> script contains additional functions used by deployment script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>set -e
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>SCRIPT_PATH<span style=color:#f92672>=</span><span style=color:#e6db74>`</span>dirname $0<span style=color:#e6db74>`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># An error exit function</span>
+</span></span><span style=display:flex><span>error_exit<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    echo <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> 1&gt;&amp;<span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>    exit <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Copy + chmod + chown</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># copy_ext source target 0755 user:group</span>
+</span></span><span style=display:flex><span>copy_ext<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>#cp + chmod + chown</span>
+</span></span><span style=display:flex><span>    local source<span style=color:#f92672>=</span>$1
+</span></span><span style=display:flex><span>    local target<span style=color:#f92672>=</span>$2
+</span></span><span style=display:flex><span>    local permission<span style=color:#f92672>=</span>$3
+</span></span><span style=display:flex><span>    local user<span style=color:#f92672>=</span>$4
+</span></span><span style=display:flex><span>    local group<span style=color:#f92672>=</span>$5
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> ! cp $source $target; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        error_exit <span style=color:#e6db74>&#34;Can not copy </span><span style=color:#e6db74>${</span>source<span style=color:#e6db74>}</span><span style=color:#e6db74> to </span><span style=color:#e6db74>${</span>target<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> ! chmod -R $permission $target; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        error_exit <span style=color:#e6db74>&#34;Can not do chmod </span><span style=color:#e6db74>${</span>permission<span style=color:#e6db74>}</span><span style=color:#e6db74> for </span><span style=color:#e6db74>${</span>target<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> ! chown $user:$group $target; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        error_exit <span style=color:#e6db74>&#34;Can not do chown </span><span style=color:#e6db74>${</span>user<span style=color:#e6db74>}</span><span style=color:#e6db74>:</span><span style=color:#e6db74>${</span>group<span style=color:#e6db74>}</span><span style=color:#e6db74> for </span><span style=color:#e6db74>${</span>target<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>    echo <span style=color:#e6db74>&#34;cp_ext: </span><span style=color:#e6db74>${</span>source<span style=color:#e6db74>}</span><span style=color:#e6db74> -&gt; </span><span style=color:#e6db74>${</span>target<span style=color:#e6db74>}</span><span style=color:#e6db74> chmod </span><span style=color:#e6db74>${</span>permission<span style=color:#e6db74>}</span><span style=color:#e6db74> &amp; chown </span><span style=color:#e6db74>${</span>user<span style=color:#e6db74>}</span><span style=color:#e6db74>:</span><span style=color:#e6db74>${</span>group<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>is_leader<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Check for leader: /opt/elasticbeanstalk/bin/leader-test.sh:</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># use as</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># if is_leader; then</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>#    dosmth</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># else</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>#    doelse</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># fi</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> <span style=color:#e6db74>&#34;</span>$EB_IS_COMMAND_LEADER<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;true&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># to be used in if&#39;s, so &#39;0&#39; means true (like for script exit code - 0 is success)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#return 0</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#more clear (true returns 0)</span>
+</span></span><span style=display:flex><span>        true
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># to be used in if&#39;s, so &#39;1&#39; means false</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#return 1</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#more clear (false returns non zero)</span>
+</span></span><span style=display:flex><span>        false
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>script_add_line<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    local target_file<span style=color:#f92672>=</span>$1
+</span></span><span style=display:flex><span>    local check_text<span style=color:#f92672>=</span>$2
+</span></span><span style=display:flex><span>    local add_text<span style=color:#f92672>=</span>$3
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> grep -q <span style=color:#e6db74>&#34;</span>$check_text<span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span>$target_file<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>        echo <span style=color:#e6db74>&#34;Modification </span><span style=color:#e6db74>${</span>check_text<span style=color:#e6db74>}</span><span style=color:#e6db74> found in </span><span style=color:#e6db74>${</span>target_file<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>        echo <span style=color:#e6db74>${</span>add_text<span style=color:#e6db74>}</span> &gt;&gt; <span style=color:#e6db74>${</span>target_file<span style=color:#e6db74>}</span>
+</span></span><span style=display:flex><span>        echo <span style=color:#e6db74>&#34;Modification </span><span style=color:#e6db74>${</span>add_text<span style=color:#e6db74>}</span><span style=color:#e6db74> added to </span><span style=color:#e6db74>${</span>target_file<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span></code></pre></div><p>The celeryd.conf in <code>.ebextensions/files/celeryd.conf</code> is a supervisord config:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[program:celeryd]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>command</span><span style=color:#f92672>=</span><span style=color:#e6db74>/opt/python/current/app/scripts/celeryd</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>directory</span><span style=color:#f92672>=</span><span style=color:#e6db74>/opt/python/current/app</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>user</span><span style=color:#f92672>=</span><span style=color:#e6db74>wsgi</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>numprocs</span><span style=color:#f92672>=</span><span style=color:#e6db74>1</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stdout_logfile</span><span style=color:#f92672>=</span><span style=color:#e6db74>/opt/python/log/celery-worker.log</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stderr_logfile</span><span style=color:#f92672>=</span><span style=color:#e6db74>/opt/python/log/celery-worker.log</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>autostart</span><span style=color:#f92672>=</span><span style=color:#e6db74>true</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>autorestart</span><span style=color:#f92672>=</span><span style=color:#e6db74>true</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>startsecs</span><span style=color:#f92672>=</span><span style=color:#e6db74>10</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Need to wait for currently executing tasks to finish at shutdown.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Increase this if you have very long running tasks.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stopwaitsecs</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>60</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; When resorting to send SIGKILL to the program to terminate it</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; send SIGKILL to its whole process group instead,</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; taking care of its children as well.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>killasgroup</span><span style=color:#f92672>=</span><span style=color:#e6db74>true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; if rabbitmq is supervised, set its priority higher</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; so it starts first</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; priority=998</span>
+</span></span></code></pre></div><p>Restart hook <code>.ebextensions/files/99_restart_services.sh</code> restarts celery application when application server is reloaded or restarted:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>set -xe
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># check if we already have the celeryd service</span>
+</span></span><span style=display:flex><span>/usr/bin/supervisorctl -c /opt/python/etc/supervisord.conf status | grep celeryd
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> $? <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>  /usr/bin/supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>eventHelper.py --msg <span style=color:#e6db74>&#34;Application server successfully restarted.&#34;</span> --severity INFO
+</span></span></code></pre></div><p>Finally the script under <code>scripts/celeryd</code> is used to set environment variables, activate virtual environment and run celery application:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>source /opt/python/current/env
+</span></span><span style=display:flex><span>source /opt/python/run/venv/bin/activate
+</span></span><span style=display:flex><span>cd /opt/python/current/app
+</span></span><span style=display:flex><span><span style=color:#75715e># Note: exec is important here - this way supervisord will control</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># the python script and not the bash script</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># See also: http://sortedaffairs.tumblr.com/post/49113594655/managing-virtualenv-apps-with-supervisor</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
+</span></span><span style=display:flex><span>exec /opt/python/run/venv/bin/celery worker -A tasks --loglevel<span style=color:#f92672>=</span>INFO
 </span></span></code></pre></div><p>Actually we configured Elastic Beanstalk to run and manage an additional application.
-The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.</p>
-<h3 id="bonus-how-to-install-zeromq-libaray">Bonus: how to install ZeroMQ libaray</h3>
-<p>To install ZeroMQ python library add it to requirements.txt:</p>
-<pre tabindex="0"><code>Flask==0.9
+The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.</p><h3 id=bonus-how-to-install-zeromq-libaray>Bonus: how to install ZeroMQ libaray</h3><p>To install ZeroMQ python library add it to requirements.txt:</p><pre tabindex=0><code>Flask==0.9
 boto==2.34.0
 ...
 pyzmq==13.0.2
-</code></pre><p>Installation process also includes a compilation phase and you can get an error like this:</p>
-<pre tabindex="0"><code>gcc: error trying to exec &#39;cc1plus&#39;: execvp: No such file or directory
-</code></pre><p>To solve this problem, add following packages into the elasticbeanstalk config:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>  <span style="color:#f92672">packages</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">yum</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">gcc</span>: []
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">gcc-c++</span>: []
-</span></span></code></pre></div> <a href="https://stackexchange.com/users/261528">
-<img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width="208" height="58" alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites">
-</a>
-
-</div>
-<div class="popup">
-    <div class="close">close</div>
-    <div class="download">
-        <a href="" target="_blank">Download (<span class="name"></span>)</a>
-    </div>
-    <div class="popup-content"></div>
-</div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/aws/'>aws</a>, <a class='tag' href='/tags/eb/'>eb</a>, <a class='tag' href='/tags/python/'>python</a>, <a class='tag' href='/tags/celery/'>celery</a>, <a class='tag' href='/tags/zeromq/'>zeromq</a></div>
-
-  </div>
-</footer>
-
-
-</article>
-
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/html/2015-02-01-dynamodb-local.html'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Local Amazon DynamoDB - tools, dump/restore and testing</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/html/2015-05-20-cloudwatch-setup.html'>
-        <span class='screen-reader-text'>Next post: </span>Elastic Beanstalk - how to setup CloudWatch Logs<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-<section id='comments' class='comments'>
-  <div class='container sep-before'>
-    <div class='comments-area'><div id="disqus_thread"></div>
-<script>
-    var disqus_config = function () {
-        this.page.url = "http://serebrov.github.io\/html\/2015-04-02-elastic-beanstalk-python.html"; 
-        
-        
-    };
-    (function () {
-        
-        var d = document,
-            s = d.createElement("script");
-        s.src = "https://serebrov.disqus.com/embed.js";
-        s.setAttribute("data-timestamp", +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript
-    >Please enable JavaScript to view the
-    <a href="https://disqus.com/?ref_noscript"
-        >comments powered by Disqus.</a
-    ></noscript
->
-</div>
-  </div>
-</section>
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'>
-    <ul><li>
-        <a href='https://github.com/serebrov' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-  
-</svg>
-</a>
-      </li><li>
-        <a href='mailto:serebrov@gmail.com' target='_blank' rel='noopener'>
-          <span class='screen-reader-text'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-  <polyline points="22,6 12,13 2,6"/>
-  
-</svg>
-</a>
-      </li></ul>
-  </nav>
-</section><div class='copyright'>
-  <p> &copy; 2020-2023 Boris Serebrov </p>
-</div>
-
-        </div>
-      </footer>
-
-    </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='https://serebrov.github.io/assets/js/main.67d669ac.js'></script><script src='/js/jquery.min.js'></script><script src='/js/custom.js'></script>
-
-
-</body>
-
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</code></pre><p>Installation process also includes a compilation phase and you can get an error like this:</p><pre tabindex=0><code>gcc: error trying to exec &#39;cc1plus&#39;: execvp: No such file or directory
+</code></pre><p>To solve this problem, add following packages into the elasticbeanstalk config:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>  <span style=color:#f92672>packages</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>yum</span>:
+</span></span><span style=display:flex><span>      <span style=color:#f92672>gcc</span>: []
+</span></span><span style=display:flex><span>      <span style=color:#f92672>gcc-c++</span>: []
+</span></span></code></pre></div><a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/aws/>aws</a>, <a class=tag href=/tags/eb/>eb</a>, <a class=tag href=/tags/python/>python</a>, <a class=tag href=/tags/celery/>celery</a>, <a class=tag href=/tags/zeromq/>zeromq</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2015-02-01-dynamodb-local.html><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
+<span class=screen-reader-text>Previous post: </span>Local Amazon DynamoDB - tools, dump/restore and testing</a></div><div class='next-entry sep-before'><a href=/html/2015-05-20-cloudwatch-setup.html><span class=screen-reader-text>Next post: </span>Elastic Beanstalk - how to setup CloudWatch Logs<span aria-hidden=true>Next<svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14 6 20 12 14 18"/></svg></span></a></div></div></nav><section id=comments class=comments><div class='container sep-before'><div class=comments-area><div id=disqus_thread></div><script>var disqus_config=function(){this.page.url="http://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html"};(function(){var e=document,t=e.createElement("script");t.src="https://serebrov.disqus.com/embed.js",t.setAttribute("data-timestamp",+new Date),(e.head||e.body).appendChild(t)})()</script><noscript>Please enable JavaScript to view the
+<a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></section></main><footer id=footer class=footer><div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'><ul><li><a href=https://github.com/serebrov target=_blank rel=noopener><span class=screen-reader-text>Open Github account in new tab</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li><li><a href=mailto:serebrov@gmail.com target=_blank rel=noopener><span class=screen-reader-text>Contact via Email</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></li></ul></nav></section><div class=copyright><p>&copy; 2020-2023 Boris Serebrov</p></div></div></footer></div></div><script>window.__assets_js_src="/assets/js/"</script><script src=https://serebrov.github.io/assets/js/main.67d669ac.js></script><script src=/js/jquery.min.js></script><script src=/js/custom.js></script></body></html>

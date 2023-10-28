@@ -1,22 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>ssh on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/ssh/</link>
-    <description>Recent content in ssh on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 11 Jan 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</title>
-      <link>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</link>
-      <pubDate>Thu, 11 Jan 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</guid>
-      <description>Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ssh on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/ssh/</link><description>Recent content in ssh on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 11 Jan 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/ssh/index.xml" rel="self" type="application/rss+xml"/><item><title>SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Internet)</title><link>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</link><pubDate>Thu, 11 Jan 2018 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2018-01-11-aws-ec2-ssh-tunnel.html</guid><description>Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
 Setup To make SSH commands shorter and easier to use, edit the ~/.ssh/config and add the configuration for the hosts you are going to connect.
-The configuration defines default ssh options, so instead of the command like this ssh ec2-user@ec2-55-222-55-55.compute-1.amazonaws.com -i ~/.</description>
-    </item>
-    
-  </channel>
-</rss>
+The configuration defines default ssh options, so instead of the command like this ssh ec2-user@ec2-55-222-55-55.compute-1.amazonaws.com -i ~/.</description></item></channel></rss>

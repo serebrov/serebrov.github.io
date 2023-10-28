@@ -1,251 +1,52 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>git on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/git/</link>
-    <description>Recent content in git on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 11 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>git - use kdiff3 as a diff/merge tool</title>
-      <link>https://serebrov.github.io/html/2023-06-11-git-use-kdiff3-as-difftool.html</link>
-      <pubDate>Sun, 11 Jun 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2023-06-11-git-use-kdiff3-as-difftool.html</guid>
-      <description>To use kdiff3 as your diff tool and merge tool in git, run the following commands:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>git on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/git/</link><description>Recent content in git on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 11 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/git/index.xml" rel="self" type="application/rss+xml"/><item><title>git - use kdiff3 as a diff/merge tool</title><link>https://serebrov.github.io/html/2023-06-11-git-use-kdiff3-as-difftool.html</link><pubDate>Sun, 11 Jun 2023 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2023-06-11-git-use-kdiff3-as-difftool.html</guid><description>To use kdiff3 as your diff tool and merge tool in git, run the following commands:
 git config --global mergetool.kdiff3.cmd &amp;#39;kdiff3 &amp;#34;$BASE&amp;#34; &amp;#34;$LOCAL&amp;#34; &amp;#34;$REMOTE&amp;#34; -o &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool kdiff3 git config --global difftool.kdiff3.cmd &amp;#39;kdiff3 &amp;#34;$LOCAL&amp;#34; &amp;#34;$REMOTE&amp;#34;&amp;#39; git config --global diff.tool kdiff3 Alternatively, edit the ~/.gitconfig and add settings there:
-[mergetool &amp;#34;kdiff3&amp;#34;] cmd = kdiff3 $LOCAL $REMOTE $BASE -o $MERGED [diff &amp;#34;kdiff3&amp;#34;] cmd = kdiff3 $LOCAL $REMOTE [merge] tool = kdiff3 [diff] tool = kdiff3 </description>
-    </item>
-    
-    <item>
-      <title>git - cherry-pick a range of commits</title>
-      <link>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</link>
-      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</guid>
-      <description>To cherry pick a range of commits to another branch, we can use the START^..END commit range syntax, where START is the first commit in the range and END is the last commit:
-git cherry-pick START^..END References How to cherry-pick a range of commits and merge them into another branch?</description>
-    </item>
-    
-    <item>
-      <title>git - how to move files with history to another repository</title>
-      <link>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</link>
-      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</guid>
-      <description>Git allows joining unrelated repositories via remotes which, in turn, allows moving files and change history between them.
+[mergetool &amp;#34;kdiff3&amp;#34;] cmd = kdiff3 $LOCAL $REMOTE $BASE -o $MERGED [diff &amp;#34;kdiff3&amp;#34;] cmd = kdiff3 $LOCAL $REMOTE [merge] tool = kdiff3 [diff] tool = kdiff3</description></item><item><title>git - cherry-pick a range of commits</title><link>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</link><pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html</guid><description>To cherry pick a range of commits to another branch, we can use the START^..END commit range syntax, where START is the first commit in the range and END is the last commit:
+git cherry-pick START^..END References How to cherry-pick a range of commits and merge them into another branch?</description></item><item><title>git - how to move files with history to another repository</title><link>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</link><pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2021-09-13-git-move-history-to-another-repository.html</guid><description>Git allows joining unrelated repositories via remotes which, in turn, allows moving files and change history between them.
 Some cases when this might be needed:
-Extract part of a big repository into a separate repository, preserving change history Splitting big repository to a set of smaller repositories Merge smaller repository into a bigger one (merge in library from the external repository) Preserving the history has an important effect: after we do the change, for example, extract a part of a bigger repository into a separate repository, we can continue moving changes between them (merge updates from the big repository to the small one and back).</description>
-    </item>
-    
-    <item>
-      <title>git - show number of commits by author</title>
-      <link>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</link>
-      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</guid>
-      <description>The shortlog -ns will show number of commits by author:
-git shortlog -ns 280 Author One 46 Author Two 25 authorthree 14 au 4 x 3 Autor One 1 ide user x </description>
-    </item>
-    
-    <item>
-      <title>git - update commit message</title>
-      <link>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</link>
-      <pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</guid>
-      <description>Simple: Change Last Commit Message To change the last commit message, use commit with --amend flag:
+Extract part of a big repository into a separate repository, preserving change history Splitting big repository to a set of smaller repositories Merge smaller repository into a bigger one (merge in library from the external repository) Preserving the history has an important effect: after we do the change, for example, extract a part of a bigger repository into a separate repository, we can continue moving changes between them (merge updates from the big repository to the small one and back).</description></item><item><title>git - show number of commits by author</title><link>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</link><pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2021-09-13-git-number-of-commits-by-author.html</guid><description>The shortlog -ns will show number of commits by author:
+git shortlog -ns 280 Author One 46 Author Two 25 authorthree 14 au 4 x 3 Autor One 1 ide user x</description></item><item><title>git - update commit message</title><link>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</link><pubDate>Mon, 13 Sep 2021 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2021-09-13-git-update-commit-message.html</guid><description>Simple: Change Last Commit Message To change the last commit message, use commit with --amend flag:
 Careful: `commit --amend` will rewirte history, do not use on public branches. $ git commit --amend It will open an editor and change the commit message, changes will be applied after saving the file and closing the editor.
-Advanced: Change Any Commit Message or Multiple Commit Messages Besides other things, interactive rebase allows editing commit messages:</description>
-    </item>
-    
-    <item>
-      <title>Git Hook to Add Issue Number to Commit Message</title>
-      <link>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</link>
-      <pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</guid>
-      <description>When using project management system (Jira, Redmine, Github issues, etc) it is useful to add the issue number into commit message that makes is easier to understand which issue the commit belongs to and often allows the project management system to display related commits.
+Advanced: Change Any Commit Message or Multiple Commit Messages Besides other things, interactive rebase allows editing commit messages:</description></item><item><title>Git Hook to Add Issue Number to Commit Message</title><link>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</link><pubDate>Sun, 16 Jun 2019 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2019-06-16-git-hook-to-add-issue-number-to-commit-message.html</guid><description>When using project management system (Jira, Redmine, Github issues, etc) it is useful to add the issue number into commit message that makes is easier to understand which issue the commit belongs to and often allows the project management system to display related commits.
 For same reasons, it is also useful to include the issue number into branch name, such as 123-branch-description or feature/PROJECT-123-branch-description.
-The process of adding the issue number into commit message can be automated with git prepare-commit-msg hook (shell script).</description>
-    </item>
-    
-    <item>
-      <title>Simple Git Workflow</title>
-      <link>https://serebrov.github.io/html/2016-07-03-simple-git-workflow.html</link>
-      <pubDate>Sun, 03 Jul 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2016-07-03-simple-git-workflow.html</guid>
-      <description>The main purpose of this workflow is to have a reliable, but simple to use git workflow. It is simple enough to be used by git beginners and minimizes possibility of mistakes (comparing to advanced flows which use rebase and related git features to achieve clean history).
-The main idea of this workflow is that we create a new branch for every task and one developer works on this branch until the task is finished.</description>
-    </item>
-    
-    <item>
-      <title>git - how to revert multiple recent commits</title>
-      <link>https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</link>
-      <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</guid>
-      <description>Let&amp;rsquo;s assume we have a history like this:
+The process of adding the issue number into commit message can be automated with git prepare-commit-msg hook (shell script).</description></item><item><title>Simple Git Workflow</title><link>https://serebrov.github.io/html/2016-07-03-simple-git-workflow.html</link><pubDate>Sun, 03 Jul 2016 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2016-07-03-simple-git-workflow.html</guid><description>The main purpose of this workflow is to have a reliable, but simple to use git workflow. It is simple enough to be used by git beginners and minimizes possibility of mistakes (comparing to advanced flows which use rebase and related git features to achieve clean history).
+The main idea of this workflow is that we create a new branch for every task and one developer works on this branch until the task is finished.</description></item><item><title>git - how to revert multiple recent commits</title><link>https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</link><pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2014-01-04-git-revert-multiple-recent-comments.html</guid><description>Let&amp;rsquo;s assume we have a history like this:
 G1 - G2 - G3 - B1 - B2 - B3 Where G1-G3 are &amp;lsquo;good&amp;rsquo; commits and B1-B3 are &amp;lsquo;bad&amp;rsquo; commits and we want to revert them.
 Here is the shell script to create the revision history like above, you can use it to try and see the effect of different commands.
-git reset The first method is a simple way to throw away few recent commits.</description>
-    </item>
-    
-    <item>
-      <title>How to keep `git log` and `git diff` output on the screen after exit</title>
-      <link>https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</link>
-      <pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</guid>
-      <description>When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less.
+git reset The first method is a simple way to throw away few recent commits.</description></item><item><title>How to keep `git log` and `git diff` output on the screen after exit</title><link>https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</link><pubDate>Sat, 04 Jan 2014 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2014-01-04-git-log-and-less-keep-output.html</guid><description>When git uses less as pager the output of commands like git log disappears from the console screen when you exit from less.
 This is not convenient in many cases so here is how to fix this.
 Just for git commands:
 git config --global --replace-all core.pager &amp;#34;less -iXFR&amp;#34; For less command, globally (including git) - add to your shell profile (.bashrc, .zshrc, etc):
-export LESS=-iXFR Options we set for less:</description>
-    </item>
-    
-    <item>
-      <title>How to setup git server on ubuntu with push email notifications</title>
-      <link>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</link>
-      <pubDate>Fri, 14 Jun 2013 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</guid>
-      <description>Git Server Prerequisites are git and ssh-server (apt-get install openssh-server).
+export LESS=-iXFR Options we set for less:</description></item><item><title>How to setup git server on ubuntu with push email notifications</title><link>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</link><pubDate>Fri, 14 Jun 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</guid><description>Git Server Prerequisites are git and ssh-server (apt-get install openssh-server).
 The installation process is described in the Pro Git book. Below is the setup process with some comments and updates.
 Add git user, set some password (you will be asked for it):
 $ sudo adduser git Log in as git user and setup authorized ssh keys:
-$ su git git@localname$ cd ~ git@localname$ mkdir .ssh For each user who need an access to the server add user&amp;rsquo;s public key into ~/.</description>
-    </item>
-    
-    <item>
-      <title>git - find not merged branches</title>
-      <link>https://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</link>
-      <pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</guid>
-      <description>Branches that were not merged with master:
+$ su git git@localname$ cd ~ git@localname$ mkdir .ssh For each user who need an access to the server add user&amp;rsquo;s public key into ~/.</description></item><item><title>git - find not merged branches</title><link>https://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</link><pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-10-01-git-find-not-merged-branches.html</guid><description>Branches that were not merged with master:
 git branch -a --no-merged (or git branch -a --no-merged master) Branches that were merged with feature:
 git branch -a --merged feature Branches that were merged not with feature:
 git branch -a --no-merged feature Reference The git-branch(1) command:
-with --contains flag shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit). with --merged shows only branches merged into the named commit (i.</description>
-    </item>
-    
-    <item>
-      <title>git - viewing changes - diff and log</title>
-      <link>https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</link>
-      <pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</guid>
-      <description>Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.
-Note: the confusing part is that log with two dots only shows changes on one branch, while diff with two dots includes changes on both branches (showing changes from one branch as removed and from another branch - as added).</description>
-    </item>
-    
-    <item>
-      <title>git - find all branches where file was changed</title>
-      <link>https://serebrov.github.io/html/2012-09-30-git-all-branches-with-file.html</link>
-      <pubDate>Sun, 30 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-09-30-git-all-branches-with-file.html</guid>
-      <description>Solution from stackoverflow.
+with --contains flag shows only the branches that contain the named commit (in other words, the branches whose tip commits are descendants of the named commit). with --merged shows only branches merged into the named commit (i.</description></item><item><title>git - viewing changes - diff and log</title><link>https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</link><pubDate>Mon, 01 Oct 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-10-01-git-diff-and-log.html</guid><description>Diff and log between two branches (all changes on both branches) To see all changes between two branches, use diff with two or three dots and log with three dots between branch names.
+Note: the confusing part is that log with two dots only shows changes on one branch, while diff with two dots includes changes on both branches (showing changes from one branch as removed and from another branch - as added).</description></item><item><title>git - find all branches where file was changed</title><link>https://serebrov.github.io/html/2012-09-30-git-all-branches-with-file.html</link><pubDate>Sun, 30 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-09-30-git-all-branches-with-file.html</guid><description>Solution from stackoverflow.
 Find all branches which contain a change to FILENAME (even if before the (non-recorded) branch point):
 git log --all --format=%H FILENAME | while read f; do git branch --contains $f; done | sort -u Manually inspect:
 gitk --all --date-order -- FILENAME Find all changes to FILENAME not merged to master:
-git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -v master | while read br; do git cherry master $br | while read x h; do if [ &amp;#34;`git log -n 1 --format=%H $h -- FILENAME`&amp;#34; = &amp;#34;$h&amp;#34; ]; then echo $br; fi; done; done | sort -u </description>
-    </item>
-    
-    <item>
-      <title>git - Your branch is ahead of &#39;origin/master&#39; by 1 commit after pull</title>
-      <link>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</link>
-      <pubDate>Sun, 30 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</guid>
-      <description>Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit (or X commits) after git pull origin master.
+git for-each-ref --format=&amp;#34;%(refname:short)&amp;#34; refs/heads | grep -v master | while read br; do git cherry master $br | while read x h; do if [ &amp;#34;`git log -n 1 --format=%H $h -- FILENAME`&amp;#34; = &amp;#34;$h&amp;#34; ]; then echo $br; fi; done; done | sort -u</description></item><item><title>git - Your branch is ahead of 'origin/master' by 1 commit after pull</title><link>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</link><pubDate>Sun, 30 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-09-30-git-branch-ahead-after-pull.html</guid><description>Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit (or X commits) after git pull origin master.
 The sequence:
-Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.” The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).</description>
-    </item>
-    
-    <item>
-      <title>git - submodule helpers</title>
-      <link>https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</link>
-      <pubDate>Sun, 23 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</guid>
-      <description>Below are some git commands which can be useful to resolve problems with submodules.
+Have up-to-date repository There is a change in the origin/master Do git pull origin master Change is received and merged git status shows “Your branch is ahead of &amp;lsquo;origin/master&amp;rsquo; by 1 commit.” The reason is because during pull origin master reference to the remote origin/master is not changed (still points to older version).</description></item><item><title>git - submodule helpers</title><link>https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</link><pubDate>Sun, 23 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-06-15-android-mobile-network-problem.html</guid><description>Below are some git commands which can be useful to resolve problems with submodules.
 Get a list of commits inside a submodule Submodules are identified by SHA-1 hashes so you may need to get a list of them. Do the following inside the submodule folder (or inside the separate submodule repository):
-git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 commit 2 c180c5a commit 1 702fc8a commit 0 View current submodule commit git submodule status 5bd722fa26dcdd64128392aa28e08849fe37f111 sub (heads/master) Compare a submodule state with another branch Assume we are on the &amp;ldquo;branch1&amp;rdquo; and want to compare &amp;lsquo;sub&amp;rsquo; submodule state with master:</description>
-    </item>
-    
-    <item>
-      <title>git - use vim with fugitive to resolve merge conflicts</title>
-      <link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link>
-      <pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid>
-      <description>To use fugitive as a mergetool you can run the following commands:
-git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description>
-    </item>
-    
-    <item>
-      <title>git - remove already deleted files</title>
-      <link>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</guid>
-      <description>To remove files that were already deleted on the file system, run git add with -u flag:
+git log --oneline 5bd722f commit 5 b5c1524 commit 4 2444bfa commit 3 e0eadd5 commit 2 c180c5a commit 1 702fc8a commit 0 View current submodule commit git submodule status 5bd722fa26dcdd64128392aa28e08849fe37f111 sub (heads/master) Compare a submodule state with another branch Assume we are on the &amp;ldquo;branch1&amp;rdquo; and want to compare &amp;lsquo;sub&amp;rsquo; submodule state with master:</description></item><item><title>git - use vim with fugitive to resolve merge conflicts</title><link>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</link><pubDate>Tue, 24 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-04-24-git-fugitive-to-resolve-conflicts.html</guid><description>To use fugitive as a mergetool you can run the following commands:
+git config --global mergetool.fugitive.cmd &amp;#39;vim -f -c &amp;#34;Gdiff&amp;#34; &amp;#34;$MERGED&amp;#34;&amp;#39; git config --global merge.tool fugitive Links stackoverflow fugitive screencast</description></item><item><title>git - remove already deleted files</title><link>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-10-01-git-rm-deleted-files.html</guid><description>To remove files that were already deleted on the file system, run git add with -u flag:
 git status D abc.c git add -u This tells git to automatically stage tracked files - including deleting the previously tracked files.
-Stackoverflow: How do I commit all deleted files in Git?</description>
-    </item>
-    
-    <item>
-      <title>git - rename branch (local and remote)</title>
-      <link>https://serebrov.github.io/html/2012-03-15-oauth-1-0.html</link>
-      <pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-03-15-oauth-1-0.html</guid>
-      <description>Rename local branch:
+Stackoverflow: How do I commit all deleted files in Git?</description></item><item><title>git - rename branch (local and remote)</title><link>https://serebrov.github.io/html/2012-03-15-oauth-1-0.html</link><pubDate>Tue, 03 Apr 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-03-15-oauth-1-0.html</guid><description>Rename local branch:
 git branch -m old-branch-name new-branch-name Rename remote branch:
-#delete remote branch with old name git push origin :old-branch-name # create remote renamed branch git push origin new-branch-name Links stackoverflow</description>
-    </item>
-    
-    <item>
-      <title>git - colored diff, branch, etc output by default</title>
-      <link>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</link>
-      <pubDate>Tue, 28 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</guid>
-      <description>To have colored git commands output, use the following command:
+#delete remote branch with old name git push origin :old-branch-name # create remote renamed branch git push origin new-branch-name Links stackoverflow</description></item><item><title>git - colored diff, branch, etc output by default</title><link>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</link><pubDate>Tue, 28 Feb 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-02-13-git-branches-have-diverged.html</guid><description>To have colored git commands output, use the following command:
 git config color.ui true or (globally)
 git config --global color.ui true Alternatively, you can set color for individual git commands.
 git config color.branch auto git config color.diff auto git config color.interactive auto git config color.status auto See also color.* options in the git config docs.
 Links git book
-Color highlighted diffs with git, svn and cvs</description>
-    </item>
-    
-    <item>
-      <title>git - your branch and &#39;origin/xxx&#39; have diverged error</title>
-      <link>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</link>
-      <pubDate>Mon, 13 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</guid>
-      <description>Git error:
-Your branch and &#39;origin/xxx&#39; have diverged, and have 1 and 1 different commit(s) each, respectively. The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
+Color highlighted diffs with git, svn and cvs</description></item><item><title>git - your branch and 'origin/xxx' have diverged error</title><link>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</link><pubDate>Mon, 13 Feb 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-02-10-git-checkout-and-track-remote-branch.html</guid><description>Git error:
+Your branch and 'origin/xxx' have diverged, and have 1 and 1 different commit(s) each, respectively. The error is caused by two independent commits - one (or more) on the local branch copy and other - on the remote branch copy (for example, commit by another person to the same branch).
 Another case for the error is git rebase (error is expected, see below).
-The history looks like this:</description>
-    </item>
-    
-    <item>
-      <title>git - checkout and track remote branch</title>
-      <link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.html</link>
-      <pubDate>Wed, 01 Feb 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.html</guid>
-      <description>Note: in recent git versions, it is enough to do git pull and git checkout feature to checkout and start tracking the remote branch.
+The history looks like this:</description></item><item><title>git - checkout and track remote branch</title><link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.html</link><pubDate>Wed, 01 Feb 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.html</guid><description>Note: in recent git versions, it is enough to do git pull and git checkout feature to checkout and start tracking the remote branch.
 Before, it was necessary to use the -t (--track) flag to do that:
 #creates and checks out &amp;#34;feature&amp;#34; branch that tracks &amp;#34;origin/feature&amp;#34; $ git checkout -t origin/feature Relevant part from the checkout docs:
-git checkout [] &amp;hellip; If is not found but there does exist a tracking branch in exactly one remote (call it ) with a matching name and &amp;ndash;no-guess is not specified, treat as equivalent to $ git checkout -b &amp;ndash;track /</description>
-    </item>
-    
-  </channel>
-</rss>
+git checkout [] &amp;hellip; If is not found but there does exist a tracking branch in exactly one remote (call it ) with a matching name and &amp;ndash;no-guess is not specified, treat as equivalent to $ git checkout -b &amp;ndash;track /</description></item></channel></rss>

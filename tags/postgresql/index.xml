@@ -1,24 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>postgresql on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/postgresql/</link>
-    <description>Recent content in postgresql on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Tue, 22 Sep 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>AWS PostgreSQL RDS - remaining connection slots are reserved error</title>
-      <link>https://serebrov.github.io/html/2015-09-22-aws-postgresql-max-connections.html</link>
-      <pubDate>Tue, 22 Sep 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-09-22-aws-postgresql-max-connections.html</guid>
-      <description>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>postgresql on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/postgresql/</link><description>Recent content in postgresql on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 22 Sep 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/postgresql/index.xml" rel="self" type="application/rss+xml"/><item><title>AWS PostgreSQL RDS - remaining connection slots are reserved error</title><link>https://serebrov.github.io/html/2015-09-22-aws-postgresql-max-connections.html</link><pubDate>Tue, 22 Sep 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-09-22-aws-postgresql-max-connections.html</guid><description>Today I had a problem with PostgreSQL connection, both my application and psql tool returned an error:
 FATAL: remaining connection slots are reserved for non-replication superuser connections The PostgreSQL server was running on the db.t1.micro RDS instance and the &amp;lsquo;Current activity&amp;rsquo; column showed &amp;lsquo;22 connections&amp;rsquo; and a red line which should represent a connection limit was far away from the 22 value.
 Here is how it looked:
 .
-And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.</description>
-    </item>
-    
-  </channel>
-</rss>
+And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.</description></item></channel></rss>

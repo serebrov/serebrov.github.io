@@ -1,22 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>zeromq on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/zeromq/</link>
-    <description>Recent content in zeromq on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 02 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/zeromq/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Elastic Beanstalk - python application server structure and celery installation</title>
-      <link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link>
-      <pubDate>Thu, 02 Apr 2015 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</guid>
-      <description>Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>zeromq on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/zeromq/</link><description>Recent content in zeromq on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 02 Apr 2015 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/zeromq/index.xml" rel="self" type="application/rss+xml"/><item><title>Elastic Beanstalk - python application server structure and celery installation</title><link>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</link><pubDate>Thu, 02 Apr 2015 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2015-04-02-elastic-beanstalk-python.html</guid><description>Elastic beanstalk python application is deployed under /opt/python/. The application is running under Apache web server.
 Source folder structure is this:
-bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.</description>
-    </item>
-    
-  </channel>
-</rss>
+bin httpdlaunch - a tool script to set environment variables and launch httpd bundle - dir with app source code, used during updates current - symlink to the recent source code version under bundle app - application sources env - shell script with environment variables (passed from EB environment settings) etc - supervisord config log - supervisord logs run - virtual environments Apache logs, deployment logs and system messages log are under /var/log.</description></item></channel></rss>

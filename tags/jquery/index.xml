@@ -1,47 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>jquery on vim, git, aws and other three-letter words</title>
-    <link>https://serebrov.github.io/tags/jquery/</link>
-    <description>Recent content in jquery on vim, git, aws and other three-letter words</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Sat, 29 Sep 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/jquery/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Yii and jquery.localtime.js - display dates in user local timezone</title>
-      <link>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</link>
-      <pubDate>Sat, 29 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</guid>
-      <description>With this method we work on the server with UTC timezone dates and convert them to a user local timezone on client.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>jquery on vim, git, aws and other three-letter words</title><link>https://serebrov.github.io/tags/jquery/</link><description>Recent content in jquery on vim, git, aws and other three-letter words</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 29 Sep 2012 00:00:00 +0000</lastBuildDate><atom:link href="https://serebrov.github.io/tags/jquery/index.xml" rel="self" type="application/rss+xml"/><item><title>Yii and jquery.localtime.js - display dates in user local timezone</title><link>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</link><pubDate>Sat, 29 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-09-29-yii-jquery-localtime.html</guid><description>With this method we work on the server with UTC timezone dates and convert them to a user local timezone on client.
 Use ‘TIMESTAMP’ type for date/datetime DB fields Setup MySQL and PHP timezone Set UTC timezone for both MySQL and PHP.
 Yii db config (MySQL):
 ‘db’ =&amp;gt; array( &amp;#39;connectionString&amp;#39; =&amp;gt; &amp;#39;...’, &amp;#39;initSQLs&amp;#39;=&amp;gt;&amp;#34;set time_zone=&amp;#39;+00:00’;&amp;#34;, ); And PHP timezone:
-date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 See date formats here Helper functions to convert dates:</description>
-    </item>
-    
-    <item>
-      <title>global ajax response handler and jquery.localtime plugin</title>
-      <link>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</link>
-      <pubDate>Tue, 25 Sep 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</guid>
-      <description>The jquery.localtime plugin allows to convert date/time strings to a local user time on a client site. By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.
-Possible solution is to add some special handling to $.ajax &amp;lsquo;success&amp;rsquo; handlers, but it can require a lot of modifications. Better way is to set some global handler for all ajax requests and apply conversion to local time there.</description>
-    </item>
-    
-    <item>
-      <title>jQuery - check minimal required version</title>
-      <link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</link>
-      <pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate>
-      
-      <guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</guid>
-      <description>To check whether jQuery is loaded to the page and verify minimum version:
-if (typeof jQuery == &#39;undefined&#39; || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw(&#39;jQuery version 1.3.1 or above is required&#39;); } Here a regular expression determines a required jQuery version -
+date_default_timezone_set(‘UTC’); Generate HTML with UTC dates in ISO 8601 See date formats here Helper functions to convert dates:</description></item><item><title>global ajax response handler and jquery.localtime plugin</title><link>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</link><pubDate>Tue, 25 Sep 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-09-25-global-ajax-handler-and-localtime.html</guid><description>The jquery.localtime plugin allows to convert date/time strings to a local user time on a client site. By default it works when the page is loaded initially, but if some elements are updated via ajax then they do not converted and left in an UTC format.
+Possible solution is to add some special handling to $.ajax &amp;lsquo;success&amp;rsquo; handlers, but it can require a lot of modifications. Better way is to set some global handler for all ajax requests and apply conversion to local time there.</description></item><item><title>jQuery - check minimal required version</title><link>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</link><pubDate>Tue, 24 Jan 2012 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2012-01-24-jquery-check-version.md</guid><description>To check whether jQuery is loaded to the page and verify minimum version:
+if (typeof jQuery == 'undefined' || !/[1-9]\.[3-9].[1-9]/.test($.fn.jquery) ) { throw('jQuery version 1.3.1 or above is required'); } Here a regular expression determines a required jQuery version -
 /[X-9]\.[Y-9].[Z-9]/ For example, for 1.3.1 use
 /[1-9]\.[3-9].[1-9]/ and for 1.2.3 use
-/[1-9]\.[2-9].[3-9]/ </description>
-    </item>
-    
-  </channel>
-</rss>
+/[1-9]\.[2-9].[3-9]/</description></item></channel></rss>
