@@ -6,7 +6,7 @@ How to run the same command in multiple panes? To run the same command in multip
 <span class=screen-reader-text>Toggle Sidebar</span>
 <span class=open><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span><span class=close><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span></button><ul><li class=item><a href=/>Home</a></li><li class='item current'><a aria-current=page href=/posts/>Posts</a></li><li class=item><a href=/archive/>Archive</a></li></ul></div></nav><div class=header-widgets><div class=container></div></div><header id=header class='header site-header'><div class='container sep-after'><div class=header-info><p class='site-title title'>vim, git, aws and other three-letter words</p><p class='desc site-desc'>Software Development Notes</p></div></div></header><main id=content><article lang=en class=entry><header class='header entry-header'><div class='container sep-after'><div class=header-info><h1 class=title>Tmux: how to run the same command in multiple panes</h1></div><div class=entry-meta><span class=posted-on><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span class=screen-reader-text>Posted on</span>
 <time class=entry-date datetime=2024-01-30T00:00:00Z>2024, Jan 30</time></span>
-<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>One min read</span></div></div></header><div class="container entry-content custom"><h1 id=why-run-the-same-command-in-multiple-tmux-panes>Why run the same command in multiple tmux panes?</h1><p>Sometimes it can be convenient as a quick way to run some command in parallel on the server. We can still see the output, detach from tmux and disconnect
+<span class=reading-time><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>2 mins read</span></div></div></header><div class="container entry-content custom"><h1 id=why-run-the-same-command-in-multiple-tmux-panes>Why run the same command in multiple tmux panes?</h1><p>Sometimes it can be convenient as a quick way to run some command in parallel on the server. We can still see the output, detach from tmux and disconnect
 and reconnect later and attach to the tmux session to see the result.</p><h1 id=how-to-run-the-same-command-in-multiple-panes>How to run the same command in multiple panes?</h1><p>To run the same command in multiple panes, we can use a script like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span>
 </span></span><span style=display:flex><span>SESS<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;generation-jobs&#39;</span>
@@ -31,7 +31,44 @@ and reconnect later and attach to the tmux session to see the result.</p><h1 id=
 </span></span><span style=display:flex><span>tmux attach -t $SESS
 </span></span></code></pre></div><p>It will work like this:</p><video class=video-shortcode preload=auto controls>
 <source src=2024-01-30-tmux-run-same-command-in-multiple-panes.mp4 type=video/mp4>There should have
-been a video here but your browser does not seem to support it.</video>
-<a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/tmux/>tmux</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2024-01-18-touch-typing-spacebar-thumbs.html><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
+been a video here but your browser does not seem to support it.</video><p>Here is also a variation of the script that allows to add more panes to the existing session:</p><pre tabindex=0><code>#!/bin/bash
+
+SESS=&#39;generation-jobs&#39;
+CMD=&#39;sleep 1 &amp;&amp; echo &#34;Hello, World\!&#34;&#39;
+NUM_PANES=$1  # Number of panes to add, specified as the first script argument
+DELAY=5  # Delay in seconds
+
+# Check if the tmux session exists
+tmux has-session -t $SESS 2&gt;/dev/null
+
+if [ $? != 0 ]; then
+  echo &#34;Session $SESS does not exist, creating it...&#34;
+  # Create a new session named &#34;$SESS&#34; and 
+  tmux new-session -d -s $SESS
+  # Send the command to the newly created pane
+  tmux send-keys -t $SESS &#34;$CMD&#34; Enter
+  let NUM_PANES=NUM_PANES-1  # Decrease NUM_PANES by 1 because the first pane is already used
+else
+  echo &#34;Session $SESS exists, adding panes to it...&#34;
+fi
+
+# Create additional panes and start command in each pane with a delay
+for i in $(seq 1 $NUM_PANES); do
+  echo &#34;.&#34;
+  # Wait for DELAY seconds before starting the command
+  sleep $DELAY
+  
+  # Split window and create a new pane
+  tmux split-window -v -t $SESS
+  # Even out the panes in the current window
+  tmux select-layout -t $SESS tiled
+
+  # Send the command to the newly created pane
+  tmux send-keys -t $SESS &#34;$CMD&#34; Enter
+done
+
+# Attach to session named &#34;$SESS&#34;
+tmux attach -t $SESS
+</code></pre><a href=https://stackexchange.com/users/261528><img src="https://stackexchange.com/users/flair/261528.png?theme=clean" width=208 height=58 alt="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Boris Serebrov on Stack Exchange, a network of free, community-driven Q&amp;A sites"></a></div><div class=popup><div class=close>close</div><div class=download><a href target=_blank>Download (<span class=name></span>)</a></div><div class=popup-content></div></div><footer class=entry-footer><div class='container sep-before'><div class=tags><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2H12l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=screen-reader-text>Tags: </span><a class=tag href=/tags/tmux/>tmux</a></div></div></footer></article><nav class=entry-nav><div class=container><div class='prev-entry sep-before'><a href=/html/2024-01-18-touch-typing-spacebar-thumbs.html><span aria-hidden=true><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><line x1="20" y1="12" x2="4" y2="12"/><polyline points="10 18 4 12 10 6"/></svg>Previous</span>
 <span class=screen-reader-text>Previous post: </span>Touch Typing: Spacebar and Thumbs</a></div></div></nav><section id=comments class=comments><div class='container sep-before'><div class=comments-area><div id=disqus_thread></div><script>var disqus_config=function(){this.page.url="http://serebrov.github.io/html/2024-01-30-tmux-run-same-command-in-multiple-panes.html"};(function(){var e=document,t=e.createElement("script");t.src="https://serebrov.disqus.com/embed.js",t.setAttribute("data-timestamp",+new Date),(e.head||e.body).appendChild(t)})()</script><noscript>Please enable JavaScript to view the
 <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></section></main><footer id=footer class=footer><div class='container sep-before'><section class='widget widget-social_menu sep-after'><nav aria-label='Social Menu'><ul><li><a href=https://github.com/serebrov target=_blank rel=noopener><span class=screen-reader-text>Open Github account in new tab</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37.0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44.0 0020 4.77 5.07 5.07.0 0019.91 1S18.73.65 16 2.48a13.38 13.38.0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07.0 005 4.77 5.44 5.44.0 003.5 8.55c0 5.42 3.3 6.61 6.44 7A3.37 3.37.0 009 18.13V22"/></svg></a></li><li><a href=mailto:serebrov@gmail.com target=_blank rel=noopener><span class=screen-reader-text>Contact via Email</span><svg class="icon" viewbox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1.0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1.0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a></li></ul></nav></section><div class=copyright><p>&copy; 2020-2024 Boris Serebrov</p></div></div></footer></div></div><script>window.__assets_js_src="/assets/js/"</script><script src=https://serebrov.github.io/assets/js/main.67d669ac.js></script><script src=/js/jquery.min.js></script><script src=/js/custom.js></script></body></html>
