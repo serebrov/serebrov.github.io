@@ -24,7 +24,7 @@ run           - virtual environments
 To run it on the server instance you need to init virtual environment and set environment variables first:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>source /opt/python/run/venv/bin/activate <span style=color:#f92672>&amp;&amp;</span> source /opt/python/current/env
 </span></span></code></pre></div><p>Now you can start the application manually:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>cd /opt/python/current/app
 </span></span><span style=display:flex><span>python application.py
-</span></span></code></pre></div><p>Or start flask shell with <code>flask shell</code>.</p><h3 id=how-to-install-celery>How to install celery</h3><p><a href=http://www.celeryproject.org/>Celery</a> is a distributed task queue.</p><p>Our requirements are following:</p><ul><li>the celery application should be launched automatically when new version is deployed to Elastic Beanstalk</li><li>the celery application should be watched by supervisord and restarted in the case of failure</li></ul><p>The final project structure will be this:</p><pre tabindex=0><code>  .ebextensions/               - elastic beanstal configs
+</span></span></code></pre></div><p>Or start flask shell with <code>flask shell</code>.</p><h3 id=how-to-install-celery>How to install celery</h3><p><a href=http://www.celeryproject.org/>Celery</a> is a distributed task queue.</p><p>Our requirements are following:</p><ul><li>the celery application should be launched automatically when new version is deployed to Elastic Beanstalk</li><li>the celery application should be watched by supervisord and restarted in the case of failure</li></ul><p>The final project structure will be this:</p><pre tabindex=0><code>  .ebextensions/               - elastic beanstalk configs
     myapp.config               - main config
     deploy.sh                  - deployment script, launched from main config
     utils.sh                   - utility functions for deployment script
@@ -39,7 +39,7 @@ To run it on the server instance you need to init virtual environment and set en
 </code></pre><p>First, add the following line to the requirements.txt in the root folder of your project (these requirements will be installed with pip automatically):</p><pre tabindex=0><code>...
 Celery==3.1.17
 </code></pre><p>Note that the version number can be different, 3.1.17 is just an actual version at the moment of writing.</p><p>Then create a main celery application file. In my case, this is <code>celery.py</code> file in the root folder.
-Here I don&rsquo;t describe the celery application file content - do whatever you need from celery here.</p><p>Now modify the elasticbeanstalk config (.elasticbeanstak/myapp.config) to include the deployment script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>container_commands:
+Here I don&rsquo;t describe the celery application file content - do whatever you need from celery here.</p><p>Now modify the elasticbeanstalk config (.elasticbeanstalk/myapp.config) to include the deployment script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>container_commands:
 </span></span><span style=display:flex><span>  004-start-container-commands:
 </span></span><span style=display:flex><span>    command: logger <span style=color:#e6db74>&#34;Start deploy script&#34;</span> -t <span style=color:#e6db74>&#34;DEPLOY&#34;</span>
 </span></span><span style=display:flex><span>  005-command:
@@ -81,7 +81,7 @@ More details about this method can be found in the great <a href=http://www.hudk
 </span></span><span style=display:flex><span>supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
 </span></span></code></pre></div><p>A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
 So in any case we need to modify the main supervisord config.
-The script above does this by adding a following lines to it:</p><pre tabindex=0><code>[include]
+The script above does this by adding the following lines to it:</p><pre tabindex=0><code>[include]
 ; it is possible to include multiple files, names should be separated by space
 files=celeryd.conf
 </code></pre><p>The <code>celeryd.conf</code> is copied into the same folder where supervisord.conf resides.</p><p>The <code>.ebextensions/utils.sh</code> script contains additional functions used by deployment script:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
@@ -196,7 +196,7 @@ files=celeryd.conf
 </span></span><span style=display:flex><span><span style=color:#75715e>#</span>
 </span></span><span style=display:flex><span>exec /opt/python/run/venv/bin/celery worker -A tasks --loglevel<span style=color:#f92672>=</span>INFO
 </span></span></code></pre></div><p>Actually we configured Elastic Beanstalk to run and manage an additional application.
-The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.</p><h3 id=bonus-how-to-install-zeromq-libaray>Bonus: how to install ZeroMQ libaray</h3><p>To install ZeroMQ python library add it to requirements.txt:</p><pre tabindex=0><code>Flask==0.9
+The same approach can be used for any kind of application, not necessarily celery - it can be any other application even written in other than python language.</p><h3 id=bonus-how-to-install-zeromq-library>Bonus: how to install ZeroMQ library</h3><p>To install ZeroMQ python library add it to requirements.txt:</p><pre tabindex=0><code>Flask==0.9
 boto==2.34.0
 ...
 pyzmq==13.0.2
