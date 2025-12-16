@@ -19,7 +19,7 @@ Drone CI setup First you&rsquo;ll need to create a drone configuration file, .">
 </span></span><span style=display:flex><span>    <span style=color:#f92672>recipients</span>:
 </span></span><span style=display:flex><span>      - <span style=color:#ae81ff>mymail@gmail.com</span>
 </span></span></code></pre></div><p>As you can see the setup is really simple. I have a <a href=https://github.com/serebrov/centos-python2.7-java>custom docker image</a> which installs all the application requirements.
-Then drone runs <code>pip install -r requirements.txt</code> to python app dependencies and runs <code>ci_test.sh</code> shell script to launch testing.
+Then drone runs <code>pip install -r requirements.txt</code> to install Python app dependencies and runs <code>ci_test.sh</code> shell script to launch testing.
 This script looks like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
 </span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e># set -e</span>
 </span></span><span style=display:flex><span>
