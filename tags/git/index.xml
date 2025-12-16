@@ -19,7 +19,7 @@ Create new branch This is a safe and simple method that does not require history
 This is not convenient in many cases so here is how to fix this.
 Just for git commands:
 git config --global --replace-all core.pager &amp;#34;less -iXFR&amp;#34; For less command, globally (including git) - add to your shell profile (.bashrc, .zshrc, etc):
-export LESS=-iXFR Options we set for less:</description></item><item><title>How to setup git server on ubuntu with push email notifications</title><link>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</link><pubDate>Fri, 14 Jun 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</guid><description>Git Server Prerequisites are git and ssh-server (apt-get install openssh-server).
+export LESS=-iXFR Options we set for less:</description></item><item><title>How to set up git server on ubuntu with push email notifications</title><link>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</link><pubDate>Fri, 14 Jun 2013 00:00:00 +0000</pubDate><guid>https://serebrov.github.io/html/2013-06-14-git-server-setup.html</guid><description>Git Server Prerequisites are git and ssh-server (apt-get install openssh-server).
 The installation process is described in the Pro Git book. Below is the setup process with some comments and updates.
 Add git user, set some password (you will be asked for it):
 $ sudo adduser git Log in as git user and setup authorized ssh keys:

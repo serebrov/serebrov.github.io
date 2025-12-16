@@ -24,7 +24,7 @@ git cherry-pick G3
 </code></pre><p>It is also possible to <a href=https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html>cherry pick a range of commits</a> with <code>git cherry-pick G1^..G3</code>.</p><h2 id=use-git-reset>Use git reset</h2><p>A simple way to throw away a few recent commits is to use <code>git reset</code>.
 It re-writes the commit history, so only use it when your changes are not public yet (you can do this locally or on your private branch).</p><p>The <code>git reset</code> command can be used to throw away recent commits (the <code>--hard</code> flag will also remove any local changes that are not committed yet):</p><pre tabindex=0><code>Careful: `git reset` will rewrite history.
 
-Careful: `--hard` will remove not-commited local changes.
+Careful: `--hard` will remove not-committed local changes.
 </code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ git reset --hard HEAD~3
 </span></span></code></pre></div><p>Here we can refer to <code>B3</code> as <code>HEAD</code>, <code>B2</code> is <code>HEAD~1</code>, <code>B1</code> is <code>HEAD~2</code>.
 This way the last good commit <code>G3</code> is <code>HEAD~3</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>G1 - G2 - G3 - B1 - B2 - B3
@@ -71,7 +71,7 @@ Note: otherwise (you&rsquo;ve got conflicts error) it is probably better to do <
 </span></span><span style=display:flex><span>git checkout -b branch  <span style=color:#75715e># Checkout branch with the same name again</span>
 </span></span><span style=display:flex><span>git push -f origin HEAD  <span style=color:#75715e># Force-push the new branch</span>
 </span></span></code></pre></div><p>So, basically, we are removing the existing branch and creating another branch with the same name from <code>G3</code>.</p><h3 id=revert-to-the-specific-revision-using-git-reset>Revert to the specific revision using git reset</h3><p>The solution comes from the <a href=https://stackoverflow.com/questions/1895059/revert-to-a-commit-by-a-sha-hash-in-git/1895095#1895095>Revert to a commit by a SHA hash in Git?</a> question.</p><p>Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
-The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p><pre tabindex=0><code>Careful, reset --hard will remove non-commited changes
+The soft reset will keep file modifications, so it will bring old state back on top of the current state:</p><pre tabindex=0><code>Careful, reset --hard will remove non-committed changes
 </code></pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>$ git reset --hard 0682c06  <span style=color:#75715e># Use the SHA1 of the revision you want to revert to</span>
 </span></span><span style=display:flex><span>HEAD is now at 0682c06 G3
 </span></span><span style=display:flex><span>$ git reset --soft HEAD@<span style=color:#f92672>{</span>1<span style=color:#f92672>}</span>
