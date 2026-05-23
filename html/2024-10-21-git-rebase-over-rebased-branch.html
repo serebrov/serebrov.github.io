@@ -52,7 +52,7 @@ git rebase -i HEAD~5 --update-refs
 Updated the following refs with --update-refs:
     refs/heads/A
     (if there are more branches, they will be listed here)  
-</code></pre><p>Now we can push changes to the remote repository like this:</p><pre tabindex=0><code>git push --force-with-lease B A # we can list all updated branches here
+</code></pre><p>Now we can push changes to the remote repository like this:</p><pre tabindex=0><code>git push --force-with-lease origin B A # we can list all updated branches here
 </code></pre><h2 id=method-2-rebase-branches-one-by-one>Method 2: Rebase branches one-by-one</h2><p>This is an older solution, before <code>--update-refs</code> was available.</p><p>We use <code>git rebase --onto</code> to rebase previous branches. It works like this:</p><pre tabindex=0><code># Checkout first branch
 git checkout A
 
