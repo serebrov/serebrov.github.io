@@ -1,0 +1,66 @@
+#+TITLE: Vim: highlight-select-change flow
+#+DATE: <2026-10-03>
+#+TYPE: note
+#+FILETAGS: :vim:
+#+DESCRIPTION: Vim usage tip, a visual search/replace flow.
+
+Vim (and Emacs evil) usage tip to make the search/replace flow more visual:
+
++ highlight: use `*` to highlight the text you want to replace
++ select: select the area you want to replace in in the visual mode
++ change: execute :'<,'>s//new_word/g or :d or :g, etc.
+
+In this scenario, we can visually see words that will be replaced
+and we limit the operation to the selected visual area.
+
+The key is that we highlight the word with `*` first, then we can
+skip the first argument for :s or other commands and we see it
+on the screen.
+
+Note that the `:s` command does not have to repeat the search pattern,
+we use `s//replacement` form that automatically operates on the last search.
+
+By default =*= only highlights a word and this makes it work for visual selection:
+
+#+begin_src vimscript
+    " Visual search
+    " select text and hit * / # to find it
+    " http://got-ravings.blogspot.com/2008/07/vim-pr0n-visual-search-mappings.html
+    " https://github.com/godlygeek/vim-files/blob/master/plugin/vsearch.vim
+    " Visual mode search
+    function! s:VSetSearch()
+      let temp = @@
+      norm! gvy
+      let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+      " Use this line instead of the above to match matches spanning across lines
+      "let @/ = '\V' . substitute(escape(@@, '\'), '\_s\+', '\\_s\\+', 'g')
+      call histadd('/', substitute(@/, '[?/]', '\="\\%d".char2nr(submatch(0))', 'g'))
+      let @@ = temp
+    endfunction
+
+    " xnoremap - only for visual mode, but not for select mode
+    xnoremap * :<C-u>call <SID>VSetSearch()<CR>/<CR>N
+    xnoremap # :<C-u>call <SID>VSetSearch()<CR>?<CR>N
+#+end_src
+
+For Emacs Evil:
+
+#+begin_src emacs-lisp
+;; Visual search: select text and hit * / # to search for it literally.
+;; Stays on the first match, like the normal-state * / # above.
+(use-package evil-visualstar
+  :after evil
+  :config
+  (defun my-evil-visualstar-forward-stay ()
+    "Search for the visual selection forward but stay on the first match."
+    (interactive)
+    (call-interactively 'evil-visualstar/begin-search-forward)
+    (evil-ex-search-previous))
+  (defun my-evil-visualstar-backward-stay ()
+    "Search for the visual selection backward but stay on the first match."
+    (interactive)
+    (call-interactively 'evil-visualstar/begin-search-backward)
+    (evil-ex-search-previous))
+  (define-key evil-visual-state-map (kbd "*") 'my-evil-visualstar-forward-stay)
+  (define-key evil-visual-state-map (kbd "#") 'my-evil-visualstar-backward-stay))
+#+end_src

@@ -1,14 +1,14 @@
 #+TITLE: Org mode demo
-#+SUBTITLE: Demo to show how various org mode blocks are rendered.
+#+SUBTITLE: Demo to show how various Org mode blocks are rendered.
 #+DATE: <2000-09-25>
 #+TYPE: post
 #+FILETAGS: :org:
 #+DESCRIPTION: A sample post: folding sections, code, images, video, and tables.
 
-This test post is the blog and org-mode features.
+This test post shows the blog and Org mode features.
 
 * Code blocks
-Source higlighting is done by Emacs at build time (with ~htmlize~). Move the mouse over a block to see the copy button.
+Source highlighting is done by Emacs at build time (with ~htmlize~). Move the mouse over a block to see the copy button.
 
 #+BEGIN_SRC python :results output :exports both
 from pathlib import Path
@@ -65,7 +65,7 @@ Everything is text, and that is powerful.
 
 #+HTML_HEAD_EXTRA: <script defer src="/static/config-preview.js"></script>
 
-The custom popup is implemented in a separate javascript file that can be included like this:
+The custom popup is implemented in a separate JavaScript file that can be included like this:
 
 #+begin_example
     #+HTML_HEAD_EXTRA: <script defer src="/static/config-preview.js"></script>
@@ -76,7 +76,7 @@ The custom popup is implemented in a separate javascript file that can be includ
 Here is a live example:
 [[file:files/cwl-setup.config][cwl-setup.config, click to preview in popup]]
 
-File can also be displayed in the HTML =<details>= tag:
+The file can also be displayed in the HTML =<details>= tag:
 
 #+begin_details
 #+begin_summary
@@ -87,7 +87,7 @@ cwl-setup.config ([[file:files/cwl-setup.config][download]])
 
 * HTML Export
 
-The =#+begin_export html= and =#+end_export= allow inserting HTML snippets that
+The =#+begin_export html= and =#+end_export= lines allow inserting HTML snippets that
 will be added to the HTML after org export:
 
 #+begin_example

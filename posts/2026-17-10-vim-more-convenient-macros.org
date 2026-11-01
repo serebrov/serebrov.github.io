@@ -1,0 +1,95 @@
+#+TITLE: Vim: better ways to handle macros
+#+DATE: <2026-10-03>
+#+TYPE: note
+#+FILETAGS: :vim:
+#+DESCRIPTION: Vim usage tip, how to manage macros in a more convenient way.
+
+* The ~@~ Command
+
+The ~@~ command is more known as a command to execute macros. But it is more generic and it can execute vim commands from any vim register.
+
+Here is what what help says:
+
+#+BEGIN_QUOTE
+							*@*
+@{0-9a-z".=*+}		Execute the contents of register {0-9a-z".=*+} [count]
+			times.  Note that register '%' (name of the current
+			file) and '#' (name of the alternate file) cannot be
+			used.
+#+END_QUOTE
+
+And a good quote about what =@= can do from the [[https://stackoverflow.com/questions/1218390/what-is-your-most-productive-shortcut-with-vim][Stack Overflow post]]:
+
+#+BEGIN_QUOTE
+The @ command is probably the most obscure vi command.
+
+@ executes the contents of a register as if it were a vi or ex command.
+
+Example: I often use: :r!locate ... to find some file on my system and
+read its name into my document. From there I delete any extraneous hits,
+leaving only the full path to the file I'm interested in.
+
+Rather than laboriously Tab-ing through each component of the path
+(or worse, if I happen to be stuck on a machine without Tab completion
+support in its copy of vi) I just use:
+- 0i:r (to turn the current line into a valid :r command),
+  it becomes something like :r /path/to/file
+- "cdd (to delete the line into the "c" register) and
+- @c execute that command.
+
+So we execute the `:r /path/to/file` command with @c and the file content
+is inserted into the current buffer.
+#+END_QUOTE
+
+It is interesting that the file name completion happens inside the regular
+Vim buffer and not inside the special command line "mini-buffer".
+
+:r!locate *.org
+
+* Manage macros in a regular buffer
+Practically it allows using the regular vim buffer to edit and execute commands.
+The command buffer =:= is limited and less convenient, so instead you can
+prepare the command in one buffer and run in another (or prepare, delete to
+the register and run in the same buffer).
+
+For example: do "cdd or "cyy on the line below and then @c to add // to all lines.
+
+#+begin_src vimscript
+:% norm I//
+#+end_src
+
+This also means that instead of recording a macro, you can type it out and then execute.
+Or you can record record, paste and edit, then execute.
+
+For example:
+- qa - start recording into register a
+- q - stop recording
+- "ap - paste the macro, edit it
+- "ayy - yank back
+- @a - execute
+
+The contents of the register can also be inserted with =Ctrl-R [a-z]= in the
+insert mode (=Ctrl-R a= in the example above).
+
+* The ~norm~ command
+
+One more note that =:norm= command is often a good alternative to macros
+(or more recent neovim multicursors).
+
+For example, as shown above, the =:% norm I//= adds =//= at the beginning of
+each line and =:% norm A!= appends =!= to each line.
+
+Combined with globals (=:g= and =:v=) this becomes a fast and flexible way
+to apply similar edits in the file.
+
+* Using globals with ~norm~
+
+For example, =:g/^For/norm A!= adds =!= at the end of each line that starts with =For=:
+- =:g= - the =global= command
+- =/^For/= - find all lines that start (the =^= in vim is the start of the line) with =For=
+- =norm A!= - execute =A!= on matching lines
+  - =A= means "append" and starts the insert mode
+  - =!= inserts the "!"
+
+Similarly, =v= can be used to apply commands to lines that do not match the pattern.
+For example, =:v/^For/norm A!= adds =!= at the end of each line that does not start with =For=.

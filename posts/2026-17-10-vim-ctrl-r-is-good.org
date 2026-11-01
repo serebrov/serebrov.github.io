@@ -1,0 +1,42 @@
+#+TITLE: Vim: The useful Ctrl-R
+#+DATE: <2026-10-03>
+#+TYPE: note
+#+FILETAGS: :vim:
+#+DESCRIPTION: Ctrl-R can be used to insert the file name, register content, last search and more.
+
+I often use =Ctrl-R %= to insert the current file name, for example, to make a
+copy of the current file:
+
+#+begin_example
+:saveas [Ctrl-R %]
+# turns into
+:saveas /Users/my/blog/posts/2026-17-10-vim-ctrl-r-is-good.org
+#+end_example
+
+=Ctrl-R= can be used in insert mode or on the command line to paste:
+- =Ctrl-R a-z= - named register
+- =Ctrl-R "= - default register
+- =Ctrl-R %= - current file name
+- =Ctrl-R #= - alternate file name
+- =Ctrl-R * / += - clipboard contents
+- =Ctrl-R /= - last search
+- =Ctrl-R := - last command line
+- =Ctrl-R .= - last inserted text
+- =Ctrl-R -= - last small delete
+- ~Ctrl-R =~ - evaluate expression (for example, in insert mode, ~Ctrl-R =~, then =2+2= and Enter)
+  (useful for :r!cat % to insert the file content)
+
+The =%= and =#= also work as current file and alternate file aliases on the command line.
+For example, =:!ls %= will show the current file name.
+A more useful example: =:!git add %= stages the current file with git.
+
+Only in command-line mode:
+- =Ctrl-R Ctrl-W= - word under the cursor
+- =Ctrl-R Ctrl-A= - WORD under the cursor
+- =Ctrl-R Ctrl-L= - line under the cursor
+- =Ctrl-R Ctrl-F= - file name under the cursor
+- =Ctrl-R Ctrl-P= - file name under the cursor, expanded with ='path'= (as in =gf=)
+- =Ctrl-\ e {expr}= - evaluate the expression and replace the command line with the
+  result
+
+See =:help i_CTRL-R= and =:help c_CTRL-R=.
