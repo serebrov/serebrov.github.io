@@ -33,7 +33,7 @@ Special branches are `master`, `staging` and `production`:
 ```
 
 Task branches should be short-living, each task should take a few hours or, at maximum, a few days to complete.
-So usually should be not necessary to merge updates back from master to the task branch.
+So usually it should not be necessary to merge updates back from master to the task branch.
 
 General git guidelines:
 
@@ -46,11 +46,11 @@ General git guidelines:
 
 ### 1) Select a Task to Work on
 
-I assume that you have the task description in some project management like [Redmine](http://www.redmine.org/) or [Trello](https://trello.com/).
+I assume that you have the task description in some project management system like [Redmine](http://www.redmine.org/) or [Trello](https://trello.com/).
 
 ### 2) Check If Working Copy Is Clean
 
-Check if there are no uncommited changes:
+Check if there are no uncommitted changes:
 
 ```bash
     $ git status
@@ -60,7 +60,7 @@ Check if there are no uncommited changes:
     nothing to commit, working directory clean
 ```
 
-Note: if there are uncommited changes, you can try to go on with following steps; in the case when switching to another branch is not safe, git will stop with error message (you changes will not be lost). An alternative is to use the [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) command to temporary save your changes into the special `stash` area, you can restore these changes later with `git stash pop`.
+Note: if there are uncommitted changes, you can try to go on with following steps; in the case when switching to another branch is not safe, git will stop with error message (your changes will not be lost). An alternative is to use the [git stash](https://git-scm.com/book/en/v1/Git-Tools-Stashing) command to temporary save your changes into the special `stash` area, you can restore these changes later with `git stash pop`.
 
 ### 3) Switch to the Master Branch and Update the Code
 
@@ -173,7 +173,7 @@ This can be done using github `pull request` feature:
  * Note: at this point changes are not merged yet. Now we have a pull request which can be reviewed by other developers and discussed. It is possible to update it with some fixes (just commit some changes on the same branch and push them)
 * When the pull request is approved it can be merged to `master` branch:
  * Click `Merge pull requests` button and confirm merge
- * Note: github will not allow to merge the branch if there are conflicts. In this case you need to merge changes from master branch to you current branch, fix the conflicts and then push your branch to the server again.
+ * Note: github will not allow to merge the branch if there are conflicts. In this case you need to merge changes from master branch to your current branch, fix the conflicts and then push your branch to the server again.
 
 Similar technique can be used not only with github, but with other git servers too (for example, bitbucket).
 
@@ -181,7 +181,7 @@ Similar technique can be used not only with github, but with other git servers t
 
 Once the work is finished on the branch, the change can be reviewed manually.
 
-1) Make sure the automatic tests suite has passed successfully on the branch, check that everything is commited and pushed:
+1) Make sure the automatic tests suite has passed successfully on the branch, check that everything is committed and pushed:
 
 ```bash
     $ git status
@@ -244,13 +244,13 @@ Once testing on the `staging` branch is done, it can be merged to the `productio
 
 ### Work on the Branch Created by Someone Else
 
-Note: while it is possible for several developers to work on the same branch at the same time, but it is better to avoid this and create separate branch for each developer.
+Note: while it is possible for several developers to work on the same branch at the same time, it is better to avoid this and create separate branch for each developer.
 
 So this is for the case when someone created the branch, but did not finish the work and passed the task to you.
 This also can be useful to review other developer's work locally.
 
 ```bash
-    # check current state, make sure everything is commited
+    # check current state, make sure everything is committed
     $ git status
 
     # get recent changes from the server
@@ -274,7 +274,7 @@ It is not clear from the first sight what was done on the current branch and wha
 Here we merge changes from `master` to our current task branch:
 
 ```bash
-    # check current state, make sure everything is commited
+    # check current state, make sure everything is committed
     $ git status
 
     # check out the branch you want to merge from (for example, master)

@@ -8,7 +8,7 @@ url: "/html/2015-07-05-elastic-beanstalk-drone-ci-setup.html"
 
 [Drone CI](https://github.com/drone/drone) is a Continuous Integration platform. It uses [Docker](https://www.docker.com/) containers to run tests for your application hosted on [github](http://github.com).
 
-It not complex to set up the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
+It is not complex to set up the automatic testing for your application and run Drone CI on EC2 instance using Elastic Beanstalk. It is even not necessary to have a dedicated EC2 instance for CI system, for example, I run it on the staging server.
 <!-- more -->
 
 # Drone CI setup
@@ -28,7 +28,7 @@ notify:
 ```
 
 As you can see the setup is really simple. I have a [custom docker image](https://github.com/serebrov/centos-python2.7-java) which installs all the application requirements.
-Then drone runs `pip install -r requirements.txt` to python app dependencies and runs `ci_test.sh` shell script to launch testing.
+Then drone runs `pip install -r requirements.txt` to install Python app dependencies and runs `ci_test.sh` shell script to launch testing.
 This script looks like this:
 
 ```bash
@@ -64,7 +64,7 @@ Mock is used during development and tests run very fast (few seconds) and local 
 
 Elastic Beanstalk setup allows to automatically install Drone CI when new EC2 instance is launched.
 
-Here it is good to have a single-instance Elastic Beanstalk environment and scripts below will install Drone on the EC instance.
+Here it is good to have a single-instance Elastic Beanstalk environment and scripts below will install Drone on the EC2 instance.
 
 First, the EB config (`.ebextensions/app.config`):
 
@@ -289,7 +289,7 @@ Access it via url like `your_eb_environment_url.elasticbeanstalk.com:8080`.
 # Setup Drone users
 
 In the configuration above we didn't set the option to open new user registration to drone, so random people will not see your repositories and tests.
-Instead you will need to explicitly invite all the people who need an access.
+Instead you will need to explicitly invite all the people who need access.
 
 First, login with github as the repository owner. This user will become Drone CI admin and will be able to invite other users.
 Now select `Users` in Drone menu and invite more users (using github accounts).
@@ -307,7 +307,7 @@ So when the setup is done the good idea is to make an image of the running insta
 - Open `AMIs` page and wait until image is created, get the AMI ID (like ami-d2faa5b0)
 - Go to Elastic Beanstalk environment, Configuration, Instances and set `Custom AMI ID`
 
-Now if you instance is re-created all the settings will stay.
+Now if your instance is re-created all the settings will stay.
 The drawback is that you'll need to repeat the process once you add more users.
 Alternative is to use external RDS instance with MySql as Drone database.
 
@@ -332,7 +332,7 @@ For your drone environment, you can choose one of existing docker images, check 
 
 But custom image with additional setup steps can speed up the build process, because you don't need to wait for dependencies install on each build.
 
-I use [an automaited build feature of docker hub](https://docs.docker.com/docker-hub/builds/) which means that I have a [github repository with docker file and description](https://github.com/serebrov/centos-python2.7-java).
+I use [an automated build feature of docker hub](https://docs.docker.com/docker-hub/builds/) which means that I have a [github repository with docker file and description](https://github.com/serebrov/centos-python2.7-java).
 
 Every time I push new Dockerfile version to this repository the image is re-build and becomes [available](https://registry.hub.docker.com/u/serebrov/centos-python2.7-java/) on the docker hub.
 

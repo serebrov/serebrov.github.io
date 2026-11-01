@@ -21,6 +21,38 @@ Next Generation Session/Windows/Tabs Manager and Too_Many_Open_Tabs Solution Tha
 *  Outliner Features – You will be able annotate open or closed windows and tabs, add comments to them, notes, a summary of main ideas, to-do items. Organize all of this in logical hierarchies and delimited groups; freely reorder to specify priority or importance.
 *  Crash Resistance and Restore Feature Done Right.
 
+
+[Dualless](https://chrome.google.com/webstore/detail/dualless/bgdpkilkheacbboffppjgceiplijhfpd)
+--------------------------------------------
+
+Dualless - For those who don't have dual monitor.
+Dualless splits your browser windows into two by just 2 clicks. The ratio can be adjusted according to your needs.You may have a  browser window showing on the right that occupy 30% of your  screen. Then the rest of space leave to Google+.
+
+The extension simulates the environment of dual monitor. Utilize the space for 16:9 monitor.
+
+[Tab Resize - split screen layouts](https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc)
+--------------------------------------------
+
+Split Screen Layouts made easy. Automates resizing tab windows to predefined and user defined layouts.
+A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs.
+
+[DEMO video](https://www.youtube.com/watch?v=SD3hrdxn3QU)
+
+### How it works ###
+* The selected/highlighted tab along with all tabs to the right of it will be considered. Whether you have more or less tabs than are needed the extension will resize only the available tabs.
+* Undo button will undo the previous layout resize. You can only perform undo once at any time.
+* In 'single tab' mode, only the selected/highlighted tab will considered. Only the current window/tab will change in size, all other tabs to the right will be ignored.
+* You can create your own custom layouts within reason and reset to default configurations if desired. Layouts are sorted most recent used on right.
+
+[Tab Scissors](https://chrome.google.com/webstore/detail/tab-scissors/cdochbecpfdpjobpgnacnbepkgcfhoek)
+--------------------------------------------
+
+This simple tab organization tool divides one window into two. If you have at least two tabs in the selected Chrome window, it…
+This simple tab organization tool divides one window into two.
+If you have at least two tabs in the selected Chrome window, it will split that window into two smaller side-by-side windows. All the tabs on the left side of the selected tab will stay in the left window, and the rest will move to the window on the right.
+It is especially helpful for those who have lots of tabs opened at a time.
+This extension works great with [Tab Glue](https://chrome.google.com/webstore/detail/tab-glue/mfedioikeigljhjfpghdejnogniddhna), which will glue all those pesky Chrome windows back together.
+
 [Frame two pages](https://chrome.google.com/webstore/detail/frame-two-pages/eldgpcphflnopbjadiaonofideekgdgm)
 --------------------------------------------
 
@@ -67,15 +99,6 @@ Known issues:
 - No support for multiple monitors
 - A few screen pixels unaccounted for on Mac OS X
 
-
-[Dualless](https://chrome.google.com/webstore/detail/dualless/bgdpkilkheacbboffppjgceiplijhfpd)
---------------------------------------------
-
-Dualless - For those who don't have dual monitor.
-Dualless splits your browser windows into two by just 2 clicks. The ratio can be adjusted according to your needs.You may have a  browser window showing on the right that occupy 30% of your  screen. Then the rest of space leave to Google+.
-
-The extension simulates the environment of dual monitor. Utilize the space for 16:9 monitor.
-
 [Chromie: Window and Tab Tools](https://chrome.google.com/webstore/detail/chromie-window-and-tab-to/mcgjgfcidldkpkanmdmedhpidpiegabg)
 -------------------------------------------
 
@@ -90,29 +113,6 @@ Manipulates (splits, merges, scrolls, indexes) Chrome's windows with simple clic
    * Another single-click will toggle between the big Chromie and the original Chromie where we started off with.
 * Synchronize Windows scrolling actions (syncScroll) among different windows by holding Alt + mouse wheel(or Shift + mouse wheel will be implemented soon enough).
 * There are options of layouts for you to pick and you decide how fast you can click by choosing click timeout parameter (where 200 millisecs is recommended).
-
-[Tab Resize - split screen layouts](https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc)
---------------------------------------------
-
-Split Screen Layouts made easy. Automates resizing tab windows to predefined and user defined layouts.
-A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs.
-
-[DEMO video](https://www.youtube.com/watch?v=SD3hrdxn3QU)
-
-### How it works ###
-* The selected/highlighted tab along with all tabs to the right of it will be considered. Whether you have more or less tabs than are needed the extension will resize only the available tabs.
-* Undo button will undo the previous layout resize. You can only perform undo once at any time.
-* In 'single tab' mode, only the selected/highlighted tab will considered. Only the current window/tab will change in size, all other tabs to the right will be ignored.
-* You can create your own custom layouts within reason and reset to default configurations if desired. Layouts are sorted most recent used on right.
-
-[Tab Scissors](https://chrome.google.com/webstore/detail/tab-scissors/cdochbecpfdpjobpgnacnbepkgcfhoek)
---------------------------------------------
-
-This simple tab organization tool divides one window into two. If you have at least two tabs in the selected Chrome window, it…
-This simple tab organization tool divides one window into two.
-If you have at least two tabs in the selected Chrome window, it will split that window into two smaller side-by-side windows. All the tabs on the left side of the selected tab will stay in the left window, and the rest will move to the window on the right.
-It is especially helpful for those who have lots of tabs opened at a time.
-This extension works great with [Tab Glue](https://chrome.google.com/webstore/detail/tab-glue/mfedioikeigljhjfpghdejnogniddhna), which will glue all those pesky Chrome windows back together.
 
 [Split Meister V](https://chrome.google.com/webstore/detail/split-meister-v/jmoblnpbicfhjfldifijonmpalgidhmd)
 -------------------------------------------

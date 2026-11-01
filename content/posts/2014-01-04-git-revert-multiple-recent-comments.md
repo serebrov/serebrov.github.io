@@ -1,5 +1,5 @@
 ---
-title: Git - how to revert multiple recent commits
+title: git - how to revert multiple recent commits
 date: 2014-01-04
 tags: [git]
 type: note
@@ -20,18 +20,42 @@ want to revert them.
 revision history like above, you can use it to try and see the effect of different
 commands.
 
-## git reset
+## Create new branch
 
-The first method is a simple way to throw away few recent commits,
-it re-writes the commit history, so only use it when your changes
-are not pushed to the server yet (or when you are 100% sure about what
-you are doing).
+This is a safe and simple method that does not require history rewrite: checkout the last 'good' commit and create a new branch from it:
 
-The `git reset` command can be used this way (the `--hard` flag will
-also clear any pending changes which are not commited yet):
+```
+git checkout G3
+git checkout -b my-new-branch
+```
+
+A variation of this is to create a new branch and then cherry-pick commits you need to it:
+
+```
+git checkout master
+git checkout -b my-new-branch
+git cherry-pick G1
+git cherry-pick G2
+git cherry-pick G3
+```
+
+It is also possible to [cherry pick a range of commits](https://serebrov.github.io/html/2021-09-13-git-cherry-pick-a-range-of-commits.html) with `git cherry-pick G1^..G3`.
+
+## Use git reset
+
+A simple way to throw away a few recent commits is to use `git reset`.
+It re-writes the commit history, so only use it when your changes are not public yet (you can do this locally or on your private branch).
+
+The `git reset` command can be used to throw away recent commits (the `--hard` flag will also remove any local changes that are not committed yet):
+
+```
+Careful: `git reset` will rewrite history.
+
+Careful: `--hard` will remove not-committed local changes.
+```
 
 ```bash
-$ git reset --hard HEAD~3  # Careful, will remove not-commited changes
+$ git reset --hard HEAD~3
 ```
 
 Here we can refer to `B3` as `HEAD`, `B2` is `HEAD~1`, `B1` is `HEAD~2`.
@@ -45,13 +69,11 @@ G1 - G2 - G3 - B1 - B2 - B3
               \-------------- HEAD~3
 ```
 
-## git revert
+## Use git revert
 
-If your changes are pushed to the remote repository or you want in general to aviod
-changing the commit history, then it is better to use `revert`.
+If your changes are public already (for example, merged to `master` or other public branch), then it is better to avoid history rewrites and use `git revert` to generate anti-commit for your changes.
 
-The `revert` command takes SHA1 of one or several commits and
-generates the new change to reverse the effect of these commits.
+The `revert` command takes SHA1 of one or several commits and generates the new change to reverse the effect of these commits.
 
 > Note for Mercurial users: in Mercurial, the `revert` command works differently -
 it takes the revision identifier and reverts the state of the repository to that
@@ -109,15 +131,77 @@ This is very useful if we want to revert some specific commits, for example, rev
 $ git revert --no-commit HEAD HEAD~2
 ```
 
-## Revert to the specific revision
+## Revert the commit in the middle of the history
 
-The `git revert` command reverts a range of specified revisions, but sometimes we just
-want to restore the state of some specific revision instead of reverting commits one-by-one.
+For example, we have history like this:
+
+```bash
+G1 - G2 - G3 - B1 - G4 - G5
+```
+
+And want to revert the `B1` commit.
+
+The safe way is to use the `git revert B1-sha1` command, as described above - it will generate an anti-commit for `B1`.
+
+The other method is to use interactive rebase to move the bad commit to the top of the history and then remove it with `git reset`:
+
+```bash
+git rebase -i HEAD~3
+
+pick B1-sha commit message
+pick G4-sha commit message
+pick G5-sha commit message
+```
+
+Here (in the file, opened by `git rebase`) we can edit the order of the commits and move the bad commit to the end of the commit history:
+
+```bash
+pick G4-sha commit message
+pick G5-sha commit message
+pick B1-sha commit message
+```
+
+Save the file and exit the editor. If everything is alright (commit has no dependencies), the command will be completed successfully.
+Note: otherwise (you've got conflicts error) it is probably better to do `git rebase --abort` to get back to the previous state and re-consider the update strategy.
+
+Now the history should look like this:
+
+```bash
+G1 - G2 - G3 - G4 - G5 - B1
+```
+
+And we can remove the last commit with `git reset --hard HEAD~1` (again, careful, it will remove any local uncommitted changes and will rewrite history, do not use on public branches).
+
+## Rollback to the specific revision
+
+The `git revert` command reverts a range of specified revisions, but sometimes we just want to restore the state of some specific revision instead of reverting commits one-by-one.
+
 This is also how `hg revert` works in Mercurial.
 
-This is especially useful if we want to revert past merge point, where it can be quite
-difficult to use `git revert` because we will also need to specify which parent to
-follow at merge point (you'll see a `Commit XXX is a merge but no -m option was given.` message).
+This is especially useful if we want to revert past the merge point, where it can be quite difficult to use `git revert` because we will also need to specify which parent to follow at merge point (you'll see a `Commit XXX is a merge but no -m option was given.` message).
+
+### Revert to the specific revision using git checkout
+
+Having a history like this:
+
+```bash
+
+ /-- master
+/
+G1 - G2 - G3 - B1 - B2 - B3
+                          \--- branch
+```
+
+We can rollback the branch state to `G3` commit this way:
+
+```bash
+git checkout G3-sha
+git branch -D branch  # Delete existing branch
+git checkout -b branch  # Checkout branch with the same name again
+git push -f origin HEAD  # Force-push the new branch
+```
+
+So, basically, we are removing the existing branch and creating another branch with the same name from `G3`.
 
 ### Revert to the specific revision using git reset
 
@@ -126,15 +210,18 @@ The solution comes from the [Revert to a commit by a SHA hash in Git?](https://s
 Here we first hard reset the state of the repository to some previous revision and then soft reset back to current state.
 The soft reset will keep file modifications, so it will bring old state back on top of the current state:
 
+```
+Careful, reset --hard will remove non-committed changes
+```
+
 ```bash
-# Careful, reset --hard will remove non-commited changes
 $ git reset --hard 0682c06  # Use the SHA1 of the revision you want to revert to
 HEAD is now at 0682c06 G3
 $ git reset --soft HEAD@{1}
 $ git commit -m "Reverting to the state of the project at 0682c06"
 ```
 
-### Revert to the specific revision using git read-tree
+### Rollback to the specific revision using git read-tree
 
 This solution comes from [How to do hg revert --all with git?](https://stackoverflow.com/questions/30572775/how-to-do-hg-revert-all-with-git) question:
 

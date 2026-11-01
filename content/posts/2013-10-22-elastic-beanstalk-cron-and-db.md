@@ -8,11 +8,11 @@ url: "/html/2013-10-22-elastic-beanstalk-cron-and-db.html"
 
 Problem
 --------------------------------------------
-I have a console command in php which needs an access to DB.
-The command need to be launched via cron.
+I have a console command in php which needs access to DB.
+The command needs to be launched via cron.
 <!-- more -->
 
-The DB connection string looks like like this
+The DB connection string looks like this
 
     'connectionString' => 'mysql:host='.$_SERVER['RDS_HOSTNAME'].';port='.$_SERVER['RDS_PORT'].';dbname='.$_SERVER['RDS_DB_NAME'],
 
@@ -23,7 +23,7 @@ So the command fails to access the database.
 
 Solution
 --------------------------------------------
-Solution is to set the required environment variables before launching the command and this can be done with '/opt/elasticbeanstal/support/envvars' script:
+The solution is to set the required environment variables before launching the command and this can be done with '/opt/elasticbeanstalk/support/envvars' script:
 
 ```bash
     0 3 * * * . /opt/elasticbeanstalk/support/envvars; /var/www/html/console/yiic mycommand

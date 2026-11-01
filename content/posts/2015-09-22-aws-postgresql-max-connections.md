@@ -21,7 +21,7 @@ Here is how it looked:
 ![cwl-setup.config, click to preview](/2015-09-22-22-connections.png).
 
 And this connection information is actually misleading - it shows 22 connections and it looks like around 30% consumed.
-While actually we already at 100% of connections.
+While actually we are already at 100% of connections.
 
 After some time, when the database load went down, I was able to login with psql to check max_connections parameter:
 

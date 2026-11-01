@@ -20,11 +20,11 @@ To debug mocha test with [node inspector](https://github.com/node-inspector/node
 ```
 
 This way there are 5 seconds to start the node inspector and set a breakpoint.
-Mocha should be lauched as this:
+Mocha should be launched like this:
 
 ```bash
     $ mocha -t 10000 --debug
 ```
 
-Same approach can be used not only for tests but for any short-living node app -
+The same approach can be used not only for tests but for any short-living node app -
 just wrap the startup code into the setTimeout() call.

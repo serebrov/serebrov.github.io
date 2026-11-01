@@ -52,7 +52,7 @@ foo = self.long_function_name(var_one, var_two,
 
 Now, besides the rename / refactoring we need to also fix the indentation in following lines.
 
-While the first way of formatting works good in these cases:
+While the first way of formatting works well in these cases:
 
 ```python
 # Two functions near each other, indentation is not jumping

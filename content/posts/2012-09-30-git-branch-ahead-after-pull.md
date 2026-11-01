@@ -9,25 +9,33 @@ url: "/html/2012-09-30-git-branch-ahead-after-pull.html"
 Your branch is ahead of 'origin/master' by 1 commit (or X commits) after `git pull origin master`.
 
 The sequence:
+
 * Have up-to-date repository
 * There is a change in the origin/master
 * Do `git pull origin master`
 * Change is received and merged
 * git status shows “Your branch is ahead of 'origin/master' by 1 commit.”
 
-The reason is because during “pull origin master” reference to the remote
-origin/master is not changed (still points to older version).
+The reason is because during `pull origin master` reference to the remote
+`origin/master` is not changed (still points to older version).
+
+Solution: you, probably, do not want to use the `git pull origin master` command.
+Use `git pull` instead (will fetch remote changes, update remote references and merge remote changes to your local branch) or `git fetch` (will fetch remote references, but without merge to your local branch, you can merge manually via `git merge origin/master`).
 
 <!-- more -->
 To check this:
 
-    git diff origin/master
+```
+git diff origin/master
+```
 
 It will show the difference - it should be the last master change.
 
-To fix this exacute:
+To fix this execute:
 
-    git fetch origin
+```
+git fetch origin
+```
 
 This will update git links to remotes.
 

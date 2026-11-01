@@ -1,30 +1,35 @@
 ---
-title: How to keep git log and less output on the screen
+title: How to keep `git log` and `git diff` output on the screen after exit
 date: 2014-01-04
 tags: [git]
 type: note
 url: "/html/2014-01-04-git-log-and-less-keep-output.html"
 ---
 
-When `git` uses `less` as pager the output of commands like `git log` disappears from the console
-screen when you exit from less.
+When `git` uses `less` as pager the output of commands like `git log` disappears from the console screen when you exit from less.
+
 This is not convenient in many cases so here is how to fix this.
 
-<!-- more -->
 Just for git commands:
 
-    git config --global --replace-all core.pager "less -iXFR"
+```bash
+git config --global --replace-all core.pager "less -iXFR"
+```
 
-For less globally (including git) - add to .bashrc / .zshrc / etc:
+For `less` command, globally (including git) - add to your shell profile (`.bashrc`, `.zshrc`, etc):
 
-    export LESS=-iXFR
+```bash
+export LESS=-iXFR
+```
 
-The options we set for less are:
+<!-- more -->
 
-    * -i - ignore case when searching (but respect case if search term contains uppercase letters)
-    * -X - do not clear screen on exit
-    * -F - exit if text is less then one screen long
-    * -R - was on by default on my system, something related to colors
+Options we set for `less`:
+
+* -i - ignore case when searching (but respect case if search term contains uppercase letters)
+* -X - do not clear screen on exit
+* -F - exit if text is less then one screen long
+* -R - was on by default on my system, something related to colors
 
 Links
 ============================================

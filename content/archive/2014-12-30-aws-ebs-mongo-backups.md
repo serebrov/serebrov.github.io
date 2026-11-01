@@ -6,7 +6,7 @@ type: note
 url: "/html/2014-12-30-aws-ebs-mongo-backups.html"
 ---
 
-I described how to setup [mongodb on EC2 using OpsWroks](http://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html) and here is how to setup mongo data backups.
+I described how to setup [mongodb on EC2 using OpsWorks](https://serebrov.github.io/html/2014-12-19-aws-opsworks-mongo-and-nodejs.html) and here is how to setup mongo data backups.
 
 In my case all mongo data is stored on the same EBS volume so I just need to make a volume snapshot.
 <!-- more -->

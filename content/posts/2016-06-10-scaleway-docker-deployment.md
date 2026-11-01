@@ -20,13 +20,13 @@ In this case I deploy to [Scaleway](https://scaleway.com), but same approach can
 
 ## Cloud Server
 
-First, you need the cloud server with one of operation systems, [supported by Docker Machine](https://docs.docker.com/machine/drivers/os-base/) with SSH access.
+First, you need the cloud server with one of operating systems, [supported by Docker Machine](https://docs.docker.com/machine/drivers/os-base/) with SSH access.
 I used Scaleway's VC1S server with Ubuntu 14.04.
 You also need to install [Docker Engine](https://docs.docker.com/engine/installation/linux/ubuntulinux/) and [Docker Machine](https://docs.docker.com/machine/install-machine/) locally.
 
 ## Docker Machine - setup Docker remotely
 
-Next step is to setup the Docker on the server, this is done with `docker-machine create` command:
+Next step is to set up the Docker on the server, this is done with `docker-machine create` command:
 
 ```bash
 SSH_HOST=111.222.333.44
@@ -56,7 +56,7 @@ This project is responsible for deployment of the web applications to the remote
 
 ### Projects layout
 
-There are several web applications which I want do deploy, each packaged into the docker container.
+There are several web applications which I want to deploy, each packaged into the docker container.
 
 On the filesystem they reside in the same `~/web` folder along with the `web-deploy` project which acts as a glue and setups everything together along with MySQL container (used by all projects) and HAProxy (listens to the port 80 and forwards requests to individual containers):
 
@@ -110,7 +110,7 @@ VOLUME /var/www/html/files
 ```
 
 This container is based on the official [php image](https://hub.docker.com/\_/php/).
-To make the php `mail` function work, I also setup `msmtp` and configure php to use it.
+To make the php `mail` function work, I also set up `msmtp` and configure php to use it.
 The example of the msmtp configuration file is [here](/scaleway-docker/msmtprc).
 
 On Scaleway by default SMTP ports are disabled. To make emails work, it is necessary to configure the security group (switch "Block SMTP" from On to Off). After changing the security group, server should be rebooted (stop / run via Archive option or Hard reboot).
@@ -149,7 +149,7 @@ Ruby application is running under apache with mod passenger.
 
 ## The web deploy project
 
-The `web-deploy` project is a glue to build and start the containers for all web projects, link them to mysql if necessary and setup the HAProxy to forward requests to each sub-project.
+The `web-deploy` project is a glue to build and start the containers for all web projects, link them to mysql if necessary and set up the HAProxy to forward requests to each sub-project.
 
 ```text
 in ~/web $
@@ -188,7 +188,7 @@ Top level scripts include:
 - [web-deploy/deploy.sh](/scaleway-docker/deploy.sh) - deploy all apps locally or to the remote instance
 - [web-deploy/init-docker.sh](/scaleway-docker/init-docker.sh) - use it for initial server setup (only needed once, for the new server)
 - [web-deploy/init-db-files.sh](/scaleway-docker/init-db-files.sh) - uploads files and database dumps to remote server and then goes over dumps in mysql/dump and drops/creates databases and loads dumps, also users [web-deploy/mysql/init-db.sh](/scaleway-docker/init-db.sh) and [web-deploy/mysql/dumps/load-dumps.sh](/scaleway-docker/load-dumps.sh), dump files should be under `web-deploy/mysql/dumps`
-- [web-deploy/mysql-cli.sh](/scaleway-docker/mysql-cli.sh) can be user to start the MySQL client for the MySQL container
+- [web-deploy/mysql-cli.sh](/scaleway-docker/mysql-cli.sh) can be used to start the MySQL client for the MySQL container
 
 The `deploy.sh` script uses docker-machine to build and run the containers on the remote server.
 There are several modes it can be used it:
@@ -290,7 +290,7 @@ docker build -t $CONTAINER_NAME .
 # start the container
 docker run -d -p $PORT:80 -v /var/web/projecta.com/files:/var/www/html/data/upload --name $APP_NAME --link web-mysql:mysql --restart always $ENV_DOCKER_OPTS $CONTAINER_NAME
 # initially files belong to the root user of the host OS
-# make them available to containter's www-data user
+# make them available to container's www-data user
 docker exec $APP_NAME sh -c 'chown -R www-data:www-data /var/www/html/files'
 ```
 
@@ -414,7 +414,7 @@ See the config file and [this post](https://www.digitalocean.com/community/tutor
 
 The HAProxy stats are available via http://hostname.com/haproxyStats. Login and password are set in the config file (haproxy.cfg, see the `stats auth` line in `defaults` section).
 
-Some hints to to debug problems with HAProxy setup:
+Some hints to debug problems with HAProxy setup:
 
 - Uncomment 'debug' in the config file
 - Check 'docker logs web-haproxy'
@@ -469,7 +469,7 @@ Some useful commands to view and manage Docker containers:
 There are few options to run cron with docker:
 * Run cron on the host machine (cronjobs can interact with containers via `docker exec ...`)
 * Run separate container with cron (cronjobs can interact with other containers via network or shared volumes)
-* Run multiple processes inside application containers (application and cron) usind supervisor or runit, for example, see http://phusion.github.io/baseimage-docker/.
+* Run multiple processes inside application containers (application and cron) using supervisor or runit, for example, see http://phusion.github.io/baseimage-docker/.
 * Run multiple processes via `CMD` instruction in the Dockerfile (for example, see http://programster.blogspot.com/2014/01/docker-working-with-cronjobs.html)
 
 Here I have chosen the first option to use cron on the host machine. First, the host machine is Ubuntu 14.04, so it already has cron. Second, everything runs on the same machine and I have no plans to scale out this setup, so it was the easiest option.
@@ -482,7 +482,7 @@ The [web-deploy/init-db-files.sh](/scaleway-docker/init-db-files.sh) script cont
   docker-machine scp -r ./config/.s3cfg scaleway:/root
 ```
 
-The `postfix` and `mutt` are need for cron to send local emails about jobs. You can check these mails by ssh'ing to the server and running mutt.
+The `postfix` and `mutt` are needed for cron to send local emails about jobs. You can check these mails by ssh'ing to the server and running mutt.
 The `s3cmd` is used to backup databases and files from the shared storage to S3.
 The `.s3cfg` contains credentials for [s3cmd](http://s3tools.org/s3cmd), it can be generated by running `s3cmd --configure`.
 

@@ -1,5 +1,5 @@
 ---
-title: How to setup git server on ubuntu with push email notifications
+title: How to set up git server on ubuntu with push email notifications
 date: 2013-06-14
 tags: [git]
 type: note
@@ -20,7 +20,7 @@ Add git user, set some password (you will be asked for it):
     $ sudo adduser git
 ```
 
-Log in as git user and setup authorized ssh keys:
+Log in as git user and set up authorized ssh keys:
 
 ```bash
     $ su git
@@ -28,8 +28,8 @@ Log in as git user and setup authorized ssh keys:
     git@localname$ mkdir .ssh
 ```
 
-For each user who need an access to the server add user's public key into ~/.ssh/authorized_keys
-to generate new key-pair for the user use ssh-keygen see [github manual](https://help.github.com/articles/generating-ssh-keys) for details.
+For each user who needs access to the server, add user's public key into ~/.ssh/authorized_keys.
+To generate a new key-pair for the user, use ssh-keygen (see [github manual](https://help.github.com/articles/generating-ssh-keys) for details).
 
 ```bash
     git@localname$ cat /home/usera/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
@@ -53,7 +53,7 @@ Make a dir for repositories and init bare repositories:
     git@localname$ git --bare init
 ```
 
-Sequrity - set git-shell for the git user:
+Security - set git-shell for the git user:
 
 ```bash
     # check where git-shell is
@@ -82,7 +82,7 @@ On the user side - clone the repository or add a remote to existing repository:
 
 For 'server.host.name' there are several options:
 * if the server has a domain name then just use it
-* use sever IP address instead of host name
+* use server IP address instead of host name
 * use any host name you like and add it to local hosts file to map to the IP address
 
 ### Possible problems and solutions
@@ -162,7 +162,7 @@ Install it:
     $ sudo apt-get install sendmail
 ```
 
-Check your hosts file - in my case sendmail was incredibly slow and this was fixed by following
+Check your hosts file - in my case sendmail was incredibly slow and this was fixed by the following
 line in /etc/hosts:
 
 ```bash
@@ -182,7 +182,7 @@ If you have problems with emails then check the log: /var/log/mail.log and error
 
 ### Setup SMTP for sendmail
 
-If you want to setup SMTP server for you emails do the following:
+If you want to set up an SMTP server for your emails do the following:
 
 ```bash
     $ cd /etc/mail
@@ -191,13 +191,13 @@ If you want to setup SMTP server for you emails do the following:
     $ sudo vim client-info
 ```
 
-Enter following line into the client-info file:
+Enter the following line into the client-info file:
 
 ```bash
     AuthInfo:smtp.server.com "U:mymail@server.com" "I:mymail@server.com" "P:mypassword"
 ```
 
-Here you put you smtp server name (instead of 'smtp.server.com') and your credentials.
+Here you put your smtp server name (instead of 'smtp.server.com') and your credentials.
 'U' is an smtp user (usually your email), 'I' is an account (usually also your email) and 'P' is a password.
 See details for parameters [here](http://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy).
 
@@ -207,7 +207,7 @@ Continue setup:
     $ sudo bash -c "makemap hash client-info < client-info"
 ```
 
-Edit the /etc/mail/sendmail.mc and add following lines before the "MAILER_DEFINITIONS" line:
+Edit the /etc/mail/sendmail.mc and add the following lines before the "MAILER_DEFINITIONS" line:
 
 ```bash
     define('SMART_HOST','smtp.server.com')dnl

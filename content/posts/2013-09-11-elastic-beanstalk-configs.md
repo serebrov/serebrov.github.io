@@ -7,11 +7,11 @@ url: "/html/2013-09-11-elastic-beanstalk-configs.html"
 ---
 
 By default Elastic Beanstalk console tool (eb) adds config files to .gitignore.
-If there are manual changes to EB configs it can be complex to manually sync these changes
+If there are manual changes to EB configs it can be difficult to sync these changes manually
 between different machines / different users.
-Of cause it is possible to add config files to git repository but there are also several
+Of course it is possible to add config files to git repository but there are also several
 parameters in the main config which are absolute paths to local files.
-This way it makes configs not useful for other users (except for the case when different
+This makes configs unusable for other users (except for the case when different
 users have exactly the same files layout).
 Here is how this problem can be fixed:
 
@@ -46,7 +46,7 @@ Add a wrapper script to run the original eb tool:
     eb "$@"
 ```
 
-Script should be on the same lever as the extracted directory.
+Script should be on the same level as the extracted directory.
 For example I have:
 
 ```bash
@@ -127,7 +127,7 @@ I had three absolute paths in my ./elasticbeanstalk/config:
 ```
 
 Path to aws credential file can be easily fixed by just removing it - eb tools will use
-config from your home dir by default (~/.elacticbeanstalk/aws_credential_file).
+config from your home dir by default (~/.elasticbeanstalk/aws_credential_file).
 
 Other two paths (for branch configs) can now be changed to relative:
 
@@ -164,4 +164,3 @@ For example, for 'eb status':
     Status	: Ready
     Health	: Green
 ```
-url: "/html/

@@ -3,7 +3,7 @@ title: SSH Tunnels (How to Access AWS RDS Locally Without Exposing it to Interne
 date: 2018-01-11
 tags: [ssh, aws]
 type: note
-html: "/html/2018-01-11-aws-ec2-ssh-tunnel.html"
+url: "/html/2018-01-11-aws-ec2-ssh-tunnel.html"
 ---
 
 Using SSH tunnels, it is possible to access remote resources that are not exposed to the Internet through the intermediate hosts or expose your local services to the Internet.
@@ -59,7 +59,7 @@ ssh my-remote-host -R *:${remote_port}:localhost:${local_port}
 
 With the command above we connect to the `my-remote-host` and instruct it to accept connections to the `8181` port and forward them to the `localhost:8888`.
 
-The `*:8181` that remote host will forward connections to any network interface (by default it will use only 127.0.0.1).
+The `*:8181` means that remote host will forward connections to any network interface (by default it will use only 127.0.0.1).
 
 ```text
 localhost:8888 <===== my-remote-host <===== my-remote-host:8181
@@ -70,7 +70,7 @@ You also need to make sure that firewall on `my-remote-host` allows connections 
 
 ## Example: Access RDS Database Through the EC2 Instance
 
-It is good idea to make RDS databases not available from the Internet, so they can only be accessed from the EC2 instances where applications are running.
+It is a good idea to make RDS databases not available from the Internet, so they can only be accessed from the EC2 instances where applications are running.
 
 On the other hand, during the development, it is convenient to have the database accessible from your local machine.
 It is easy to do it, running the following command:

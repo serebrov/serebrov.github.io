@@ -463,7 +463,7 @@ For events storage we have:
 * table size limit and scaling: better for DynamoDB
 * cost: much higher for DynamoDB
 
-Additional resources
+Additional Resources
 --------------------------------------------
 
 [Quora: What is the difference between SimpleDB and DynamoDB?](http://www.quora.com/Amazon-DynamoDB/What-is-the-difference-between-SimpleDB-and-DynamoDB)

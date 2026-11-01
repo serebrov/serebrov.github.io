@@ -1,5 +1,5 @@
 ---
-title: JS libraties for charts (links)
+title: JS libraries for charts (links)
 date: 2013-06-14
 tags: [js]
 type: note

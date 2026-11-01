@@ -68,3 +68,5 @@ And angular controllers are very similar to scalable architecture modules:
 * interaction between modules is done via events or via special service but not directly
 
 This way the idea of the scalable architecture is present in the AngularJS. And angular also gives other essential components (views, models, services, etc) and provides complete and ready to use architecture.
+
+Update: Toptal has reached out to me asking to link their article and I think it is quite useful not only when you need to hire someone, but also when learning or refreshing angular knowledge, so here it is: [How to Hire a Great AngularJS Developer](https://www.toptal.com/angular-js#hiring-guide).

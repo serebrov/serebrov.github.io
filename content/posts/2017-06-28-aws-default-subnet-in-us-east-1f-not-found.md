@@ -28,14 +28,14 @@ Current state: 'CREATE_FAILED'
 Reason: The following resource(s) failed to create: [AWSEBLoadBalancer].
 ```
 
-The reason seems to be that new `us-east-1f` availablity zone was added, but the subnet for it wasn't configured (not sure why and if it supposed to be configured automatically).
+The reason seems to be that new `us-east-1f` availability zone was added, but the subnet for it wasn't configured (not sure why and if it supposed to be configured automatically).
 
 The solution is to create the subnet manually:
 
 - Open VPC - Subnets
 - Click "Create Subnet"
 - Select the "Availability Zone" - us-east-1f
-- It is neccessary to also specify the "IPv4 CIDR block" - in my case I already had 5 subnets with IP blocks:
+- It is necessary to also specify the "IPv4 CIDR block" - in my case I already had 5 subnets with IP blocks:
   - 172.31.0.0/20
   - 172.31.16.0/20
   - 172.31.48.0/20

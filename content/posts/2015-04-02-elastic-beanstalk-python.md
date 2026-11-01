@@ -62,7 +62,7 @@ Or start flask shell with `flask shell`.
 
 [Celery](http://www.celeryproject.org/) is a distributed task queue.
 
-Our requirements are following:
+Our requirements are the following:
 
 - the celery application should be launched automatically when new version is deployed to Elastic Beanstalk
 - the celery application should be watched by supervisord and restarted in the case of failure
@@ -70,7 +70,7 @@ Our requirements are following:
 The final project structure will be this:
 
 ```
-  .ebextensions/               - elastic beanstal configs
+  .ebextensions/               - elastic beanstalk configs
     myapp.config               - main config
     deploy.sh                  - deployment script, launched from main config
     utils.sh                   - utility functions for deployment script
@@ -96,7 +96,7 @@ Note that the version number can be different, 3.1.17 is just an actual version 
 Then create a main celery application file. In my case, this is `celery.py` file in the root folder.
 Here I don't describe the celery application file content - do whatever you need from celery here.
 
-Now modify the elasticbeanstalk config (.elasticbeanstak/myapp.config) to include the deployment script:
+Now modify the elasticbeanstalk config (.elasticbeanstalk/myapp.config) to include the deployment script:
 
 ```bash
 container_commands:
@@ -152,7 +152,7 @@ supervisorctl -c /opt/python/etc/supervisord.conf restart celeryd
 
 A small inconvenience with supervisord is that configuration for all apps managed by supervisord should be inside the main supervisord.conf file or additional configs should be included into it.
 So in any case we need to modify the main supervisord config.
-The script above does this by adding a following lines to it:
+The script above does this by adding the following lines to it:
 
 ```
 [include]
@@ -294,9 +294,9 @@ exec /opt/python/run/venv/bin/celery worker -A tasks --loglevel=INFO
 ```
 
 Actually we configured Elastic Beanstalk to run and manage an additional application.
-The same approach can be used for any kind of application, not necessary celery - it can be any other application even written in other than python language.
+The same approach can be used for any kind of application, not necessarily celery - it can be any other application even written in other than python language.
 
-### Bonus: how to install ZeroMQ libaray
+### Bonus: how to install ZeroMQ library
 
 To install ZeroMQ python library add it to requirements.txt:
 

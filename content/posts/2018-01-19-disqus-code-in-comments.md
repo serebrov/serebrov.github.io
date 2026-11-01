@@ -3,7 +3,7 @@ title: Disqus - code formatting and highlighting in comments
 date: 2018-01-19
 tags: [disqus]
 type: note
-html: "/html/2018-01-19-disqus-code-in-comments.html"
+url: "/html/2018-01-19-disqus-code-in-comments.html"
 ---
 
 It is possible to format and have syntax highlighting for code in Disqus comments.
@@ -11,7 +11,7 @@ To do that, wrap the code into `<pre><code>` tags (see the example comment to th
 
 <!-- more -->
 
-I didn't know about this feature and, acutally, I think this is an UI flaw.
+I didn't know about this feature and, actually, I think this is a UI flaw.
 
 It would be great to see the `formatting help` link or popup when you are editing the comment (and also the `preview` feature would be really nice to have).
 

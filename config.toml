@@ -29,7 +29,7 @@ title404 = "Nothing's here!"
 
 favicon = "favicon.ico"
 customCSS = ["css/custom.css"]
-customJS = ["js/custom.js"]
+customJS = ["js/jquery.min.js", "js/custom.js"]
 gopher = "" # used in 404 template ( Generator: https://gopherize.me )
 
 [params.copyright]
@@ -56,7 +56,8 @@ rtl = false
 enable = true
 
 [params.widgets]
-header = ["breadcrumbs"]
+# header = ["breadcrumbs"]
+header = []
 homepage = ["recent_posts"]
 sidebar = ["about","search","sidebar_menu","taxonomy_cloud"]
 footer = ["social_menu"]
@@ -121,11 +122,11 @@ tag = "tags"
 page = "/:slug/"
 posts = "/html/:slug.html"
 
-[[menu.main]]
-name = "Home"
-weight = -1000
-identifier = "home"
-url = "/"
+# [[menu.main]]
+# name = "Home"
+# weight = -1000
+# identifier = "home"
+# url = "/"
 
 [blackfriday]
 hrefTargetBlank = true

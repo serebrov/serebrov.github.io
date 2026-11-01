@@ -1,5 +1,5 @@
 ---
-title: CloudFront Setup to Route Requests to Services Based on Request Path
+title: Multi-Origin CloudFront Setup to Route Requests to Services Based on Request Path
 date: 2019-06-16
 tags: [aws]
 type: note
@@ -18,13 +18,18 @@ For example:
 
 # CloudFront Setup Structure
 
-CloudFront [distribution](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html) can have one or more origins (sources to serve the data from) and one or more behaviors (rules defining how to cache the data based on the request path).
+CloudFront [distribution](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-overview.html) is an entry point which we assign a root domain name (www.myapp.com).
+
+The distribution can have one or more origins (these are our services - landing page, S3 app, wordpress, etc).
+
+And each origin has behaviors - rules defining how CloudFront will work for the specific request path:
+- Allowed protocols (HTTP, HTTPS) and HTTP methods
+- Caching settings
+- Lambda@Edge functions to add custom logic to the request or response processing.
 
 For example, we can have a distribution for a single-page app hosted on S3 (origin is S3 bucket) with one behavior defining caching rules.
 
 Or we can have a distribution for a [wordpress site](https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/) with one origin (wordpress server) and several behaviors defining caching rules for static and dynamic content.
-
-The distribution has a unique default domain name (such as `d111111abcdef8.cloudfront.net`) and can also be assigned a custom domain name (such as `media.myapp.com`).
 
 In a simple case that is enough: if we have multiple services (single-page app and wordpress blog), we can create separate distributions for them and use different sub-domains to route the requests (`app.myapp.com` and `blog.myapp.com`).
 
@@ -32,84 +37,51 @@ But it is also possible to merge different services under the same distribution 
 
 # Multi-Origin CloudFront Setup
 
-If we want to have a single domain name used for all services (frontend app, landing pages, wordpress blog, etc), we can achieve that with CloudFront by having multiple origins for each service (and multiple behaviors to specify which request paths should be forwarded to these origins).
+If we want to have a single domain name used for all services (frontend app, landing pages, wordpress blog, etc), we can achieve that with CloudFront by having multiple origins for each service and multiple behaviors to specify which request paths should be forwarded to these origins.
 
-The example setup for this post includes following origins:
+The example setup for this post includes the following origins:
 
 - `www.myapp.com` -> unbounce.com, landing pages
 - `www.myapp.com/app` -> single-page application, S3 bucket
 - `www.myapp.com/blog` -> wordpress running on ElasticBeanstalk (origin points to Elastic Load Balancer)
 
-As mentioned, CloudFront is able to route requests based on request path (this is defined in behaviors).
-
-But there is also a bunch of additional problems to be solved with lambda@edge functions, such as:
-- configure single-page application and wordpress to be run from the subfolders
-- handle requests without the trailing slash (`www.myapp.com/app` vs `www.myapp.com/app/`
-= handle default `index.html` object for a sub-folder on S3.
-
-The solutions for these problems are described below, in the following sections of this post.
-
-For this setup, we have the following origins:
-
-- 0: app*, origin: `S3-app.myapp.com`
-- 1: blog/wp-login.php, origin: `wordpress-elb`
-- 2: blog/wp-admin/*, origin: `wordpress-elb`
-- 3: blog/wp-includes/*, origin: `S3-wordpress.myapp.com`
-- 4: blog/wp-content/*, origin: `S3-wordpress.myapp.com`
-- 5: blog*, origin: `wordpress-elb`
-- 6: Default (*), origin: `unbounce-www.myapp.com`
+And behaviors for our distribution will route requests to different origins based on the request path:
+- `app*` -> S3 origin, `S3-app.myapp.com`
+- `blog/wp-login.php` -> wordpress origin, `wordpress-elb`, no caching
+- `blog/wp-admin/*` -> wordpress origin, `wordpress-elb`, no caching
+- `blog/wp-content/upload`, origin: `S3-wordpress.myapp.com`
+- `blog*`, origin: `wordpress-elb`
+- `/` -> unbounce origin, `unbounce-www.myapp.com`
 
 The `app*` behavior serves the single-page application from the S3 origin.
 The app is accessible from the sub-path (`myapp.com/app`) and should be placed in the sub-folder on S3 (the sub-path is preserved in the request to origin).
 
-We use helper lambda functions to forward all requests to `index.html`:
+In the case of single page web application, there is a single entry point, usually `index.html` that is loaded on first request and further navigation across app pages is handled by application code in browser.
 
-- Origin Request: CloudFrontSubdirectoryIndex - catches root requests (`www.myapp.com/app`) and forwards them to `index.html`
+To implement this logic in `CloudFront`, we use Lambda@Edge functions attached to origin request and response events:
+
+- Origin Request: CloudFrontSubdirectoryIndex - handles root requests (`www.myapp.com/app`) and forwards them to `index.html`
 - Origin Response: CloudFrontDefaultIndexForOrigin - catches 404 / 403 requests (`www.myapp.com/app/some-path`) and forwards them to `index.html`
 
-More details and lambda functions code are below.
+In general, this setup is flexible enough to handle various use cases.
 
-The `blog...` group of behaviors forward `/blog/...` requests to the wordpress origin. 
+Advantages of CloudFront for routing are:
+- The distributed solution, which is very fast for end users
+- No need in single entry point component for app services, requests are routed by CloudFront
+- All services are under the same subdomain, so we avoid additional [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) complexity
 
-There are special behaviors for `wp-login.php` and `wp-admin/*` as these are used for administrative tasks and here we don't need caching and special behaviors for `wp-includes/*` and `wp-content/*` - these are forwarded to S3.
-
-For the `blog*` behaviors we also have the `CloudFrontRedirectToTrailingSlash` lambda function attached to the "Viewer Request" event that forwards `www.myapp.com/blog` requests to `www.myapp.com/blog/`.
-
-The default origin forwards root requests (www.myapp.com/) to unbounce.com landing pages.
-
-# Unbounce Setup
-
-Unbounce.com is a service for landing pages and there are two (official) ways to use it: point CNAME (such as `www.myapp.com`) to unbounce.com or use a wordpress plugin - in this case the "Host" header should contain the domain name (`www.myapp.com`).
-
-We can use the latter to make unbounce work with CloudFront: we setup the `www.myapp.com` domain to point to CloudFront and we configure CloudFront to forward the `Host` header to unbounce.
-
-The configuration sequence I used is this:
-
-  1. Add `www.myapp.com` domain on unbounce.com
-  2. Get the unbounce URL, like `ab44444888888.unbouncepages.com`
-  3. In DNS settings, point `www` CNAME to `ab44444888888.unbouncepages.com`
-  4. Wait until unbounce shows "Working and Secure" for the domain
-  5. Edit (or create) CloudFront distribution, set alternative domain to `www.myapp.com` (or see https://serverfault.com/a/888776/527019, there is also a method based on lambda function)
-  6. Create the CloudFront origin, point it to unbounce URL (`ab44444888888.unbouncepages.com`)
-  7. Create default behavior `(*)` for the origin above, disable caching (set "Cache Based on Selected Request Headers" to "All")
-  8. Change DNS settings, point `www` subdomain to CloudFront distribution (`d33xxx8888xxxx.cloudfront.net`) - replace the unbounce domain with CloudFront domain
-  9. Wait for DNS changes to propagate, now the `www.myapp.com` root URL should point to CloudFront
-
-So we first point CNAME to unbounce.com, wait until unbounce thinks that everything is good and then reconfigure the CNAME to point to CloudFront (and CloudFront forwards the custom domain name via Host header).
+More details about the setup for specific services and lambda functions code are below.
 
 # Single Page App Setup
 
-The single page app setup is pretty simple with CloudFront: the app source is copied to S3 bucket and then served via CloudFront (the origin is S3 bucket, with one default behavior).
+The single page app setup is quite simple with CloudFront: the app source is copied to S3 bucket and then served via CloudFront (the origin is S3 bucket, with one default behavior).
 
-Example shell script to deploy the SPA application to S3 (also sends Slack notification about the deployment):
+Here is an example shell script to deploy the SPA application to S3 (which also sends Slack notification about the deployment):
 
 ```
 #!/usr/bin/env bash
 
-SCRIPT_PATH=`dirname $0`
-ROOT_PATH=$SCRIPT_PATH/../
-
-SLACK_HOOK=https://hooks.slack.com/services/THANKFT88/BBB44444D/aarrrvRRxxxxxSSSSSjjHHHH
+SLACK_HOOK=https://hooks.slack.com/services/XXX/YYY/aaabbbccc
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 if [[ $APP_ENV == "develop" ]]; then
@@ -123,9 +95,11 @@ else
     exit 1
 fi
 
-echo "Deploying ${GIT_BRANCH} to ${AWS_BUCKET}"
+echo "Deploying ${GIT_BRANCH} to ${AWS_BUCKET} with options ${AWS_CLI_OPTS}"
+aws s3 sync --delete dist/ s3://${AWS_BUCKET}/app/ ${AWS_CLI_OPTS}
 
-. ${SCRIPT_PATH}/deploy_aws.sh
+# Invalidate app on CloudFront
+aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths /app/* ${AWS_CLI_OPTS}
 
 if [ $? -eq 0 ]; then
     echo 'Deployment: OK'
@@ -142,68 +116,46 @@ fi
 
 ```
 
-And the `deploy_aws.sh` script:
+I've used similar setup for Angular and Vue applications, it should work well for other frameworks too.
 
-```
-#!/usr/bin/env bash
-set -e
-
-SCRIPT_PATH=`dirname $0`
-ROOT_PATH=$SCRIPT_PATH/../
-RELEASE=$(git rev-parse HEAD)
-
-# Expected environment variables
-# AWS_BUCKET:=dev.myapp.com
-# CLOUDFRONT_DISTRIBUTION:=YYY
-# AWS_CLI_OPTS - optional, can be used to set profile
-
-echo "Syncing dist to ${AWS_BUCKET} with options ${AWS_CLI_OPTS}"
-
-aws s3 sync --delete dist/ s3://${AWS_BUCKET}/app/ ${AWS_CLI_OPTS}
-
-# Invalidate app on CloudFront
-aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION} --paths /app/* ${AWS_CLI_OPTS}
-```
-
-I've used such a setup for Angular and Vue applications, it should work well for other frameworks too.
-
-In a single-origin setup, it is also useful to:
+In a single-origin setup (no other services, and the distribution only used for single page app), it is also useful to:
 
 - Set default object for distribution to `index.html`
 - Add 404 and 403 error handlers for distribution and reply 200 OK and with `index.html` (so all requests are sent to the single page app even if there are no real files on S3)
 
-Unfortunately, these settings are on the distribution level, although it would be more useful to have them for behaviors: in a multi-origin setup, we need to have same configuration, but only for a specific request path (for example, for `www.myapp.com/app`, but not for `www.myapp.com/blog`).
+Unfortunately, these settings are on the distribution level, but in multi-origin setup we would need them for behaviors representing specific request paths.
+For example, we need to redirect requests to `index.html` for `www.myapp.com/app`, but not for `www.myapp.com/blog`.
 
-So in multi-origin setup the solution is to use lambda@edge functions (described below) to do the same - use `index.html` as default object (CloudFrontSubdirectoryIndex) and redirect requests to non-existing files to `index.html` (CloudFrontDefaultIndexForOrigin).
+In a multi-origin setup this logic is handled by Lambda@Edge functions: [CloudFrontSubdirectoryIndex](#lambda-code-cloudfrontsubdirectoryindex) and [CloudFrontDefaultIndexForOrigin](#lambda-code-cloudfrontdefaultindexfororigin)
 
 # WordPress Setup
 
-WordPress can be either installed on a standalone EC2 instance, hosted externally or running on ElasticBeanstalk, the CloudFront setup will be similar:
+WordPress can be installed on a standalone EC2 instance, hosted externally or launched [using ElasticBeanstalk](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/php-hawordpress-tutorial.html), in any case the CloudFront setup will be similar:
 
-- One origin that points to the wordpress server
-- Several behaviors (described above, see `blog...` group) to describe caching rules for the static and dynamic content.
+- One origin that points to the wordpress server (`wordpress-elb` in my case, ElasticBeanstalk load balancer)
+- Several behaviors define caching rules for the static and dynamic content:
+  - `blog/wp-login.php` -> wordpress origin, `wordpress-elb`, no caching
+  - `blog/wp-admin/*` -> wordpress origin, `wordpress-elb`, no caching
+  - `blog/wp-content/upload`, origin: `S3-wordpress.myapp.com`
+  - `blog*`, origin: `wordpress-elb`
 
-I am hosting WordPress on ElasticBeanstalk which has several nuances related to how WordPress works.
+Here we forward requests to `/wp-login.php` and `wp-admin/*` without caching.
 
-Since we use Elastic Beanstalk as a deployment platform (in general, this is also true if we host on stand-alone EC2), we should treat underlying EC2 instance and it's file storage as a disposable resource.
+WordPress media files are hosted on S3 (for example, using [WP Media Offload](https://wordpress.org/plugins/amazon-s3-and-cloudfront/) plugin) and other requests also go to the load balancer, but with caching enabled.
 
-We can use W3 Total Cache plugin (or other) to move variable content to S3 (for example, `wp.myapp.com` bucket) and serve via CDN (add a distribution for `wp.myapp.com` domain).
-
-To deploy the WordPress to S3 we create a repository with WordPress code, do the 
- configuration changes, plugin or theme installs that affect the code (such as wp-config.php) and deploy to ElasticBeanstalk. 
- Note that these changes should only be done locally, committed to git and deployed (not configured directly on the live server as these changes may be lost).
+For the `blog*` behaviors we also have the [CloudFrontRedirectToTrailingSlash](#lambda-code--cloudfrontredirecttotrailingslash) lambda function attached to the "Viewer Request" event that forwards `www.myapp.com/blog` requests to `www.myapp.com/blog/`.
 
 Here are some useful resources describing the WordPress setup options on AWS:
 
-- Using this for the current setup: https://d0.awsstatic.com/whitepapers/deploying-wordpress-with-aws-elastic-beanstalk.pdf
+- [Deploying WordPresswith AWS Elastic Beanstalk (PDF)](https://d0.awsstatic.com/whitepapers/deploying-wordpress-with-aws-elastic-beanstalk.pdf)
 - How to accelerate your WordPress site with Amazon CloudFront: https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/
-- W3 Total Cache plugin: https://wordpress.org/plugins/w3-total-cache/
 - https://d0.awsstatic.com/whitepapers/wordpress-best-practices-on-aws.pdf
 - How to accelerate your WordPress site with Amazon CloudFront | AWS Startups Blog: https://aws.amazon.com/blogs/startups/how-to-accelerate-your-wordpress-site-with-amazon-cloudfront/
-- (example with EFS) Deploying a High-Availability WordPress Website with an External Amazon RDS Database to Elastic Beanstalk - AWS Elastic Beanstalk: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/php-hawordpress-tutorial.html, https://github.com/aws-samples/eb-php-wordpress/
 - Hosting WordPress on AWS: https://github.com/aws-samples/aws-refarch-wordpress
 
 **Elastic Beanstalk Setup for PHP App**
+
+The whole wordpress setup (along with the wordpress code and plugins) is added to the git repository and deployed to ElasticBeanstalk as [php application](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_PHP_eb.html).
 
 The (standard) Elastic Beanstalk setup for php is a set of configurations and scripts that automatically deploys and runs the application on the EC2 instance:
 
@@ -211,10 +163,35 @@ The (standard) Elastic Beanstalk setup for php is a set of configurations and sc
 - Apache logs are under `/var/log/httpd` (logs are also sent to CloudWatch)
 - System log is `/var/log/messages`
 
-Note: along with the application code it is useful to also deploy `.git` folder (don't add it to `.ebignore`), so `git status` on the server inside the `/var/www/html` will show if there are any modifications done directly on the server.
+Note: along with the application code it is useful to also deploy `.git` folder (don't add it to `.ebignore`), so `git status` on the server inside the `/var/www/html` will show if there are any modifications done directly on the server by wordpress or plugins.
+
+Wordpress plugins often modify local files, so it is useful to check the behavior periodically (especially after installing some plugins or doing configuration changes) to see if there is something that needs to be saved to repository.
 This is useful to check if there are any local changes to the files after changing wordpress settings (if there are changes, we need to copy them back to local machine, commit to git and redeploy).
 
-# Single Page App Setup: Function To Handle Index Documents in Subfolders (CloudFrontDefaultIndexForOrigin)
+# Unbounce Setup
+
+Unbounce.com is a service for landing pages and there are two (official) ways to use it: point CNAME (such as `www.myapp.com`) to unbounce.com or use a wordpress plugin - in this case the "Host" header should contain the domain name (`www.myapp.com`).
+
+We can use the latter to make unbounce work with CloudFront: we setup the `www.myapp.com` domain to point to CloudFront and we configure CloudFront to forward the `Host` header to unbounce.
+
+This is how unbounce and CloudFront can be configured to work together:
+
+  1. Add `www.myapp.com` domain on unbounce.com
+  2. Get the unbounce URL, like `ab44444888888.unbouncepages.com`
+  3. In DNS settings, point `www` CNAME to `ab44444888888.unbouncepages.com`
+  4. Wait until unbounce shows "Working and Secure" for the domain
+  5. Edit (or create) CloudFront distribution, set alternative domain to `www.myapp.com` (or see https://serverfault.com/a/888776/527019, there is also a method based on lambda function)
+  6. Create the CloudFront origin, point it to unbounce URL (`ab44444888888.unbouncepages.com`)
+  7. Create default behavior `(*)` for the origin above, disable caching (set "Cache Based on Selected Request Headers" to "All")
+  8. Change DNS settings, point `www` subdomain to CloudFront distribution (`d33xxx8888xxxx.cloudfront.net`) - replace the unbounce domain with CloudFront domain
+  9. Wait for DNS changes to propagate, now the `www.myapp.com` root URL should point to CloudFront
+
+So we first point CNAME to unbounce.com, wait until unbounce thinks that everything is good and then reconfigure the CNAME to point to CloudFront (and CloudFront forwards the custom domain name via Host header).
+
+
+# Lambda Code: CloudFrontDefaultIndexForOrigin
+
+This is the function to handle index documents in subfolders.
 
 For multi-origin setup, we use CloudFront distribution to route the requests to multiple origins depending on the request path.
 
@@ -371,9 +348,9 @@ function wrapAndFilterHeaders(headers, originalHeaders){
 }
 ```
 
-# Wordpress: Handle Trailing Slash - Function To Redirect "/blog" Requests (CloudFrontRedirectToTrailingSlash)
+# Lambda Code: CloudFrontRedirectToTrailingSlash
 
-This is used to redirect `www.myapp.com/blog` requests to `www.myapp.com/blog/` (add trailing slash which triggers index.php loading from the folder):
+This function is used for wordpress setup to redirect `www.myapp.com/blog` requests to `www.myapp.com/blog/` (add trailing slash which triggers index.php loading from the folder).
 
 The Lambda function code ([source](https://www.barelyknown.com/posts/add-trailing-slash-to-cloudfront-request)):
 
@@ -399,7 +376,7 @@ exports.handler = async (event) => {
 
 The function is attached to "Viewer Request" event.
 
-# Function to Handle S3 Directory Requests (CloudFrontSubdirectoryIndex)
+# Lambda Code: CloudFrontSubdirectoryIndex
 
 This function is attached to the "Origin Request" event and it handles requests like `www.myapp.com/app/` (with trailing slash at the end).
 
@@ -439,10 +416,10 @@ exports.handler = (event, context, callback) => {
 };
 ```
 
-# Function to Redirect CloudFront Requests (CloudFrontRedirectApp)
+# Lambda Code: CloudFrontRedirectApp
 
-This can be useful to transfer the application from single-origin setup to multi-rigin.
-In this case, the `app.myapp.com` requests should be forwared to `www.myapp.com/app`.
+This function can be useful to transfer the application from single-origin setup to multi-origin.
+In this case, the `app.myapp.com` requests should be forwarded to `www.myapp.com/app`.
 
 Note: in the next section there is another solution for the same problem, based on S3 static website hosting feature.
 
@@ -479,7 +456,7 @@ exports.handler = async (event) => {
 
 ```
 
-# Redirect Requests to the new Location with S3 Static Website
+## Another Way to Redirect Requests to the new Location with S3 Static Website
 
 This is another solution to the problem described above: redirect requests from the old location (such as `app.myapp.com` to new `www.myapp.com/www`).
 

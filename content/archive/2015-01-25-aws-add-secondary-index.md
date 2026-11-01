@@ -12,12 +12,12 @@ At the moment it is not possible to add a secondary index into the existing tabl
 This feature is [announced](https://forums.aws.amazon.com/ann.jspa?annID=2650) but not yet available.
 
 So the only way is to create a new table and migrate the existing data to it.
-This can be done using [Amazon EMR](http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html).
+This can be done using [Amazon EMR](https://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-what-is-emr.html).
 <!-- more -->
 
 ### Create the new table
 
-The new table can be created from the DynamoDB console or with code like this (in python / [boto](http://boto.readthedocs.org/en/latest/ref/dynamodb.html)):
+The new table can be created from the DynamoDB console or with code like this (in python / [boto](https://boto.readthedocs.org/en/latest/ref/dynamodb.html)):
 
 ```python
 Table.create(
@@ -40,7 +40,7 @@ This is not complex to implement such data transfer also in python / boto, but i
 
 In this case it is much more convenient to use EMR for this - process is launched and monitored and all logs are recorded.
 
-Another option is to use AWS Data Pipeline service, see the example of [cross-region data copy](http://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/dp-crossregion-ddb.html). Table to table data copy can be done in a similar way.
+Another option is to use AWS Data Pipeline service, see the example of [cross-region data copy](https://docs.aws.amazon.com/datapipeline/latest/DeveloperGuide/dp-crossregion-ddb.html). Table to table data copy can be done in a similar way.
 
 But in my case the AWS Data Pipeline service was not available for the region where DynamoDB was launched, so I used EMR (and actually data pipeline also uses EMR behind the scenes).
 
@@ -79,10 +79,10 @@ Also note that logs are not available just when the process is finished. Just wa
 
 ## Links
 
-[Amazon DynamoDB, EMR and Hive notes](http://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html)
+[Amazon DynamoDB, EMR and Hive notes](https://serebrov.github.io/html/2015-01-24-aws-dynamodb-emr-hive.html)
 
-[Optimizing Performance for Amazon EMR Operations in DynamoDB](http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html)
+[Optimizing Performance for Amazon EMR Operations in DynamoDB](https://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/EMR_Hive_Optimizing.html)
 
 [Hive & DynamoDB Pitfalls](http://arjon.es/2014/01/29/hive-dynamodb-pitfalls/)
 
-[Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow](http://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow)
+[Stackoverflow: Amazon Elastic MapReduce - mass insert from S3 to DynamoDB is incredibly slow](https://stackoverflow.com/questions/10683136/amazon-elastic-mapreduce-mass-insert-from-s3-to-dynamodb-is-incredibly-slow)

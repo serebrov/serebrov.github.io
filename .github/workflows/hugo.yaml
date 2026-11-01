@@ -1,0 +1,80 @@
+name: Deploy Hugo site
+
+on:
+  push:
+    branches:
+      - master
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+# Default to bash
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.119.0
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
+          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
+      - name: Install Dart Sass Embedded
+        run: sudo snap install dart-sass-embedded
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          # We need to specify the boken as we need write access to two
+          # prepositories (this and serebrov.github.io where public pages
+          # are stored, it is added as a submodule).
+          # The token has expiration time, can be created here:
+          # https://github.com/settings/tokens
+          # And then added in the current repository
+          # Settings - Secrets and variables - actions.
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Install Node.js dependencies
+        run: '[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true'
+      - name: Configure git
+        # We need to commit change to both this repository and
+        # the submodle, another repository, that keeps all public
+        # files (deployed via github pages).
+        run: |
+          git config --global user.name 'Borys Serebrov'
+          git config --global user.email 'serebrov@users.noreply.github.com'
+      - name: Prepare the submodule
+        working-directory: ./public
+        run: |
+          git checkout master
+      - name: Build with Hugo
+        env:
+          # For maximum backward compatibility with Hugo modules
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
+        run: hugo --gc --minify
+      - name: Run status
+        run: git status
+      - name: Run status in public dir
+        working-directory: ./public
+        run: git status
+      - name: Commit public files
+        working-directory: ./public
+        run: |
+          git add .
+          msg="rebuilding site $(date)" && git commit -m "$msg" && git push origin master
+      - name: Commit public submodule ref
+        run: |
+          git add .
+          msg="[ci skip] update public ref $(date)" && git commit -m "$msg"
+          git push origin master
