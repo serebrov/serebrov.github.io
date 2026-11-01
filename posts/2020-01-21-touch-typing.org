@@ -10,7 +10,7 @@ A collection of links to touch typing tutors and games.
 :PROPERTIES:
 :CUSTOM_ID: online-typing-tutors
 :END:
-- [[https://www.keybr.com/][keybr.com]] - Typing practice, supports Qwerty, Dvorak, Colemak and Workman layouts
+- [[https://www.keybr.com/][keybr.com]] - Typing practice, supports QWERTY, Dvorak, Colemak and Workman layouts
 - [[https://www.typing.com/][typing.com]] - Typing practice, free
 - [[https://typing.io/][typing.io]] - Typing Practice for Programmers
 - [[https://monkeytype.com/][monkeytype.com]] - a minimalistic, customizable typing test, featuring many test modes,
@@ -24,7 +24,7 @@ A collection of links to touch typing tutors and games.
   [[https://github.com/codicocodes/speedtyper.dev/tree/main][open source]]
 - [[https://www.typelit.io/][typelit.io]] - practice typing by retyping entire novels
 - [[https://codingspeedtest.com/][codingspeedtest.com]] - coding speed test, different languages (including [[https://codingspeedtest.com/?language=asm6502][assembly]] and [[https://codingspeedtest.com/?language=machine][machine code]])
-- [[https://typingmentor.com/][typingmentor.com]] - typing practice, live per-word wpm measurements
+- [[https://typingmentor.com/][typingmentor.com]] - typing practice, live per-word WPM measurements
 - [[https://keyhero.com/][keyhero.com]] - Typing test and lessons
 - [[https://learntyping.org/][learntyping.org]] - typing lessons with detailed explanations
 - [[https://www.typingbee.com/][Typing Bee]] - typing lessons and games
@@ -53,7 +53,7 @@ A collection of links to touch typing tutors and games.
 - [[https://www.typinggames.zone/][typinggames.zone]] - typing games
 - [[https://www.kidztype.com/browse-typing-games.html][kidztype.com]] - typing games for kids
 - [[https://play.typeracer.com/][TypeRacer]] - Free typing game and competition
-- [[http://klavogonki.ru/][Клавогонки]] - racing game
+- [[https://klavogonki.ru/][Клавогонки]] - racing game
 - [[https://zty.pe/][ZType]] - Typing Game - Type to Shoot
 - [[https://hackertyper.com/][Hacker Typer]] - just start typing anything to look smart
 

@@ -13,7 +13,7 @@ For the same reasons, it is also useful to include the issue number in the
 branch name, such as =123-branch-description= or
 =feature/PROJECT-123-branch-description=.
 
-The process of adding the issue number into the commit message can be
+The process of adding the issue number to the commit message can be
 automated with the git =prepare-commit-msg= hook (shell script).
 
 Below are a few examples of hook scripts.
@@ -33,7 +33,7 @@ where =123= is the issue id:
 # get current branch
 branchName=`git rev-parse --abbrev-ref HEAD`
 
-# search issue id in the branch name, such as "123-description" or "XXX-123-description"
+# search for the issue id in the branch name, such as "123-description" or "XXX-123-description"
 issueId=$(echo $branchName | sed -nE 's,([A-Z]?-?[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and issue id was found
@@ -61,7 +61,7 @@ the PROJECT-123 format to display commits in the issue):
 # get current branch
 branchName=`git rev-parse --abbrev-ref HEAD`
 
-# search jira issue id in a pattern such as "feature/ABC-123-description"
+# search for the Jira issue id in a pattern such as "feature/ABC-123-description"
 jiraId=$(echo $branchName | sed -nE 's,[a-z]+/([A-Z]+-[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and jiraId was found
@@ -97,14 +97,14 @@ the end.
 # get current branch
 branchName=`git rev-parse --abbrev-ref HEAD`
 
-# search issue id in the branch name, such as "123-description" or "XXX-123-description"
+# search for the issue id in the branch name, such as "123-description" or "XXX-123-description"
 issueId=$(echo $branchName | sed -nE 's,([A-Z]?-?[0-9]+)-.+,\1,p')
 
 # only prepare commit message if pattern matched and issue id was found
 if [[ ! -z $issueId ]]; then
  # $1 is the name of the file containing the commit message
  # We prepend the issue number at the beginning (so we can easily see it in history)
- # And also we append the full issue id (with organization/repository#) prefix,
+ # And also we append the full issue id (with the organization/repository# prefix),
  # so this commit hook works for other repositories (frontend) too.
  echo -e "[#$issueId] ""$(cat $1)""\n[organization/repository#$issueId]" > "$1"
  # sed -i.bak -e "1s/^/\n\n[$issueId]\n/" $1

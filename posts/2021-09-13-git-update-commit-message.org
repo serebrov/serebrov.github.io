@@ -8,17 +8,17 @@
 :PROPERTIES:
 :CUSTOM_ID: simple-change-last-commit-message
 :END:
-To change the last commit message, use =commit= with =--amend= flag:
+To change the last commit message, use =commit= with the =--amend= flag:
 
 #+begin_quote
-Careful: =commit --amend= will rewrite history, do not use on public branches.
+Careful: =commit --amend= will rewrite history; do not use it on public branches.
 #+end_quote
 
 #+begin_src shell
 git commit --amend
 #+end_src
 
-It will open an editor and change the commit message, changes will be
+It will open an editor to change the commit message. The changes will be
 applied after saving the file and closing the editor.
 
 * Advanced: Change Any Commit Message or Multiple Commit Messages
@@ -32,13 +32,13 @@ git rebase -i HEAD~3
 #+end_src
 
 #+begin_example
-  pick SHA-A commit message
-  pick SHA-B commit message
-  pick SHA-C commit message
+pick SHA-A commit message
+pick SHA-B commit message
+pick SHA-C commit message
 #+end_example
 
 Do not change commit messages just yet, only change =pick= in the first
-column to =r= (or full =reword=):
+column to =r= (or the full =reword=):
 
 #+begin_example
 pick SHA-A commit message
@@ -46,11 +46,11 @@ r SHA-B commit message
 r SHA-C commit message
 #+end_example
 
-Here we schedule commit message update for =SHA-B= and =SHA-C= commits.
+Here we schedule a commit message update for the =SHA-B= and =SHA-C= commits.
 After the file is saved, git will open the editor once more for each of
-the marked commits where we can edit the commit message.
+the marked commits, where we can edit the commit message.
 
-* Alternative: Cherry Pick Commits and Update Messages
+* Alternative: Cherry-Pick Commits and Update Messages
 :PROPERTIES:
 :CUSTOM_ID: alternative-cherry-pick-commits-and-update-messages
 :END:
@@ -66,5 +66,5 @@ git cherry-pick commit-sha
 git commit --amend
 #+end_src
 
-So we cherry pick needed commits and then edit commit messages with
+So we cherry-pick the needed commits and then edit commit messages with
 =commit --amend=.

@@ -22,12 +22,12 @@ Where =npm run build= is defined in =package.json= as =vue-cli-service build=.
 It is also possible to create several bundles using Vue CLI
 [[https://cli.vuejs.org/config/#pages][multi-page mode]], but in this case we will have a big common JS and CSS "vendors" package.
 
-The JS bundle is [[https://stackoverflow.com/a/61089300/4612064][solvable with custom chunks settings]], but it still leaves a big shared
+The JS bundle problem is [[https://stackoverflow.com/questions/51242317/how-to-split-vue-cli-3-pages-vendor-file/61089300#61089300][solvable with custom chunk settings]], but it still leaves a big shared
 CSS package (I didn't find a solution for that).
 
 The separate =vue.config.js= file has the advantage of building a completely independent bundle.
 
-The [[https://stackoverflow.com/a/50951316/4612064][alternative, check the comments]] is to have [[https://gist.github.com/educkf/97e76da8d8c2b5dad17846a7d576e205][separate configs and copy them over]],
+The [[https://stackoverflow.com/questions/49454372/how-can-i-create-two-separate-bundles-with-vue-cli-3/50951316#50951316][alternative]] (check the comments) is to have [[https://gist.github.com/educkf/97e76da8d8c2b5dad17846a7d576e205][separate configs and copy them over]],
 but this is less convenient than using the environment variable.
 
 Note: I didn't find any mention of =VUE_CLI_SERVICE_CONFIG_PATH= in the

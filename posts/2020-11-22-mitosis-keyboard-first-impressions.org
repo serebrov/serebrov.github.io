@@ -14,7 +14,7 @@ I received my [[https://flashquark.com/product/gb-mitosis-wireless-split-ergonom
 - It requires a receiver to be connected to the computer, but that is not a big deal. Also, it is cool to realize that your keyboard (QMK) is actually running inside that small board
 - Layout: I am not sure which layout was there initially. It was QWERTY, while
   the [[https://config.qmk.fm/#/mitosis/LAYOUT][default layout in the QMK configurator]] is Maltron (I think). Anyway,
-  I changed it to my layout, similar to [[https://configure.zsa.io/moonlander/layouts/MJvlL/latest/0][what I have on Moonlander]]
+  I changed it to my layout, similar to [[https://configure.zsa.io/moonlander/layouts/MJvlL/latest/0][what I have on my Moonlander]]
 - Open source: here is the [[https://www.reddit.com/r/MechanicalKeyboards/comments/66588f/wireless_split_qmk_mitosis/][announcement post]], [[https://github.com/reversebias/mitosis-hardware][hardware]], [[https://github.com/reversebias/mitosis][receiver firmware]] and [[https://github.com/qmk/qmk_firmware/tree/master/keyboards/mitosis][keyboard firmware, QMK]]
 
 How it [[file:images/Mitosis.jpg][looks]]:
@@ -30,17 +30,17 @@ and [[file:images/Mitosis.Receiver.jpg][the receiver]]:
 Getting it to work didn't take much time, although I first had an issue
 with the cable (the first one I tried didn't work; it was probably just
 not a data cable), and then I had the batteries upside down and one of them
-didn't hold in place.
+didn't stay in place.
 
 I wish there were a quick start guide, something like this:
 - Unscrew the PCBs from the case (inner screws)
 - Put the batteries into the left and right halves. They go between the top and bottom plates, in the bottom right corner of the right half and the bottom left corner of the left half
 - Note that the battery position is different in the left and right halves
-- Don't screw the PCB back yet. First, make sure it works
+- Don't screw the PCBs back yet. First, make sure it works
 - Find a micro-USB to USB-A/USB-C cable. It should be a data cable (so some cables may not work)
 - Connect the receiver to a computer
 - Try pressing keys on both halves. It should already work
-- Screw the PCB back into the case
+- Screw the PCBs back into the case
 - Put on the keycaps (it ships without keycaps)
 
 If it doesn't work:
@@ -61,31 +61,31 @@ Alternatively, clone QMK and flash from the command line. The setup guide is
 =qmk flash -kb mitosis -km mitosis_mini= (where =mitosis_mini= is the
 custom keymap name, and there are also several [[https://github.com/qmk/qmk_firmware/tree/master/keyboards/mitosis][alternative keymaps in the QMK source]]).
 
-The keymap itself can remain in =json= format. Here is
+The keymap itself can remain in JSON format. Here is
 [[https://github.com/serebrov/qmk_firmware/tree/custom/keyboards/mitosis/keymaps/mitosis_mini][what I have so far]]:
 - =config.h= - defines the auto shift timeout and enables tapping force hold
 - =custom.c= - LED colors for layers (although I have a problem with the green light)
 - =keymap.json= - the keymap made with the QMK configurator
 - =rules.mk= - enables auto shift
 
-Compared to the [[https://configure.zsa.io/][ZSA configurator]], the QMK Configurator provides fewer features,
+Compared to the [[https://configure.zsa.io/][ZSA configurator]], the QMK configurator provides fewer features,
 so I had to switch to the source code to enable auto shift.
 
-I still have a few questions, maybe someone could answer these for me:
+I still have a few questions. Maybe someone could answer them for me:
 
-1. The battery didn't hold in the right half, so I put aluminum foil under it to keep it in place.
-   It seems to work well now, but is it safe to do and to go like this in the long term? Maybe there is a better way to fix this?
+1. The battery didn't stay in place in the right half, so I put aluminum foil under it to keep it in place.
+   It seems to work well now, but is it safe to keep it like this in the long term? Maybe there is a better way to fix this?
    Here is how [[file:images/Mitosis.Battery.jpg][the battery with foil looks]].
 
 2. There are + / - markers on the PCB, but I had to put the batteries
    upside down to make it work (so the battery's plus is facing the plate
    marked with minus). It is the same on both sides. Am I interpreting these
-   markings wrong? (it works, so it is not very important, I am just curious)
+   markings wrong? (It works, so it is not very important; I am just curious.)
 
 3. The green light doesn't seem to work in the indicator LED. Is this a
-   defective LED or a soldering defect? How to "debug" it? The blue and
+   defective LED or a soldering defect? How can I "debug" it? The blue and
    red lights work separately and together, producing magenta, but the
-   green doesn't work either on its own or when combined with red or blue, it
+   green doesn't work on its own or when combined with red or blue; it
    just stays off.
 
 4. What do I do with several boards that I like a lot? I now have

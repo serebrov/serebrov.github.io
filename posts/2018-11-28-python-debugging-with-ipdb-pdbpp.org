@@ -20,6 +20,9 @@ pip install ipdb
 pip install pdbpp
 #+end_example
 
+**Note**: the combination of packages is now broken with recent IPython changes.
+A quick fix is to pin ~ipython~ to ~ipython<9.16~.
+
 The =ipdb= package improves the standard (pdb) debugger by adding syntax
 highlighting and code completion. And =pdbpp= adds the =sticky= mode,
 so the debugger can be run in full-screen mode in the terminal:

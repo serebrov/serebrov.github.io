@@ -1,4 +1,4 @@
-#+TITLE: git: move files to another repository
+#+TITLE: git: move files with history to another repository
 #+DATE: <2021-09-13>
 #+TYPE: note
 #+FILETAGS: :git:
@@ -51,7 +51,7 @@ check out its =master= branch to the destination repository and then use
 only the =/lib= folder with all the change history.
 
 Now we can merge the upstream files and history from the =/lib= folder
-to the target =master= branch:
+into the target =master= branch:
 
 #+begin_src shell
 git checkout master
@@ -73,7 +73,7 @@ git push origin master
 :PROPERTIES:
 :CUSTOM_ID: update-from-upstream
 :END:
-Pull the recent upstream master branch and re-split it into a new
+Pull the latest upstream master branch and re-split it into a new
 branch:
 
 #+begin_src shell

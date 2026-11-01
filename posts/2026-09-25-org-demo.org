@@ -5,11 +5,10 @@
 #+FILETAGS: :org:
 #+DESCRIPTION: A sample post: folding sections, code, images, video, and tables.
 
-This post is the test page for the blog. Each section shows one feature.
-Click a heading to fold or unfold its section.
+This test post is the blog and org-mode features.
 
 * Code blocks
-Emacs colors the code at build time (htmlize). Move the mouse over a block to see the copy button.
+Source higlighting is done by Emacs at build time (with ~htmlize~). Move the mouse over a block to see the copy button.
 
 #+BEGIN_SRC python :results output :exports both
 from pathlib import Path
@@ -34,29 +33,29 @@ make serve
 Inline code also works: ~make rebuild~.
 
 * Images
-A link to a local image file becomes an image on the page.
+Links to local image files are rendered as images on the page.
 
 #+CAPTION: The build pipeline.
 [[file:images/pipeline.svg]]
 
 * Video
-A =video:= link becomes an HTML5 video player. The path can be a local file or a URL.
+A =video:= link is rendered as an HTML5 video player. The path can be a local file or a URL.
 
 [[video:https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4]]
 
-* A section that starts folded                                      :folded:
-The =:folded:= tag on the heading closes this section when the page opens.
+* A section can be initially folded                                  :folded:
+The =:folded:= tag on the heading makes the section folded on page load.
 A link to a heading inside this section opens it: [[*Nested section][go to the nested section]].
 
 ** Nested section
 Nested sections fold too.
 
 * Tables and quotes
-| Feature   | Where it is made     |
-|-----------+----------------------|
-| Folding   | =static/blog.js=     |
-| Code      | htmlize              |
-| Video     | =publish.el=         |
+| Feature   | Where it is implemented |
+|-----------+-------------------------|
+| Folding   | =static/blog.js=        |
+| Code      | htmlize                 |
+| Video     | =publish.el=            |
 
 #+BEGIN_QUOTE
 Everything is text, and that is powerful.

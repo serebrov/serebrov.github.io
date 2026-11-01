@@ -1,4 +1,4 @@
-#+TITLE: Installing NPM packages from GitHub
+#+TITLE: Installing npm packages from GitHub
 #+DATE: <2019-02-16>
 #+TYPE: note
 #+FILETAGS: :npm:
@@ -9,8 +9,8 @@ you have a fork of a published package with some private changes. So you
 can avoid cluttering the npm registry with similar packages, creating
 confusion for other people.
 
-NPM [[https://docs.npmjs.com/cli/install/][supports]] installing dependencies from GitHub, but it is also good to have
-versioning for your package, so you can use it exactly as other packages, develop it
+npm [[https://docs.npmjs.com/cli/v12/commands/npm-install/][supports]] installing dependencies from GitHub, but it is also good to have
+versioning for your package, so you can use it exactly like other packages, develop it
 independently and upgrade the dependency for the main project in a
 controlled way.
 
@@ -34,13 +34,13 @@ git control, for example, results of the webpack build.
 :END:
 The workflow I use is this:
 
-- Make the changes as usual, create branches / Pull Requests, merge them
+- Make the changes as usual, create branches / pull requests, merge them
   to master
 - Prepare a release:
   - Check out the build branch: =git checkout build=
   - Merge master into it: =git merge master=
   - Run commands to generate the build (if any), like =npm run build=
-  - Add build files to git: =git add buiid/..= and
+  - Add build files to git: =git add buiid/.= and
     =git commit -m "Rebuild"=
 - Push changes: =git push origin HEAD=
 - Tag the new release: =git tag 3.1.1 -a=; the =-a= flag means an annotated

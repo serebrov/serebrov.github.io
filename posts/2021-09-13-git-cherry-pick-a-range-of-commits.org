@@ -16,4 +16,4 @@ git cherry-pick START^..END
 :PROPERTIES:
 :CUSTOM_ID: references
 :END:
-[[https://stackoverflow.com/a/1994491/4612064][How to cherry-pick a range of commits and merge them into another branch?]]
+[[https://stackoverflow.com/questions/1994463/how-to-cherry-pick-a-range-of-commits-and-merge-them-into-another-branch/1994491#1994491][How to cherry-pick a range of commits and merge them into another branch?]]

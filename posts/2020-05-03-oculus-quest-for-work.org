@@ -4,25 +4,25 @@
 #+FILETAGS: :vr:
 #+DESCRIPTION: Using Oculus Quest for software development and not only.
 
-After reading [[https://www.reddit.com/r/OculusGo/comments/aq5q7q/shout_out_to_immersed_devs_thanks_to_them_i_can/][this]], [[https://www.reddit.com/r/OculusQuest/comments/ct1wx1/bigscreen_and_immersed_vr_are_oculus_secret/][this]], [[https://www.reddit.com/r/OculusQuest/comments/c6ryyu/immersed_vr_has_forever_changed_my_workflow_the/][this]] and [[https://blog.immersed.team/working-in-vr-8-hrs-day-e8308b6791f0][this]], I got an Oculus Quest, wanting to try it
+After reading [[https://www.reddit.com/r/OculusGo/comments/aq5q7q/shout_out_to_immersed_devs_thanks_to_them_i_can/][this]], [[https://www.reddit.com/r/OculusQuest/comments/ct1wx1/bigscreen_and_immersed_vr_are_oculus_secret/][this]], [[https://www.reddit.com/r/OculusQuest/comments/c6ryyu/immersed_vr_has_forever_changed_my_workflow_the/][this]] and [[https://medium.com/immersedteam/working-in-vr-8-hrs-day-e8308b6791f0][this]], I got an Oculus Quest, wanting to try it
 for work. I am a software developer and spend 8-10 hours per day in front of the laptop.
 My main machine at the moment is a MacBook Pro, and I also own a ThinkPad with Linux.
 
-This way, in terms of software, [[https://www.immersed.com/][ImmersedVR]] seems to be the only contender and the only
+So, in terms of software, [[https://www.immersed.com/][ImmersedVR]] seems to be the only contender and the only
 compatible headsets are Oculus Go and Oculus Quest. I got the Quest as it has a higher
 resolution.
 
 After reading all the posts above, my expectations of the image quality
 were quite high. I was hoping to get something similar to what I have
-with regular physical computer screens. In (virtual) reality it turned out
+with regular physical computer screens. In (virtual) reality, it turned out
 to be not that good. The text is crisp enough to read, but the overall
 image has some moving artifacts and the general experience is somewhat close
 (I think) to what I've seen long ago on the first 14-15 inch CRT monitors.
 
 The video in [[https://www.reddit.com/r/OculusQuest/comments/c6ryyu/immersed_vr_has_forever_changed_my_workflow_the/][this post]] is pretty accurate - you can see these moving artifacts
 (should I call it moire? or distortion?), especially on the edges of screens.
-I don't know if that is the resolution that is not high enough or the refresh rate
-not high enough, maybe both. There is eye strain too: after using it for
+I don't know if the resolution or the refresh rate is not high enough,
+maybe both. There is eye strain too: after using it for
 2-3 hours and taking the headset off, you can feel your eyes begging to
 stay closed for a while to get some rest.
 
@@ -30,7 +30,7 @@ Anyway, this is the future of screens as I see and want it: you
 have a wearable (headset, glasses) that creates a virtual screen or
 several screens of any size you want. It is way more compact and easier
 than having a physical setup. I also like to move often from place to
-place, work outside, sit, or stand, so I rarely use a stationary
+place, work outside, sit, or stand, so I rarely use the stationary
 workplace that I have at home with a 27-inch monitor. Usually, I just take
 the laptop and sit on a couch with it. Having a VR screen is a big
 addition to the portable setup that you can take anywhere with you.
@@ -39,26 +39,27 @@ Although the image quality is lower than what I expected, it is not that
 bad, and I was able to work in VR for most of the day. I am just saying
 that it is still not a perfect experience. I would say it is definitely
 something that I can use right now, at least for part of the day,
-and I am looking forward to higher resolution devices that would improve
+and I am looking forward to higher-resolution devices that would improve
 the quality of the image.
 
 Good parts:
 
 - Freedom and portability: you can sit (or lie or stand) wherever you want and position
-  the screen anywhere, for example, I can lie in a deck chair [[https://www.amazon.com/Sunjoy-S-DNC1384PST-B3-Zero-Gravity-Chair-Black/dp/B078MM3SKK/ref=sr_1_7?dchild=1&keywords=deck+chair&qid=1597502719&sr=8-7][like this]]
+  the screen anywhere. For example, I can lie in a deck chair [[https://www.amazon.com/Sunjoy-S-DNC1384PST-B3-Zero-Gravity-Chair-Black/dp/B078MM3SKK/ref=sr_1_7?dchild=1&keywords=deck+chair&qid=1597502719&sr=8-7][like this]]
   with a big screen hanging above me in the air. This is something you can
   do [[https://www.youtube.com/watch?v=msfVdsh9VAQ][physically]], but that would be quite an effort (and you cannot take it with
-  you on a beach).
+  you to a beach).
 - Easy to add more monitors (up to 5 virtual monitors in a paid
   version of ImmersedVR), and again, you can reposition them easily in a way
-  that is hard to do or impossible in a physical setup.
-- Using the Oculus controller instead of a mouse is OK (better than I expected), you can
+  that is hard or impossible to do in a physical setup.
+- Using the Oculus controller instead of a mouse is OK (better than I expected): you can
   scroll with the stick and click with a trigger or a button (this is
   where some training is needed to avoid moving the pointer up when you
   pull the trigger).
 - Nobody can tell if you are working or watching a movie :)
 
 Less good:
+
 - Image quality, as mentioned above, is not perfect.
 - It is not convenient to drink coffee. I hope future headsets will be smaller and
   closer to glasses in size.
@@ -71,7 +72,8 @@ put it on - there are no sticky straps, and it is very easy to adjust it
 properly.
 
 Some specific notes about working in Quest:
-- Touch typing is essential, at least unless they implement a virtual keyboard
+
+- Touch typing is essential, at least until they implement a virtual keyboard
   that works with hand tracking (this is not a problem for me, as I do touch typing).
 - [[https://www.meta.com/help/quest/463504908043519/][The guardian system]] is very useful, and the stationary area (vs. the room-scale area)
   is good for cases when you are sitting in place - it makes a circle around you,
@@ -85,6 +87,7 @@ Some specific notes about working in Quest:
   headset on for quite a long time without any problem.
 
 And notes about ImmersedVR:
+
 - It looks better in 1440x900 resolution (on Mac: "scaled" display mode, "larger text" option).
 - Different virtual environments are good, although I ended up using "void" where everything
   is just dark around you.
@@ -102,7 +105,7 @@ And notes about ImmersedVR:
   also [[https://www.vrdesktop.net/][Virtual Desktop]] and [[https://www.vspatial.com/][vSpatial]], but both only support Windows,
   so there was no other choice than Immersed VR.
 
-One thing I didn't find how to do (maybe it's not possible) in Immersed
+One thing I couldn't figure out how to do (maybe it's not possible) in Immersed
 VR is to move the virtual screen horizontally (left / right)
 or vertically without rotation. It seems that I can only move it up and
 down or left-right, and it rotates around the point of view at the
@@ -110,6 +113,7 @@ same time, but sometimes I just want to move it a bit left or right
 straight, without rotation.
 
 What else would be cool to have:
+
 - A virtual keyboard that works with hand tracking
 - Some hotkey to enable external cameras, the same as in
   the guardian setup mode, or when you walk off the guardian area. It looks

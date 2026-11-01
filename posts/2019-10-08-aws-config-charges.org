@@ -6,7 +6,7 @@
 
 I started seeing an increased charge in billing for the AWS Config service
 in one of the accounts; it increased from around $5 to $100 per month.
-And I didn't even remember if I enabled and configured it.
+And I didn't even remember if I had enabled and configured it.
 
 I could not get any details from AWS Cost Explorer besides the fact that the charges
 are in the same region where our app is running.
@@ -32,11 +32,11 @@ questions I had were:
 The [[https://aws.amazon.com/config/pricing/][AWS Config pricing]] page was also a bit misleading - what caught my eye was the
 table with rule evaluation prices (and I didn't have any rules defined).
 
-Only after reading through the examples, I found that they also use some
+Only after reading through the examples did I find that they also use some
 "configuration items" to calculate the price, not only rule
 evaluations. The thing I missed was at the very top:
 =You pay $0.003 per configuration item recorded in your AWS account per AWS Region.=
-(I jumped over this part initially right into the rules pricing table).
+(Initially, I skipped this part and jumped right into the rules pricing table.)
 
 It appears that AWS Config was enabled and some automation in our
 account caused a large number of configuration items (changes to the

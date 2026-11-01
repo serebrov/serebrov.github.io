@@ -2,11 +2,13 @@
 #+DATE: <2018-11-29>
 #+TYPE: note
 #+FILETAGS: :shell:
-#+DESCRIPTION: Recording a Linux Terminal Session to GIF with asciinema
+#+DESCRIPTION: Recording a Linux terminal session to GIF with asciinema
 
 [[https://github.com/asciinema/asciinema][asciinema]] is a good, simple-to-use tool to record a screencast of a terminal session.
 
 And [[https://github.com/asciinema/asciicast2gif][asciicast2gif]] converts the recording to a GIF animation.
+
+Install asciinema:
 
 #+begin_example
 virtualenv -p python3 venv
@@ -14,6 +16,8 @@ source venv/bin/activate
 
 pip install asciinema
 #+end_example
+
+Record a session:
 
 #+begin_example
 $ asciinema rec demo.cast
