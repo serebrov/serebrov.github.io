@@ -1,5 +1,5 @@
 #+TITLE: Vim: highlight-select-change flow
-#+DATE: <2026-10-03>
+#+DATE: <2026-10-17>
 #+TYPE: note
 #+FILETAGS: :vim:
 #+DESCRIPTION: Vim usage tip, a visual search/replace flow.
