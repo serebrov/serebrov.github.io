@@ -4,11 +4,11 @@
 #+FILETAGS: :vim:
 #+DESCRIPTION: Vim usage tip, how to manage macros in a more convenient way.
 
-* The ~@~ Command
+* The ~@~ command
 
-The ~@~ command is more known as a command to execute macros. But it is more generic and it can execute vim commands from any vim register.
+The ~@~ command is better known as a command to execute macros. But it is more generic, and it can execute Vim commands from any Vim register.
 
-Here is what what help says:
+Here is what the help says:
 
 #+BEGIN_QUOTE
 							*@*
@@ -36,60 +36,63 @@ support in its copy of vi) I just use:
   it becomes something like :r /path/to/file
 - "cdd (to delete the line into the "c" register) and
 - @c execute that command.
-
-So we execute the `:r /path/to/file` command with @c and the file content
-is inserted into the current buffer.
 #+END_QUOTE
 
-It is interesting that the file name completion happens inside the regular
-Vim buffer and not inside the special command line "mini-buffer".
+So we execute the =:r /path/to/file= command with =@c= and the file content
+is inserted into the current buffer.
 
+It is interesting that instead of using the file name completion in the minibuffer,
+we build the file name in the regular Vim buffer and then use that file name to
+read the file content.
+
+#+begin_src vimscript
 :r!locate *.org
+#+end_src
 
 * Manage macros in a regular buffer
-Practically it allows using the regular vim buffer to edit and execute commands.
+In practice, it allows using the regular Vim buffer to edit and execute commands.
 The command buffer =:= is limited and less convenient, so instead you can
-prepare the command in one buffer and run in another (or prepare, delete to
+prepare the command in one buffer and run it in another (or prepare, delete to
 the register and run in the same buffer).
 
-For example: do "cdd or "cyy on the line below and then @c to add // to all lines.
+For example: do ="cdd= or ="cyy= on the line below and then =@c= to add =//= to all lines.
 
 #+begin_src vimscript
 :% norm I//
 #+end_src
 
-This also means that instead of recording a macro, you can type it out and then execute.
-Or you can record record, paste and edit, then execute.
+This also means that instead of recording a macro, you can type it out and then execute it.
+Or you can record it, paste and edit it, then execute it.
 
 For example:
-- qa - start recording into register a
-- q - stop recording
-- "ap - paste the macro, edit it
-- "ayy - yank back
-- @a - execute
+- =qa= - start recording into register =a=
+- =q= - stop recording
+- ="ap= - paste the macro, edit it
+- ="ayy= - yank it back into register =a=
+- =@a= - execute
 
-The contents of the register can also be inserted with =Ctrl-R [a-z]= in the
+The contents of the register can also be inserted with =Ctrl-R [a-z]= in
 insert mode (=Ctrl-R a= in the example above).
 
 * The ~norm~ command
 
-One more note that =:norm= command is often a good alternative to macros
-(or more recent neovim multicursors).
+Note that the =:norm= command is often a good alternative to macros
+(or the more recent Neovim multicursors).
 
-For example, as shown above, the =:% norm I//= adds =//= at the beginning of
+For example, as shown above, the =:% norm I//= command adds =//= at the beginning of
 each line and =:% norm A!= appends =!= to each line.
 
-Combined with globals (=:g= and =:v=) this becomes a fast and flexible way
+Combined with globals (=:g= and =:v=), this becomes a fast and flexible way
 to apply similar edits in the file.
 
 * Using globals with ~norm~
 
 For example, =:g/^For/norm A!= adds =!= at the end of each line that starts with =For=:
 - =:g= - the =global= command
-- =/^For/= - find all lines that start (the =^= in vim is the start of the line) with =For=
+- =/^For/= - find all lines that start (the =^= in Vim is the start of the line) with =For=
 - =norm A!= - execute =A!= on matching lines
-  - =A= means "append" and starts the insert mode
+  - =A= means "append": it starts insert mode at the end of the line
   - =!= inserts the "!"
 
-Similarly, =v= can be used to apply commands to lines that do not match the pattern.
+Similarly, =:v= can be used to apply commands to lines that do not match the pattern.
 For example, =:v/^For/norm A!= adds =!= at the end of each line that does not start with =For=.

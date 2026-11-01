@@ -4,23 +4,23 @@
 #+FILETAGS: :vim:
 #+DESCRIPTION: Vim usage tip, a visual search/replace flow.
 
-Vim (and Emacs evil) usage tip to make the search/replace flow more visual:
+Vim (and Emacs Evil) usage tip to make the search/replace flow more visual:
 
-+ highlight: use `*` to highlight the text you want to replace
-+ select: select the area you want to replace in in the visual mode
-+ change: execute :'<,'>s//new_word/g or :d or :g, etc.
++ highlight: use =*= to highlight the text you want to replace
++ select: select the area for the replacement in visual mode
++ change: execute =:'<,'>s//new_word/g= or =:d= or =:g=, etc.
 
-In this scenario, we can visually see words that will be replaced
+In this scenario, we can see the words that will be replaced,
 and we limit the operation to the selected visual area.
 
-The key is that we highlight the word with `*` first, then we can
-skip the first argument for :s or other commands and we see it
+The key is that we highlight the word with =*= first. Then we can
+skip the search pattern for =:s= or other commands, and we see this pattern
 on the screen.
 
-Note that the `:s` command does not have to repeat the search pattern,
-we use `s//replacement` form that automatically operates on the last search.
+Note that the =:s= command does not have to repeat the search pattern:
+we use the =s//replacement= form, which automatically uses the last search.
 
-By default =*= only highlights a word and this makes it work for visual selection:
+By default, =*= only highlights the word under the cursor. This code makes it work for a visual selection:
 
 #+begin_src vimscript
     " Visual search

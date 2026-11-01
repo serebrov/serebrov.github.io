@@ -26,6 +26,7 @@ copy of the current file:
 - ~Ctrl-R =~ - evaluate expression (for example, in insert mode, ~Ctrl-R =~, then =2+2= and Enter)
 
 The =%= and =#= also work as current file and alternate file aliases on the command line.
+
 For example, =:!ls %= will show the current file name.
 A more useful example: =:!git add %= stages the current file with git.
 
