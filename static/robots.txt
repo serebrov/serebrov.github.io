@@ -1,2 +1,3 @@
 User-agent: *
 Disallow:
+Sitemap: https://serebrov.github.io/sitemap.xml

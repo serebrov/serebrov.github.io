@@ -29,6 +29,7 @@
     "Directory that contains this file."))
 
 (require 'blog-tags (expand-file-name "blog-tags" blog-root))
+(require 'blog-feeds (expand-file-name "blog-feeds" blog-root))
 
 (defun blog-path (name)
   "Return NAME expanded against `blog-root'."
@@ -315,6 +316,7 @@ All files are also exported again when `blog-templates-changed-p'."
           (append '(blog-lazy-images blog-add-sidebar) org-export-filter-final-output-functions))
          (make-backup-files nil))
     (org-publish "blog" force)
+    (blog-feeds-write (blog-post-files org-publish-project-alist) (blog-path "public"))
     (write-region "" nil (blog-path blog-build-stamp) nil 'silent)))
 
 (provide 'publish)
