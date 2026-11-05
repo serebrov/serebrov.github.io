@@ -27,10 +27,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Emacs
-        uses: jcs090218/setup-emacs@master
+        uses: jcs090218/setup-emacs@54b61ac9c1d7011a54d2b6d66dedbcddf20e2fb9
         with:
           version: 31.1
 
@@ -42,7 +42,7 @@ jobs:
         run: make rebuild
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload the "public" folder
           path: 'public'
