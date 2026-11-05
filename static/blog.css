@@ -57,7 +57,11 @@ a { color: var(--link); }
    content (the header and the footer have the post list links).  On wide screens, a left column that stays
    on the screen and scrolls independently of the page. */
 .sidebar { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.sidebar-toc, .sidebar .sidebar-menu { display: none; }
+.sidebar-toc, .sidebar .sidebar-menu, .sidebar-search { display: none; }
+.sidebar-search input {
+  width: 100%; box-sizing: border-box; padding: 0.4rem 0.6rem;
+  font: inherit; border: 1px solid var(--border); border-radius: 6px;
+}
 .sidebar-title, .sidebar-toc h2 { margin: 0 0 0.6rem; font-size: 1rem; }
 .sidebar-title a { color: var(--text); text-decoration: none; }
 .sidebar .tag-cloud { margin: 0; gap: 0.2rem 0.8rem; }
@@ -87,6 +91,8 @@ a { color: var(--link); }
   }
   .sidebar > :not(:first-child) { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
   .sidebar .sidebar-menu { display: flex; }
+  .sidebar-search { display: block; }
+  body:has(#search) .sidebar-search { display: none; }  /* the search page has its own box */
   .sidebar-toc { display: block; font-size: 0.9rem; line-height: 1.45; }
   .sidebar-toc ul { margin: 0; padding-left: 1rem; }
   .sidebar-toc > div > ul { padding-left: 0; list-style: none; }

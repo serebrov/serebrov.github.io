@@ -1,0 +1,10 @@
+# Pagefind settings for `make search`. See https://pagefind.app/docs/config-options/
+site: public
+# Index only the posts, not the post lists and tag pages.
+glob: "html/*.html"
+# Index only the post text, not the site header, footer, sidebar, and table of contents.
+exclude_selectors:
+  - "#preamble"
+  - "#postamble"
+  - ".sidebar"
+  - "#table-of-contents"

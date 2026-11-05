@@ -39,7 +39,7 @@ jobs:
           emacs --batch -Q --eval "(package-initialize)" --eval "(package-refresh-contents)" --eval "(package-install 'htmlize)"
 
       - name: Build Static Pages
-        run: make rebuild
+        run: make rebuild search
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

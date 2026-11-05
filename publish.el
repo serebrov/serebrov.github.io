@@ -55,14 +55,15 @@ after the next rebuild without a reload of this file."
 
 (defun blog-page-section (file)
   "Return the menu section of the page made from FILE.
-The value is \"posts\", \"archive\", or \"tags\"."
+The value is \"posts\", \"archive\", \"tags\", or \"search\"."
   (cond ((or (file-in-directory-p file (blog-path "posts/archive"))
              (string= (file-name-nondirectory file) "archive.org"))
          "archive")
         ((file-in-directory-p file (blog-path "tags")) "tags")
+        ((string= (file-name-nondirectory file) "search.org") "search")
         (t "posts")))
 
-(defconst blog-section-pages '("index.org" "archive.org" "tags/index.org")
+(defconst blog-section-pages '("index.org" "archive.org" "tags/index.org" "search.org")
   "Source files of the pages that the menu links go to, relative to `blog-root'.")
 
 (defun blog-header (info)
@@ -250,7 +251,7 @@ without TAGS, the projects only give the post files."
       ("blog-index"
        :base-directory ,blog-root
        :exclude "."
-       :include ("index.org" "archive.org" "404.org")
+       :include ("index.org" "archive.org" "404.org" "search.org")
        :publishing-directory ,(blog-path "public")
        ,@page-options)
       ("blog-tags"
