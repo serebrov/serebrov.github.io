@@ -2,11 +2,16 @@ name: Deploy org mode content
 
 on:
   push:
-    branches:
-      - master
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -14,45 +19,34 @@ concurrency:
   group: 'pages'
   cancel-in-progress: false
 
-# Default to bash
-defaults:
-  run:
-    shell: bash
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      EMACS_VERSION: 31.1
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-
-      # Install the Emacs
-      - uses: jcs090218/setup-emacs@master
-        with:
-          version: ${{ EMACS_VERSION }}
-
-      - name: Checkout Content Repo
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Install Emacs
+        uses: jcs090218/setup-emacs@master
         with:
-          # We need to specify the boken as we need write access to two
-          # repositories (this and serebrov.github.io where public pages
-          # are stored).
-          # The token has expiration time, can be created here:
-          # https://github.com/settings/tokens
-          # And then added in the current repository
-          # Settings - Secrets and variables - actions.
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      - name: Configure git
-        # We need to commit the change in the content repository.
+          version: 31.1
+
+      - name: Install packages
         run: |
-          git config --global user.name 'Borys Serebrov'
-          git config --global user.email 'serebrov@users.noreply.github.com'
-      - name: Checkout Public Pages Branch
-        run: git checkout public-pages
-      - name: Build Static Content
+          emacs --batch -Q --eval "(package-initialize)" --eval "(package-refresh-contents)" --eval "(package-install 'htmlize)"
+
+      - name: Build Static Pages
         run: make rebuild
-      - name: Commit public files
-        run: |
-          git add -f public
-          msg="rebuilding site $(date)" && git commit -m "$msg" && git push origin master
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload the "public" folder
+          path: 'public'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
