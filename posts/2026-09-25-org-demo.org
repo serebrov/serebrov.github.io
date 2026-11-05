@@ -103,12 +103,12 @@ will be added to the HTML after org export:
 </style>
 
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", () => {
-        console.log("The DOM is fully parsed and ready!");
-        // document.addEventListener("click", () => {
-        //    document.querySelector('.demo-popup').style.display = 'block'
-        // });
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("The DOM is fully parsed and ready!");
+    // document.addEventListener("click", () => {
+    //    document.querySelector('.demo-popup').style.display = 'block'
+    // });
+});
 </script>
 #+end_export
 #+end_example
