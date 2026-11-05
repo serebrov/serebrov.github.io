@@ -1,0 +1,15 @@
+/* Pagefind UI on /search.html (see search.org), in the style of blog.css. */
+
+.pagefind-ui {
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-primary: var(--link);
+  --pagefind-ui-text: var(--text);
+  --pagefind-ui-border: var(--border);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 6px;
+  --pagefind-ui-font: inherit;
+}
+/* Pagefind colors the result links with --pagefind-ui-text. */
+.pagefind-ui .pagefind-ui__result-title { --pagefind-ui-text: var(--link); }
+.pagefind-ui .pagefind-ui__message { color: var(--muted); font-weight: normal; }
+.pagefind-ui mark { background: #fff8c5; color: inherit; }

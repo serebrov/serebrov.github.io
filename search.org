@@ -1,12 +1,13 @@
 #+TITLE: Search
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" href="/static/search.css">
 #+HTML_HEAD_EXTRA: <script src="/pagefind/pagefind-ui.js"></script>
 
 #+begin_export html
 <div id="search"></div>
 <script>
   window.addEventListener("DOMContentLoaded", () => {
-    const ui = new PagefindUI({ element: "#search", showSubResults: true, autofocus: true });
+    const ui = new PagefindUI({ element: "#search", showSubResults: true, showImages: false, autofocus: true });
     // The sidebar search form sends the query as ?q=...
     const query = new URLSearchParams(location.search).get("q");
     if (query) ui.triggerSearch(query);
