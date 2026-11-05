@@ -64,7 +64,7 @@ a { color: var(--link); }
 }
 .sidebar-title, .sidebar-toc h2 { margin: 0 0 0.6rem; font-size: 1rem; }
 .sidebar-title a { color: var(--text); text-decoration: none; }
-.sidebar .tag-cloud { margin: 0; gap: 0.2rem 0.8rem; }
+.sidebar .tag-cloud { margin: 0; gap: 0.5rem 0.8rem; line-height: 1.25; }
 @media (min-width: 64rem) {
   body:has(> .sidebar) {
     display: grid;
