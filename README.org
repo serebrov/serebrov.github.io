@@ -7,6 +7,10 @@ The live site is updated by the [[.github/workflows/orgmode.yaml][GitHub action]
  * Runs =make build= to build static content.
  * Deploys "public" folder.
 
+A nice property of this setup: content can be edited locally of via GitHub
+web interface (in both cases the workflow it triggers the workflow and the live site
+is updated).
+
 * Static Files Build Process
 
 A static blog made from org files with the Emacs HTML exporter (=ox-html=).
