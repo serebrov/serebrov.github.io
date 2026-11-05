@@ -277,8 +277,13 @@ without TAGS, the projects only give the post files."
        :publishing-directory ,(blog-path "public/static")
        :publishing-function org-publish-attachment
        :recursive t)
+      ("blog-root-files"  ; favicons and robots.txt must be at the site root
+       :base-directory ,(blog-path "static")
+       :base-extension "ico\\|png\\|txt"
+       :publishing-directory ,(blog-path "public")
+       :publishing-function org-publish-attachment)
       ("blog" :components ("blog-posts" "blog-archive" "blog-index" "blog-tags"
-                           "blog-media" "blog-files" "blog-static")))))
+                           "blog-media" "blog-files" "blog-static" "blog-root-files")))))
 
 (defconst blog-build-stamp ".cache/build-stamp"
   "File that the build touches after it publishes, relative to `blog-root'.")
