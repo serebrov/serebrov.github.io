@@ -54,7 +54,7 @@ POSTS is a list of (FILE . PROJECT)."
             "\n</channel></rss>\n")))
 
 (defun blog-feeds-sitemap (public-dir)
-  "Return the sitemap of all HTML pages in PUBLIC-DIR.
+  "Return the sitemap of all HTML pages in PUBLIC-DIR, except 404.html.
 The URL of an index.html page is the URL of its directory."
   (concat "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
           "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
@@ -63,7 +63,8 @@ The URL of an index.html page is the URL of its directory."
                                blog-feeds-site-url
                                (string-remove-suffix "index.html"
                                                      (file-relative-name file public-dir))))
-                     (directory-files-recursively public-dir "\\.html\\'")
+                     (remove (expand-file-name "404.html" public-dir)
+                             (directory-files-recursively public-dir "\\.html\\'"))
                      "\n")
           "\n</urlset>\n"))
 

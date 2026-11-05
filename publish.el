@@ -250,7 +250,7 @@ without TAGS, the projects only give the post files."
       ("blog-index"
        :base-directory ,blog-root
        :exclude "."
-       :include ("index.org" "archive.org")
+       :include ("index.org" "archive.org" "404.org")
        :publishing-directory ,(blog-path "public")
        ,@page-options)
       ("blog-tags"
