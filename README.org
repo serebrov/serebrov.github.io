@@ -1,10 +1,15 @@
 #+TITLE: Blog
 
-A copy of the markdown content in https://github.com/serebrov/serebrov.github.io-hugo/tree/master/content
-in org mode.
+The org-mode content for the site (in https://github.com/serebrov/serebrov.github.io).
 
-The live site (in https://github.com/serebrov/serebrov.github.io-org) is currently still using the
-content from the hugo setup.
+The live site is updated by the GitHub action that rebuilds live pages:
+ * Checks out the `public-pages` branch (this is used as a source for public pages)
+ * Runs =make build= to build static content.
+ * Commits the change on the branch and pushes it
+
+Note: the content was originally markdown in the https://github.com/serebrov/serebrov.github.io-hugo/tree/master/content.
+
+* Static Files Build Process
 
 A static blog made from org files with the Emacs HTML exporter (=ox-html=).
 
