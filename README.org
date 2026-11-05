@@ -1,13 +1,11 @@
 #+TITLE: Blog
 
-The org-mode content for the site (in https://github.com/serebrov/serebrov.github.io).
+The org-mode content for https://serebrov.github.io.
 
-The live site is updated by the GitHub action that rebuilds live pages:
+The live site is updated by the [[.github/workflows/orgmode.yaml][GitHub action]] that rebuilds live pages:
  * Checks out the `public-pages` branch (this is used as a source for public pages)
  * Runs =make build= to build static content.
- * Commits the change on the branch and pushes it
-
-Note: the content was originally markdown in the https://github.com/serebrov/serebrov.github.io-hugo/tree/master/content.
+ * Deploys "public" folder.
 
 * Static Files Build Process
 
