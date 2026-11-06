@@ -85,6 +85,19 @@ cwl-setup.config ([[file:files/cwl-setup.config][download]])
 #+include: "files/cwl-setup.config" src yaml
 #+end_details
 
+* ob-mermaid
+
+Export the ~org-mode~ document or invoke ~org-babel-execute-src-block~
+(e.g. with ~C-c C-c~ on a block) to generate the diagram.
+
+#+begin_src mermaid :file test.png
+sequenceDiagram
+ A-->B: Works!
+#+end_src
+
+#+RESULTS:
+[[file:test.png]]
+
 * HTML Export
 
 The =#+begin_export html= and =#+end_export= lines allow inserting HTML snippets that

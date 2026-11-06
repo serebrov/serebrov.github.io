@@ -18,13 +18,17 @@ Have OBS working with Google Meet and Zoom to be able to:
 
 * Setup
 
-How it works for audio:
+This is how it works for audio:
 
-#+begin_example
-Input (microphone, desktop) -> OBS
--> (sends audio to) -> BlackHole (monitoring device)
--> (used as input) Google Meet, Zoom, etc.
-#+end_example
+#+begin_src mermaid :file obs-flow.png
+    flowchart LR
+      input["Input (microphone, desktop)"] --> OBS
+      OBS -- (sends audio to) --> blackhole["BlackHole (monitoring device)"]
+      blackhole -- (used as input) --> app["Google Meet, Zoom, etc"]
+#+end_src
+
+#+RESULTS:
+[[file:obs-flow.png]]
 
 For video, it is simpler: just click "Start Virtual Camera" in OBS and use it as a video input in Google Meet.
 
@@ -133,17 +137,17 @@ Q: How exactly do aggregate devices work?
 Q: OBS Studio has the "Mic/Aux" channel by default; is it necessary to add an audio source explicitly?
 + I was not able to actually get anything from Mic/Aux, and also I can't add filters for it, so maybe this is something separate.
 
-Related: [[https://www.reddit.com/r/Twitch/comments/14lx1ea/comment/jpyr6re/][Reddit comment]]
+Related discussion in the [[https://www.reddit.com/r/Twitch/comments/14lx1ea/comment/jpyr6re/][reddit comment]]
 + This is a really tough situation and one I share with my wife, who is sitting four-ish feet away from me.
 + Here are the things I did to reduce my voice on her end:
   + 1. Get a [[https://www.reddit.com/search/?q=Dynamic+Microphone+Twitch+streaming&cId=6a950a59-7215-45b4-b00b-dc2faf27d459&iId=6f99a407-de88-4329-b410-047887371872][Dynamic Microphone]] and mount it to your desk using a boom arm so that the speaking side (usually the top) is pointing to you and away from your BF. I bought her the [[https://www.tonormic.com/products/td510-usb-xlr-dynamic-microphone][Tonor TD510 USB/XLR Mic]] and it is SURPRISINGLY good for the $60 price point.
     + 1b) Make sure the microphone is close to you, and with close I mean for a Dynamic Microphone you should be able to practically kiss it (4-6 inches) and for a condenser mic (which you have now) you should have it about 8-10 inches away at the most. Closer *is* better.
     + 1c) With your microphone so close you are probably a LOT louder, So turn your Gain (the knob on the Wave or the buttons on the Tonor) right down until your normal streaming voice hits the top of the green or right in the yellow. (-15 to 10dB)
-  + 2) In OBS it is time to set up some filters, starting with [[https://www.reddit.com/search/?q=Noise+Suppression+OBS+Twitch&cId=8b43aecd-7135-4090-b437-2c90d37a2b99&iId=3631a29b-afa9-4385-9794-bf6592368272][Noise Suppression]]. Pick the filter you think works best - I prefer RNN Noise over RTX for example - such that your voice stays clear and unmuddied while removing as much noise from your BF as possible.
-  + 3) After noise suppression, get your BF to play a game and be loud about it. Look at what levels on your microphone he hits. If this is -45dB or lower this is great, because that means that you -should- be able to top that with your own voice.
+  + 2. In OBS it is time to set up some filters, starting with [[https://www.reddit.com/search/?q=Noise+Suppression+OBS+Twitch&cId=8b43aecd-7135-4090-b437-2c90d37a2b99&iId=3631a29b-afa9-4385-9794-bf6592368272][Noise Suppression]]. Pick the filter you think works best - I prefer RNN Noise over RTX for example - such that your voice stays clear and unmuddied while removing as much noise from your BF as possible.
+  + 3. After noise suppression, get your BF to play a game and be loud about it. Look at what levels on your microphone he hits. If this is -45dB or lower this is great, because that means that you -should- be able to top that with your own voice.
     + 3b) Speak as loud as you normally do into your mic, then pretend you have a little intimate moment with your viewers and give them a whisper. Check what the lowest is you get while you whisper. If that is under -20dB you may want to add a little Gain filter and just up it 3-5dB, but make sure it is *below* your Noise Suppression. Suppress first, then add gain.
     + 3c) If that is well clear of your BF then you -could- add a Noise Gate on top of the noise suppression to just remove your BF entirely -unless- you are speaking too.
-  + 4) Now it is time to test your highs: Talk as if you are normally streaming - and really check the dB on this one - , then get excited, get scared, scream for a bit. It will probably be WAY too loud (peaking or high reds). Now we are going to add a compression filter. Set the ratio to 4:1 and set the attentuation to 3-5dB *under* your normal speaking voice dB.
+  + 4. Now it is time to test your highs: Talk as if you are normally streaming - and really check the dB on this one - , then get excited, get scared, scream for a bit. It will probably be WAY too loud (peaking or high reds). Now we are going to add a compression filter. Set the ratio to 4:1 and set the attentuation to 3-5dB *under* your normal speaking voice dB.
     + 4b) Now speak again at your normal volume and use the make-up gain slider to -just- hit the yellow if you need to. Just make sure not to push it too far (don't add anything more than 6dB).
-  + 5) Add one last filter: A Limiter. Set it to -3dB. This will cut you off completely if you are about to peak. It is a really good idea to have because it is great for your viewers if you don't make their ears bleed.
+  + 5. Add one last filter: A Limiter. Set it to -3dB. This will cut you off completely if you are about to peak. It is a really good idea to have because it is great for your viewers if you don't make their ears bleed.
 + And that's it. Give it another test: Whisper, Talk, Scream. You should never hit below -20dB while whispering and never clip (fill the whole dB bar) when screaming. If you have any questions, feel free to drop them below.
