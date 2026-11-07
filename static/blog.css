@@ -28,6 +28,7 @@
 }
 
 body {
+  width: auto;  /* org.css sets 95%, too wide with the padding */
   max-width: 46rem;
   margin: 0 auto;
   padding: 2rem 1rem 4rem;
@@ -54,8 +55,8 @@ a { color: var(--link); }
 @media (max-width: 600px) {
   .site-menu { flex-basis: 100%; }
 }
-.site-menu, .site-contacts, .sidebar-menu { display: flex; gap: 1rem; }
-.site-menu a, .site-contacts a, .sidebar-menu a { text-decoration: none; }
+.site-menu, .site-contacts { display: flex; gap: 1rem; }
+.site-menu a, .site-contacts a { text-decoration: none; }
 .site-menu a[aria-current] { color: var(--text); font-weight: 600; }
 #postamble {
   display: flex;
@@ -71,22 +72,24 @@ a { color: var(--link); }
 #postamble p { margin: 0; }
 
 /* Sidebar (see blog-add-sidebar in publish.el): a copy of the table of
-   contents, the links to the post lists, and the tag cloud, with lines
-   between them.  On narrow screens, only the tag cloud, below the page
-   content (the header and the footer have the post list links).  On wide screens, a left column that stays
-   on the screen and scrolls independently of the page. */
+   contents and the collapsed tag cloud, with a line between them.  The
+   post lists have a search box and the open tag cloud instead.  On
+   narrow screens, only the tag cloud, below the page content.  On wide
+   screens, a right column that stays on the screen and scrolls
+   independently of the page. */
 .sidebar { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-.sidebar-toc, .sidebar .sidebar-menu, .sidebar-search { display: none; }
+.sidebar-toc, .sidebar-search { display: none; }
 .sidebar-search input {
   width: 100%; box-sizing: border-box; padding: 0.35rem 0.6rem;
   font: inherit; font-size: 0.9rem; border: 1px solid var(--border); border-radius: 6px;
 }
-.sidebar-title, .sidebar-toc h2 { margin: 0 0 0.6rem; font-size: 1rem; }
-.sidebar-title a { color: var(--text); text-decoration: none; }
-.sidebar .tag-cloud { margin: 0; gap: 0.5rem 0.8rem; line-height: 1.25; }
+.sidebar-tags { margin: 0; }  /* the details rule below adds a margin */
+.sidebar-title, .sidebar-toc h2 { font-size: 1rem; font-weight: 600; }
+.sidebar-toc h2 { margin: 0 0 0.6rem; }
+.sidebar .tag-cloud { margin: 0.6rem 0 0; gap: 0.5rem 0.8rem; line-height: 1.25; }
 @media (min-width: 64rem) {
   /* Wide screens: the page starts at the left edge, the free space is on the right.
-     On pages without the sidebar (/tags/), only the content moves to the content column. */
+     The content is the first column, the sidebar is the second. */
   body {
     --sidebar-width: 14rem;
     --column-gap: 3rem;
@@ -94,20 +97,19 @@ a { color: var(--link); }
     max-width: calc(var(--sidebar-width) + var(--column-gap) + var(--content-width));
     margin: 0 0 0 2.5rem;
   }
-  body:not(:has(> .sidebar)) > #content { margin-left: calc(var(--sidebar-width) + var(--column-gap)); }
   body:has(> .sidebar) {
     display: grid;
-    grid-template-columns: var(--sidebar-width) minmax(0, var(--content-width));
+    grid-template-columns: minmax(0, var(--content-width)) var(--sidebar-width);
     column-gap: var(--column-gap);
     align-items: start;
   }
-  /* The fold arrow hangs in the gap, so that the heading text aligns with the paragraphs. */
+  /* The fold arrow hangs in the left margin, so that the heading text aligns with the paragraphs. */
   .fold-toggle::before { margin-left: -1.1em; }
   body:has(> .sidebar) > #preamble, body:has(> .sidebar) > #postamble { grid-column: 1 / -1; }
-  body:has(> .sidebar) > #content { grid-column: 2; grid-row: 2; }
+  body:has(> .sidebar) > #content { grid-column: 1; grid-row: 2; }
   body:has(> .sidebar) #content > #table-of-contents { display: none; }
   .sidebar {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 2;
     position: sticky;
     top: 0;
@@ -120,9 +122,7 @@ a { color: var(--link); }
     border-top: none;
   }
   .sidebar > :not(:first-child) { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-  .sidebar .sidebar-menu { display: flex; }
   .sidebar-search { display: block; }
-  body:has(#search) .sidebar-search { display: none; }  /* the search page has its own box */
   .sidebar-toc { display: block; font-size: 0.9rem; line-height: 1.45; }
   .sidebar-toc ul { margin: 0; padding-left: 1rem; }
   .sidebar-toc > div > ul { padding-left: 0; list-style: none; }
@@ -155,6 +155,7 @@ h1.title {
 /* Tags (see blog-tags.el) */
 .tag-cloud { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 1.1rem; padding: 0; list-style: none; }
 .tag-cloud a { text-decoration: none; }
+.tag-count { color: var(--muted); font-size: 0.85em; }
 .post-tags { margin-top: 2.5rem; color: var(--muted); font-size: 0.95em; }
 .post-tags a { margin-right: 0.4rem; }
 .subtitle { color: var(--muted); margin-top: 0; }

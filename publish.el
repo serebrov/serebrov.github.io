@@ -63,8 +63,15 @@ The value is \"posts\", \"archive\", \"tags\", or \"search\"."
         ((string= (file-name-nondirectory file) "search.org") "search")
         (t "posts")))
 
-(defconst blog-section-pages '("index.org" "archive.org" "tags/index.org" "search.org")
+(defconst blog-post-list-pages '("index.org" "archive.org")
+  "Source files of the post lists, relative to `blog-root'.")
+
+(defconst blog-section-pages (append blog-post-list-pages '("tags/index.org" "search.org"))
   "Source files of the pages that the menu links go to, relative to `blog-root'.")
+
+(defun blog-page-file (info)
+  "Return the source file of the page that INFO describes, relative to `blog-root'."
+  (file-relative-name (plist-get info :input-file) blog-root))
 
 (defun blog-header (info)
   "Return the site header for the page that INFO describes.
@@ -73,7 +80,7 @@ The menu link with the data-section of the page gets aria-current:
 pages of the section (posts and pages of single tags)."
   (let* ((file (plist-get info :input-file))
          (section (format "data-section=\"%s\"" (blog-page-section file)))
-         (current (if (member (file-relative-name file blog-root) blog-section-pages)
+         (current (if (member (blog-page-file info) blog-section-pages)
                       "page"
                     "true")))
     (string-replace section
@@ -182,25 +189,28 @@ keeps its own table of contents for narrow screens (see blog.css)."
 
 (defun blog-add-sidebar (output backend info)
   "Add the sidebar after the <main> element of OUTPUT.
-The sidebar has the table of contents of the page, the links to the
-post lists (layout/sidebar-menu.html), and the tag cloud, the
-:blog-sidebar property of INFO.  The /tags/ page has no
-sidebar, because its content is the same tag cloud."
-  (let ((tags (plist-get info :blog-sidebar)))
+The sidebar has the table of contents of the page and the tag cloud
+for the :blog-tags property of INFO.  The post lists (/ and
+/archive.html) also have a search box, and their tag cloud is open.
+The /tags/ page has no sidebar, because its content is the same tag
+cloud."
+  (let ((tags (plist-get info :blog-tags))
+        (page (blog-page-file info)))
     (when (and tags
                (org-export-derived-backend-p backend 'html)
-               (not (string= (file-relative-name (plist-get info :input-file) blog-root)
-                             "tags/index.org")))
-      (string-replace "</main>"
-                      (concat "</main>\n<div class=\"sidebar\">\n"
-                              (blog-sidebar-toc output) "\n"
-                              (blog-read-layout "sidebar-menu.html")
-                              tags "</div>")
-                      output))))
+               (not (string= page "tags/index.org")))
+      (let ((post-list (member page blog-post-list-pages)))
+        (string-replace "</main>"
+                        (concat "</main>\n<div class=\"sidebar\">\n"
+                                (if post-list (blog-read-layout "sidebar-search.html") "")
+                                (blog-sidebar-toc output) "\n"
+                                (blog-tags-sidebar tags post-list) "</div>")
+                        output)))))
 
-(defun blog-page-options (sidebar)
+(defun blog-page-options (tags)
   "Return the export options that all pages share.
-SIDEBAR is the HTML of the sidebar, or nil for no sidebar."
+TAGS from `blog-tags-collect' are for the tag pages and the sidebar,
+nil for no sidebar."
   `(:base-extension "org"
     :publishing-function org-html-publish-to-html
     ;; to allow things_like_this without making them subscript.
@@ -219,7 +229,7 @@ SIDEBAR is the HTML of the sidebar, or nil for no sidebar."
                 (content "main" "content")
                 (postamble "footer" "postamble"))
     :html-validation-link nil
-    :blog-sidebar ,sidebar))
+    :blog-tags ,tags))
 
 (defun blog-projects (&optional tags)
   "Return the `org-publish-project-alist' for the blog.
@@ -227,7 +237,7 @@ Posts and archive posts go to one flat directory, public/html/, so that
 the URLs are /html/<file name>.html, the same as on the old Hugo site.
 TAGS from `blog-tags-collect' are for the tag pages and the sidebar;
 without TAGS, the projects only give the post files."
-  (let ((page-options (blog-page-options (and tags (blog-tags-sidebar tags)))))
+  (let ((page-options (blog-page-options tags)))
     `(("blog-posts"
        :base-directory ,(blog-path "posts")
        :publishing-directory ,(blog-path "public/html")
@@ -259,7 +269,6 @@ without TAGS, the projects only give the post files."
        :recursive t
        :publishing-directory ,(blog-path "public/tags")
        :preparation-function blog-write-tag-pages
-       :blog-tags ,tags
        ,@page-options)
       ("blog-media"
        :base-directory ,(blog-path "posts")

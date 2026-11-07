@@ -42,37 +42,47 @@ POSTS is a list of (FILE . PROJECT).  TAG-POSTS are newest first."
           (or attributes "")
           (org-html-encode-plain-text tag)))
 
-(defun blog-tags-cloud-html (tags)
+(defun blog-tags--font-size (count max-count)
+  "Return the font size in em of a tag with COUNT posts.
+The size grows from the smallest size (one post) to the largest
+size (MAX-COUNT posts)."
+  (let ((smallest 0.9) (largest 1.25))
+    (if (<= max-count 1)
+        smallest
+      (+ smallest (* (- largest smallest) (/ (float (1- count)) (1- max-count)))))))
+
+(defun blog-tags-cloud-html (tags &optional with-counts)
   "Return the HTML list of the tag cloud for TAGS from `blog-tags-collect'.
-The font size grows with the number of posts, as on the old Hugo
-site: 1em + (count - 1) / (largest count)."
+See `blog-tags--font-size' for the size of each tag.  With
+WITH-COUNTS, show the number of posts after each tag."
   (let ((max-count (apply #'max 1 (mapcar (lambda (tag) (length (cdr tag))) tags))))
     (concat
      "<ul class=\"tag-cloud\">\n"
      (mapconcat (lambda (tag)
                   (let ((count (length (cdr tag))))
-                    (format "<li>%s</li>"
+                    (format "<li>%s%s</li>"
                             (blog-tags--link
                              (car tag)
                              (format " style=\"font-size: %.2fem\" title=\"%d post%s\""
-                                     (+ 1 (/ (float (1- count)) max-count))
-                                     count (if (= count 1) "" "s"))))))
+                                     (blog-tags--font-size count max-count)
+                                     count (if (= count 1) "" "s")))
+                            (if with-counts (format " <span class=\"tag-count\">(%d)</span>" count) ""))))
                 tags "\n")
      "\n</ul>\n")))
 
 (defun blog-tags-cloud (tags)
   "Return the org text of the tag cloud page for TAGS."
   (concat "#+TITLE: Tags\n\n#+begin_export html\n"
-          (blog-tags-cloud-html tags)
+          (blog-tags-cloud-html tags t)
           "#+end_export\n"))
 
-(defun blog-tags-sidebar (tags)
-  "Return the HTML of the sidebar block with the tag cloud for TAGS."
-
-  (concat "<aside class=\"sidebar-tags\" aria-labelledby=\"sidebar-tags\">\n"
-          "<h2 id=\"sidebar-tags\" class=\"sidebar-title\"><a href=\"/tags/\">Tags</a></h2>\n"
+(defun blog-tags-sidebar (tags &optional open)
+  "Return the HTML of the sidebar block with the tag cloud for TAGS.
+The tag cloud is collapsed, or open with OPEN; the summary toggles it."
+  (concat (format "<details class=\"sidebar-tags\"%s>\n" (if open " open" ""))
+          "<summary class=\"sidebar-title\">Tags</summary>\n"
           (blog-tags-cloud-html tags)
-          "</aside>\n"))
+          "</details>\n"))
 
 (defun blog-tags-page (tag posts format-page format-entry)
   "Return the org text of the page for TAG with POSTS.
