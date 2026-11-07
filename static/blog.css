@@ -1,18 +1,37 @@
 /* Page style for pages that ox-html exports. */
 
+/* Atkinson Hyperlegible Next, variable weight (static/fonts/, OFL license). */
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('/static/fonts/AtkinsonHyperlegibleNext-Variable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next';
+  src: url('/static/fonts/AtkinsonHyperlegibleNext-Italic-Variable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --text: #1f2328;
   --muted: #6e7781;
   --border: #d0d7de;
   --code-bg: #f6f8fa;
   --link: #0969da;
+  /* org.css uses these too: --sans for the headings, --code-size for the code. */
+  --sans: 'Atkinson Hyperlegible Next', Verdana, sans-serif;
+  --code-size: 0.9em;
 }
 
 body {
   max-width: 46rem;
   margin: 0 auto;
   padding: 2rem 1rem 4rem;
-  font: 17px/1.65 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font: 17px/1.65 var(--sans);
   color: var(--text);
 }
 
@@ -66,13 +85,24 @@ a { color: var(--link); }
 .sidebar-title a { color: var(--text); text-decoration: none; }
 .sidebar .tag-cloud { margin: 0; gap: 0.5rem 0.8rem; line-height: 1.25; }
 @media (min-width: 64rem) {
+  /* Wide screens: the page starts at the left edge, the free space is on the right.
+     On pages without the sidebar (/tags/), only the content moves to the content column. */
+  body {
+    --sidebar-width: 14rem;
+    --column-gap: 3rem;
+    --content-width: 38rem;
+    max-width: calc(var(--sidebar-width) + var(--column-gap) + var(--content-width));
+    margin: 0 0 0 2.5rem;
+  }
+  body:not(:has(> .sidebar)) > #content { margin-left: calc(var(--sidebar-width) + var(--column-gap)); }
   body:has(> .sidebar) {
     display: grid;
-    grid-template-columns: 16rem minmax(0, 1fr);
-    column-gap: 3rem;
+    grid-template-columns: var(--sidebar-width) minmax(0, var(--content-width));
+    column-gap: var(--column-gap);
     align-items: start;
-    max-width: 66rem;
   }
+  /* The fold arrow hangs in the gap, so that the heading text aligns with the paragraphs. */
+  .fold-toggle::before { margin-left: -1.1em; }
   body:has(> .sidebar) > #preamble, body:has(> .sidebar) > #postamble { grid-column: 1 / -1; }
   body:has(> .sidebar) > #content { grid-column: 2; grid-row: 2; }
   body:has(> .sidebar) #content > #table-of-contents { display: none; }
@@ -100,12 +130,19 @@ a { color: var(--link); }
   .sidebar-toc a { text-decoration: none; }
 }
 
+/* Heading sizes: these rules override the sizes in org_css/org.css. */
+h1,h2,h3,h4,h5,h6 { font-weight: 600; }
 h2,h3,h4,h5,h6 {
   /* color: #A5573E; */
   color: #000000;
+  font-size: 1rem;
 }
+h2 { font-size: 1.4rem; margin: 2rem 0 0.6rem; }
+h3 { font-size: 1.15rem; }
 h1.title {
   text-align: left;
+  font-size: 1.9rem;
+  line-height: 1.2;
   margin-bottom: 0.2rem;
 }
 .subtitle { text-align: left; }
@@ -148,7 +185,7 @@ h1.title {
 .tag .folded { display: none; }
 
 /* Code */
-code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em; }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 :not(pre) > code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 4px; }
 pre { overflow-x: auto; }
 
@@ -161,7 +198,7 @@ Override org.css style to have the gray background and no shadow. */
   box-shadow: none;
 }
 .org-src-container { padding: 0.1rem 1rem; }
-.org-src-container > pre { margin: 0.5em 0; font-size: inherit; }
+.org-src-container > pre { margin: 0.5em 0; }
 pre.example {
   font-size: var(--code-size);
   padding: 0.5em 1rem;

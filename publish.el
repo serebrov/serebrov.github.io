@@ -275,7 +275,7 @@ without TAGS, the projects only give the post files."
        :recursive t)
       ("blog-static"
        :base-directory ,(blog-path "static")
-       :base-extension "css\\|js"
+       :base-extension "css\\|js\\|woff2"
        :publishing-directory ,(blog-path "public/static")
        :publishing-function org-publish-attachment
        :recursive t)
