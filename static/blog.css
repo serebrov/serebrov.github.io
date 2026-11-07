@@ -24,7 +24,7 @@
   --link: #0969da;
   /* org.css uses these too: --sans for the headings, --code-size for the code. */
   --sans: 'Atkinson Hyperlegible Next', Verdana, sans-serif;
-  --code-size: 0.9em;
+  --code-size: 0.8em;
 }
 
 body {
@@ -189,20 +189,36 @@ h1.title {
 code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 :not(pre) > code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 4px; }
 pre { overflow-x: auto; }
+/* A thin scrollbar that stays visible on code that scrolls sideways.
+   macOS hides overlay scrollbars; only ::-webkit-scrollbar makes Chromium
+   and Safari show it.  Chromium ignores these rules when scrollbar-color
+   or scrollbar-width is set, so the standard properties are only for
+   browsers without ::-webkit-scrollbar (Firefox). */
+pre::-webkit-scrollbar { height: 8px; }
+pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+@supports not selector(::-webkit-scrollbar) {
+  pre { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+}
 
 /* Code boxes: source (.org-src-container) and example (pre.example) blocks.
 Override org.css style to have the gray background and no shadow. */
 .org-src-container, pre.example {
+  --code-pad-x: 1rem;
   background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   box-shadow: none;
 }
-.org-src-container { padding: 0.1rem 1rem; }
+.org-src-container { padding: 0.1rem var(--code-pad-x); }
 .org-src-container > pre { margin: 0.5em 0; }
 pre.example {
   font-size: var(--code-size);
-  padding: 0.5em 1rem;
+  padding: 0.5em var(--code-pad-x);
+}
+/* Wide screens: the boxes use the side padding as extra width, so that
+   the code text aligns with the paragraphs. */
+@media (min-width: 64rem) {
+  .org-src-container, pre.example { margin-inline: calc(-1 * var(--code-pad-x)); }
 }
 
 /* Code colors: htmlize outputs one "org-<face>" class per Emacs face. */
@@ -212,8 +228,9 @@ pre.example {
 .org-function-name { color: #8250df; }
 .org-variable-name, .org-constant { color: #0550ae; }
 .org-type, .org-preprocessor { color: #953800; }
-/* Copy button (see setupCopyButtons in blog.js).  At the bottom, because
-   org.css puts the language label at the top right corner. */
+/* Copy button (see setupCopyButtons in blog.js) and the language label
+   of org.css (pre::before, top right corner): both show only on hover,
+   so that they do not cover the code. */
 .copy-button {
   position: absolute;
   bottom: 0.4rem;
@@ -226,7 +243,8 @@ pre.example {
   cursor: pointer;
   opacity: 0;
 }
-.org-src-container:hover .copy-button, .copy-button:focus { opacity: 1; }
+.org-src-container > pre::before { opacity: 0; }
+.org-src-container:hover .copy-button, .org-src-container:hover > pre::before, .copy-button:focus { opacity: 1; }
 
 /* File preview dialog (see static/config-preview.js) */
 .file-preview { width: min(60rem, 90vw); padding: 0; border: 1px solid var(--border); border-radius: 6px; }
