@@ -38,6 +38,7 @@ A collection of links to touch typing tutors and games.
 - [[https://www.typingstudy.com/][TypingStudy]] - Touch Typing Practice Online
 - [[https://ranelpadon.github.io/ngram-type/][Ngram Type]] - Practice typing bigrams, trigrams, tetragrams and top words
 - [[https://www.speedcoder.net/][speedcoder.net]] - Online Typing Practice for Programmers
+- Typesy Review 2020 - Individual & Homeschool | [[https://www.typinglounge.com/typesy-review][Typing Lounge]]
 
 * Other
 :PROPERTIES:
@@ -64,6 +65,7 @@ A collection of links to touch typing tutors and games.
 - [[https://www.epistorygame.com/][Epistory Typing Chronicles]] - a beautiful atmospheric 3D action/adventure typing game
 - [[https://nanotalegame.com/][Nanotale Typing Chronicles]] - one more typing adventure game
 - The Typing of the Dead (Windows game) - [[https://en.wikipedia.org/wiki/The_Typing_of_the_Dead][Wikipedia]], [[https://store.steampowered.com/app/246580/The_Typing_of_The_Dead_Overkill/][Steam]]
+- Glyphica: [[https://store.steampowered.com/app/2400160/Glyphica_Typing_Survival/][Typing Survival on Steam]]
 
 * Terminal and Desktop Apps
 :PROPERTIES:
@@ -89,3 +91,10 @@ Grey keys: I usually use the pinky here (except for the space bar).
 
 Space bar: Press with the left thumb after typing a letter with the right hand
 and with the right thumb after typing a letter with the left hand.
+
+* Related:
+- [[file:2020-01-21-touch-typing.org][Touch Typing Tutors and Games]]
+- [[file:links-keyboards.org][Keyboards Links]]
+- [[file:links-diy.org][DIY Links]]
+- [[file:links-keyboard-firmware.org][Keyboard Firmware Links]]
+- [[file:links-keyboard-keymap.org][Keyboard Layouts]]
