@@ -20,6 +20,8 @@
   --text: #1f2328;
   --muted: #6e7781;
   --border: #d0d7de;
+  --border-medium: #e9e9e9;
+  --border-subtle: #f0f8fa;
   --code-bg: #f6f8fa;
   --link: #0969da;
   /* org.css uses these too: --sans for the headings, --code-size for the code. */
@@ -200,6 +202,16 @@ pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
   pre { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 }
 
+.outline-3 {
+  margin-left: 1.25rem;
+  padding-left: .3rem;
+  border-left: 1.5px dotted var(--border-medium);
+}
+.outline-4, .outline-5, .outline-6 {
+  margin-left: 1.25rem;
+  padding-left: .3rem;
+  border-left: 1.5px dotted var(--border-subtle);
+}
 /* Code boxes: source (.org-src-container) and example (pre.example) blocks.
 Override org.css style to have the gray background and no shadow. */
 .org-src-container, pre.example {

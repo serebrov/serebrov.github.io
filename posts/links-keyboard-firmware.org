@@ -1,0 +1,401 @@
+#+TITLE: Keyboard Firmware Links
+#+DATE: <2006-11-06>
+#+TYPE: links
+#+FILETAGS: :kdb:
+#+DESCRIPTION: Keyboard firmware, a collection of links.
+
+Links related to keyboard firmware.
+
+* QMK
+** [[https://thomasbaart.nl/category/mechanical-keyboards/firmware/qmk/qmk-basics/][QMK Basics – Thomas Baart]]
+*** QMK Basics: Tap and hold actions: [[https://thomasbaart.nl/2018/12/09/qmk-basics-tap-and-hold-actions/][Tap into your modifiers – Thomas Baart]]
+** [[https://ergodox-ez.com/pages/getting-started][Layer toggle types]]
+*** Momentary (MO):
+- This is like a Shift key. Hold down a momentary toggle, and you’re taken to another layer. Let go, and you drop back to layer 0.
+- As soon as you let go of the key, the layer is deactivated and you pop back out to the previous layer.
+- When you apply this to a key, that same key must be set as KC_TRNS on the destination layer. Otherwise, you won't make it back to the original layer when you release the key (and you'll get a keycode sent).
+- You can only switch to layers above your current layer. If you're on layer 0 and you use MO(1), that will switch to layer 1 just fine. But if you include MO(3) on layer 5, that won't do anything for you -- because layer 3 is lower than layer 5 on the stack.
+*** Toggle (TG):
+- This is similar to a Caps Lock. Tap once, and you’re moved to that layer. You’ll stay on that layer until you tap the layer toggle key again. Depending on the type, you’ll momentarily/permanently have access to the key bindings of that specific layer.
+*** One-shot (OSL):
+- Tap this key, and you’re moved to the layer. Tap a single key on the layer, and you will then be sent back to layer 0. Like Shift, but without having to hold down two keys at once.
+- This type of layer switch allows you to either tap it and get the next layer for one key press or hold it and continue to get that next layer until you release it. It's wonderful for the types of keys we'll be looking at on Layer 1.
+*** OSM(mod) - this is a "one shot" modifier. - sticky shift
+- So let's say you have your left Shift key defined as OSM(MOD_LSFT). Tap it, let go, and Shift is "on" -- but only for the next character you'll type. So to write "The", you don't need to hold down Shift -- you tap it, tap t, and move on with life. And if you hold down the left Shift key, it just works as a left Shift key, as you would expect (so you could type THE). There's also a magical, secret way to "lock" a modifier by tapping it multiple times. If you want to learn more about that, open an issue. :)
+*** Tap-Toggle (TT):
+- A combination of Momentary and Toggle. Hold this key, and the layer is active only as long as you hold it. Tap it briefly, and you’re moved to the destination layer until you tap it again.
+*** Direct switch (TO):
+- All other layer switches go <i>up</i> (allow you to switch from layer 0 to layer 1, for example). TO is the only one which also allows you to switch <i>down</i> (from layer 3 to layer 2, for example).
+*** Meh / Hyper keys
+- System-level shortcuts to switch to apps
+** Retro [[https://precondition.github.io/home-row-mods#using-home-row-mods-with-qmk][tapping]]: MT(Mod, X) will send X if the key held longer than tapping term. Retro Tap thus gives another way to trigger the tapping function of mod-taps. With this option, you can get away with a very short tapping term.
+- Tapping term is short, so it is easier to do Hold
+*** What if we set tapping term to zero? (so any keypress is "Hold")
+- When used in combination with other keys, mod will be always Hold
+*** What if we set tapping term to infinity? (so any keypress is "Tap")
+- We can get "nested hold, rolling tap" behavior with
+- MT = Nested=Hold, Rolling=Tap -> PERMISSIVE_HOLD + IGNORE_MOD_TAP_INTERRUPT
+- LT = Nested=Hold, Rolling=Tap -> PERMISSIVE_HOLD
+- This is also a behavior that looks natural to me, so it might be possible to go without tapping term
+  - When keys should be processed in this case? Should we wait until all are released?
+  - What if we are on a layer or holding Shift?
+** [[https://docs.qmk.fm/#/tap_hold][Tap-Hold Configuration]]
+*** Questions
+- permissive hold is always enabled when tapping term > 500 - how the tapping term is used then? tapping term determines what is a tap and what is a hold, but now hold ignores the tapping term
+- is retro tapping useful for anything else? the obvious case is a habit to often keep keys pressed for too long like when thinking on something
+**** am I understanding ignore mod tap interrupt right?
+- permissive hold: nested key press ("mod down - key down - key up - mod up") = always mod+key (hold action)
+- ignore mod tap interrupt: rolling key press ("mod down - key down - mod up - key up") holding keys longer than tapping term = mod+key
+- ignore mod tap interrupt + permissive hold: rolling key press ("mod down - key down - mod up - key up") = always mod+key
+  - maybe: both nested and rolling key press are counted as mod (so this is just "stronger" option than permissive hold)
+- [[https://github.com/qmk/qmk_firmware/issues/8971][there is also a discussion here [Feature Request] Permissive Hold and Ignore Mod Tap Interrupt for LT · Issue #8971 · qmk/qmk_firmware]]
+  - especially, this comment - [[https://github.com/qmk/qmk_firmware/issues/8971#issuecomment-623435438][https://github.com/qmk/qmk_firmware/issues/8971#issuecomment-623435438]]
+  - and a follow up PR
+  - [[https://github.com/qmk/qmk_firmware/pull/9404][Add HOLD_ON_OTHER_KEY_PRESS option for dual-role keys by sigprof · Pull Request #9404 · qmk/qmk_firmware]]
+    - Looking at the change itself - code change is very small, it more a terminology question and the how-it-works explanation (also, current documentation may not be correct as he says that default MT behavior is not to wait for tapping term and to use mod both for nested key press and rolling key press
+***** In general: it looks these two settings are over-complicated, and could be a multi-choice option instead of the combination of settings
+- Defaut: wait for tapping term (shorter - regular key, longer - mod)
+- Other key is pressed / released while mod is hold (regardless of time) - apply mod
+- Other key is pressed while mod is hold (can be released after, regardless of time) - apply mod
+- if QMK has unit tests, it would be great to emulate and check how it works via test (set some settings, run key sequences, check the result) - to be sure how it works
+- but sigprof just tested manually, using 499 tapping term
+- AND they are adding alternative options for LT mods (current options are for MT, but affect LT too)
+*** ~TAPPING_TERM 200~: Tapping Term - determines what is a tap and what is a hold
+- ~TAPPING_TERM_PER_KEY~ + get_tapping_term() function to define term per key
+*** ~#define PERMISSIVE_HOLD~: Permissive Hold - do not take tapping term into account for mod taps (hold mod, press and release another key will always work, even if done faster than tapping term)
+- Makes tap and hold keys (like Mod Tap) work better for fast typists, or for high ~TAPPING_TERM~ settings
+- Note: always enabled for ~TAPPING_TERM~ >= 500
+**** For Instance:
+- ~SFT_T(KC_A) Down~
+- ~KC_X Down~
+- ~KC_X Up~
+- ~SFT_T(KC_A) Up~
+- Normally, if you do all this within the ~TAPPING_TERM~, by default 200ms, this will be registered as ax by the firmware and host system.
+- With permissive hold enabled, this modifies how this is handled by considering the Mod Tap keys as a Mod if another key is tapped, and would registered as X (SHIFT+x).
+**** [[https://github.com/qmk/qmk_firmware/pull/1359/][Permissive Hold, and two keymaps by agbell · Pull Request #1359 · qmk/qmk_firmware]]
+**** Note: it looks like permissive hold only works for MT (mod tap), but not for LT
+- Maybe not, this is mentioned in PR comments, but it may have changed since then
+- PERMISSIVE_HOLD_PER_KEY + get_permissive_hold() to define permissive hold per key
+*** ~#define IGNORE_MOD_TAP_INTERRUPT~: Ignore Mod Tap Interrupt - allow to release modifier before the other key (rolling through mod and key), need to hold both down durIng the tapping term (or is this the opposite, where enabling ignore mod tap interrupt makes rolling input to produce regular keys and enables mod ONLY AFTER waiting for the tapping term)
+- Setting Ignore Mod Tap Interrupt requires holding both keys for the ~TAPPING_TERM~ to trigger the hold function (the mod)
+**** For Instance:
+- ~SFT_T(KC_A) Down~
+- ~KC_X Down~
+- ~SFT_T(KC_A) Up~
+- ~KC_X Up~
+**** Normally, this would send X (SHIFT+x). With Ignore Mod Tap Interrupt enabled, holding both keys are required for the ~TAPPING_TERM~ to register the hold action.
+- Bad example, as "normally" here does not say if that is done before or after the tapping term
+- A quick tap will output ax in this case, while a hold on both will still output X (SHIFT+x).
+**** Note: This only concerns modifiers and not layer switching keys.
+- Not sure why, logically layers should work exactly the same as regular modifiers
+- ~IGNORE_MOD_TAP_INTERRUPT_PER_KEY~ + get_ignore_mod_tap_interrupt to set per key
+*** Ignore Mod Tap Interrupt + Permissive Hold - modifier added when rolling (modifier released first) instead of waiting for other key release (like in permissive hold) or when both keys are hold for tapping term
+- If you have Permissive Hold enabled, as well, this will modify how both work.
+- The regular key has the modifier added if the first key is released first or if both keys are held longer than the ~TAPPING_TERM~.
+**** Not sure, but probably this means that
+- SFT_T(KC_A) Down - KC_X Down - SFT_T(KC_A) Up - KC_X Up
+- will always produce Shift-x?
+- Is not it more logical to always have SFT Down - X down - X Up - Shift Up to trigger Shift-x?
+- Again, the description is confusing: "The regular key has the modifier added if the first key is released first" - what is the 'first' key here, is this always a mod key?
+- Does it mean
+*** ~#define TAPPING_FORCE_HOLD~: Tapping Force Hold - disable key repeat on tap followed by tap+hold (act as hold instead of key repeat)
+- Usually, this is a way to activate the repeat function on mod taps
+**** But it does not work good, for example, when I have backspace on a layer that is activated with space
+- When I type "xy " and want to delete it, I do
+- x - y - z - left space - hold left space - right space (as backspace)
+- so here I have the "left space - hold left space" which would trigger space repeat normally, while I do not want this
+- TAPPING_FORCE_HOLD_PER_KEY + get_tapping_force_hold for per key setting
+*** Retro Tapping - releasing the Mod key without pressing another will send the original keycode even if it is outside the tapping term (regular behavior: ~#define RETRO_TAPPING~: no output)
+- For instance, holding for tapping term and releasing LT(2, KC_SPACE) will output space (by default - nothing)
+- RETRO_TAPPING_PER_KEY + get_retro_tapping for per key setting
+*** [[https://drive.google.com/file/d/1nCo7v6UAJDBQVXsY303mu3GrKh79Z6iL/view?usp=sharing][Cheatsheet on MT and LT]]
+*** QMK Tap-Hold Configuration - Google Sheets
+  - [[https://docs.google.com/spreadsheets/d/1IaaOMbl6zLBb5Jswyr90Lp9hGx3xIyugVSfD_oBk4po/edit#gid=0][https://docs.google.com/spreadsheets/d/1IaaOMbl6zLBb5Jswyr90Lp9hGx3xIyugVSfD_oBk4po/edit#gid=0]]
+*** [[https://github.com/qmk/qmk_firmware/issues/8971][[Feature Request] Permissive Hold and Ignore Mod Tap Interrupt for LT · Issue #8971 · qmk/qmk_firmware]]
+** mmalecki/qmk_rc: Remote control for your QMK-powered keyboard
+- [[https://github.com/mmalecki/qmk_rc][https://github.com/mmalecki/qmk_rc]]
+- On the keyboard side: include the c/h files, hook it to the `raw_hid_receive`
+- On the computer side: run cmd tool to send commands to the keyboard - enable or disable RGB, write something to OLED screen, toggle layer, etc
+- Interesting as an interaction example between the host and keyboard
+** source
+*** (tmk core + keyboards) tmk/tmk_keyboard: [[https://github.com/tmk/tmk_keyboard][Keyboard firmwares for Atmel AVR and Cortex-M]]
+*** tmk/tmk_core: [[https://github.com/tmk/tmk_core][TMK keyboard library]]
+**** [[https://github.com/tmk/tmk_core/commit/ac3134ffeb3a2fb998e628e97a06b413fba8ee48][(first commit) add initial files from teensy's usb_keyboard_debug. · tmk/tmk_core@ac3134f]]
+- [[https://github.com/tmk/tmk_core/commits/master?after=f47682b6f99eb6304c1e35b43cad7644d8980a51+1294&branch=master][(page with first commits) Commits · tmk/tmk_core]]
+**** lufa - The Lightweight USB Framework for AVRs
+- initial attempt for LUFA. · [[https://github.com/tmk/tmk_core/commit/dd93d2915f79d0b825fc6bbc4edb556a69eac406][tmk/tmk_core@dd93d29]]
+- [[https://github.com/tmk/tmk_core/commit/a9a3610dd4a168e473d2d6a2eb3fbc37aabb46c9][Add LUFA mouse feature and fix mouse report. · tmk/tmk_core@a9a3610]]
+- [[https://github.com/tmk/tmk_core/commit/3d81d5221eac9ca9620ba9043a250dcb8371b22e][Add consumer/system control feature to LUFA. · tmk/tmk_core@3d81d52]]
+- [[https://github.com/tmk/tmk_core/commit/cc68adeb5744cba9e8650bab04ff0f0a4033db9f][Add protocol/lufa. LUFA supported now. · tmk/tmk_core@cc68ade]]
+- [[https://github.com/tmk/tmk_core/commit/fca518f90dfc7f72132ff7950b000cfbd5709807][Merge branch 'lufa' · tmk/tmk_core@fca518f]]
+- [[https://github.com/tmk/tmk_core/commits/master?after=f47682b6f99eb6304c1e35b43cad7644d8980a51+1154&branch=master][Commits · tmk/tmk_core]]
+- [[https://github.com/tmk/tmk_core/commit/daa4a4235fd4a88b3b6f64e4a2cf590f28f4b65b][Add NKRO support for LUFA · tmk/tmk_core@daa4a42]]
+- [[https://github.com/tmk/tmk_core/search?o=desc&q=lufa&s=committer-date&type=commits][Search · lufa]]
+**** [[https://github.com/tmk/tmk_core/commit/2a562a4191a5b9e88731efb5eabd921821f25f7e][(first ps2 commit) Add PS/2 mouse support to connect TrackPoint Unit. · tmk/tmk_core@2a562a4]]
+- [[https://github.com/tmk/tmk_core/commits/master?before=f47682b6f99eb6304c1e35b43cad7644d8980a51+1295&branch=master][(page with ps2 commits) Commits · tmk/tmk_core]]
+- [[https://github.com/tmk/tmk_core/search?o=desc&q=ps%2F2&s=committer-date&type=commits][Search · ps/2]]
+**** [[https://github.com/tmk/tmk_core/commit/895cd4dfa29f0f3c623544f4868ac63e619c69d9][(first usb hid commit) Add USB HID(host) protocol.(not finished) · tmk/tmk_core@895cd4d]]
+- [[https://github.com/tmk/tmk_core/commits/master?before=f47682b6f99eb6304c1e35b43cad7644d8980a51+1190&branch=master][Commits · tmk/tmk_core]]
+**** chibios
+- [[https://github.com/tmk/tmk_core/commit/aa054f0eb6b85f3303c792a86bf75af44a6f3947][Add ChibiOS support (USB stack + support files). · tmk/tmk_core@aa054f0]]
+- [[https://github.com/tmk/tmk_core/commits/master?before=f47682b6f99eb6304c1e35b43cad7644d8980a51+455&branch=master][Commits · tmk/tmk_core]]
+- [[https://github.com/tmk/tmk_core/search?o=desc&p=1&q=ChibiOS&s=committer-date&type=commits][Search · ChibiOS]]
+- [[https://github.com/tmk/tmk_core/commits?author=flabbergast][(the chibios implementation contributor commits) Commits · tmk/tmk_core]]
+** [[https://github.com/qmk/qmk_web_stack][qmk/qmk_web_stack]]
+** QMK - python code
+- I thought it is for tool scripts, but looks like actually part of the keyboard code can be in python
+*** [[https://github.com/qmk/qmk_firmware/tree/master/users/dennytom/chording_engine][qmk_firmware/users/dennytom/chording_engine at master · qmk/qmk_firmware]]
+- This chording engine has some python logic
+*** [[https://github.com/qmk/qmk_firmware/search?l=Python&q=def&type=code][see also Search · def]]
+** [[https://github.com/CommunistWitchDoctor/qmk_firmware/tree/master/users/datagrok][This is a hack to place question mark on shift-comma and exclamation mark on shift-period]]
+- I would move something useful here too, as I have < and > on the right
+- Maybe : and ;
+** LED heatmap lighting : [[https://www.reddit.com/r/ergodox/comments/klxkcs/led_heatmap_lighting/][ergodox]]
+** order matters: [[https://github.com/qmk/qmk_firmware/issues/6943][OSL + OSM ignores OSL; OSM + OSL works as expected · Issue #6943 · qmk/qmk_firmware]]
+** webusb / connect mitosis to ORYX
+- probably the simple way would be to flash zsa's QMK and add my keymap to it
+*** [[https://github.com/qmk/qmk_firmware/pull/7778][Add support for WebUSB by drashna · Pull Request #7778 · qmk/qmk_firmware]]
+*** [[https://github.com/qmk/qmk_firmware/pull/9214][Keyboards/zsa updates by drashna · Pull Request #9214 · qmk/qmk_firmware]]
+*** [[https://github.com/qmk/qmk_firmware/blob/c87b2efef8c7ff02c997c64c6bf112af4f30622e/keyboards/moonlander/moonlander.h][qmk_firmware/moonlander.h at c87b2efef8c7ff02c997c64c6bf112af4f30622e · qmk/qmk_firmware]]
+** Joystick support
+- TODO: research how to electrically connect joystick, how to support it in the firmware
+*** Joystick
+  - [[https://docs.qmk.fm/#/feature_joystick][https://docs.qmk.fm/#/feature_joystick]]
+*** [[https://github.com/qmk/qmk_firmware/tree/a3db72df7299140e52f57d082a3742a8b480a226/keyboards/handwired/onekey/keymaps/joystick][qmk_firmware/keyboards/handwired/onekey/keymaps/joystick at a3db72df7299140e52f57d082a3742a8b480a226 · qmk/qmk_firmware]]
+*** [[https://github.com/qmk/qmk_firmware/pull/10439][Joystick 16-bit support by seb-pau · Pull Request #10439 · qmk/qmk_firmware]]
+** [home key mods + fast typing] 111WPM on a Dactyl Manuform with homerow mods and Colemak-DHM : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/hdyw8c/111wpm_on_a_dactyl_manuform_with_homerow_mods_and/][ErgoMechKeyboards]]
+- I've enabled pretty much every tap hold configuration setting and tweaked the tapping term on a per key basis based on frequency of the modifier and the tendency of some of my fingers to rest longer on the key. This is, for example, why I added 200ms to the tapping term of the HOME_I key as my ring finger tended to rest oddly long on the key when typing n-grams such as "ion".
+- Recently, in an effort to lower the tapping term for my shift modtaps even more, I've been toying with canceling the effect of shift on the adjacent keys. So if I hit "N" with right shift on, I probably intended to write "en" instead. So in those cases, instead of sending "N", the firmware sends "en". As a consequence, capital "N" can only be typed with the opposite shift.
+*** [[https://beta.docs.qmk.fm/using-qmk/software-features/tap_hold#tapping-term][Tap-Hold Configuration - QMK]]
+- there is an option to set tapping term per key
+*** settings for home mods in miryoku layout
+**** [[https://github.com/manna-harbour/qmk_firmware/blob/miryoku/users/manna-harbour_miryoku/miryoku.org#usersmanna-harbour_miryokuconfigh][qmk_firmware/[[http://miryoku.org][miryoku.org]] at miryoku · manna-harbour/qmk_firmware]]
+** Retro Shift - allows using AutoShift with dual-mod keys (hold longer and let go - shifed symbol, use with another key - mod)
+*** Retro Shift (Auto Shift for Tap Hold via Retro Tapping) : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/i2s0px/retro_shift_auto_shift_for_tap_hold_via_retro/][ErgoMechKeyboards]]
+*** [[https://github.com/qmk/qmk_firmware/pull/9889][Add Retro Shift (Auto Shift for Tap Hold via Retro Tapping) by manna-harbour · Pull Request #9889 · qmk/qmk_firmware]]
+*** [[https://github.com/qmk/qmk_firmware/pull/11059][Add Retro Shift (Auto Shift for Tap Hold via Retro Tapping) and Custom Auto Shifts by IsaacElenbaas · Pull Request #11059 · qmk/qmk_firmware]]
+- Not merged yet, PR by miryoku author
+** Automatic conversion of OLED images : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/i3dlz3/automatic_conversion_of_oled_images/][ErgoMechKeyboards]]
+** Help me start a collection of QMK Macro and features for sharing : [[https://www.reddit.com/r/olkb/comments/coz5wa/help_me_start_a_collection_of_qmk_macro_and/][olkb]]
+** What clever keystroke shortcuts have you set up with QMK? : [[https://www.reddit.com/r/olkb/comments/5ilzi9/what_clever_keystroke_shortcuts_have_you_set_up/][olkb]]
+** Porting QMK To A Cheap Mechanical Keyboard | [[https://hackaday.com/2020/10/04/porting-qmk-to-a-cheap-mechanical-keyboard/][Hackaday]]
+** Macro shortcuts: [[https://github.com/jackhumbert/qmk_firmware#macro-shortcuts-send-a-whole-string-when-pressing-just-one-key][Send a whole string when pressing just one key]]
+** Tap Dance: [[https://github.com/jackhumbert/qmk_firmware#tap-dance-a-single-key-can-do-3-5-or-100-different-things][A single key can do 3, 5, or 100 different things]]
+** The Leader key: [[https://github.com/jackhumbert/qmk_firmware#the-leader-key-a-new-kind-of-modifier][A new kind of modifier]]
+* ZMK (bluetooth firmware)
+*** zephyrproject-rtos/zephyr: [[https://github.com/zephyrproject-rtos/zephyr][Primary Git Repository for the Zephyr Project. Zephyr is a new generation, scalable, optimized, secure RTOS for multiple hardware architectures.]]
+*** [[https://github.com/joric/nrfmicro/wiki/ZMK][ZMK · joric/nrfmicro Wiki]]
+**** [[https://github.com/zmkfirmware/zmk/pull/547][Invoke behaviors with different "locality" by petejohanson · Pull Request #547 · zmkfirmware/zmk]]
+*** Troubleshooting | [[https://zmkfirmware.dev/docs/troubleshooting][ZMK Firmware]]
+*** [[https://github.com/serebrov/zmk-config/actions/runs/541712788][Add autoshift for slash · serebrov/zmk-config@f1bd3d9]]
+*** [[https://github.com/zmkfirmware/zmk/blob/main/app/include/dt-bindings/zmk/keys.h][zmk/keys.h at main · zmkfirmware/zmk]]
+*** autoshift via Hold-Tap works
+**** Hold-Tap Behavior | [[https://zmkfirmware.dev/docs/behaviors/hold-tap][ZMK Firmware]]
+- flashing - double "tap" the reset button
+*** connect halfes - tap reset once on each half (blue diode starts flashing on the nice!nano)
+- tap once more to exit the pair mode
+*** Basic Setup | [[https://zmkfirmware.dev/docs/development/setup][ZMK Firmware]]
+**** [[https://docs.zephyrproject.org/2.3.0/getting_started/toolchain_3rd_party_x_compilers.html#gnu-arm-embedded][3rd Party Toolchains — Zephyr Project Documentation]]
+*** auto-shift can be done as hold-tap where the hold version is the upper-case version of the same key
+- &ht A LS(A)
+- (it is not possible to combine it with mod though - but this is not yet possible in QMK too)
+**** From discord                                                    :folded:
+- BrainWart01/08/2021
+- I saw something about auto-shift in this Discord? another one? and I was wondering what that really takes. Just watch for a '.' and then a ' '? Fire off a OSK shift? That wouldn't handle numbers well though. Would allow people do do things in other similar scenarios if there are any. Thoughts? Maybe not worth thinking about too much atm?(edited)
+***** TJ - chormbo the great01/08/2021
+- I think autoshift is just hold for shifted key
+- hold a get A
+***** BrainWart01/08/2021
+- don't we have that then?
+***** TJ - chormbo the great01/08/2021
+- I thought thats how it works in qmk(edited)
+- I mean yeah if thats what it is
+- I don't think its really "automatically" shifting based on context
+- that sounds wildly challenging
+***** BrainWart01/08/2021
+- I could see a dumb one as being alright. Only shift one key after '. '. Any other key would cancel. Essentially an execute behavior after blah keys pressed. how the keys are defined could be key positions maybe?
+***** TJ - chormbo the great01/08/2021
+- oh sure that is of pretty limited use if you only type prose I guess
+- or recognize space i space
+- and things like that
+***** petejohanson (US ET)01/08/2021
+- If it's just "hold the same key for shifted version", then current hold-tap can do that.
+- &ht A LS(A)
+- Easy enough for a local macro to make it easier.
+***** TJ - chormbo the great01/08/2021
+- yeah
+***** petejohanson (US ET)01/08/2021
+- #define AUTOSHFT(keycode) &ht keycode LS(keycode)
+***** TJ - chormbo the great01/08/2021
+- Tap a key and you get its character. Tap a key, but hold it slightly longer and you get its shifted state. Voilà! No shift key needed!
+- from qmk doc
+***** petejohanson (US ET)01/08/2021
+- Yeah,
+***** TJ - chormbo the great01/08/2021
+- look at that, free features
+***** Okke01/08/2021
+- @BrainWart I think we can implement autoshift as a 'wrapper' around a hold-tap.
+- similar to @petejohanson (US ET)'s solution, but then with a behavior &as A which under water calls &some-holdtap LS(A) A(edited)
+- maybe even configurable which modifier should be sent
+- &am for automod?
+- that way you could also nest it inside of holdtaps, making it possible to have autoshift and homerow mods
+- (because hold-taps only support one-argument behaviors)
+***** TJ - chormbo the great01/08/2021
+- the nice thing in QMK is you can set it all at once
+- so it applies to the whole board at one time
+- but you still have to define your whole keymap anyway so I guess changing the &kp to &as is not any harder
+***** Okke01/08/2021
+- hm, that's a valid point
+- Ill think about how we could do this without having to resort to changing everything to &as (including bindings inside hold-taps, which is not something we'd want to teach regular users)(edited)
+***** TJ - chormbo the great01/08/2021
+- IMO just write it in the docs
+- I think a genuine user will want to fine tune the hold time anyway
+- also do not consider this a volunteer to write the doc
+***** Okke01/08/2021
+- autoshift will only work with homerowmods once we have retro tapping. so much to do.
+* KMK (python-based firmware)
+- KMKfw/kmk_firmware: [[https://github.com/KMKfw/kmk_firmware][Clackety Keyboards Powered by Python]]
+- 40% Keyboards: [[https://www.40percent.club/2021/02/kmk-explorer.html][KMK-Explorer]]
+- 40% Keyboards: [[https://www.40percent.club/2021/02/pipi-gherkin.html][PiPi Gherkin]]
+- 40% Keyboards: [[https://www.40percent.club/2021/01/pca10059-running-kmk-firmware.html][PCA10059 running KMK firmware]]
+- [[https://github.com/KMKfw/kmk_firmware/tree/master/kmk][kmk_firmware/kmk at master · KMKfw/kmk_firmware]]
+- makerdiary/python-keyboard: [[https://github.com/makerdiary/python-keyboard][A hand-wired USB & Bluetooth keyboard powered by Python and more]]
+* Keyboard firmware
+** [[https://keebfolio.netlify.app/firmware/][Firmware - Keebfol.io]]
+- [[https://github.com/jpconstantineau/BlueMicro_BLE][BlueMicro_BLE]] - A Bluetooth Firmware for the NRF52832.
+- [[https://github.com/geoah/bluetosis][Bluetosis]] - Bluetooth firmware for the Mitosis keyboard.
+- [[https://github.com/dhowland/EasyAVR][EasyAVR]] - is a keyboard firmware and keymapper GUI for custom keyboards based on USB AVRs.
+- [[https://github.com/keyboardio/Kaleidoscope][Kaleidoscope]] - Flexible firmware for Arduino-powered keyboards.
+- [[https://github.com/TeXitoi/keyberon][Keyberon]] - A pure rust keyboard firmware.
+- [[https://github.com/ahtn/keyplus][Keyplus]] - An easy to use keyboard firmware with support for wireless and wired split keyboards.
+- [[https://github.com/KMKfw/kmk_firmware][KMK]] - is a feature-rich and beginner-friendly firmware for computer keyboards written and configured in CircuitPython.
+- [[https://github.com/colinta/Mechy][Mechy]] - Arduino compatible, plugin based.
+- [[https://github.com/Galzai/MK32][MK32]] - Simple BLE keyboard for ESP32
+- [[https://github.com/Lotlab/nrf52-keyboard][nrf52-keyboard]] - A ble keyboard firmware using nrf52810/52832
+- [[https://github.com/makerdiary/python-keyboard][Python-Keyboard]] - A highly extensible firmware written in Python, based on CircuitPython, with RGB, USB and Bluetooth.
+- [[https://github.com/qmk/qmk_firmware][QMK]] - A keyboard firmware based on the tmk_keyboard firmware for Atmel AVR and ARM controllers.
+- [[https://github.com/tmk/tmk_keyboard][TMK]] - Keyboard firmwares for Atmel AVR and Cortex-M.
+- [[https://zmkfirmware.dev/][ZMK]] - MIT-licensed firmware built on top of the Zephyr RTOS that is “wireless first”.
+** Real-Time OS Basics: Picking The Right RTOS When You Need One | [[https://hackaday.com/2021/02/24/real-time-os-basics-picking-the-right-rtos-when-you-need-one/][Hackaday]]
+*** RTOS: [[https://blog.nordicsemi.com/getconnected/what-is-rtos-real-time-operating-systems-for-embedded-developers][Real-Time Operating Systems for Embedded Developers]]
+*** Introduction to RTOS Part 1 - What is a Real-Time Operating System (RTOS)? | [[https://www.youtube.com/watch?v=F321087yYy4][Digi-Key Electronics - YouTube]]
+** How to make your C codebase rusty: [[https://about.houqp.me/posts/rusty-c/][rewriting keyboard firmware keymap in Rust · houqp]]
+** Univa/rumcake: A rust-based mechanical keyboard firmware
+ [[https://github.com/Univa/rumcake][https://github.com/Univa/rumcake]]
+** pop-os/keyboard-configurator: [[https://github.com/pop-os/keyboard-configurator][Keyboard configuration UI]]
+** grota/tmk_keyboard: [[https://github.com/grota/tmk_keyboard][keyboard controller firmware for Atmel AVR USB family]]
+** Hello from ZMK Firmware | [[https://zmkfirmware.dev/][ZMK Firmware]]
+** KMKfw/kmk_firmware: [[https://github.com/KMKfw/kmk_firmware][Clackety Keyboards Powered by Python]]
+** KeySeeBee, TeXitoi/keyberon: [[https://github.com/TeXitoi/keyberon][A rust crate to create a pure rust keyboard firmware.]]
+- KeySeeBee
+** [[https://kaleidoscope.readthedocs.io/en/latest/][Kaleidoscope — Kaleidoscope documentation]]
+*** keyboardio/Kaleidoscope: [[https://github.com/keyboardio/Kaleidoscope][Firmware for the Keyboardio Model 01 and other keyboards with AVR or ARM MCUs.]]
+*** [[https://kaleidoscope.readthedocs.io/en/latest/customization/core-plugins.html][Core plugin overview — Kaleidoscope documentation]]
+*** keyboardio/Chrysalis: [[https://github.com/keyboardio/Chrysalis][Graphical configurator for Kaleidoscope-powered keyboards]]
+** VIA : [[https://caniusevia.com/][https://caniusevia.com/]]
+*** [[https://github.com/the-via/keyboards/issues/491][Is VIA dead? · Issue #491 · the-via/keyboards]]
+*** GitHub - ci-bus/Miguelio-VIA-Keyboards: [[https://github.com/ci-bus/Miguelio-VIA-Keyboards][VIA Software Open Source to keyboards with QMK]]
+- looks like this is a dynamic configurator (no flashing needed)
+- it is closed-source (some code is open, but not the configurator nor fiwmware, so it is not possible to build via firmware on your own)
+*** QMK is amazing and the VIA tool is just something else. : [[https://www.reddit.com/r/olkb/comments/im5qv7/qmk_is_amazing_and_the_via_tool_is_just_something/?sort=qa][olkb]]
+**** drashna (about non-opensource Via)
+- They did have the source for a while.
+- But no license attached to it. But then some Chinese company cloned it, and they changed the repo to private.
+**** drashna (how it works)
+- It's a few things, actually.The real magic is the "dynamic keymaps" which store the keymap in eeprom, rather than program memory. This allows for it to be changed and retained without flashing the board.
+- The second part is Raw HID, which allows for bidirectional communication (to read and write data to the board). This is what allows you to get and change said keymap.
+- And there is the via feature, which leverages both of the above, and creates a communication protocol that allows for all of this to work, and interface with other features in QMK (rgb stuff).
+- ..
+- I'd also love to see VIA use the QMK API (what the configurator uses for the backend) to grab all the board info. That would mean that once the board is added to QMK, it would be immediately recognized by VIA. No doubling up PRs.
+- However, I suspect that it would take some changes to the API. but ... that would be something to be discussed between the via devs and the devs for the QMK configurator.
+*** microdox is not listed on the site, but it looks like there is a support already
+**** [[https://github.com/qmk/qmk_firmware/blob/master/keyboards/boardsource/microdox/keymaps/via/rules.mk][qmk_firmware/[[http://rules.mk][rules.mk]] at master · qmk/qmk_firmware]]
+**** although the PR to via repository is open
+***** [[https://github.com/the-via/keyboards/pull/406][Add VIA support for boardsource/microdox by wafflekeebs · Pull Request #406 · the-via/keyboards]]
+***** so may need to build via manually to make it work, not sure though if the configurator itself is opensource, I only see the binary releases repository
+****** [[https://github.com/the-via/releases/releases/tag/v1.3.1][Release 1.3.1 · the-via/releases]]
+****** [[https://github.com/the-via/releases/issues/13][No Source Code (=Closed source?) · Issue #13 · the-via/releases]]
+****** [[https://github.com/the-via/releases/issues/26][Is Via actually open source? I want to compile my own version with the devtools enabled. · Issue #26 · the-via/releases]]
+***** Is the source In the reader repo?
+****** [[https://github.com/the-via/reader][the-via/reader]]
+*** there is a PR for mitosis
+**** [[https://github.com/the-via/keyboards/pull/468][Add support for the Mitosis keyboard. by awpr · Pull Request #468 · the-via/keyboards]]
+*** also for Ergodox EZ
+**** [[https://github.com/the-via/keyboards/pull/467][Add support for the ErgoDox EZ. by awpr · Pull Request #467 · the-via/keyboards]]
+** vial-kb/vial-gui: [[https://github.com/vial-kb/vial-gui][Vial is an open-source cross-platform (Windows, Linux and Mac) GUI and a QMK fork for configuring your keyboard in real time, similar to VIA.]]
+** makerdiary/python-keyboard: [[https://github.com/makerdiary/python-keyboard][A hand-wired USB & Bluetooth keyboard powered by Python and more]]
+** joric/nrfmicro: [[https://github.com/joric/nrfmicro][Pro Micro-compatible Bluetooth 5.2 board with Li-Po charger and USB-C (nRF52840-based)]]
+** [[https://www.reddit.com/r/MechanicalKeyboards/wiki/firmware][firmware - MechanicalKeyboards]]
+** [[https://github.com/BenRoe/awesome-mechanical-keyboard/blob/master/docs/firmware.md][awesome-mechanical-keyboard/firmware.md]] at master · BenRoe/awesome-mechanical-keyboard]]
+- Firmware
+- [[https://github.com/jpconstantineau/BlueMicro_BLE][BlueMicro_BLE]] - A Bluetooth Firmware for the NRF52832.
+- [[https://github.com/geoah/bluetosis][Bluetosis]] - Bluetooth firmware for the Mitosis keyboard.
+- [[https://github.com/dhowland/EasyAVR][EasyAVR]] - is a keyboard firmware and keymapper GUI for custom keyboards based on USB AVRs.
+- [[https://github.com/keyboardio/Kaleidoscope][Kaleidoscope]] - Flexible firmware for Arduino-powered keyboards.
+- [[https://github.com/ahtn/keyplus][Keyplus]] - An easy to use keyboard firmware with support for wireless and wired split keyboards.
+- [[https://github.com/KMKfw/kmk_firmware][KMK]] - is a feature-rich and beginner-friendly firmware for computer keyboards written and configured in CircuitPython.
+- [[https://github.com/colinta/Mechy][Mechy]] - Arduino compatible, plugin based.
+- [[https://github.com/Galzai/MK32][MK32]] - Simple BLE keyboard for ESP32
+- [[https://github.com/Lotlab/nrf52-keyboard][nrf52-keyboard]] - A ble keyboard firmware using nrf52810/52832
+- [[https://github.com/makerdiary/python-keyboard][Python-Keyboard]] - A highly extensible firmware written in Python, based on CircuitPython, with RGB, USB and Bluetooth.
+- [[https://github.com/qmk/qmk_firmware][QMK]] - A keyboard firmware based on the tmk_keyboard firmware for Atmel AVR and ARM controllers.
+- [[https://github.com/tmk/tmk_keyboard][TMK]] - Keyboard firmwares for Atmel AVR and Cortex-M.
+- [[https://zmkfirmware.dev/][ZMK]] - MIT-licensed firmware built on top of the Zephyr RTOS that is “wireless first”.
+- [[https://github.com/blakedietz/kbd-prettier][kbd-prettier]] - Automatically format your keyboard layout
+- [[https://kbfirmware.com/][Keyboard Firmware Builder]] - Online QMK Firmware Builder (2+ years behind QMK firmware master)
+- [[https://github.com/2hwk/Q2K][Q2K]] - A python based utility for parsing QMK Firmware keymaps to various outputs
+- [[https://config.qmk.fm/][QMK Configurator]] - An open source configurator for QMK Firmware
+- [[https://github.com/klardotsh/qmk_emote_macro_generator][qmk_emote_macro_generator]] - Easily generate QMK macro/leader sequences for arbitrary unicode sequences.
+- [[http://kb.sized.io/][TMK Firmware Builder]] - Online TMK Firmware Builder
+** help-14/mechanical-keyboard: [[https://github.com/help-14/mechanical-keyboard#firmware][DIY mechanical keyboard and where to find them]]
+- [[https://github.com/dhowland/EasyAVR][EasyAVR]] - EasyAVR is a keyboard firmware and keymapper GUI for custom keyboards based on USB AVRs. It is powerful but also really easy to use.
+- [[https://github.com/tmk/tmk_keyboard][TMK]] - A very popular firmware that support Atmega32u4 powered keyboard.
+- [[https://github.com/qmk/qmk_firmware][QMK]] - Base on TMK but support a lot of controller, support RGB, easy to use.
+- [[https://github.com/the-via/firmware][The VIA]] - QMK based firmware for the view app.
+- [[https://github.com/ahtn/keyplus][Keyplus]] - An easy to use, wired and wireless modular keyboard firmware, for both ATXmega family and atmega32u4.
+- [[https://github.com/jpconstantineau/BlueMicro_BLE][BlueMicro]] - A Keyboard Firmware for nRF52832 Boards with a pinout compatible with the Arduino Pro Micro.
+- [[https://github.com/Galzai/MK32][MK32]] - BLE keyboard firmware for ESP32 microcontrollers,designed to be relativley easily customizable.
+- [[https://github.com/geoah/bluetosis][Bluetosis]] - Bluetooth firmware for the Mitosis keyboard.
+- [[https://github.com/keyboardio/Kaleidoscope][Kaleidoscope]] - Flexible firmware for Arduino-powered keyboards.
+- [[https://github.com/ah-/anne-key][Anne Key]] - Firmware for Anne Pro Keyboard written in Rust.
+- [[https://github.com/Lotlab/nrf52-keyboard][Lotlab/nrf52-keyboard]] - TMK based keyboard firmware for nRF52 series, now support both nRF52810 and nRF52832.
+- [[https://github.com/Lotlab/nrf51822-keyboard][Lotlab/nrf51822-keyboard]] - This is a firmware based on nrf51822 Bluetooth keyboard, which uses nRF SDK 10.0 as the underlying hardware driver, and uses TMK keyboard library as the upper part of the keyboard function.
+- [[https://github.com/TeXitoi/keyberon][Keyberon]] - Keyboard firmware written in Rust.
+- [[https://github.com/TyberiusPrime/KeyToKey][Key To Key]] - Rust libary for building keyboard firmwares.
+- [[https://gitlab.com/polymer-kb/firmware/polymer][Polymer firmware]] - Polymer keyboard firmware.
+- [[https://github.com/e-matteson/pipit-keyboard][Pipit keyboard]] - Firmware and config tools for chording keyboards.
+- [[https://about.houqp.me/posts/rusty-c/][rusty-c]] - QMK in rust.
+- [[https://github.com/makerdiary/python-keyboard][python-keyboard]] - A highly extensible firmware written in Python, based on CircuitPython, with RGB, USB and Bluetooth. similar to TMK/QMK.
+** [[https://github.com/safijari/keyboard_firmware_gen][safijari/keyboard_firmware_gen]]
+- looks like basic firmware is actually pretty simple, can try own (based on arduino keyboard.h)
+*** My dumb little firmware generator is functionally complete now : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/l1c3vx/my_dumb_little_firmware_generator_is_functionally/][ErgoMechKeyboards]]
+*** Question about how serial or i2c comms are handled : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/ksxak3/question_about_how_serial_or_i2c_comms_are_handled/][ErgoMechKeyboards]]
+** Wireless Firmware - from the nice!nano FAQ:
+- [[https://docs.nicekeyboards.com/#/wireless_firmware/bluemicro][BlueMicro]] - Recommended
+  - BlueMicro is an easy to set up firmware for nRF52 chips utilizing Arduino
+    - Pros:
+      - Easy to set up
+      - Good wireless performance
+    - Cons:
+      - No USB support
+- [[https://docs.nicekeyboards.com/#/wireless_firmware/zmk][ZMK]] - New and shiny!
+  - ZMK is an extremely promising firmware with a wireless first approach and permissive licensing
+    - Pros:
+      - Well designed board system leveraging Zephyr RTOS
+      - Supports much more than just the nRF52
+      - USB support
+    - Cons
+      - Core functionality is still evolving and incomplete
+- [[https://docs.nicekeyboards.com/#/wireless_firmware/qmk_forks][QMK Forks]] - Experimental
+  - QMK forks exist that let you use QMK with nRF52 chips (the nice!nano is one)
+  - Pros:
+    - It’s QMK!
+  - Cons:
+    - Not all features are tested
+    - Forks lag behind the main QMK repository substantially
+    - It’s a bit finnicky to set up
+    - Legality is in question
+- [[https://docs.nicekeyboards.com/#/nice!nano/faq?id=qmk-firmware-support][QMK firmware support?]]
+  - This is complicated. Nordic’s nRF52 line has some licensing issues with its SDK making it not possible to be upstreamed to the main QMK repo. There are some QMK forks such as sekigon’s, but the legality is questionable at best. At the same time the BlueMicro firmware ([[https://github.com/jpconstantineau/BlueMicro_BLE][https://github.com/jpconstantineau/BlueMicro_BLE]]) is available and promising in my opinion. Take a look and contribute! It works with the nice!nano.
+- Issues · qmk/qmk_firmware - search bluetooth
+  https://github.com/qmk/qmk_firmware/issues?q=Bluetooth

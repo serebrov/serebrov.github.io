@@ -214,7 +214,8 @@ nil for no sidebar."
   `(:base-extension "org"
     :publishing-function org-html-publish-to-html
     ;; to allow things_like_this without making them subscript.
-    ;; :with-sub-superscript {}
+    ;; we can still use `things_{like_this}`
+    :with-sub-superscript {}
     :with-toc t
     :section-numbers nil
     :headline-levels 6
