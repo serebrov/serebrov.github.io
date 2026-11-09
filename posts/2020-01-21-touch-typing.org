@@ -91,10 +91,10 @@ Grey keys: I usually use the pinky here (except for the space bar).
 
 Space bar: Press with the left thumb after typing a letter with the right hand
 and with the right thumb after typing a letter with the left hand.
-
 * Related:
+- [[file:keyboard-my-layout.org][My Keyboard Layouts]]
+- [[file:keyboard-layouts.org][Keyboard Layouts (Links, Articles)]]
+- [[file:keyboard-layouts-examples.org][Keyboard Layouts (Examples)]]
+- [[file:keyboard-links.org][Keyboards Links]]
 - [[file:2020-01-21-touch-typing.org][Touch Typing Tutors and Games]]
-- [[file:links-keyboards.org][Keyboards Links]]
-- [[file:links-diy.org][DIY Links]]
-- [[file:links-keyboard-firmware.org][Keyboard Firmware Links]]
-- [[file:links-keyboard-keymap.org][Keyboard Layouts]]
+- [[file:diy-links.org][DIY Links]]
