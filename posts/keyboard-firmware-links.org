@@ -1,0 +1,15 @@
+#+TITLE: Keyboard Firmware Links
+#+DATE: <2006-11-06>
+#+TYPE: links
+#+FILETAGS: :kbd:
+#+DESCRIPTION: Keyboard firmware, a collection of links.
+
+Links related to keyboard firmware.
+
+* Related:
+- [[file:keyboard-my-layout.org][My Keyboard Layouts]]
+- [[file:keyboard-layouts.org][Keyboard Layouts (Examples)]]
+- [[file:keyboard-links.org][Keyboards Links]]
+- [[file:keyboard-firmware-links.org][Keyboard Firmware Links]]
+- [[file:2020-01-21-touch-typing.org][Touch Typing Tutors and Games]]
+- [[file:diy-links.org][DIY Links]]
