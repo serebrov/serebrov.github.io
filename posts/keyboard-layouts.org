@@ -22,7 +22,7 @@ keys in the home row:
       - The DHm variant has M in the home row, and keeps Z in its current position. The m refers to the fact that it's recommended for matrix keyboards (although I think it used to refer to the fact that the M and K keys were swapped from the original DH layout).
       - You can compare all of the different layouts [[https://colemakmods.github.io/mod-dh/keyboards.html][here]].
     - [[https://stevep99.github.io/seniply/][Colemak-DH Seniply]]
-      - [[https://blog.zsa.io/zsa-loves-colemak/?mc_cid=f9404429af&mc_eid=c2a3cf3895][ZSA Loves: Colemak | ZSA: The Blog]]
+      - [[https://blog.zsa.io/zsa-loves-colemak/][ZSA Loves: Colemak | ZSA: The Blog]]
       - [[https://configure.zsa.io/moonlander/layouts/Aw7ae/latest/0/intro][Oryx: The ZSA Keyboard Configurator]]
   - [[https://stevep99.github.io/seniply/][colemak-dh seniply]]
   - Seniply - an ergonomic, minimal keyboard layout for a keyboard with at least 34 keys : [[https://www.reddit.com/r/KeyboardLayouts/comments/mpimmr/seniply_an_ergonomic_minimal_keyboard_layout_for/][KeyboardLayouts]]
@@ -42,12 +42,12 @@ keys in the home row:
 - [[https://sites.google.com/alanreiser.com/handsdown/][HandsDown - alanreiser.com/handsdown/]]
   - Oryx: [[https://configure.zsa.io/ergodox-ez/layouts/l9Jyz/latest/0/intro][The ZSA Keyboard Configurator - inspired by the HandsDown-Neu layout by Alan Reiser]]
 - More layouts
-  - Uno layout : [[https://www.reddit.com/r/KeyboardLayouts/comments/phmdbh/uno_layout/?utm_source=pocket_mylist][KeyboardLayouts]]
+  - Uno layout : [[https://www.reddit.com/r/KeyboardLayouts/comments/phmdbh/uno_layout/][KeyboardLayouts]]
   - [[https://www.keyboard-design.com/index.html][Keyboard-Design.com - A feast for the fingers]]
-  - Suggestions for layout to learn after Colemak DH : [[https://www.reddit.com/r/KeyboardLayouts/comments/oxj1cd/suggestions_for_layout_to_learn_after_colemak_dh/?utm_source=pocket_mylist][KeyboardLayouts]]
+  - Suggestions for layout to learn after Colemak DH : [[https://www.reddit.com/r/KeyboardLayouts/comments/oxj1cd/suggestions_for_layout_to_learn_after_colemak_dh/][KeyboardLayouts]]
   - [[https://lykt.xyz/jnsf/ortho/][Orthocarpus layout]]
   - Has anyone here heard of (or used) the Halmak layout? : [[https://www.reddit.com/r/MechanicalKeyboards/comments/8o0xrm/has_anyone_here_heard_of_or_used_the_halmak_layout/][MechanicalKeyboards]]
-    - GitHub - MadRabbit/halmak: [[https://github.com/kaievns/halmak][The final version of the AI designed keyboard layout]]
+    - GitHub - kaievns/halmak: [[https://github.com/kaievns/halmak][The final version of the AI designed keyboard layout]]
   - GitHub - bclnr/kb-layout-evaluation: [[https://github.com/bclnr/kb-layout-evaluation][Evaluate ergonomic keyboard layouts over multiple languages]]
   - The Development of the ThinQu Keyboard Layout: [[https://microexploitation.com/2018/06/26/the-development-of-the-thinqu-keyboard-layout-factors-that-influence-typing-effort/][Factors that Influence Typing Effort – MicroExploitation, MacroExploration]]
   - [[http://thedarnedestthing.com/beakl%20ti%20revisited][beakl ti revisited]]
@@ -135,10 +135,8 @@ keys in the home row:
       - Because it allows using rolls with modifiers (mod down - key down - mod up - key up)
       - Although, it may work this way by default (from PR 9404)
     - [[https://docs.qmk.fm/tap_hold][Tap-Hold Configuration]]
-    - Proposed changes in PR 9404
-      - [[https://github.com/qmk/qmk_firmware/blob/155cc17359711a6dd7b67119ec994800588ebaaa/docs/tap_hold.md][qmk_firmware/tap_hold.md at 155cc17359711a6dd7b67119ec994800588ebaaa · qmk/qmk_firmware]]
-      - [[https://github.com/qmk/qmk_firmware/pull/9404][Add HOLD_ON_OTHER_KEY_PRESS option for dual-role keys by sigprof · Pull Request #9404 · qmk/qmk_firmware]]
-        - Cheatsheet on LT and MT: [[https://web.archive.org/web/20211211132011/https://cdn.discordapp.com/attachments/663573863480950808/757162393209012304/modtap.pdf][modtap.pdf]]
+    - Proposed changes in [[https://github.com/qmk/qmk_firmware/pull/9404][PR 9404]]
+    - Cheatsheet on LT and MT: [[https://web.archive.org/web/20211211132011/https://cdn.discordapp.com/attachments/663573863480950808/757162393209012304/modtap.pdf][modtap.pdf]]
 ** Retro [[https://precondition.github.io/home-row-mods#using-home-row-mods-with-qmk][tapping]] :folded:
 - ~MT(Mod, X)~ will send X if the key is held longer than tapping term. Retro Tap thus gives another way to trigger the tapping function of mod-taps. With this option, you can get away with a very short tapping term.
 - Tapping term is short, so it is easier to do Hold
@@ -207,7 +205,7 @@ keys in the home row:
 - Retro Tapping - releasing the Mod key without pressing another will send the original keycode even if it is outside the tapping term (regular behavior: ~#define RETRO_TAPPING~: no output)
   - For instance, holding for tapping term and releasing LT(2, KC_SPACE) will output space (by default - nothing)
   - RETRO_TAPPING_PER_KEY + get_retro_tapping for per key setting
-- okke's [[https://drive.google.com/file/d/1nCo7v6UAJDBQVXsY303mu3GrKh79Z6iL/view?usp=sharing][Cheatsheet on MT and LT]]
+- okke's cheatsheet on LT and MT: [[https://web.archive.org/web/20211211132011/https://cdn.discordapp.com/attachments/663573863480950808/757162393209012304/modtap.pdf][modtap.pdf]]
   - QMK Tap-Hold Configuration
   - [[https://docs.google.com/spreadsheets/d/1IaaOMbl6zLBb5Jswyr90Lp9hGx3xIyugVSfD_oBk4po/edit#gid=0][https://docs.google.com/spreadsheets/d/1IaaOMbl6zLBb5Jswyr90Lp9hGx3xIyugVSfD_oBk4po/edit#gid=0]]
 - [[https://github.com/qmk/qmk_firmware/issues/8971][[Feature Request] Permissive Hold and Ignore Mod Tap Interrupt for LT · Issue #8971 · qmk/qmk_firmware]]
@@ -235,7 +233,7 @@ keys in the home row:
 ** The Leader key: [[https://docs.qmk.fm/features/leader_key][A new kind of modifier]]
 ** Macro shortcuts: [[https://docs.qmk.fm/feature_macros][Send a whole string when pressing just one key]]
 ** Combos
-- 30% layout based on QMK combos: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pfwgg7/30_layout_based_on_qmk_combos/?utm_source=pocket-app&utm_medium=share][ErgoMechKeyboards]]
+- 30% layout based on QMK combos: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pfwgg7/30_layout_based_on_qmk_combos/][ErgoMechKeyboards]]
 - Additional Mods via combos - can get rid of the third thumb key:
   - Two spaces = Ctrl
   - Two Syms = Shift
@@ -249,7 +247,7 @@ keys in the home row:
     - [[https://www.reddit.com/r/ErgoMechKeyboards/comments/mi7tyi/the_kombol_layout/][https://www.reddit.com/r/ErgoMechKeyboards/comments/mi7tyi/the_kombol_layout/]]
 - Chords as word shortcuts (see also steno)
   - The Stenomod | [[https://stenoblog.com/the-stenomod/][Steno Blog]]
-- How do you utilize qmk combos? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/o6s822/how_do_you_utilize_qmk_combos/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
+- How do you utilize qmk combos? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/o6s822/how_do_you_utilize_qmk_combos/][ErgoMechKeyboards]]
   - Z and Q
   - Tab, escape, backspace, enter
   - Some symbols like : ^ and $
@@ -263,7 +261,7 @@ keys in the home row:
   - [[https://github.com/qmk/qmk_firmware/pull/8591][Process combos earlier & overlapping combos by sevanteri · Pull Request #8591 · qmk/qmk_firmware]]
     - This makes combos work with AutoShift
 - QMK: alternative combo engine:
-  - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/users/dennytom/chording_engine][qmk_firmware/users/dennytom/chording_engine at master · qmk/qmk_firmware]]
+  - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/users/dennytom/chording_engine][qmk_firmware/users/dennytom/chording_engine at 0.19.0 · qmk/qmk_firmware]]
   - [[https://github.com/CommunistWitchDoctor/qmk_firmware/tree/master/keyboards/centromere/keymaps/buttery_cwd][see also qmk_firmware/keyboards/centromere/keymaps/buttery_cwd at master · CommunistWitchDoctor/qmk_firmware]]
     - I can have system-wide jk = ESC
     - can think about other combos too - : for example
@@ -290,7 +288,7 @@ Allows using AutoShift with dual-mod keys (hold longer and let go - shifted symb
     - Set SWAP_HANDS_ENABLE in the Makefile and define a hand_swap_config entry in your keymap.
     - Now whenever the ACTION_SWAP_HANDS command key is pressed the keyboard is mirrored.
     - For instance, to type "Hello, World" on QWERTY you would type ^Ge^s^s^w^c W^wr^sd
-  - One-handed solutions? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/o21plf/onehanded_solutions/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
+  - One-handed solutions? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/o21plf/onehanded_solutions/][ErgoMechKeyboards]]
     - [[https://www.maltron.com/store/p19/Maltron_Single_Hand_Keyboards_-_US_English.html][https://www.maltron.com/store/p19/Maltron_Single_Hand_Keyboards_-_US_English.html]]
     - QMK Firmware has a "Swap Hands" feature
   - Do you also mirror the order of the keys? So, for QWERTY:
@@ -310,11 +308,11 @@ Related:
 - settings for home mods in miryoku layout
   - [[https://github.com/manna-harbour/qmk_firmware/blob/miryoku/users/manna-harbour_miryoku/miryoku.org#usersmanna-harbour_miryokuconfigh][qmk_firmware/miryoku.org at miryoku · manna-harbour/qmk_firmware]]
 * Layouts - Articles, Tips                                           :folded:
-- [[https://blog.zsa.io/compact-layouts/?mc_cid=94b4643e60&mc_eid=c2a3cf3895&utm_source=pocket_mylist][Working With Compact Layouts]]
+- [[https://blog.zsa.io/compact-layouts/][Working With Compact Layouts]]
 - [[https://getreuer.info/posts/keyboards/symbol-layer/index.html][Designing a Symbol Layer]]
 - [[https://stevelosh.com/blog/2012/10/a-modern-space-cadet/][A Modern Space Cadet / Steve Losh]]
 - [[https://blog.zsa.io/layout-buffet-mousing/][Layout Buffet - Mousing with a keyboard]]
-- [[https://dreymar.colemak.org/tarmak-intro.html?utm_source=pocket_mylist][DreymaR's Big Bag of Kbd Tricks - Tarmak Intro]]
+- [[https://dreymar.colemak.org/tarmak-intro.html][DreymaR's Big Bag of Kbd Tricks - Tarmak Intro]]
 - Bernhardt: [[https://web.archive.org/web/20200107114950/https://blog.gboards.ca/2020/01/weird-keyboards-programmable-keyboards.html][Weird Keyboards, Programmable Keyboards]]
 
 - Numpad typing system
@@ -331,11 +329,11 @@ Related:
   https://numpadadventure.gitlab.io/keyboard/
 - [[https://www.youtube.com/watch?v=Fqlc35Meb-Y][Watch "How To Type Faster By Cheating (Alt-Fingering)" on YouTube]]
   - Cheat: move the whole hand to type bigrams like ML or MN with two fingers
-- The best layout I've ever used 🙂 : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/1spq1y3/the_best_layout_ive_ever_used/?solution=2046924c9a5beb622046924c9a5beb62&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da5861dc2c17db4987b4b5c55dc4d1556bc7ec&share_id=TbvylEXjegfGxzXLZGZFg&utm_medium=android_app&utm_name=androidcss&utm_source=share&utm_term=2][r/ErgoMechKeyboards]]
+- The best layout I've ever used 🙂 : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/1spq1y3/the_best_layout_ive_ever_used/][r/ErgoMechKeyboards]]
 - [[https://www.jhelvy.com/blog/2021-07-03-in-search-of-keyboard-nirvana/][In search of keyboard nirvana]]
- - Optimizing layouts for both typing and short cut usage? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pcsbpx/optimizing_layouts_for_both_typing_and_short_cut/?utm_source=pocket_mylist][ErgoMechKeyboards]]
+- Optimizing layouts for both typing and short cut usage? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pcsbpx/optimizing_layouts_for_both_typing_and_short_cut/][ErgoMechKeyboards]]
 - Keyboard Heatmap
-  - | [[https://www.patrick-wied.at/projects/heatmap-keyboard/][Realtime heatmap visualization of text character distribution]]
+  - [[https://www.patrick-wied.at/projects/heatmap-keyboard/][Realtime heatmap visualization of text character distribution]]
     - pa7/Keyboard-Heatmap: [[https://github.com/pa7/Keyboard-Heatmap][Realtime Keyboard Heatmap showing the character distribution of texts - made with heatmap.js]]
   - [[https://github.com/qmk/qmk_firmware/issues/714][Is it possible to gather usage data? · Issue #714 · qmk/qmk_firmware]]
     - [[https://github.com/naps62/ergodox-heatmap-generator][naps62/ergodox-heatmap-generator]]
@@ -346,8 +344,8 @@ Related:
       - I can try checking their js code, probably it is all there
       - see if that can work while the browser window is not in focus
       - then collect the heatmap data instead of the live typing feedback
-  - Recommended keylogger/layout analyzer?: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/lx13rp/recommended_keyloggerlayout_analyzer/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
-  - Key Logger to Help Understand My Usage : [[https://www.reddit.com/r/KeyboardLayouts/comments/ou7363/key_logger_to_help_understand_my_usage/?utm_source=pocket_mylist][KeyboardLayouts]]
+  - Recommended keylogger/layout analyzer?: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/lx13rp/recommended_keyloggerlayout_analyzer/][ErgoMechKeyboards]]
+  - Key Logger to Help Understand My Usage : [[https://www.reddit.com/r/KeyboardLayouts/comments/ou7363/key_logger_to_help_understand_my_usage/][KeyboardLayouts]]
     - Ga68/benign-key-logger: [[https://github.com/Ga68/benign-key-logger][A simple, transparent, open-source key logger, written in Python, for tracking your own key-usage statistics.]]
   - [[https://github.com/naps62/ergodox-layout][https://github.com/naps62/ergodox-layout]]
     - Keylogger
@@ -355,16 +353,16 @@ Related:
     - Keyboard output can be caught using hid_listen.
     - This functionality is enabled by default (via KEYLOGGER_ENABLE and AUTOLOG_ENABLE in Makefile).
     - But some external tool would probably work too
-- [[https://ranelpadon.github.io/ngram-type/?utm_source=pocket_mylist][Ngram Type]]
+- [[https://ranelpadon.github.io/ngram-type/][Ngram Type]]
 - getreuer/qmk-keymap: [[https://github.com/getreuer/qmk-keymap][My keymap & reusable QMK gems]]
 - Dosh: [[https://www.davidb.org/post/2026/dosh/][Chording Down to Eighteen Keys - Brownian Motion]]
-- [[https://kbd.news/Keymap-wizardry-Typing-out-the-Harry-Potter-saga-2395.html?utm_source=kbdnews&utm_medium=email&utm_campaign=issue-167-keyboard-builders-digest][Typing out the Harry Potter and custom layouts]]
+- [[https://kbd.news/Keymap-wizardry-Typing-out-the-Harry-Potter-saga-2395.html][Typing out the Harry Potter and custom layouts]]
 - [[https://community.keyboard.io/t/thumb-key-choices/301/32][Thumb key choices - Model 01 Layouts - Keyboardio community]]
-- Как превратить обычную клавиатуру в 60-процентную. Эксперимент, часть 1 | [[https://dou.ua/forums/topic/37776/?from=twitter&utm_source=pocket_mylist][DOU]]
-- Physical layout prototyping on a touchscreen : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/kli50e/physical_layout_prototyping_on_a_touchscreen/?utm_source=pocket_mylist][ErgoMechKeyboards]]
+- Как превратить обычную клавиатуру в 60-процентную. Эксперимент, часть 1 | [[https://dou.ua/forums/topic/37776/?from=twitter][DOU]]
+- Physical layout prototyping on a touchscreen : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/kli50e/physical_layout_prototyping_on_a_touchscreen/][ErgoMechKeyboards]]
 - defiant00/soar: [[https://github.com/defiant00/soar][One-handed chorded keyboard layout.]]
   - defiant00/purple: [[https://github.com/defiant00/purple][CircuitPython code for one-handed chording keyboards.]]
-- Keyboard Layout Companion app : [[https://www.reddit.com/r/KeyboardLayouts/comments/nqgzwx/keyboard_layout_companion_app/?utm_source=pocket_mylist][r/KeyboardLayouts]]
+- Keyboard Layout Companion app : [[https://www.reddit.com/r/KeyboardLayouts/comments/nqgzwx/keyboard_layout_companion_app/][r/KeyboardLayouts]]
 - Placing ~!~ on ~S-,~ and ~?~ on ~S-.~
   [[https://github.com/CommunistWitchDoctor/qmk_firmware/tree/master/users/datagrok][This is a hack to place question mark on shift-comma and exclamation mark on shift-period]]
 - [[https://precondition.github.io/pressing-e-with-the-thumb][Pressing E with the thumb‽]]
@@ -375,24 +373,23 @@ Related:
   - The Stenomod | [[https://stenoblog.com/the-stenomod/][Steno Blog]]
   - Stenomod: [[https://stenomod.blogspot.com/2016/][2016]]
   - CharleyShattuck/Stenomod-Hardware: [[https://github.com/CharleyShattuck/Stenomod-Hardware][Open Source hardware files for Stenomod 16 hinge and TinyMods 1, 2, 3, and 4. (same firmware for StenoMod hinge and TinyMod 1, but new firmware for TinyMod 2 and new again for TinyMod 3, and then again for TinyMod4)]]
-- [[https://www.reddit.com/r/stenography/comments/xkym3a/how_long_till_casual_usability/][Reddit:  How long* till casual usability]]
+- [[https://www.reddit.com/r/stenography/comments/xkym3a/how_long_till_casual_usability/][Reddit: How long till casual usability]]
   - Plover learning
 - The Asterisk: [[https://www.kickstarter.com/projects/stenokeyboards/the-asterisk-steno-keyboard-for-beginners][Steno Keyboard For Beginners by StenoKeyboards — Kickstarter]]
-- 200+wpm with this? | [[https://www.youtube.com/watch?app=desktop&feature=youtu.be&utm_source=pocket_mylist&v=nRp_1S7cj6A][Stenography & Plover - YouTube]]
-- [[https://github.com/opensteno/plover/wiki/Learning-Stenography][Learning Stenography · openstenoproject/plover Wiki]]
+- 200+wpm with this? | [[https://www.youtube.com/watch?app=desktop&feature=youtu.be&v=nRp_1S7cj6A][Stenography & Plover - YouTube]]
+- [[https://github.com/opensteno/plover/wiki/Learning-Stenography][Learning Stenography · opensteno/plover Wiki]]
   - [[https://en.wikipedia.org/wiki/Vowel_length][Vowel length - Wikipedia]]
-- 174 WPM 10FF on a Planck with Plover : [[https://www.reddit.com/r/MechanicalKeyboards/comments/4fhy8s/174_wpm_10ff_on_a_planck_with_plover/?utm_medium=android_app&utm_source=share][MechanicalKeyboards]]
+- 174 WPM 10FF on a Planck with Plover : [[https://www.reddit.com/r/MechanicalKeyboards/comments/4fhy8s/174_wpm_10ff_on_a_planck_with_plover/][MechanicalKeyboards]]
 - [[https://blog.stenokeyboards.com/][StenoKeyboards]]
-- 149 wpm on the Uni v2 | [[https://stenokeyboards.com/][stenokeyboards.com]] : [[https://www.reddit.com/r/MechanicalKeyboards/comments/nd533c/149_wpm_on_the_uni_v2_stenokeyboardscom/?utm_medium=android_app&utm_source=share][MechanicalKeyboards]]
+- 149 wpm on the Uni v2 | [[https://stenokeyboards.com/][stenokeyboards.com]] : [[https://www.reddit.com/r/MechanicalKeyboards/comments/nd533c/149_wpm_on_the_uni_v2_stenokeyboardscom/][MechanicalKeyboards]]
   - Home | [[https://stenokeyboards.com/][StenoKeyboards]]
 - [[https://web.archive.org/web/20190125003956/https://thomasbaart.nl/2019/01/24/exploring-professional-stenotype-machines/][Exploring professional stenotype machines – Thomas Baart]]
-- [[https://opensteno.org/plover/][Plover / Steno]]
 - Steno keyboard: About | [[https://web.archive.org/web/20200113174020/https://www.charachorder.com/about][CharaChorder]]
-- Chordie - a chording keyboard you shouldn't be scared of : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pccxh4/chordie_a_chording_keyboard_you_shouldnt_be/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
+- Chordie - a chording keyboard you shouldn't be scared of : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pccxh4/chordie_a_chording_keyboard_you_shouldnt_be/][ErgoMechKeyboards]]
 * Ergonomics                                                         :folded:
 - PSA: [[https://getreuer.info/posts/keyboards/thumb-ergo/index.html][Thumbs can get overuse injuries]]
 - [[https://www.masteringemacs.org/article/thoughts-on-mechanical-keyboards-zsa-moonlander][Thoughts on Mechanical Keyboards and the ZSA Moonlander - Mastering Emacs]]
-- [[https://www.reddit.com/r/ErgoMechKeyboards/comments/nhh7e8/is_curling_your_thumb_under_your_other_fingers/?utm_medium=android_app&utm_source=share][Is curling your thumb under your other fingers comfortable? (e.g. Corne, Iris, Lily58, etc.)]]
+- [[https://www.reddit.com/r/ErgoMechKeyboards/comments/nhh7e8/is_curling_your_thumb_under_your_other_fingers/][Is curling your thumb under your other fingers comfortable? (e.g. Corne, Iris, Lily58, etc.)]]
 - Having wrist pain, should I change keyboard? : [[https://www.reddit.com/r/MechanicalKeyboards/comments/bmweh5/having_wrist_pain_should_i_change_keyboard/en0wklv/][MechanicalKeyboards]]
   - Let's take a look at human hands:
     - Hands are symmetrical.

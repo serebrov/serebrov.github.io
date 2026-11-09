@@ -7,7 +7,7 @@
 Various examples of keyboard layouts.
 
 * Layouts                                                            :folded:
-** [[https://stevep99.github.io/seniply/][_Colemak-DH Seniply_]]
+** [[https://stevep99.github.io/seniply/][Colemak-DH Seniply]]
 :PROPERTIES:
 :CUSTOM_ID: colemak-dh-seniply
 :END:
@@ -50,7 +50,7 @@ Examples:
 
 (iii) Output Alt-Tab using Ext-a-,
 
-#+CAPTION: Functiun
+#+CAPTION: Function
 [[file:images/media/image3.png]]
 
 #+CAPTION: Sym
@@ -59,25 +59,25 @@ Examples:
 #+CAPTION: Symbols2 Layer
 [[file:images/media/image2.png]]
 
-** [[http://xahlee.info/kbd/eucalyptus_keyboard.html][_Eucalyptus Keyboard_]]
+** [[http://xahlee.info/kbd/eucalyptus_keyboard.html][Eucalyptus Keyboard]]
 :PROPERTIES:
 :CUSTOM_ID: eucalyptus-keyboard
 :END:
 [[file:images/media/image46.png]]
 
-** [[http://xahlee.info/kbd/darknight_keyboard.html][_Darknight Keyboard_]]
+** [[http://xahlee.info/kbd/darknight_keyboard.html][Darknight Keyboard]]
 :PROPERTIES:
 :CUSTOM_ID: darknight-keyboard
 :END:
 [[file:images/media/image22.png]]
 
-** [[http://xahlee.info/kbd/gergoplex.html][_gergoplex_]]
+** [[http://xahlee.info/kbd/gergoplex.html][gergoplex]]
 :PROPERTIES:
 :CUSTOM_ID: gergoplex
 :END:
 [[file:images/media/image24.png]]
 
-** [[http://xahlee.info/kbd/gergo_keyboard.html][_Gergo Keyboard_]]
+** [[http://xahlee.info/kbd/gergo_keyboard.html][Gergo Keyboard]]
 :PROPERTIES:
 :CUSTOM_ID: gergo-keyboard
 :END:
@@ -91,7 +91,7 @@ Examples:
 :PROPERTIES:
 :CUSTOM_ID: xah-gergo-layout
 :END:
-[[http://xahlee.info/kbd/xah_gergo_layout.html][_Xah Gergo Layout_]]
+[[http://xahlee.info/kbd/xah_gergo_layout.html][Xah Gergo Layout]]
 
 [[file:images/media/image12.png]]
 
@@ -99,13 +99,13 @@ Examples:
 
 [[file:images/media/image32.png]]
 
-** [[http://xahlee.info/kbd/gergoplex.html][_gergoplex_]]
+** [[http://xahlee.info/kbd/gergoplex.html][gergoplex]]
 :PROPERTIES:
 :CUSTOM_ID: gergoplex-1
 :END:
 [[file:images/media/image24.png]]
 
-** [[http://xahlee.info/kbd/atreus_keyboard.html][_Atreus Keyboard_]]
+** [[http://xahlee.info/kbd/atreus_keyboard.html][Atreus Keyboard]]
 :PROPERTIES:
 :CUSTOM_ID: atreus-keyboard
 :END:
@@ -121,11 +121,11 @@ Examples:
 :PROPERTIES:
 :CUSTOM_ID: mitosis
 :END:
-[[http://www.keyboard-layout-editor.com/#/gists/f89d2ff79b72e920939b][_http://www.keyboard-layout-editor.com/#/gists/f89d2ff79b72e920939b_]]
+[[https://www.keyboard-layout-editor.com/#/gists/f89d2ff79b72e920939b][https://www.keyboard-layout-editor.com/#/gists/f89d2ff79b72e920939b]]
 
 [[file:images/media/image47.png]]
 
-[[http://www.keyboard-layout-editor.com/#/gists/e213fec721cb035614cef401cd6750d6][_http://www.keyboard-layout-editor.com/#/gists/e213fec721cb035614cef401cd6750d6_]]
+[[https://www.keyboard-layout-editor.com/#/gists/e213fec721cb035614cef401cd6750d6][https://www.keyboard-layout-editor.com/#/gists/e213fec721cb035614cef401cd6750d6]]
 
 [[file:images/media/image21.png]]
 
@@ -135,23 +135,23 @@ Examples:
 :END:
 [[https://www.reddit.com/r/MechanicalKeyboards/comments/66588f/wireless_split_qmk_mitosis/di5yf8z/][from the Reddit comment]]
 
-[[http://www.keyboard-layout-editor.com/#/gists/acec41432b5ce0eb341d88245a20d9da][http://www.keyboard-layout-editor.com/#/gists/acec41432b5ce0eb341d88245a20d9da_]]
+[[https://www.keyboard-layout-editor.com/#/gists/acec41432b5ce0eb341d88245a20d9da][https://www.keyboard-layout-editor.com/#/gists/acec41432b5ce0eb341d88245a20d9da]]
 
 [[file:images/media/image19.png]]
 
-** [[https://josef-adamcik.cz/electronics/in-search-of-the-best-custom-keyboard-layout.html][_In search of the best custom keyboard layout_]]
+** [[https://josef-adamcik.cz/electronics/in-search-of-the-best-custom-keyboard-layout.html][In search of the best custom keyboard layout]]
 :PROPERTIES:
 :CUSTOM_ID: in-search-of-the-best-custom-keyboard-layout
 :END:
 [[file:images/media/image18.jpg]]
 
-** [[https://josef-adamcik.cz/electronics/in-search-of-the-best-custom-keyboard-layout.html][_In search of the best custom keyboard layout_]]
+** [[https://josef-adamcik.cz/electronics/in-search-of-the-best-custom-keyboard-layout.html][In search of the best custom keyboard layout]]
 :PROPERTIES:
 :CUSTOM_ID: in-search-of-the-best-custom-keyboard-layout-1
 :END:
 [[file:images/media/image36.jpg]]
 
-** [[https://www.reddit.com/r/MechanicalKeyboards/comments/igf0xw/check_out_my_new_small_keyboard_and_read_all/][_Check out my new small keyboard and read all about my layers (details in comments) : MechanicalKeyboards_]]
+** [[https://www.reddit.com/r/MechanicalKeyboards/comments/igf0xw/check_out_my_new_small_keyboard_and_read_all/][Check out my new small keyboard and read all about my layers (details in comments) : MechanicalKeyboards]]
 :PROPERTIES:
 :CUSTOM_ID: check-out-my-new-small-keyboard-and-read-all-about-my-layers-details-in-comments-mechanicalkeyboards
 :END:
@@ -231,7 +231,7 @@ The function layer provides access to the F-keys, print screen, num
 lock, and insert. It underglows white and can be accessed by hitting
 both the "Raise" and "Lower" keys.
 
-** [[https://sgotti.dev/post/the-quest-for-the-perfect-keyboard-and-layout/][_The (infinite) quest for the perfect keyboard and layout_]]
+** [[https://web.archive.org/web/20201109022903/https://sgotti.dev/post/the-quest-for-the-perfect-keyboard-and-layout/][The (infinite) quest for the perfect keyboard and layout]]
 :PROPERTIES:
 :CUSTOM_ID: the-infinite-quest-for-the-perfect-keyboard-and-layout
 :END:
@@ -245,7 +245,7 @@ both the "Raise" and "Lower" keys.
 #+CAPTION: lower
 [[file:images/media/image17.png]]
 
-** [[https://www.smittey.co.uk/the-planck-key-theory][_The Planck - Key Theory_]]
+** [[https://www.smittey.co.uk/the-planck-key-theory/][The Planck - Key Theory]]
 :PROPERTIES:
 :CUSTOM_ID: the-planck---key-theory
 :END:
@@ -266,22 +266,22 @@ both the "Raise" and "Lower" keys.
 :PROPERTIES:
 :CUSTOM_ID: the-art-of-making-40-layouts
 :END:
-[[http://www.keyboard-layout-editor.com/#/gists/d06425aaccaef71cf3d0ffbc0e2042ba][http://www.keyboard-layout-editor.com/#/gists/d06425aaccaef71cf3d0ffbc0e2042ba_]]
+[[https://www.keyboard-layout-editor.com/#/gists/d06425aaccaef71cf3d0ffbc0e2042ba][https://www.keyboard-layout-editor.com/#/gists/d06425aaccaef71cf3d0ffbc0e2042ba]]
 
 [[file:images/media/image43.png]]
 
-** [[http://evantravers.com/articles/2020/02/22/customizing-a-keyboard-layout/][_Customizing a Keyboard Layout_]]
+** [[https://evantravers.com/articles/2020/02/22/customizing-a-keyboard-layout/][Customizing a Keyboard Layout]]
 :PROPERTIES:
 :CUSTOM_ID: customizing-a-keyboard-layout
 :END:
 
-#+CAPTION: Plank Version
+#+CAPTION: Planck Version
 [[file:images/clipboard-20261108T211358.png]]
 
 #+CAPTION: Kyria Version
 [[file:images/clipboard-20261108T211420.png]]
 
-** Planck: [[https://github.com/olkb/olkb_parts/blob/master/planck/planck-keymap-MD3.pdf][_The PDF of the default keymap_]]
+** Planck: [[https://github.com/olkb/olkb_parts/blob/master/planck/planck-keymap-MD3.pdf][The PDF of the default keymap]]
 :PROPERTIES:
 :CUSTOM_ID: planck-the-pdf-of-the-default-keymap
 :END:
@@ -314,7 +314,7 @@ typing on an infinitely better layout now, is because:
   and considered, it's literally not possible to accomplish all
   objectives. Optimize top 3grams? Sacrifice top 2grams. Optimize top
   2grams? Sacrifice pinkie curling. It's endless (even with tools like
-  [[http://mkweb.bcgsc.ca/carpalx/][_this_]]), and maddening. I
+  [[http://mkweb.bcgsc.ca/carpalx/][this]]), and maddening. I
   eventually realized that, while I could still weight other concerns, I
   had to really focus on two main things: minimal pinkie use, and
   minimal index finger stretching. That greatly simplified things, and
@@ -323,7 +323,7 @@ typing on an infinitely better layout now, is because:
   alternating fingers!
 
 - I gave all the major modern layouts really good runs. Colmak[/dh],
-  Workman, Carpalx [[http://mkweb.bcgsc.ca/carpalx/?full_optimization][_QGMLWY_]], and
+  Workman, Carpalx [[http://mkweb.bcgsc.ca/carpalx/?full_optimization][QGMLWY]], and
   several ortholinear/thumb-cluster derivatives. I desperately wanted
   one - any one - to work. They all made too many tradeoffs. (And had
   too many "quality-of-life" issues such as dumb navigation or Fn-key
@@ -341,13 +341,13 @@ typing on an infinitely better layout now, is because:
 My work has all been local, but I've recently begun open-sourcing it.
 More to come.
 
-[[https://github.com/t00mietum/keyboard][https://github.com/t00mietum/keyboard_]]
+[[https://github.com/t00mietum/keyboard][https://github.com/t00mietum/keyboard]]
 
 [[https://docs.google.com/spreadsheets/d/1i8QfbnC41kJ8Fhe2n4VAXiONWaPQjeGDeqqHqsaXD2Y/edit?usp=sharing][https://docs.google.com/spreadsheets/d/1i8QfbnC41kJ8Fhe2n4VAXiONWaPQjeGDeqqHqsaXD2Y/edit?usp=sharing]]
 
-[[https://configure.ergodox-ez.com/moonlander/layouts/7Qqby/][https://configure.ergodox-ez.com/moonlander/layouts/7Qqby/]]
+[[https://configure.zsa.io/moonlander/layouts/7Qqby/][https://configure.zsa.io/moonlander/layouts/7Qqby/]]
 
-[[https://configure.ergodox-ez.com/planck-ez/layouts/En5W5/][https://configure.ergodox-ez.com/planck-ez/layouts/En5W5/]]
+[[https://configure.zsa.io/planck-ez/layouts/En5W5/][https://configure.zsa.io/planck-ez/layouts/En5W5/]]
 
 By another user:
 
@@ -381,7 +381,7 @@ navigation, etc.
 
 I love the Microdox, thanks for that link! I might have to order one.
 Like yours, my layouts are specifically designed with that form factor
-in mind as a lowest common denominator. I ordered [[https://www.gboards.ca/product/gergoplex-heavy][_this_]] months ago,
+in mind as a lowest common denominator. I ordered [[https://web.archive.org/web/20200517142002/https://www.gboards.ca/product/gergoplex-heavy][this]] months ago,
 but have given up on it shipping.
 
 So, my layouts are fully functional if all the extra keys go away.
@@ -398,7 +398,7 @@ So, my layouts are fully functional if all the extra keys go away.
 :PROPERTIES:
 :CUSTOM_ID: alternative-numpad-layout
 :END:
-[[https://kbd.news/Numbers-in-Pnohty-1230.html][_https://kbd.news/Numbers-in-Pnohty-1230.html_]]
+[[https://kbd.news/Numbers-in-Pnohty-1230.html][https://kbd.news/Numbers-in-Pnohty-1230.html]]
 
 [[file:images/media/image9.png]]
 
@@ -412,7 +412,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
 
 [[file:images/media/image1.png]]
 
-[[http://www.keyboard-layout-editor.com/#/gists/9b6379d4940a356bf904ea5452bf3956][_http://www.keyboard-layout-editor.com/#/gists/9b6379d4940a356bf904ea5452bf3956_]]
+[[https://www.keyboard-layout-editor.com/#/gists/9b6379d4940a356bf904ea5452bf3956][https://www.keyboard-layout-editor.com/#/gists/9b6379d4940a356bf904ea5452bf3956]]
 
 ** Layout with combos
 
@@ -428,7 +428,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
 
 [[file:images/media/image6.png]]
 
-- Layer Overview*
+- *Layer Overview*
   - *Layer 0: QWERTY Base*
     #+begin_example
     ┌─────┬─────┬─────┬─────┬─────┬─────┐     ┌─────┬─────┬─────┬─────┬─────┬─────┐
@@ -481,7 +481,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
     - Mouse buttons
     - Keyboard reset and utilities
 
-- Combo System*
+- *Combo System*
   The keyboard features comprehensive combos that adapt to your current
   layout (QWERTY/Colemak-DH). Each combo is mapped to equivalent key
   positions on both layouts, so you learn one set of finger movements that
@@ -501,7 +501,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
     | Plus       | R+U           | P+L            | +        |
     | Minus      | V+M           | D+H            | -        |
     | Equal      | F+J           | T+N            | =        |
-    | Asterisk   | E+I           | F+U            | ​*        |
+    | Asterisk   | E+I           | F+U            | =*=      |
     | Underscore | R+T           | P+B            | _        |
 
   - *Special Characters*
@@ -511,7 +511,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
     | Grave       | S+D           | R+S            | `        |
     | Exclamation | Y+U           | J+L            | !        |
     | At symbol   | H+J           | M+N            | @        |
-    | Hash        | F+G           | T+G            | ​#        |
+    | Hash        | F+G           | T+G            | =#=      |
     | Dollar      | S+L           | R+I            | $        |
     | Percent     | V+B           | D+V            | %        |
     | Caret       | N+M           | K+H            | ^        |
@@ -522,7 +522,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
     |-------------+--------+---------------|
     | Word Delete | 4+5    | Alt+Backspace |
 
-- Special Features
+- *Special Features*
   - *Layout Switching*
     - Toggle Layout: Access via Function layer to switch between QWERTY and
       Colemak-DH
@@ -534,7 +534,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
     - A = 1, S = 2, D = 4, F = 8, G = 16
     - Hold combinations to generate F-keys: A+D = F5, S+F = F10, etc.
     - Access all F1-F24 keys with simple finger combinations
-    /Idea brutally copied from [[https://leanrada.com/notes/developing-bitwise-input-method/][_this excellent article_]] - full credit to the original author!/
+    /Idea brutally copied from [[https://leanrada.com/notes/developing-bitwise-input-method/][this excellent article]] - full credit to the original author!/
   - *Auto Mouse Layer*
     - Automatically activates when trackpoint movement is detected
     - 1-second timeout returns to previous layer
@@ -607,7 +607,7 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
   - main layout - BEAKL with fallback layers - qwerty and dvorak
 - [[http://thedarnedestthing.com/wide%20planck%20form][wide planck form (letters outside, mods inside)]]
   - [[http://thedarnedestthing.com/ergo%20planck][ergo planck]]
-- [[https://xeiaso.net/blog/zsa-moonlander-first-impressions-2020-10-27/][ZSA Moonlander First Impressions - Christine Dodrill]]
+- [[https://xeiaso.net/blog/zsa-moonlander-first-impressions-2020-10-27/][ZSA Moonlander First Impressions]]
   - [[https://configure.zsa.io/moonlander/layouts/xbJXx/latest/0][Ergodox EZ Configurator]]
     - Four different layouts - colemak, qwerty, dvorak, steno
     - Layout for window manager (dwm)
@@ -620,14 +620,13 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
   - very "classic" layout, close to the standard keyboard
   - brackets at the right bottom
   - coder layer with num pad (I tried similar setup, then moved the numpad to a separate layer to have arrows on the right side)
-- [[https://www.massdrop.com/talk/70/the-ergodox-layouts-repository][The Ergodox Layouts Repository - Massdrop]]
 - [[https://geekhack.org/index.php?topic=62848][fixing the ergodox thumb section]]
 * Layouts: Links                                                     :folded:
 - [[https://github.com/callum-oakley/qmk_firmware/tree/master/users/callum][qmk_firmware/users/callum at master · callum-oakley/qmk_firmware]]
-- Jonas Hietala: [[https://www.jonashietala.se/blog/2021/06/03/the-t-34-keyboard-layout/?utm_source=pocket_mylist][The T-34 keyboard layout]]
-  - [[https://www.jonashietala.se/blog/2021/09/05/t-34-0/?utm_source=pocket_mylist][The T-34/0 keyboard layout]]
-- Share your keyboard layouts, here is my iris layout: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pdvp40/share_your_keyboard_layouts_here_is_my_iris_layout/?utm_source=pocket-app&utm_medium=share][ErgoMechKeyboards]]
-- Yet, another keyboard layout (RSHT / IENA) : [[https://www.reddit.com/r/KeyboardLayouts/comments/n1ngck/yet_another_keyboard_layout_rsht_iena/?utm_medium=android_app&utm_source=share][KeyboardLayouts]]
+- Jonas Hietala: [[https://www.jonashietala.se/blog/2021/06/03/the-t-34-keyboard-layout/][The T-34 keyboard layout]]
+  - [[https://www.jonashietala.se/blog/2021/09/05/t-34-0/][The T-34/0 keyboard layout]]
+- Share your keyboard layouts, here is my iris layout: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pdvp40/share_your_keyboard_layouts_here_is_my_iris_layout/][ErgoMechKeyboards]]
+- Yet, another keyboard layout (RSHT / IENA) : [[https://www.reddit.com/r/KeyboardLayouts/comments/n1ngck/yet_another_keyboard_layout_rsht_iena/][KeyboardLayouts]]
 - [[https://blog.friz64.de/ergodox-rawhid/][[with custom RGB control - qmk + host app!] my ergonomic keyboard adventure - ergodox ez · Friz64]]
 - Symbols via combos on the base layer: The Kombol Layout : ErgoMechKeyboards
   https://www.reddit.com/r/ErgoMechKeyboards/comments/mi7tyi/the_kombol_layout/
@@ -638,8 +637,8 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
 - Arno's Engram keyboard layout | [[https://web.archive.org/web/20210306170723/https://engram.dev/][engram]]
   - alternative letter / symbol layout
 - 30-40% split keyboard users: how do your punctuation/symbol/number layer(s) look like? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/mbf7w6/3040_split_keyboard_users_how_do_your/][ErgoMechKeyboards]]
-- Made a video explaining how I made a 34 key keymap. Might be useful for those wondering how so few keys are usable!: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/lvp7bz/made_a_video_explaining_how_i_made_a_34_key/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
-- Share your keyboard layouts, here is my iris layout : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pdvp40/share_your_keyboard_layouts_here_is_my_iris_layout/?utm_medium=android_app&utm_source=share][ErgoMechKeyboards]]
+- Made a video explaining how I made a 34 key keymap. Might be useful for those wondering how so few keys are usable!: [[https://www.reddit.com/r/ErgoMechKeyboards/comments/lvp7bz/made_a_video_explaining_how_i_made_a_34_key/][ErgoMechKeyboards]]
+- Share your keyboard layouts, here is my iris layout : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/pdvp40/share_your_keyboard_layouts_here_is_my_iris_layout/][ErgoMechKeyboards]]
 - [[https://artsey.io/][ARTSEY.io - 8 key layout]]
 - LT-37 Keyboard mod for regular keyboards : [[https://www.reddit.com/r/Keyboard/comments/lkjqpc/lt37_keyboard_mod_for_regular_keyboards/][Keyboard]]
 - ZenTron
@@ -650,9 +649,9 @@ row (as it's done on the classic numpad) you can put 123 (Pnohty) or
 - [[https://deskthority.net/wiki/Ergonomic_keyboard_layouts#Ergolinear_Split-case_designs][Ergonomic keyboard layouts - Deskthority wiki]]
 - What are some of the most popular ergonomic keyboard layouts with layers? : [[https://www.reddit.com/r/ErgoMechKeyboards/comments/kq6902/what_are_some_of_the_most_popular_ergonomic/][ErgoMechKeyboards]]
   - [[https://www.reddit.com/r/olkb/comments/hz2zux/making_a_crkbdmini_any_pointers_on_qmk_for_non/fzhub49/][modtap comments on Making a crkbd-mini, any pointers on QMK for non default column layouts]]
-    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/dustypomerleau][qmk_firmware/keyboards/minidox/keymaps/dustypomerleau at master · qmk/qmk_firmware]]
-    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/bepo][qmk_firmware/keyboards/minidox/keymaps/bepo at master · qmk/qmk_firmware]]
-    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/norman][qmk_firmware/keyboards/minidox/keymaps/norman at master · qmk/qmk_firmware]]
+    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/dustypomerleau][qmk_firmware/keyboards/maple_computing/minidox/keymaps/dustypomerleau at 0.19.0 · qmk/qmk_firmware]]
+    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/bepo][qmk_firmware/keyboards/maple_computing/minidox/keymaps/bepo at 0.19.0 · qmk/qmk_firmware]]
+    - [[https://github.com/qmk/qmk_firmware/tree/0.19.0/keyboards/maple_computing/minidox/keymaps/norman][qmk_firmware/keyboards/maple_computing/minidox/keymaps/norman at 0.19.0 · qmk/qmk_firmware]]
     - [[https://github.com/germ/qmk_firmware/blob/ginny-improv/keyboards/gergoplex/keymaps/default/keymap.c][qmk_firmware/keymap.c at ginny-improv · germ/qmk_firmware]]
     - [[https://github.com/qmk/qmk_firmware/blob/054021e8757a72de4d3fae1f58944e9c922d22d1/keyboards/squiggle/keymaps/rick/keymap.c][qmk_firmware/keymap.c at 054021e8757a72de4d3fae1f58944e9c922d22d1 · qmk/qmk_firmware]]
   - [[https://www.reddit.com/r/MechanicalKeyboards/comments/ik7foh/just_finished_my_levinson/g3is4wc/][lifow comments on Just finished my Levinson]]

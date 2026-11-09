@@ -7,18 +7,27 @@
 * My Layout
 I use [[https://www.zsa.io/voyager][Voyager]] as my main keyboard with [[https://www.kailhswitch.com/mechanical-keyboard-switches/choc-pro-pink-keyboard-switch.html][20g Choc Pro Pink switches]].
 
-And [[https://configure.zsa.io/voyager/layouts/aldqO/latest/0][my layout]] is minimal, I dont't even use all the Voyager keys,
-this is a cleaned up version with only keys I actually use (and I am experimenting with the rest to try different things).
+And [[https://configure.zsa.io/voyager/layouts/aldqO/latest/0][my layout]] is minimal, I don't even use all the Voyager keys.
+
+This is a cleaned up version with only keys I actually use (and I am experimenting with the rest to try different things).
 
 #+begin_export html
-<div style="padding-top: 60%; position: relative;">
-   <iframe src="https://configure.zsa.io/embed/voyager/layouts/q6boz/latest/0" style="border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%"></iframe>
+<!-- The ZSA embed shows empty frame if the width is below ~760px wide, so render it at 1000px and scale it to fit. -->
+<div class="zsa-embed" style="position: relative; aspect-ratio: 1000 / 620; overflow: hidden;">
+  <iframe src="https://configure.zsa.io/embed/voyager/layouts/q6boz/latest/0"
+          style="border: 0; width: 1000px; height: 620px; position: absolute; top: 0; left: 0; transform-origin: 0 0;"></iframe>
 </div>
+<script>
+for (const box of document.querySelectorAll('.zsa-embed')) {
+  const frame = box.querySelector('iframe');
+  new ResizeObserver(() => frame.style.transform = `scale(${box.clientWidth / 1000})`).observe(box);
+}
+</script>
 #+end_export
 
 Main features:
-+ The layout is shifted up and outward (comared to the [[https://configure.zsa.io/voyager/layouts/default/latest/0][default layout]]
-  + This creates more space for thumbkeys and less work for pinky (no modifiers on the far left and right sides).
++ The layout is shifted up and outward (compared to the [[https://configure.zsa.io/voyager/layouts/default/latest/0][default layout]])
+  + This creates more space for thumb keys and less work for pinky (no modifiers on the far left and right sides).
   + Numbers are on the separate layer with Numpad-like layout.
 + Home-row mods
   + (Cmd, Ctrl, Alt, Num Layer) on the left side
@@ -42,7 +51,7 @@ In terms of the ergonomics:
 + The pinky load is reduced by moving modifiers to home row and thumbs
 + All thumb keys extend outward to avoid thumb pain
 + The layout is mostly symmetric (with mods, Space, Shift on both sides)
-+ The keymap is QUERY
++ The keymap is QWERTY
 
 It is important to have all thumb keys extending outward because, through some pain,
 I found out that if the thumb key is directly below the index finger or further inward
@@ -169,7 +178,7 @@ Notes:
 :PROPERTIES:
 :CUSTOM_ID: autoshift
 :END:
-[[https://configure.ergodox-ez.com/moonlander/layouts/0qL5N/latest/0][_https://configure.ergodox-ez.com/moonlander/layouts/0qL5N/latest/0_]]
+https://configure.zsa.io/moonlander/layouts/0qL5N/latest/0
 
 [[file:images/media/image44.png]]
 
@@ -177,7 +186,7 @@ Notes:
 
 [[file:images/media/image42.png]]
 
-AutoShift allows to keep the layout very simple, with minimal Sym layer.
+AutoShift lets you keep the layout very simple, with minimal Sym layer.
 
 Typing is somewhat similar to morse code: regular keys are dots and
 shifted versions are dashes.
@@ -201,11 +210,11 @@ on letters.
 
 And another thing about AutoShift is that there is an adjustment period.
 In the beginning, your text looks like this: YOuR TExt LOOKS Like This.
-Some letters come out as upper case more often then others, it depends
+Some letters come out as upper case more often than others, it depends
 on the typing habits I guess. Probably this is a good thing that
-AutoShift teaches you to type more uniforemly, with shorter strokes,
-rather than having delays on certain keys. In the beginning, I felt it
-like I have to type much more aggressive and faster to get it working
+AutoShift teaches you to type more uniformly, with shorter strokes,
+rather than having delays on certain keys. In the beginning, I felt
+like I had to type much more aggressively and faster to get it working
 properly.
 
 The autoshift configuration buttons are also helpful: on the adjustment
@@ -250,15 +259,15 @@ Spacebars are symmetric. It is better to use both hands for spaces: when
 you finish typing the word with the left hand, press space with right
 thumb, and vice versa.
 
-I haven't finalize the decision about enter - thumb or pinky.
+I haven't finalized the decision about enter - thumb or pinky.
 
 Ctrl and Alt modifiers are OSM (one shot modifiers, can be tapped to
-only modify the next key, and can be hold as a regular modifier). In
+only modify the next key, and can be held as a regular modifier). In
 general, OSMs are very convenient to type, but require a dedicated key
 (you can not use them as dual function key). OSM shift is not needed
 when autoshift is on.
 
-Esc is on the Sym layer, under the right s thumb. There is a backup
+Esc is on the Sym layer, under the right thumb. There is a backup
 escape on the red key.
 
 Backspace is on the space: hold one space and press another to produce
@@ -277,7 +286,7 @@ Nav layer (and the rest of layers) is similar in all layouts. Nav layer
 acts as CMD, but with top row on the left acting as CMD plus numbers, I
 use these to switch between virtual desktops.
 
-The rest of key have CMD modifier, so we can do copy/paste and other cmd
+The rest of keys have CMD modifier, so we can do copy/paste and other cmd
 operations from here.
 
 Nav layer also has arrows on the right.
@@ -287,11 +296,11 @@ PgUp/PgDown are useful for scrolling. Ctrl plus arrows to move by word.
 Overview of modifiers / special keys
 
 - Mods
-  - *Ctrl*, *Alt*, *Cmd*, - ctrl and cmd and thumb keys (I mostly use
+  - *Ctrl*, *Alt*, *Cmd*, - ctrl and cmd are thumb keys (I mostly use
     the Nav layer as Cmd, Ctrls are OSM, so it is easy to use it for
     single combinations, such as ctrl-r in zsh to search history), Alt
-    is in the buttom row, in the unreachable for a thumb position, but I
-    use it extremely rare, usually for some specific shortcuts, so it is
+    is in the bottom row, in the unreachable for a thumb position, but I
+    use it extremely rarely, usually for some specific shortcuts, so it is
     OK to move the hand to press it.
   - *Shift* - this layout uses autoshift, there is a backup shift on
     right thumb and red keys
@@ -324,7 +333,7 @@ server where I don't have my vim config), Caps (I use it for language
 switch, so it is not needed during the typing sessions), Del (I almost
 never use it, unless it is in some keyboard shortcut).
 
-So I can get away with :
+So I can get away with:
 
 - Space + Sym toggle
   - Backspace on the Sym layer, on Space keys, easily reachable and
@@ -339,22 +348,22 @@ So, besides Space, I need 4 more places for these special keys. Or even
 less when using dual function keys - here I can put Sym layer switch to
 F and J and ctrl to D and K (these are the modifiers I use most).
 
-This way, everything fits nicely into 36 keys keyboard, like
-[[https://boardsource.xyz/store/5f2e7e4a2902de7151494f92][_Microdox_]] (or is it called [[https://github.com/That-Canadian/MiniDox_PCB][_Minidox_]]?).
+This way, everything fits nicely into a 36-key keyboard, like
+[[https://web.archive.org/web/20210126220212/https://boardsource.xyz/store/5f2e7e4a2902de7151494f92][_Microdox_]] (or is it called [[https://github.com/That-Canadian/MiniDox_PCB][_Minidox_]]?).
 
 The rest of layers:
 
 - Fn&Num - I mostly use it for a numpad to enter longer sequences of
   numbers.
   - It also has a full number row at the top, so could be always used
-    for numbers, and on the Sym layer we could have shifted version (! @
-    ​# etc)
+    for numbers, and on the Sym layer we could have shifted version
+    (! @ # etc)
   - This trick is useful for other layouts (no autoshift) to create a
     sym layer that can be used without shift, but this also creates
     additional cognitive load: you need to remember to use additional
     layer for numbers
 - Media - Mouse controls
-- Adjust - keyboard settings, backlight controls, audIo and music
+- Adjust - keyboard settings, backlight controls, audio and music
   toggles, autoshift settings, reset and oryx buttons
 - Game - full standard layout, no modifiers, so it can be used for games
   or other cases when standard layout is needed.
@@ -368,7 +377,7 @@ The rest of layers:
 :PROPERTIES:
 :CUSTOM_ID: moonlander-osm-shift
 :END:
-[[https://configure.ergodox-ez.com/moonlander/layouts/ZrKpV/latest/0][_https://configure.ergodox-ez.com/moonlander/layouts/ZrKpV/latest/0_]]
+https://configure.zsa.io/moonlander/layouts/ZrKpV/latest/0
 
 [[file:images/media/image49.png]]
 
@@ -381,10 +390,10 @@ left and right hand.
 The rest of layers (Nav, Fn&Num, Media, Game, Alert) are exactly the
 same as in the AutoShift layout.
 
-The goals here are same: reduce finger movement and load stronger
+The goals here are the same: reduce finger movement and load stronger
 fingers more.
 
-Few key points about this layout:
+A few key points about this layout:
 
 - J and F are toggles to the Sym layer (left and right parts, but
   conceptually this is the single Sym layer, more about it below)
@@ -407,9 +416,9 @@ left and shifted versions of numbers on the right.
 What this does is:
 - numbers are always available at the top
 - shifted versions of numbers can be produced by:
-  - holding F or J to get to the Sym layer, taping OSM shift, taping the
+  - holding F or J to get to the Sym layer, tapping OSM shift, tapping the
     number
-  - OR holding F or J to get to the Sym layer and taping the appropriate
+  - OR holding F or J to get to the Sym layer and tapping the appropriate
     shifted symbol with the same hand
 
 This is because I find it not very convenient to use the layer toggle
@@ -425,7 +434,7 @@ shift to get any of the symbols.
 :PROPERTIES:
 :CUSTOM_ID: microdox-osm-shift
 :END:
-[[https://configure.ergodox-ez.com/moonlander/layouts/0qoY6/latest/0][_https://configure.ergodox-ez.com/moonlander/layouts/0qoY6/latest/0_]]
+https://configure.zsa.io/moonlander/layouts/0qoY6/latest/0
 
 [[file:images/media/image45.png]]
 
@@ -436,7 +445,7 @@ additional keys, so it could fit to microdox, but also, what is more
 important, it implements a different version of the Sym layer - it is a
 single layer on this layout.
 
-So both F and J switch to this layout when hold.
+So both F and J switch to this layout when held.
 
 This Sym layer also doesn't have numbers - the top row has shifted
 versions, so it is for symbols only.
@@ -444,12 +453,12 @@ versions, so it is for symbols only.
 Numbers are available on the Fn&Num layer, both at the top row and as a
 numpad on the right.
 
-We can get to this layer by holding either of spacebars.
+We can get to this layer by holding either of the spacebars.
 
 So in this case, it is necessary to actively use three layers: base, sym
-and fn&num. While in AutoShift another OSM layout it is mainly two: Base
+and fn&num. While in AutoShift and the other OSM layout it is mainly two: Base
 and Sym to get letters, numbers and all symbols (strictly speaking,
-another OSM also has three main layers as there are two Syms, but it
+the other OSM layout also has three main layers as there are two Syms, but it
 feels like one layer when working with it, so we can count it as two).
 
 This way:
@@ -468,12 +477,12 @@ This way:
 - [[https://configure.zsa.io/moonlander/layouts/7JaNr/latest/0][Classic ML 2.9 - Ergodox EZ Configurator]]
 - Tab
   - The left cmd + TAB should work well, but do I need tab there? It is not something I need to access very often. So might get back backspace in there. Try using the tab / shift-tab on the media layer.
-    - From a quick test - it works nice, especially in workflowy where both tab and shift tab are useful. The only issue is that I don't use the media layer too much, so I have to learn to hold a special modifier just for tab.
+    - From a quick test - it works nicely, especially in workflowy where both tab and shift tab are useful. The only issue is that I don't use the media layer too much, so I have to learn to hold a special modifier just for tab.
     - Another solution - put it to the right side to the num layer, although again, I don't use the right num/fn side much and I am more used to having navigation on the right side (hjkl, arrows)
 - Symbols - !#% are not very convenient to type, while I have some free space on the right side, maybe move them?
   - Reordered the symbols, I quite like the current layout, where left and right rows are not used.
 - Add Copy / Cut / Paste keys?
-  - Added copy and paste, let's see how it works and if I need also a Cut shortcut
+  - Added copy and paste, let's see how it works and if I also need a Cut shortcut
   - Another useful thing could be Ctrl+A to select all
   - Also Ctrl+z
   - Add "+p macro? or better rebind it in vim?
@@ -510,7 +519,7 @@ This way:
       - lower is bound to both spaces and my style, as a backup, to thumb enters
 - "Moonlander Planck" Motivation: have a unified Moonlander / Ergodox / Planck layout, minimize finger movements, shift more work from pinky to bigger and stronger fingers; try Planck-like experience
   - Modifiers are on the home row (shift, ctrl, media)
-  - Caps - I use it as a language switch, [ and ] in the bottom row are for cyrillic layout (х and ъ), I use brackets from the lower / raised layer on the right
+  - Caps - I use it as a language switch, [ and ] in the bottom row are for Cyrillic layout (х and ъ), I use brackets from the lower / raised layer on the right
     - TODO: maybe move caps to the bottom right key? (and keep the layer 3 switch where it is, so I can still have reset on the same place). Will it work well? If I also start using enter on the right, won't it be a problem (accidental layout switches)?
   - Space is also a Lower and Raised Planck layers modifier
     - For Planck, the raised and lower layers would be exactly the same
@@ -522,7 +531,7 @@ This way:
     - inner row of keys (not present on Planck) - caps, mentioned above, hyper / meh and backspace
       - I only use backspace quite a lot, would have to train to use the backspace after P on Planck
       - The Adjust layer has some color buttons at the top, but these are rarely used and can be placed elsewhere
-      - In a perspective - remove top keys and use them for media functions (volume, brightness, etc)
+      - In the future - remove top keys and use them for media functions (volume, brightness, etc)
       - Experimental - enter on the left and on the right, see if I can use them (there was Esc on the left, but I don't need it since I use jk in vim and there is a backup esc in the thumb cluster [but I would have to use esc on the left or somewhere else on Planck])
 ** Planck Symmetric
 [[file:images/clipboard-20261108T222853.png]]
