@@ -1,0 +1,1147 @@
+#+TITLE: Emacs Features Overview
+#+DATE: <2006-11-06>
+#+TYPE: post
+#+FILETAGS: :emacs:
+#+DESCRIPTION: Overview of some of the useful Emacs features
+
+* About
+:PROPERTIES:
+:CUSTOM_ID: about
+:END:
+
+This is my overview of some of the Emacs features created as a part of
+learning about these features.
+
+My Emacs config is here: https://github.com/serebrov/.emacs
+The configuration is close to what I had built for Vim over the years (https://github.com/serebrov/vimrc).
+
+At this point, configurations are quite close and I can use Emacs and Vim almost interchangeably.
+Main reasons to switch to Emacs are: Lisp and Emacs being a programming environment (vs Vim being
+an editor with embedded scripting language); Org mode and just to try some new things.
+
+Related: [[file:vim-features.org][Vim Features Overview]] (most of this is applicable to the Evil mode).
+
+* Emacs Terminology (for the Vim user)
+:PROPERTIES:
+:CUSTOM_ID: terminology
+:END:
+
+~Minibuffer~ is the line at the bottom of the screen where you can enter
+commands. Similar to the Vim command line.
+
+~Window~ is the Emacs term for a Vim split or a tmux pane.
+
+~Buffer~ is similar to the Vim buffer (file loaded in memory, can be
+displayed in a window or hidden).
+
+~Frame~ opens a new GUI window in GUI Emacs (and something similar to a
+tab in terminal Emacs).
+
+~Point~ is the place in the document where the cursor is.
+
+The =M-= in keyboard shortcuts is "Meta" ("Option" key or "Alt" key).
+Alternatively, "Esc" can be used as meta, for example, press "Esc" and
+then "v" to move up one screen.
+
+* Help
+** Getting Help
+:PROPERTIES:
+:CUSTOM_ID: getting-help
+:END:
+
+Main commands:
+ * ~M-x info~ to open manuals, =q= to quit, =l= to go back.
+   * Select a manual and search in it: =M-x info-lookup-symbol=, C-h S
+ * ~M-x describe-key~, ~M-x describe-mode~, and other =describe-= commands to get quick information about things.
+   * Or ~M-x helpful-key~, ... ("helpful" alternatives usually have nicer format)
+ * Help prefix: ~C-h~ [will prompt for other help commands]
+
+Emacs manual:
+ * Quick reference card: =M-x help-quick=
+ * Info reader: =M-x info=, =C-h i=
+ * Emacs manual: =M-x info-emacs-manual=, =C-h r=
+ * Find Emacs manual: =M-x info-display-manual=, =C-h R=
+ * =RET= go to link; =l= to go back; =s= search
+ * =m= [item] - pick a menu item; =i= jump to index entry
+ * see more in the "Reading Help" section
+ * =M-x info-lookup-symbol= [symbol] - search for symbol in manuals
+ * =M-x info-display-manual= [topic] - manual on the =topic=
+ * =M-x view-emacs-news= - history of Emacs changes
+
+Help on a topic:
+ * =M-x Info-goto-emacs-command-node= [command] - emacs Info topic for =command=
+ * =M-x shortdoc-display-group= [topic] - grouped information for commands related to =topic=
+ * =M-x finder-by-keyword= [topic] - see which packages exist for the selected [topic]
+
+Describe:
+ * Package: =M-x describe-package=, C-h P
+ * provided by package.el, does not cover standard packages like dired
+ * for dired, see the emacs manual, C-h r
+ * Current mode: =M-x describe-mode=, C-h m
+ * Function under cursor: =M-x describe-function=
+ * Command: =M-x describe-command= [command]
+ * Key: =M-x describe-key=, =C-h k= (=C-h k C-h k= to get help on =C-h k= itself)
+ * Related: =M-x where-is= [command] - which key this command is bound to?
+ * =M-x helpful-key= [key] - show help for the command bound to the =key=
+ * =M-x describe-key-briefly=, =C-h c {key}= - show the command bound to a key
+ * Key bindings: =M-x describe-bindings=, =C-h b=
+ * Keymap: =M-x describe-keymap= [mode] - describe keys for selected mode
+
+What did I just press???
+ * see the history of keystrokes: =M-x view-lossage=, =C-h l=
+
+Search:
+ * =M-x apropos= [keyword] - search for symbols (functions, commands, variables, etc) with =keyword=
+ * =M-x apropos-documentation= [keyword] - search docstrings
+ * =M-x apropos-command= [keyword], =C-h a= - search for commands with =keyword=
+ * =M-x apropos-variable= [keyword] - search variables
+ * =M-x apropos-value= [val] - which variables have =val= value?
+
+Search in all manuals with regexp (use ~M-: Info-directory-list RET~ to see where manuals are):
+#+begin_src sh
+zgrep -n "search-regexp" /opt/homebrew/share/info/emacs/*.info.gz
+#+end_src
+
+Search with consult and deadgrep:
+ * =M-x consult-info= - search with consult, fuzzy completion
+   * =C-u M-x consult-info= to select manual to search
+ * Use consult-ripgrep or deadgrep to search ~/usr/share/info/~ (info manuals)
+   * check where info files are with ~M-: Info-directory-list~
+   * ~M-x deadgrep RET a.b*c RET~
+     * then change the directory at the top to ~/usr/share/info/~
+   * ~C-u M-x consult-ripgrep RET /usr/share/info/ RET a.b*c~
+
+Related links:
+ * https://www.chiply.dev/post-june-emacs-carnival
+
+** Reading Help
+:PROPERTIES:
+:CUSTOM_ID: reading-help
+:END:
+
+Note: you can see the current mode in the bottom bar, it says =*Help*= for help buffers and =*Info*= for Info manuals. Keybindings (info, help) are somewhat different.
+
+When using evil mode:
+ * Press =Ctrl-Z= to switch from evil to emacs mode (=Ctrl-Z= one more time to go back)
+ * Go to insert mode: most help/info commands will work
+ * There are also evil keybindings (leaving these out of scope)
+
+In the Help file:
+- scroll up/down: =spc= / =backspace= (or =DEL=).
+- Go to the top: =<=
+- Go to the bottom: =>=
+- Go back in history: =l=
+- Go forward in history: =r=
+- Next / prev page: =n= and =p=
+- Open info page for current topic: =i=
+- View source code: =s=
+- Quit: =q=
+
+** Reading Info Manuals
+:PROPERTIES:
+:CUSTOM_ID: reading-info-manuals
+:END:
+
+~M-x info~ to open manuals, =q= to quit, =l= to go back.
+
+Note: you can see the current mode in the bottom bar, it says =*Help*= for help buffers and =*Info*= for Info manuals. Keybindings in these two modes are somewhat different.
+
+When using evil mode:
+ * Press =Ctrl-Z= to switch from evil to emacs mode (=Ctrl-Z= one more time to go back)
+ * Go to insert mode: most help/info commands will work
+ * There are also evil keybindings (leaving these out of scope)
+
+In the Info manual:
+- get quick help: =?=
+- quit: scroll to the bottom or C-g (or anything that is not bound like =j=)
+- scroll up/down: =spc= / =backspace= (or =DEL=).
+- =spc= at the end of a node to go to the next node.
+- Go to the top (beginning of the node): =b=
+- Go to the bottom (end of the node): =e=
+- Copy current node name: =c=
+- Quit: =q=
+
+Moving between nodes:
+- Go back/forward in history (like jump list): =l= / =r=
+- Note that =l= is a universal back command, it works in many contexts.
+- See the history: =L=
+- Go to nearest node: RET
+- Next/prev node, sequentially: =[= / =]= (same as space/backspace, but without scrolling)
+- Next/prev node on the same level: =n= and =p= (will skip lower level nodes)
+- First (top) node / last node: =t= and =<= / =>=
+- Table of contents: =T=
+- Parent node: =u= (up one level)
+
+Quick jumps:
+- Show menu: =m=
+- Cycle through menu items: =TAB=
+- Show references: =f=
+- Go to node: =g=, in new window: =Ctrl-g=
+
+Search:
+- Search in the document: =s=
+  - ~s RET~ or ~}~ for next match
+- Incremental search: =C-s= or =C-r=
+- Search in the index =i= (=,= for the next match)
+  - All search results in one node =I=
+- Search everywhere: M-x info-apropos
+
+Other:
+- All manuals (directory): =d= to go to the directory of all manuals.
+- Open current manual in the browser: =G=
+- =M-x visible-mode= to toggle visible mode (show hidden markup).
+- =M-n= creates a new Info window with the same node (duplicate the current window)
+
+Info has some hints in the top and bottom bars:
+- The mode line at the bottom shows where we are now (/info/ (info) NodeName)
+- The mode line at the bottom also says "Top" (we see part of the text) or "All" (all text is visible)
+
+Note: there is no easy way to scroll down or up half a page (like =C-d= or =C-u= in Vim), but it is possible to do =M-r C-l C-l= to scroll down half a page and =M-r M-r C-l= to scroll up half a page
+See: https://www.reddit.com/r/emacs/comments/r7l3ar/comment/hn0ywbu/
+
+Info help: ? or =H= in a standalone reader
+- Note: the ? does not work for me, H works.
+- Note: the manual says when I go to help from the Info, I can scroll all the way down with SPC and then press SPC one or more times to get back to Info
+- this does not happen (I am going back through the list of buffers)
+- Maybe both problems are related
+
+Evil bindings:
+- scroll up/down: =spc= / =backspace= (or =DEL= or =b=).
+- Quit: =q=
+- Go to nearest node: RET
+- Parent node: =u=
+- Search: =s=
+- Directory: =d=
+- Go back/forward in history: =C-o= / =TAB=
+- Next/prev node, sequentially: =C-j= / =C-k=
+- Next/prev node on the same level: =g j= and =g k=
+- First (top) node / last node: =g t= and ?
+- Table of contents: =g T=
+
+Quick jumps (evil):
+- Show menu: =J=
+- Cycle through menu items: =g ]= and =g [=
+- Show references: =g f=
+- Go to node: =g G=
+- Virtual index: =I=
+
+* Interactive commands, universal argument and prefix system
+
+Interactive commands are commands that are executed from the minibuffer after we press =M-x=. These commands are special Emacs Lisp functions that may require user input (in contrast with regular functions that we pass arguments to when calling them). For example, =M-x describe-key= will prompt for the key to show help for.
+
+Note on evil mode: the =C-u= that serves as "universal argument" (described below) for interactive commands is "scroll up" in Evil mode.
+ * An easy way to use the universal argument is to switch to the insert mode (then =C-u M-x ...= will add the universal argument).
+ * Another alternative: temporarily switch to emacs mode with =Ctrl-Z= (and one more =Ctrl-Z= to switch back to evil).
+
+Besides user input, interactive commands are able to take extra arguments passed via the Emacs prefix system.
+
+The ~prefix~ is a key combination that you use before executing the actual command, for example, to repeat the "move down" command we do =C-u 4 C-n=. This moves down 4 lines.
+
+In this example the =C-u 4= is the prefix that passes =4= as an argument to the next command (=C-n= that is bound to the =next-line= command).
+
+One more example: the =forward-char= command moves the cursor forward. We can do the following with prefixes:
+- C-f or M-x forward-char → moves forward 1 character
+- M-5 C-f → moves forward 5 characters
+- C-u 10 C-f → moves forward 10 characters
+- C-u C-f → moves forward 4 characters (C-u alone defaults to 4)
+
+Note that the prefix can be passed either with =C-u {n}= or with =M-{n}=.
+
+The =C-u= on its own passes the default "universal argument" which usually tells the command "do what you usually do, but differently".
+
+For example, =M-x run-lisp= starts the default lisp REPL and =C-u M-x run-lisp= will ask which REPL to run before starting it.
+
+The run-lisp function's code basically does this:
+
+#+BEGIN_SRC emacs-lisp
+(defun run-lisp (arg)
+  (interactive "P")  ;; "P" means "accept a prefix argument"
+  (if arg
+      ;; If ANY argument was passed, prompt user
+      (read-string "Run lisp: " inferior-lisp-program)
+    ;; Otherwise use default
+    inferior-lisp-program))
+#+END_SRC
+
+It does not care what argument we pass as long as we pass something.
+
+In the case we want to distinguish arguments, we can do it like this:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-command (arg)
+  (interactive "P")
+  (cond
+   ((null arg) (message "No argument"))
+   ((equal arg '(4)) (message "You pressed C-u"))
+   ((equal arg '(16)) (message "You pressed C-u C-u"))
+   ((eq arg '-) (message "You pressed M-- (or C-u -)"))
+   ((eql arg 1) (message "You passed 1!"))
+   (t (message "You passed: %d" arg))))
+#+END_SRC
+
+With ="P"= the command gets the "raw" prefix argument:
+- no prefix - =nil=
+- =C-u= - the list =(4)=, =C-u C-u= - =(16)=
+- =M--= or =C-u -= - the symbol =-=
+- =M-5= or =C-u 5= - the number =5=
+
+So the list and symbol cases must be checked first: ~(= arg 1)~ fails with
+=wrong-type-argument number-or-marker-p (4)= when =arg= is a list.
+If we only need a number, ="p"= converts the raw argument with =prefix-numeric-value=
+(=nil= - 1, =(4)= - 4, =-= - -1).
+
+Functions can also have multiple arguments. The prefix argument (M-6, C-u, etc.) is special.
+It is captured before the command runs and is separate from other arguments.
+All other arguments are gathered by prompting the user through the minibuffer.
+
+So when we do:
+
+#+begin_example
+M-5 M-x replace-string RET foo RET bar RET
+#+end_example
+
+We have the following sequence of actions:
+- M-5 sets a prefix argument (which replace-string might use to limit replacements, depending on the command)
+- Then it prompts for "foo"
+- Then it prompts for "bar"
+
+To pass a negative argument use =C--5 ...= or =M--5 ...=.  The =C-- ...= works as =-1= (same for =M-- ...=). Also we can use =C-u -5 ...= and =C-u - ...=.
+
+* UI: windows, buffers, frames
+** Minibuffer
+
+Cancel current operation: C-g (which is usually done with Esc in vim)
+- Close minibuffer
+- Close autocompletion popup
+
+The autocompletion in minibuffer is managed with vertico.
+- Use ~M-n~ / ~M-p~ to move through completion suggestions.
+- Note: with ~(vertico-preselect 'first)~ set, use M-RET to use what you typed without using a suggestion (but I disabled it in favor of more explicit behavior)
+
+** Managing Windows
+:PROPERTIES:
+:CUSTOM_ID: managing-windows
+:END:
+Window is the Emacs term for a Vim split or a tmux pane.
+
+- =C-x 2= - Split the window vertically (like =:split= in Vim)
+- =C-x 3= - Split the window horizontally (like =:vsplit= in Vim)
+- =C-x 0= - Close the current window
+- =C-x 1= - Close all windows except the current one
+  - Note: can go back with =M-x winner-undo=.
+- =C-x o= - Move to the next window
+- =C-M-v= - Scroll other window (useful for reading help)
+
+** Managing Buffers
+:PROPERTIES:
+:CUSTOM_ID: managing-buffers
+:END:
+Buffer is similar to the Vim buffer.
+
+- =C-x b= - Switch to another buffer
+- =C-x k= - Kill a buffer
+- =:ls= or =C-x C-b= - List all buffers
+  - m to mark several buffers for opening
+  - D to mark the buffer for deletion
+  - s to mark the buffer for saving
+  - u to unmark the buffer
+  - U to unmark all
+  - x to execute deletions
+  - v to open marked with =m= buffers
+
+See
+ * =M-x describe-function buffer-menu=
+ * =M-x describe-mode buffer-menu-mode=
+ * M-x Info-goto-emacs-command-node RET buffer-menu RET
+
+** Managing Frames
+:PROPERTIES:
+:CUSTOM_ID: managing-frames
+:END:
+Frame opens a new GUI window in GUI Emacs (and something similar to a
+tab in terminal Emacs).
+
+- =C-x 5 2= - Create a new frame
+- =C-x 5 0= - Close the current frame
+- =C-x 5 o= - Move to the next frame
+
+** Save and restore sessions
+:PROPERTIES:
+:CUSTOM_ID: save-and-restore-sessions
+:END:
+- =M-x desktop-save= - Save the current session
+- =M-x desktop-read= - Restore the last session
+- =M-x desktop-clear= - Clear the session
+- =M-x desktop-change-dir= - Change the session directory
+- Get help about sessions: =C-h i= to open the manual, =m desktop= to
+  open the desktop manual.
+
+* Custom Keybindings
+
+Example: I want to add C-h/j/k/l as keybindings to switch to the split window
+and C-u/C-d to go to the previous and next page
+for the =PDFView= mode (the =emacs-reader= package) that don't have them.
+
+First, open any PDF and run the =M-x describe-mode= to see what standard keybindings
+are mapped to:
+
+#+begin_example
+n						pdf-view-next-page-command
+p						pdf-view-previous-page-command
+#+end_example
+
+Then add =:bind= section in the =use-package= config:
+
+#+begin_src emacs-lisp
+(use-package reader
+  :load-path "~/web/emacs/emacs-reader"
+  :bind (:map pdf-view-mode-map
+              ("C-h" . windmove-left)
+              ("C-l" . windmove-right)
+              ("C-j" . windmove-down)
+              ("C-k" . windmove-up)
+              ("C-u" . pdf-view-previous-page-command)
+              ("C-d" . pdf-view-next-page-command)
+              ))
+#+end_src
+
+* Emacs Lisp
+:PROPERTIES:
+:CUSTOM_ID: emacs-lisp
+:END:
+
+Lisp intro: =C-h i= to open manual, =m lisp intro= to open Lisp intro or =m elisp= to open Lisp manual.
+
+- =C-x C-e= - Evaluate (execute) the expression before the cursor
+- =C-j= - Evaluate the expression before the cursor and insert the result
+
+- =M-x= - Run a command
+  - A command is an interactive function (has =(interactive)= call in the body).
+  - Interactive functions are available in the ~M-x~ interface.
+- =M-:= - Evaluate an Emacs Lisp expression
+  - This can evaluate any expression, which includes non-interactive functions.
+  - It may sometimes be useful to see how things work, for example:
+    - The =org-rich-yank= has an internal =org-rich-yank--treat-as-image= function.
+    - That function is not invokable with ~M-x~, but we can copy the text and run it with ~M-:~.
+
+Base syntax:
+- =(function arg1 arg2)= - call a function with arguments
+- =something= - variable, for example, =fill-column=
+- ="something"= - string
+- ='something= - symbol, when we want something to be treated as a symbol, not as code
+
+For example, ='(fun arg1 arg2)= is a list with the symbol fun and two arguments, while =(fun arg1 arg2)= is a function call.
+
+Similarly, =(fun1 'fun2)= is a =fun1= function call with a symbol ='fun2= as an argument, while =(fun1 (fun2))= is a function call with the result of fun2 as an argument.
+
+#+begin_src elisp
+(defun fun1 (text)
+  (message "message: %s" text))
+
+(defun fun2 ()
+  "done2")
+
+(fun1 'fun2)
+--> message: fun2
+
+(fun1 (fun2))
+--> message: done2
+#+end_src
+
+All function calls look like above and, basically, this is the syntax of the language.
+
+This way, for example, =2 + 2= in Emacs Lisp would be =(+ 2 2)=. This has an advantage of having the same syntax for multiple arguments, like =(+ 2 2 2 2)=.
+
+Whitespace does not matter, we can format code for readability:
+
+#+begin_src elisp
+(defun my-function (arg1 arg2)
+  "Documentation"
+  (if (> arg1 arg2)
+      (message "arg1 is greater")
+    (message "arg2 is greater")))
+#+end_src
+
+Note: Something like =number-or-marker-p= in the error message means that the function can accept either a number or a marker. The =p= at the end of the function name is a common convention in Emacs Lisp to indicate that the function returns a boolean value ("p" means "predicate"). Marker is the Emacs marker, position in a buffer and =+= in Emacs Lisp can add numbers or markers.
+
+Show message (also demonstrates the string interpolation):
+
+#+begin_src elisp
+(message "Hello, %s! %d times" "world" (+ 5 5))
+#+end_src
+
+Useful string functions:
+- =(concat str1 str2)= - concatenate strings
+- =(substring str start end)= - get a substring
+
+The variable can be set with =setq= or =let=:
+
+#+begin_src elisp
+(setq my-var "value")
+
+(let ((my-var "value"))
+  (message "my-var: %s" my-var))
+#+end_src
+
+Evaluating the variable:
+
+#+begin_src elisp
+(setq flowers '(rose tulip daisy))
+flowers
+--> (rose tulip daisy)
+
+'flowers
+--> flowers
+
+(setq trees '(oak maple pine)
+      animals '(cat dog bird))
+#+end_src
+
+We can see above that we may set =flowers=, and we can quote it to get the symbol "flowers".
+
+We can also set multiple variables at once as in the last example above.
+
+We can modify variables like this:
+
+#+begin_src elisp
+(setq counter 0)
+counter
+--> 0
+
+(setq counter (+ counter 1))
+counter
+--> 1
+#+end_src
+
+Useful Emacs functions for buffers:
+- (buffer-name) - Get the buffer name
+- (buffer-file-name) - Get the file name of the buffer
+- (switch-to-buffer "buffer-name") - Switch to a buffer by name
+- (switch-to-buffer-other-window "buffer-name") - Switch to a buffer in another window
+- (switch-to-buffer (other-buffer)) - Switch to the previous buffer
+- (buffer-size) - Get the size of the buffer
+- (point) - Get the cursor position
+
+Full function definition:
+
+#+begin_src elisp
+     (defun FUNCTION-NAME (ARGUMENTS...)
+       "OPTIONAL-DOCUMENTATION..."
+       (interactive ARGUMENT-PASSING-INFO)     ; optional
+       BODY...)
+#+end_src
+
+Comments start with a semicolon.
+
+Functions with (interactive ..) right after the documentation can be executed with =M-x fn-name=.
+
+Interactive function example:
+
+#+begin_src elisp
+     (defun multiply-by-seven (number)       ; Interactive version.
+       "Multiply NUMBER by seven."
+       (interactive "p")
+       (message "The result is %d" (* 7 number)))
+#+end_src
+
+The ="p"= in =interactive= means that the function gets the prefix argument as a number (1 if there is no prefix). Other options are: ="f"= - file, ="b"= - buffer, ="r"= - region.
+
+The =(message "string")= function is used to show a message in the minibuffer.
+
+A =let= is used to define a local variable or a set of variables for the body of the let:
+
+#+begin_src elisp
+     (let ((VARIABLE VALUE)
+           (VARIABLE VALUE)
+           ...)
+       BODY...)
+
+     (let ((zebra "stripes")
+           (tiger "fierce"))
+       (message "One kind of animal has %s and another is %s."
+                zebra tiger))
+#+end_src
+
+A =let= returns the value of the last expression in the body.
+
+By default =let= sets the variable to =nil=, for example, =(let ((a)) a)= returns =nil=. We can skip parentheses for =nil= values, so =(let (a) a)= is the same.
+
+The =let*= is used to define variables that depend on the previous ones:
+
+#+begin_src elisp
+     (let* ((VAR1 VALUE)
+            (VAR2 (some-function VAR1))
+            (VAR3 (some-function VAR2)))
+       BODY...)
+#+end_src
+
+An =if= expression:
+
+#+begin_src elisp
+     (if CONDITION
+         THEN-EXPRESSION
+       ELSE-EXPRESSION)
+
+     (if (> 4 5)                               ; if-part
+         (message "4 falsely greater than 5!") ; then-part
+       (message "4 is not greater than 5!"))   ; else-part
+#+end_src
+
+Note: =nil= is false, everything else is true. In turn, =nil= is an empty list, same as =()=.
+
+** Point, Mark and save-excursion
+:PROPERTIES:
+:CUSTOM_ID: point-mark-and-save-excursion
+:END:
+
+Point is the cursor position in the buffer. Mark is some position in the buffer, =C-SPC= sets the mark, =C-u C-SPC= jumps to the mark. Region is the text between point and mark.
+
+=save-excursion= saves the cursor position ("point") and restores it after the code is executed:
+
+#+begin_src elisp
+     (save-excursion
+       BODY...)
+#+end_src
+
+Also, =save-excursion= saves the current buffer, window, and frame and restores them after (so if the inner code jumps to another buffer, the current one will be reopened after =save-excursion=).
+
+Alternatively, when we need to temporarily switch to another buffer, the =with-current-buffer= can be used to execute code and then return to the original buffer:
+
+#+begin_src elisp
+     (with-current-buffer ANOTHER-BUFFER-OR-NAME
+       BODY...)
+#+end_src
+
+** Lisp Code Style
+:PROPERTIES:
+:CUSTOM_ID: lisp-code-style
+:END:
+Lisp code is usually formatted like this:
+
+#+begin_example
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; Context actions on target at point
+   ("C-;" . embark-dwim)        ;; "Do what I mean" on target
+   :map minibuffer-local-map
+   ("C-c C-e" . embark-export)  ;; Export results to a buffer
+   ("C-c C-c" . embark-collect))) ;; Collect results in a buffer
+#+end_example
+
+Practically it seems to be inconvenient as it is not easy to add new
+code after the last line and before closing parenthesis:
+
+#+begin_example
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; Context actions on target at point
+   ("C-;" . embark-dwim)        ;; "Do what I mean" on target
+   :map minibuffer-local-map
+   ("C-c C-e" . embark-export)  ;; Export results to a buffer
+   ("C-c C-c" . embark-collect) ;; Collect results in a buffer
+   (i-can-add_more-stuff-here_easily)  ;; <--- add more code here
+ )
+ (and-here-to-if-i-want)               ;; <--- and more here
+)
+#+end_example
+
+The Lisp style seems to be to put parenthesis on the same line.
+Practically it means:
+- Pay attention to the indentation, not to the parens
+- Structural editing: use extra tools to work with code
+
+Tools: [[https://paredit.org/][paredit]],
+[[https://smartparens.readthedocs.io/en/latest/][smartparens]],
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Matching.html][show-paren]],
+[[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]].
+
+* Basic emacs keybindings
+:PROPERTIES:
+:CUSTOM_ID: basic-emacs-keybindings
+:END:
+
+I use evil, but it is good to know basic keybindings and be able to move around without evil.
+
+Note: =M-= (Meta) in shortcuts is "Opt" or "Alt", or "Esc" followed by letter.
+
+Cancel current operation: =C-g= (which is usually done with Esc in vim)
+- Close minibuffer
+- Close autocompletion popup
+
+Move around:
+- use arrow keys
+- Page up/down: =C-v= / =M-v= or actual PgUp / PgDown keys
+- Other window (useful when reading help): =C-M-v=
+- Start of file / end of file: =M-<= and =M->=
+- Center and redraw the screen: =C-l=
+- Go to line: =M-g g=
+
+Open/save/quit:
+- Open file: =C-x C-f=
+- Save: =C-x C-s= or =M-x save-buffer=
+- =M-x save-some-buffers= to save multiple buffers
+- Quit emacs: =C-x C-c=
+
+Char/line movements, arrow keys also work:
+- Char forward/backward: =C-f= / =C-b=
+- Word forward/backward: =M-f= / =M-b=
+- Start / end of line: =C-a= and =C-e=
+- Start / end of sentence: =M-a= and =M-e=
+- Next / prev line: =C-n= / =C-p=
+
+Search in the document:
+- Search forward: =C-s= (next =C-s=, prev =C-r=)
+- Search backward: =C-r=
+- Query replace: =M-%=
+- Regex replace: =C-M-%=
+- Replace a string: =M-x replace-string=
+
+Select, copy/paste:
+- Select text: =C-space=
+- Copy/Cut/Paste: =M-w=, =C-w=, =C-y=
+
+Undo and redo:
+- =C-/= - undo, also =C-x u=, also =C-_=
+- =C-?= - redo
+- Note: originally Emacs did not have redo, related:
+- Undo also does redo, so =C-/= undoes the undo
+- Use =C-g= to reverse the direction of undos/redos when doing multiple undos/redos
+- From [[https://stackoverflow.com/a/18383455][this answer]]:
+    - To redo once, immediately after undoing: =C-g C-/=
+    - To redo twice, immediately after undoing: =C-g C-/ C-/=.
+        - Note that C-g is not repeated.
+- Read M-x Info-goto-emacs-command-node RET undo RET to get confused more
+
+Editing:
+- Delete char/word - =C-d= / =M-d=
+- Delete until the end of line / sentence - =C-k= / =M-k=
+- Delete selection - =C-w=
+- Swap chars - =C-t=
+- Uppercase / lowercase / capitalize the word - =M-u= / =M-l= / =M-c=
+- Comment/uncomment the current line or selection - =M-;=
+- Format the paragraph - =M-q=
+
+Rectangular selection:
+- =C-x SPC= - Start selecting text in a rectangle
+- =C-x r k= - Kill the rectangle
+- =C-x r y= - Yank the rectangle
+
+Mark ring:
+- =C-SPC= - Set the mark
+- =C-u C-SPC= - Jump to the mark
+- =C-x C-x= - Swap the cursor and the mark
+
+Navigating:
+- Jump to the function definition - =M-.= (calls =xref-find-definitions=)
+
+Running commands and code:
+- Run emacs function ("interactive command"): M-x {function name}
+- Eval (execute) emacs code in the buffer: C-x C-e
+- Eval buffer: M-x eval-buffer
+
+Splits:
+- Make a split: C-x 2 (horizontal), C-x 3 (vertical)
+- Move to other split: C-x o
+- Close current split: C-x 0
+
+Buffers:
+- Close: C-x k (kill-buffer)
+- Switch to buffer: C-x b
+- List buffers: C-x C-b, nicer UI: M-x ibuffer
+
+Set mode (usually set automatically):
+- =M-x {mode-name}= set the mode (text-mode, org-mode, etc.)
+
+Repeating commands:
+- =C-u {number} {command}= - repeat the command {number} times
+  - =C-u 4 C-n= - move down 4 lines
+
+See also:
+- https://www.masteringemacs.org/article/effective-editing-movement
+- http://xahlee.info/emacs/emacs/effective_emacs.html
+- https://sites.google.com/site/steveyegge2/effective-emacs
+
+* Dealing with Errors and Debugging
+:PROPERTIES:
+:CUSTOM_ID: dealing-with-errors-and-debugging
+:END:
+
+Understanding what's just happened:
+ * history of keystrokes: =M-x view-lossage=, =C-h l= (what did I just press??)
+ * last command as lisp: =M-x repeat-complex-command=, =C-x ESC ESC=
+ * use "up" and "down" arrows to scroll through the history of commands
+ * the =M-x consult-complex-command= shows the history (and C-c C-c in consult
+   exports it to a buffer)
+ * view messages: =M-x ibuffer= and select =*Messages*= or =M-x view-echo-area-messages=, =C-h e=
+ * view warnings: =M-x ibuffer= and select =*Warnings*=
+
+Navigating Elisp code:
+ * Jump to definition at point (point=cursor): =M-.=, =M-x xref-find-definitions=
+ * Jump back: =M-,=, =M-x xref-go-back=
+ * Go to function source: =M-x find-function=
+ * Go to variable definition: =M-x find-variable=
+ * Go to library source: =M-x find-library=
+
+To see details about the error, enable debug mode to see stack trace for errors: =M-x toggle-debug-on-error=.
+
+Other ways to set breakpoints:
+ * =M-x debug-on-entry= [command] adds a breakpoint on each command entry
+ * =M-x cancel-debug-on-entry= to remove
+ * Insert =(debug)= in the elisp code
+
+The stacktrace window is interactive, you can evaluate expressions to
+see the state of local variables and continue execution, key bindings:
+ * h to see the help
+ * d to step through
+ * c to continue
+ * + to display the current code as multi-line
+ * v to see locals
+ * e to evaluate expression
+
+** Edebug
+:PROPERTIES:
+:CUSTOM_ID: edebug
+:END:
+
+The standard debugger UI is not very convenient as you can't see the code until you execute the next statement. The =edebug= mode provides a much better interactive debugger.
+
+To set a breakpoint, put cursor on the function and press =C-u C-M-x=.
+ * This executes the =eval-defun= command with universal argument to add Edebug instrumentation.
+ * The =edebug= instruments the function, so next time it runs, we have the interactive debugger.
+
+The =C-M-x= itself is =eval-defun=, it evaluates the current function and updates the in-memory copy of the code. This is useful when working on fixes to refresh the "live" copy of the code without restarting Emacs.
+ * To re-evaluate the whole file, use =M-x eval-buffer=.
+
+More ways to add breakpoints:
+
+| Instrument one defun     | With cursor on it, press =C-u C-M-x=            |
+| Instrument defun by name | =M-x edebug-defun=                              |
+| Instrument a whole file  | =M-x edebug-all-defs=, then =M-x eval-buffer=   |
+| Remove from one defun    | =C-M-x=                                         |
+| Remove from everything   | =M-x edebug-remove-instrumentation=             |
+
+Note on =evil= mode: the =C-u C-M-x= can be entered by:
+1. Switching to emacs mode (C-Z)
+2. Switching to insert mode and entering there
+
+Same for the debugger and edebug: when they are active, either switch to emacs mode
+or insert mode to have the keybindings.
+
+By default Edebug re-arranges/restores windows automatically, to disable this
+behavior add =(setq edebug-save-windows nil)= or press =W=
+(or =M-x edebug-toggle-save-windows=) to turn this off.
+
+Key bindings in Edebug:
+
+| Key     | Command                           | What it does                                   |
+|---------+-----------------------------------+------------------------------------------------|
+| ?       | edebug-help                       | The list of key bindings                       |
+|         |                                   | =M-x describe-keymap RET edebug-mode-map RET=  |
+|         |                                   | for more detailed information.                 |
+| SPC     | edebug-step-mode                  | Run to the next stop point                     |
+| n       | edebug-next-mode                  | Stop after the current expression returns      |
+| i       | edebug-step-in                    | Step into the call at point                    |
+| o       | edebug-step-out                   | Run until the enclosing expression finishes    |
+| f       | edebug-forward-sexp               | Run over the next expression                   |
+| h       | edebug-goto-here                  | Run until point (a one-shot breakpoint)        |
+| b       | edebug-set-breakpoint             | Breakpoint at point                            |
+| x       | edebug-set-conditional-breakpoint | Breakpoint with a condition                    |
+| u       | edebug-unset-breakpoint           | Remove the breakpoint                          |
+| e       | edebug-eval-expression            | Evaluate an expression in the current context  |
+| C-x C-e | edebug-eval-last-sexp             | Evaluate the expression before point           |
+| E       | edebug-visit-eval-list            | Watch list: expressions re-evaluated each stop |
+| g       | edebug-go-mode                    | Run on, stop only at breakpoints or errors     |
+| c       | edebug-continue-mode              | Run on, but show each stop point briefly       |
+| q       | top-level                         | Abort back to the top level                    |
+| r       | edebug-previous-result            | Show the last value again                      |
+| d       | edebug-pop-to-backtrace           | The normal backtrace, from inside Edebug       |
+| v       | edebug-view-outside               | Look at the buffers as they were outside       |
+| I       | edebug-instrument-callee          | Instrument the function called at point        |
+
+=i= and =I= are useful to explore the code in runtime.
+=i= instruments the function under cursor, adds the breakpoint for it and runs =go=.
+=I= instruments the function without entering it.
+
+=E= is very useful to watch for expressions while you are moving through the code.
+
+To start edebug on specific error: =(setq edebug-on-error '(wrong-type-argument))=.
+
+Questions:
+ * Easier way to debug defer code? Maybe temporarily make it blocking somehow?
+ * Is there a way to switch from the backtrace window to Edebug?
+
+* Running emacs in a terminal
+:PROPERTIES:
+:CUSTOM_ID: running-emacs-in-a-terminal
+:END:
+#+begin_example
+emacs -nw ./file-name
+#+end_example
+
+If there is the GUI Emacs running at the same time, =--no-desktop= is
+helpful to avoid conflict with the running emacs:
+
+#+begin_example
+emacs -nw --no-desktop ./file-name
+#+end_example
+
+* Themes and packages
+:PROPERTIES:
+:CUSTOM_ID: themes-and-packages
+:END:
+
+- =M-x load-theme= - Load a theme
+- =M-x customize-group= - Customize a group of options
+- =M-x customize-face= - Customize a face (font, color, etc.)
+- =M-x list-packages= - List all packages
+
+Upgrade packages:
+- =M-x package-upgrade= [package]
+- =M-x package-upgrade-all=
+- =M-x package-vc-upgrade= [package]
+- =M-x package-vc-upgrade-all=
+
+Configuration file is =~/.emacs.d/init.el=.
+Use =M-x eval-buffer= to reload the configuration file.
+Start Emacs with =emacs -q= to ignore the configuration file (if something is broken).
+
+* Dired and files
+:PROPERTIES:
+:CUSTOM_ID: dired-and-files
+:END:
+
+Open dired: =C-x d=, ~M-x dired~
+
+- =C-x d= - Open Dired (directory editor)
+- =C-x C-f {dir name}= - The find-file command opens dired when given a dir.
+- =C-x C-j= - Open Dired and jump to the current file
+- =C-x C-d= - Open a directory
+- =C-x C-q= - switch to edit mode (like vidir) - wdired
+  - =C-c C-c= to save changes
+  - =C-c ESC= to undo
+
+Navigation:
+- In evil mode: j, k to go up/down, =-= to go dir up
+- Next/prev dir: =g j= and =g k=
+
+Mark files:
+- =d= - mark for deletion
+- =m= - mark for command that we will decide on later, =t= - toggle marks
+- =u= - unmark, =U= to unmark all
+- =DEL= to back up one line and unmark or unflag.
+
+Commands:
+- Delete: =x= to delete (eXpunge) the files flagged 'D'.
+- Open: =RET= to open file
+  - =shift-RET= or =g O= (=o= in emacs mode) to open file or directory in Other window
+- New dir: =i= to Insert a subdirectory in this buffer.
+- Move / Rename: =R= to Rename a file or move the marked files to another directory.
+- Copy: =C= to Copy files.
+- Open URL: =W=
+- Execute shell command: =!= or =X=
+- Compress: =Z=, =c= is "compress to" (will ask for the archive name)
+- Redisplay: =r= (=l= in emacs mode)
+
+Helpers:
+- View: =g o= (=v= in emacs mode), use =Ctrl-o= to get back
+- Show file type: =g y= (=y= in emacs mode)
+- View:
+  - =TAB= or =(= to show/hide details
+  - Sorting: =o= (=s= in emacs mode) to toggle Sorting by name/date or change the 'ls' switches.
+- Redisplay: =r= (=l= in emacs mode), =:e!= also works
+  - This retains all marks and hides subdirs again that were hidden before.
+- Use SPC and DEL to move down and up by lines.
+
+Most of the =evil= mode bindings are the same, but there are some
+differences because of the keys used for Vim navigation (h,j,k,l,-,
+etc), for example:
+- =-= in evil goes to the parent dir (this is "negative argument" by default)
+- =I= is "dired-maybe-insert-subdir" in =evil= (and Info by default)
+- Go to file: "J" in evil and "j" in emacs
+- ...
+
+Marking tools:
+- =* C-n= dired-next-marked-file
+- =* C-p= dired-prev-marked-file
+- =* != dired-unmark-all-marks
+- =* %= dired-mark-files-regexp
+- =* (= dired-mark-sexp
+- =* *= dired-mark-executables
+- =* .= dired-mark-extension
+- =* /= dired-mark-directories
+- =* ?= dired-unmark-all-files
+- =* @= dired-mark-symlinks
+- =* O= dired-mark-omitted
+- =* c= dired-change-marks
+- =* m= dired-mark
+- =* s= dired-mark-subdir-files
+- =* t= dired-toggle-marks
+- =* u= dired-unmark
+- =* DEL= dired-unmark-backward
+
+Regex tools:
+- =% C= dired-do-copy-regexp
+- =% H= dired-do-hardlink-regexp
+- =% R= dired-do-rename-regexp
+- =% S= dired-do-symlink-regexp
+- =% d= dired-flag-files-regexp
+- =% g= dired-mark-files-containing-regexp
+- =% l= dired-downcase
+- =% m= dired-mark-files-regexp
+- =% r= dired-do-rename-regexp
+- =% u= dired-upcase
+
+** Wdired, editing mode (similar to vidir)
+:PROPERTIES:
+:CUSTOM_ID: wdired-editing-mode-similar-to-vidir
+:END:
+
+Edit mode (wdired): =i= in evil switches to editing mode (or =M-x wdired-change-to-wdired-mode=)
+- Apply changes: =C-c C-c= or =M-x wdired-finish-edit=
+- Exit: =C-x C-q=
+
+** Dired: interactive replacement mode
+:PROPERTIES:
+:CUSTOM_ID: dired-interactive-replacement-mode
+:END:
+
+=Q= in dired starts the regexp replace in marked files (or in the current file under cursor).
+
+It opens two buffers: search results and current buffer with replacements.
+
+Key mappings are:
+- Type SPC or y to replace one match, Delete or n to skip to next,
+- RET or q to exit, Period to replace one match and exit,
+- , to replace but not move point immediately,
+- ! to replace all remaining matches in this buffer with no more questions,
+- C-r to enter recursive edit (C-M-c to get out again),
+- C-w to delete match and then enter recursive edit,
+- ^ to move point back to previous match,
+- u to undo previous replacement,
+- U to undo all replacements,
+- e to edit the replacement string.
+- E to edit the replacement string with exact case.
+- C-l to clear the screen, redisplay, and offer same replacement again,
+- Y to replace all remaining matches in all remaining buffers (in multi-buffer replacements) with no more questions,
+- N (in multi-buffer replacements) to skip to the next buffer without replacing remaining matches in the current buffer.
+
+Any other character exits the interactive replacement loop, and is then re-executed as a normal key sequence.
+- Question: how to re-enable the interactive mode?
+
+* Org Mode
+:PROPERTIES:
+:CUSTOM_ID: org-mode
+:END:
+
+Org mode is a major mode for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
+
+See [[file:emacs-org-mode.org][Org Mode Features]].
+
+* Magit
+:PROPERTIES:
+:CUSTOM_ID: magit
+:END:
+
+Magit is useful for reviewing and committing parts of the local changes, having a better interface than with =git add -p=:
+ * =M-x magit= to open magit
+ * =TAB= to expand folded sections (files with changes)
+ * =s= to stage changes
+ * =c= to commit
+ * =?= to see help and key shortcuts
+
+Magit is also useful to review changes on a specific branch (your code or doing a code review):
+ * Checkout and switch to the branch you want to review
+ * =M-x magit= to open magit
+ * =d= to open diff menu
+ * =r= to select range to diff
+ * Usually you want to diff against =main= or =master= branch
+ * Or type another parent branch, the one you want to review against
+ * =M-x magit-diff-visit-file-other-window= to see the current file in the split
+ * =e= to start the "ediff" mode where you can see before/after files side-by-side
+ * Tip: Some developers use Git's staging area as a "read tracker".
+ * If you check out the branch locally and soft-reset it to the base branch (=git reset --soft main=), you can "stage" hunks as you review them to clear them from your vision.
+ * [[https://www.reddit.com/r/emacs/comments/2n9tj8/anyone_care_to_share_their_magit_workflow/][1]]
+ * [[https://tigerbeetle.com/blog/2025-08-04-code-review-can-be-better/][2]]
+ * =?= to see help and key shortcuts
+
+While working on a specific file it may also be convenient to run =git add=
+or =git rm= equivalents on it from Emacs:
+ * =M-x magit-file-stage= to =git add= the file
+ * =M-x magit-file-delete= to =git rm= the file
+ * =M-x magit-diff-buffer-file= show diff for the current file
+ * =M-x magit-file-dispatch= to run other commands on the current file
+
+One more nice way to review the diff is ~ediff~:
+ * =M-x vc-ediff= to inspect the diff for the current file
+
+Or just run git commands directly:
+ * =M-x magit-git-command= type and run git command
+ * =M-x magit-run= interactively select what to do
+ * From the =evil= command line:
+   * =:!git add %= to "git add" the current file
+
+* Magit vs Forge vs Code Review
+:PROPERTIES:
+:CUSTOM_ID: magit-vs-forge-vs-code-review
+:END:
+There are two main packages to work with git: Magit and Forge.
+
+Magit implements local operations with Git.
+
+Forge adds API operations with GitHub, GitLab, Bitbucket.
+
+Forge documentation is a bit cryptic and is a good reference, but I did
+not find a good explanation of what exactly the package is for. The
+terminology is also confusing at first:
+- "Forges" are git hosting services (GitHub, GitLab, Bitbucket).
+- "Topics" are pull requests and issues (in terms of GitHub).
+
+And =Forge= (package) lets you fetch the information about topics (pull
+requests and issues) and:
+- Have pull requests and issues displayed in the Magit buffer
+- Open pull request and issue and see all the related information
+- Add, edit and reply to comments
+
+Forge does not have a feature to review pull requests the way it is done
+on Github (see the PR diff and comment on it inline).
+
+The code review capability is added by the =Code Review= package (see
+the configuration in the [[https://github.com/serebrov/.emacs/blob/custom-config/init.el][init.el]]). The current version of the
+package is outdated and does not work with recent magit/forge, so I have
+a forked version with a few fixes that make it work again.
+
+** Code Review TODO
+:PROPERTIES:
+:CUSTOM_ID: code-review-todo
+:END:
+
+My Code Review fork is here: https://github.com/serebrov/code-review
+
+It works, but I only tested it briefly and there may be problems I am not yet aware of.
+
+TODOs:
+ * Check issues and PRs
+ * https://github.com/wandersoncferreira/code-review/issues
+ * https://github.com/wandersoncferreira/code-review/pulls
+ * Check other forks
+ * https://github.com/wandersoncferreira/code-review/compare/master...BenediktBroich:code-review:master
+ * https://github.com/wandersoncferreira/code-review/compare/master...doomelpa:code-review:master
+ * https://codeberg.org/rossabaker/code-review/commit/73425a1c50bfecf3215a5be894baea9ebfa953bf
+ * https://github.com/wandersoncferreira/code-review/forks
+ * Check the "parent" package: https://github.com/charignon/github-review
+
+* Other
+:PROPERTIES:
+:CUSTOM_ID: other
+:END:
+- =M-x calendar= - Open the calendar
+- =M-x calc= - Open the calculator
+- =M-x tetris= - Play Tetris
+- =M-x doctor= - Talk to the Emacs doctor
+- =M-x butterfly= - Show a butterfly
+
+TRAMP (Transparent Remote Access, Multiple Protocols) is a package that allows you to open files on remote servers.
+Use =/ssh:user@host:/path/to/file= to open a file on a remote server.
+
+Shell mode - =M-x shell= to open a shell in a buffer. Eshell - Emacs
+shell, a shell implemented in Emacs Lisp, =M-x eshell=.
