@@ -122,6 +122,13 @@ build.  This runs on the export copy of the buffer, not on the file."
            (org-entry-put nil "CUSTOM_ID"
                           (if (= count 1) slug (format "%s-%d" slug count)))))))))
 
+(defun blog-add-transclusions (_backend)
+  "Insert the content of each #+transclude: keyword.
+This runs on the export copy of the buffer, not on the file."
+  (when (require 'org-transclusion nil t)
+    (let ((inhibit-read-only t))
+      (org-transclusion-add-all))))
+
 (defun blog-post-entry (file project html-dir)
   "Return the post list line for the post FILE of PROJECT.
 The line is a description list item: the post title is the term, and
@@ -320,7 +327,8 @@ All files are also exported again when `blog-templates-changed-p'."
          (org-html-htmlize-output-type 'css)
          (org-export-use-babel nil)
          (org-export-before-parsing-functions
-          (cons #'blog-add-heading-ids org-export-before-parsing-functions))
+          (append '(blog-add-transclusions blog-add-heading-ids)
+                  org-export-before-parsing-functions))
          (org-export-filter-body-functions
           (cons #'blog-add-post-tags org-export-filter-body-functions))
          (org-export-filter-final-output-functions

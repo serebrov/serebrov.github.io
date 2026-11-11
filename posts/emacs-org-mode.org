@@ -280,6 +280,59 @@ CLOCK: [2026-09-20 Sun 16:56]--[2026-09-20 Sun 16:56] =>  0:00
 + C-c a t - List all TODO entries
 + C-c a m - Match tags and properties
 
+* org-transclusion
+
+The [[https://github.com/nobiot/org-transclusion][org-transclusion]] package can be used to include content from another file.
+
+Add ~#+transclude:~ before the org link and then execute ~M-x org-transclusion-add~ to virtually include its content in the current file.
+
+For example, for this link:
+~[[file:emacs-featurs.org::#about][About]]~
+
+The transcluded version looks like this:
+~#+transclude: [[file:emacs-features.org::#about][About]] :level 4~
+
+** Transclusion example                                             :folded:
+
+#+transclude: [[file:emacs-features.org::#about][About]] :level 4
+
+** Transclusion mode keybindings                                    :folded:
+
+Keybindings available on the transcluded block:
+
+#+begin_example
+    key             binding
+    ---             -------
+
+    C-c             Prefix Command
+    TAB             org-cycle
+    D               org-transclusion-demote-subtree
+    O               org-transclusion-move-to-source
+    P               org-transclusion-promote-subtree
+    d               org-transclusion-remove
+    C-d             org-transclusion-detach
+    e               org-transclusion-live-sync-start
+    g               org-transclusion-refresh
+    o               org-transclusion-open-source
+#+end_example
+
+Note that transcluded heading can be demoted (deeper nesting) or promoted to match
+the surrounding content (like the block above is h1 (~*~), but it is demoted to h4.
+Practically, we have ` :level 4` after the link that sets the level.
+
+** Org mode 'include' directive                                     :folded:
+
+Note that org mode has the ~#+INCLUDE~ directive that will add the content
+during the export (but not visible in emacs):
+
+#+BEGIN_SRC
+#+INCLUDE: "emacs-features.org::#about"
+#+END_SRC
+
+*** Included content example:
+
+#+INCLUDE: "emacs-features.org::#about"
+
 * Org mode + Embedded Calc Demo
 
 https://www.reddit.com/r/emacs/comments/1upaqm5/underappreciated_emacs_builtins_emacs_calc/
