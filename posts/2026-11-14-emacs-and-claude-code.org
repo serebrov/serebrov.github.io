@@ -1,0 +1,456 @@
+#+TITLE: Different ways to integrate Claude Code in Emacs
+#+DATE: <2026-11-14>
+#+TYPE: note
+#+FILETAGS: :llm:emacs:
+#+DESCRIPTION: agent-shell? gptel? claude-code-ide? let's see...
+
+* Overview
+
+What I want to have:
++ Run Claude Code in Emacs with access to its skills and tools
++ Easy way to scroll up and down and search in the session output
++ Easy way to copy the output
+  + Note that the ~/copy~ command is a good "native" Claude Code way to copy agent responses (where ~/copy 2~ can copy the second-to-last response and so on).
++ Ability to send input from another buffer (select some text, send it as a prompt)
+
+Below are some options to achieve these goals (and some more).
+
+* ghostel + claude
+
+The simplest way is to use a terminal emulator like [[https://github.com/dakra/ghostel][ghostel]] and run Claude Code inside it.
+
+By default the experience is not very good because Claude Code tries to manage the output and scrolling on the screen, but it works better with some extra settings:
+
+#+BEGIN_SRC shell
+    # This disables the "fancy" output and makes it closer to a regular terminal app.
+    export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
+    # This disables the "agent view", which Claude switches to occasionally.
+    # The "agent view" forces the "fancy" output mode again.
+    export CLAUDE_CODE_DISABLE_AGENT_VIEW=1
+    claude
+#+END_SRC
+
+When using Evil mode, ~M-x evil-ghostel-toggle-send-escape~ helps to get ~ESC~ working normally (i.e. switching to the normal mode) and you can still send ~ESC~ to the agent session using ~C-c ESC~.
+
+To always use ~ESC~ to switch to the normal mode, add ~(setq evil-ghostel-escape 'evil)~ in the ~ghostel~ config.
+
+To implement the "Ability to send input from another buffer (select some text, send it as a prompt)", I have a custom ~M-x term-setup-ghostel~ command that configures ~RET~ (Enter) in the current buffer to send the selected text to ghostel:
+
+#+BEGIN_SRC elisp
+;; Helper to find a buffer in the current tab by partial name.
+(defun find-tab-buf (buf-name-to-find)
+  (let ( (buf-result nil) )
+    (dolist (win (window-list))
+      (let ((buf (window-buffer win))
+            (buf-name (buffer-name (window-buffer win)))
+            )
+        (if (string-match buf-name-to-find buf-name)
+            (setq buf-result buf))))
+    buf-result))
+
+;; Helper to get the current line or the selected region.
+(defun get-line-or-region ()
+  (if (use-region-p)
+      (list (region-beginning) (region-end))
+    (list (line-beginning-position) (line-end-position))))
+
+;; Send the current line or the selected region to the ghostel buffer
+;; in the current tab.
+(defun ghostel-send-text ()
+  (interactive)
+  (let ( (start-end (get-line-or-region) )
+         (term-buf (find-tab-buf "*ghostel*"))
+         )
+    (if term-buf
+        (let ( (buf-text (apply 'buffer-substring-no-properties start-end)) )
+          (with-current-buffer term-buf
+            (ghostel-paste-string buf-text)
+            (ghostel-send-key "return"))))))
+
+;; Run this to be able to send text to ghostel with Enter (in the current buffer).
+(defun term-setup-ghostel ()
+  "Create RET keybinding in the current buffer to send text to ghostel."
+  (interactive)
+  (evil-local-set-key 'normal (kbd "RET") #'ghostel-send-text)
+  (evil-local-set-key 'visual (kbd "RET") #'ghostel-send-text))
+#+END_SRC
+
+So I can either use ~M-x ghostel-send-text~ if I need this once or do ~M-x term-setup-ghostel~ and then ~RET~ will do that.
+
+This is convenient for the workflow that I often use with the terminal (and with agents):
+ * Create a file with my notes and commands I am going to execute
+ * Split the Emacs (or Vim) window to have the shell buffer side by side with the notes
+ * Run commands by sending them from the file to the terminal
+ * Copy results (maybe partial results) back to my file with notes
+
+This way I end up with a detailed log of the work session and don't have to hunt for "what command did I run 5 minutes ago?" in the shell history.
+
+* claude-code-ide
+
+A more "integrated" way to use Claude Code from Emacs is a package such as [[https://github.com/manzaltu/claude-code-ide.el][claude-code-ide]].
+
+Note: for scrolling to work normally, it needs the ~/tui default~ mode to be set in Claude Code (which is similar to using ~export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1~ when running Claude Code in ~ghostel~).
+
+Also useful: ~/tui fullscreen~ (or ~export CLAUDE_CODE_NO_FLICKER=1~).
+
+The overall experience is similar to running Claude Code inside ghostel with some extras: it provides extra tools (use ~(claude-code-ide-emacs-tools-setup)~ to enable standard tools) and you can add your own tools.
+
+My [[https://github.com/serebrov/.emacs/blob/ad0a5720aee5c52f50ed8989581d8de98a2967e2/init-claude-code.el][current setup]] looks like this:
+
+#+BEGIN_SRC elisp
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :init
+  (setq claude-code-ide-cli-path "~/.local/bin/claude")
+  (setq claude-code-ide-terminal-backend 'ghostel)
+  ;; Use standard buffer instead of the "side window".
+  (setq claude-code-ide-use-side-window nil)
+  :config
+  (claude-code-ide-emacs-tools-setup) ; Enable Emacs MCP tools
+  ;; Add tools to list and read all buffers, including non-file buffers.
+  ;; Note that there is the `executeCode` tool and Claude Code could do the
+  ;; same with elisp, but these tools are more straightforward and cheaper.
+  (claude-code-ide-make-tool
+   :function #'my/claude-list-buffers
+   :name "emacs_list_buffers"
+   :description "List the open Emacs buffers with their size and file path"
+   :args nil)
+  (claude-code-ide-make-tool
+   :function #'my/claude-read-buffer
+   :name "emacs_read_buffer"
+   :description "Read the text of an open Emacs buffer, including buffers with no file such as *Code Review*, *compilation*, or magit buffers"
+   :args '((:name "buffer_name"
+                  :type string
+                  :description "Exact buffer name, for example *Code Review*")
+           (:name "start_line"
+                  :type integer
+                  :description "First line to return (1-based)"
+                  :optional t)
+           (:name "end_line"
+                  :type integer
+                  :description "Last line to return (1-based)"
+                  :optional t))))
+
+;; Buffer access for Claude Code
+;; claude-code-ide only gives access to file buffers,
+;; but it is useful to have access to other buffers too,
+;; such as *Code Review*, *compilation*, or magit buffers.
+(defvar my/claude-buffer-deny
+  '("authinfo" "\\.gpg\\'")
+  "Buffer name patterns Claude must not read.")
+
+(defun my/claude-buffer-denied-p (buf)
+  (let ((name (buffer-name buf)))
+    (seq-some (lambda (re) (string-match-p re name)) my/claude-buffer-deny)))
+
+(defun my/claude-list-buffers ()
+  "List readable buffers with size and file, one per line."
+  (mapconcat
+   (lambda (buf)
+     (format "%-45s %8d  %s"
+             (buffer-name buf)
+             (buffer-size buf)
+             (or (buffer-file-name buf) "(no file)")))
+   (seq-remove #'my/claude-buffer-denied-p (buffer-list))
+   "\n"))
+
+(defun my/claude-read-buffer (buffer_name &optional start_line end_line)
+  "Return text of BUFFER_NAME, from START_LINE to END_LINE if given."
+  (let ((buf (get-buffer buffer_name)))
+    (cond
+     ((null buf) (format "No buffer named %s" buffer_name))
+     ((my/claude-buffer-denied-p buf) (format "Buffer %s is not readable" buffer_name))
+     (t
+      (with-current-buffer buf
+        (save-excursion
+          (let* ((beg (progn (goto-char (point-min))
+                             (forward-line (1- (or start_line 1)))
+                             (point)))
+                 (end (if end_line
+                          (progn (goto-char (point-min))
+                                 (forward-line end_line)
+                                 (point))
+                        (point-max))))
+            (buffer-substring-no-properties beg end))))))))
+#+END_SRC
+
+* agent-shell
+
+The [[https://github.com/xenodium/agent-shell][agent-shell]] package is even more "integrated" as the experience now changes from "running Claude Code app" to "using an Emacs buffer to talk to Claude Code".
+
+This also means that interaction with Claude Code is a bit different from what we have in the Claude Code app: the interaction is via the [[https://agentclientprotocol.com/get-started/introduction][Agent Client Protocol]] and some of the commands are not available and tools may work a bit differently.
+
+Also the "auto" mode that is now enabled in Claude Code by default needs to be enabled by running ~M-x agent-shell-set-session-mode~ (I did not realize this initially, and struggled with many confirmation requests).
+
+Note that missing Claude Code commands have "native" replacements, such as:
++ There is no ~/resume~, but you can pick a past session in the menu that ~M-x agent-shell~ shows at startup
++ There is no ~/exit~, but you can "kill" the buffer with ~C-x k~
+
+One more bonus (that I did not see highlighted in the documentation) is that ~agent-shell~ automatically saves session transcripts in the ~.agent-shell/transcripts~ folder (under the current project root folder). So it is easy to later see what was going on or to search for something. I found this out from the [[https://20y.hu/~slink/journal/agent-shell/index.html][Agentic development workflow in Emacs]] post:
+
+#+begin_quote
+agent-shell also addresses the "Long-Term Memory" problem that Laurent
+highlighted. It automatically saves all conversations as markdown files,
+which can then be searched or restored for continued work.
+#+end_quote
+
+* gptel
+
+The [[https://github.com/karthink/gptel][gptel]] package works differently from the other solutions because it does not integrate a full coding agent (Claude Code or Codex), but instead integrates LLM APIs, so you get a lower-level experience (and can also build your own "harness" tooling around it).
+
+With ~gptel~ we can run LLM queries from any Emacs buffer:
++ select text and run ~M-x gptel-send~ to send it as a prompt to the LLM; the response will be inserted below
++ select text and run ~M-x gptel-rewrite~ to send the text as a prompt and replace it with the response (this can be used for things like "replace this text with code that implements it" or "translate this text from English to Spanish")
+
+It is also possible to use ~gptel~ on something you typed in the minibuffer if you have "recursive minibuffers" enabled:
+
+#+BEGIN_SRC elisp
+;; With recursive minibuffers it is possible to run M-x when
+;; running another M-x command.
+;; For example, run ~M-x async-shell-command~, then, instead of the shell command,
+;; enter a prompt that describes what you want to do
+;; and then run ~M-x gptel-menu~ to rewrite the prompt to a shell command.
+(setq enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode 1) ;; Show depth of recursive minibuffers in the prompt
+#+END_SRC
+
+See also gptel demos:
+ * [[https://www.youtube.com/watch?v=bsRnh_brggM][Every LLM in Emacs, with gptel]]
+ * [[https://www.youtube.com/watch?v=xHEnWvKmSKM][Play your LLM like an instrument]]
+
+So overall, ~gptel~ provides a different experience from what ~claude-code-ide~ and ~agent-shell~ do, so you can use it alongside them.
+
+Or you can use it to build your own "coding agent" in Emacs.
+
+* gptel-agent: adding "agenticality" to gptel
+
+The [[https://github.com/karthink/gptel-agent/][gptel-agent]] package is built on top of ~gptel~ and adds some tools which bring it closer to what we have in coding agents.
+
+With some extra setup you can tune it and make it work the way you like.
+
+The gptel-based agent combines the system prompt (some pre-defined agents), tools (read and edit files, etc.) and the LLM API client. The main commands are:
++ ~M-x gptel-agent~ to start the agent session.
++ ~M-x gptel-send~ or ~C-c RET~ to send your input to the session.
+
+Saving/restoring sessions (simple way, see also the ~my/gptel-keep-session-mode~ description below):
++ save the gptel-agent buffer to a file
++ later, start a new session and copy/paste from the file
++ or run ~:r path/to/file~ to read it into the buffer (this is an Evil command, can also be done with ~C-x i~ or ~M-x insert-file~).
+
+~gptel-agent~ has the following tools (and default confirmation settings):
+
+| Tool      | Confirm? |
+|-----------+----------|
+| Agent     | yes      |
+| Insert    | yes      |
+| Edit      | yes      |
+| Write     | yes      |
+| Mkdir     | yes      |
+| Eval      | yes      |
+| Bash      | yes      |
+| TodoWrite | no       |
+| Glob      | no       |
+| Grep      | no       |
+| Read      | no       |
+| WebSearch | no       |
+| WebFetch  | no       |
+| Skill     | no       |
+
+Confirmation settings can be changed:
+ - Per session: in ~M-x gptel-menu~, press ~-c~ and select the mode.
+ - Globally: set ~(setq gptel-confirm-tool-calls 'auto)~ in Emacs config.
+   - Other possible options: ~t~ to confirm every call and ~nil~ to never confirm.
+ - Per preset: add ~confirm-tool-calls: auto~ (or ~true~ or ~false~) in the frontmatter.
+
+Presets are pre-defined configurations that define the system prompt and the set of available tools. A preset can look like this:
+
+#+BEGIN_SRC markdown
+---
+name: researcher
+description: >
+  Specialized agent for research and information gathering.
+  Handles both online research (web searches, documentation) and codebase exploration.
+  Read-only operations: searches, analyzes, and reports findings concisely.
+tools:
+  - Glob
+  - Grep
+  - Read
+  - WebSearch
+  - WebFetch
+  - Skill
+---
+You are a specialized research agent designed to gather information efficiently while minimizing context consumption.
+
+<core_responsibilities>
+**Online Research:**
+- Search the web across multiple sources for information
+...
+</core_responsibilities>
+
+<research_methodology>
+**For online research:**
+- Use multiple search queries to get comprehensive coverage
+...
+</research_methodology>
+
+Remember: You run autonomously and cannot ask follow-up questions. ...
+#+END_SRC
+
+This is one of the pre-configured setups that comes with ~gptel-agent~. You can see it and other presets in the [[https://github.com/karthink/gptel-agent/tree/2fbe4f6c71a6a1355c647ce90151c8c2bc1c4bdf/agents][/agents folder in the package code]].
+
+We can add more presets and let ~gptel-agent~ know about them by configuring the ~gptel-agent-dirs~ variable (see ~gptel-agent-update~).
+
+It is also possible to have your own presets (see the section below).
+
+Here are the ~gptel-agent~ settings that I have in my [[https://github.com/serebrov/.emacs/blob/custom-config/.emacs][Emacs config]]:
+
+#+BEGIN_SRC elisp
+    (use-package gptel
+      :ensure t
+      :config
+      ;; Use the API key from the Emacs "auth-source" file
+      (setq gptel-api-key #'gptel-api-key-from-auth-source)
+      (setq gptel-backend (gptel-make-anthropic "Claude"
+                            :key #'gptel-api-key-from-auth-source
+                            :stream t))
+      ;; This turns on LLM request caching, important for gptel-agent.
+      (setq gptel-cache '(tool message))
+      ;; Use org mode by default
+      (setq gptel-default-mode 'org-mode)
+      )
+
+    (use-package gptel-agent
+      :ensure t
+      :config (gptel-agent-update))
+
+    ;; Add presets from ~/.emacs.conf/gptel-agents/.
+    ;; Adds `base-agent` that is just a set of tools, no prompts.
+    (load "~/.emacs.conf/init-gptel-agents")
+    ;; Keep the agent session live when it is saved with
+    ;; `:w', `:saveas' or `save-buffer'.
+    (my/gptel-keep-session-mode 1)
+#+END_SRC
+
+The last line in my configuration, ~(my/gptel-keep-session-mode 1)~, enables a custom minor mode that improves session handling in ~gptel-agent~.
+
+By default, if I save the session buffer to a file, it stops being an agent session and becomes a regular file. The [[https://github.com/serebrov/.emacs/blob/ad0a5720aee5c52f50ed8989581d8de98a2967e2/init-gptel-agents.el#L81-L158][my/gptel-keep-session-mode]] changes this: it restores the agent session, so I can save it to a file at any time.
+
+* "Raw" agent with gptel-agent
+
+At the end of my ~gptel-agent~ configuration I load a custom configuration that adds a "raw" agent:
+
+#+BEGIN_SRC elisp
+  ;; Add presets from ~/.emacs.conf/gptel-agents/.
+  ;; Adds `base-agent` that is just a set of tools, no prompts.
+  (load "~/.emacs.conf/init-gptel-agents")
+#+END_SRC
+
+The "raw" agent [[https://github.com/serebrov/.emacs/blob/ad0a5720aee5c52f50ed8989581d8de98a2967e2/gptel-agents/base-agent.md][preset]] looks like this:
+
+#+BEGIN_SRC markdown
+---
+description: Tools only, no system prompt
+system: ""
+tools:
+  - Agent
+  - TodoWrite
+  - Glob
+  - Grep
+  - Read
+  - Insert
+  - Edit
+  - Write
+  - Mkdir
+  - Eval
+  - Bash
+  - WebSearch
+  - WebFetch
+  - Skill
+---
+#+END_SRC
+
+This creates an agent that has access to the tools, but has no system prompt, so I tell it what to do in my own prompt.
+
+The related code is [[https://github.com/serebrov/.emacs/blob/ad0a5720aee5c52f50ed8989581d8de98a2967e2/init-gptel-agents.el#L40-L79][here]] and it defines separate directories with my presets and loads presets from them. I don't use ~gptel-agent-dirs~ from ~gptel-agent~ to avoid loading default presets (and prompts):
+
+#+begin_src elisp
+(defvar my/gptel-preset-dirs '("~/.emacs.conf/gptel-agents/"
+                               "~/.emacs.d/gptel-agents/")
+  "Directories with preset files.")
+
+(defun my/gptel-load-presets (&optional project-dir)
+  "Register a gptel preset for each file in `my/gptel-preset-dirs'."
+  (interactive)
+  (dolist (dir my/gptel-preset-dirs)
+    (setq dir (expand-file-name dir project-dir))
+    (when (file-directory-p dir)
+      (dolist (file (directory-files dir t "\\.\\(md\\|org\\)\\'"))
+        (pcase-let ((`(,name . ,spec) (gptel-agent-read-file file)))
+          (apply #'gptel-make-preset (intern name) spec))))))
+
+(defun my/gptel-project-dir ()
+  "Return the current project root."
+  (cond (current-prefix-arg (funcall project-prompter))
+        ((project-current) (project-root (project-current)))
+        (t default-directory)))
+
+(defun my/gptel-agent (project-dir preset)
+  "Start `gptel-agent' in the PROJECT-DIR with PRESET."
+  (interactive
+   (let ((dir (my/gptel-project-dir)))
+     (my/gptel-load-presets dir)
+     (list dir (intern (completing-read
+                        "Agent preset: "
+                        (mapcar (lambda (p) (symbol-name (car p)))
+                                gptel--known-presets)
+                        nil t nil nil "base-agent")))))
+  (gptel-agent project-dir preset))
+#+end_src
+
+Now I can use ~M-x my/gptel-agent~ to start the agent (it will display the menu with available agents).
+
+Important keys:
++ ~C-c RET~ to send your prompt
++ ~C-c C-c~ to confirm the tool usage (it displays an on-screen prompt with a hint)
+
+The ~M-x my/gptel-agent~ session with ~base-agent~ looks like this:
+
+#+BEGIN_EXAMPLE
+,*** You are an LLM agent, running in emacs with ~gptel-agent~.
+Please check the ~/web/org/blog/posts/2026-11-14-emacs-and-claude-code.org~ and my emacs config to make sure everything is clear and correct before I publish it.
+
+
+
+#+begin_tool (Read :file_path "~/web/org/blog/posts/2026-11-14- ...)
+(:name "Read" :args (:file_path "~/web/org/blog/posts/2026-11-14-emacs-and-claude-code.org"))
+
+,#+TITLE: Different ways to integrate Claude Code in Emacs.
+...
+#+end_tool
+#+begin_tool (Read :file_path "/Users/user/.emacs.conf/.emacs" : ...)
+(:name "Read" :args (:file_path "/Users/user/.emacs.conf/.emacs" :start_line 495 :end_line 610))
+...
+#+end_tool
+...
+#+begin_reasoning
+
+#+end_reasoning
+
+#+begin_reasoning
+
+____________Run tools: C-c C-c, Cancel: C-c C-k, Steer: C-c C-r, Inspect: C-c C-i
+Claude wants to run:
+
+(Bash in ~/.emacs.conf/)
+cd ~/.emacs.d/elpa; grep -n "evil-ghostel-escape\|evil-ghostel--escape-mode" evil-ghostel-*/evil-ghostel.el | head -20; grep -n ":name \"\|:confirm\|^ :category" gptel-agent-*/gptel-agent-tools.el | grep -v "^.*:category" | head -80; grep -n "defcustom gptel-confirm-tool-calls" -A22 gptel-2*/gptel.el
+
+...
+
+I found a few real problems, some in the post and some in your config, plus a lot of typos. I only read files and ran a few throwaway Evil tests in your Emacs. I haven't changed anything.
+
+... (a lot of feedback) ...
+
+#+END_EXAMPLE
+
+In the example above, I used it to proofread this post. It works well and shows that we don't need long system prompts for the LLM to be useful. Not having these extra, often hidden, prompts may make the behavior more predictable.

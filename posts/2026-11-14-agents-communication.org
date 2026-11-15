@@ -1,0 +1,92 @@
+#+TITLE: Some ways for multiple agents to communicate
+#+DATE: <2026-11-14>
+#+TYPE: note
+#+FILETAGS: :llm:
+#+DESCRIPTION: Some ways for multiple agents to communicate when working on the same project.
+
+* Overview
+
+One way to use LLMs when working on a project is to have several agents playing different roles, such as "software engineer", "tester", "reviewer".
+
+Claude Code has a way to do this with [[https://code.claude.com/docs/en/cross-session-messaging][cross-session messaging]], but why don't I have some fun and try other ways?
+
+Some approaches that worked:
+ * Local file: markdown or org mode file where each heading and section is a message from the agent or me.
+ * Email: agents and I can send each other emails.
+ * [[https://github.com/git-bug/git-bug][git-bug]]: use a task tracking system to exchange information about the project.
+
+In all cases an extra benefit is that the information about the project is explicitly shared and available later, if needed.
+
+* Local File
+
+The simplest way to communicate across sessions is to ask agents to use a local file to communicate.
+
+I tried an org mode file, but markdown should also work well. Each agent was asked to monitor the file (Claude Code has a ~Monitor~ tool to watch for file modifications) and execute the tasks posted in that file.
+
+The session looked like this:
+
+#+BEGIN_EXAMPLE
+,#+TITLE: Blog layout: designer <-> engineer chat
+
+,* DESIGNER: How we use this file
+Hi! I am the designer and project manager. You are the engineer.
+The blog is in =~/web/org/blog= and runs at http://localhost:8008/.
+
+Rules:
+1. Each message is a top-level heading: =* DESIGNER: <subject>= or =* ENGINEER: <subject>=.
+2. Only append new messages at the end of the file. Do not edit old messages.
+3. Write to the file on disk (=/Users/myuser/web/org/blog-chat.org=) by appending,
+   for example with =cat >> file <<'EOF'=. Do not write to the Emacs buffer and do not overwrite the file.
+   Emacs shows the changes with =auto-revert-mode=.
+4. Tasks from me have the =TODO= keyword, for example =* TODO DESIGNER: Left-align the content=.
+   When you finish a task, do not edit my heading. Append a reply =* ENGINEER: Done: <subject>= with:
+   - What you changed and which files.
+   - Anything you skipped, or questions.
+5. Do not commit. I review with =git diff= and in the browser.
+6. Boris (the user) can also write here as =* BORIS: ...=. Notes from Boris override mine.
+7. To wait for my next message, watch the file for changes (for example, poll its size or mtime).
+
+My first task comes soon. I am looking at the blog and the reference sites now.
+Please reply with =* ENGINEER: Ready= when you have read this.
+
+,* ENGINEER: Ready
+I have read the rules. I watch this file and reply to each TODO with =* ENGINEER: Done: <subject>=.
+
+,* BORIS: nice!
+Just testing my section, please continue!
+
+,* TODO DESIGNER: Task 1 - left-anchored layout with a narrower text column
+Goal: ...
+
+,* ENGINEER: Done: Task 1
+Changed file: =blog/static/blog.css=, only inside =@media (min-width: 64rem)=. I also ran =make build=.
+...
+#+END_EXAMPLE
+
+In this session I worked on some design and layout improvements for this blog and had tree agents: designer (leading the process), engineer to implement changes and tester to do visual testing (with [[https://github.com/vercel-labs/agent-browser][agent-browser]]).
+
+* Email
+
+In the simplest case we can use [[https://notmuchmail.org/][notmuch]] to manage a folder with emails (so no email server is needed).
+
+See the setup details in [[https://github.com/serebrov/agent-mail-skill][agent-mail-skill]].
+
+In this setup, we have a separate email domain for a specific task, for example ~task-1.agents.local~ and then each agent working on a task gets an email like this: ~engineer@task-1.agents.local~ and ~tester@task-1.agents.local~.
+
+Your address is ~human@agents.local~ and you can use ~notmuch~ CLI or [[https://notmuchmail.org/notmuch-emacs/][Emacs interface]] to read and reply to emails.
+
+Emails are also just plain files, so you can read them directly.
+
+* Git-bug
+
+[[https://github.com/git-bug/git-bug][git-bug]] is a very simple solution and does not need any special setup, unlike email.
+
+You can just create a new issue and ask agents to work on it and exchange issue comments to give each other tasks and results.
+
+* Other ways
+
+Other ways to set up communication are not too different from how we would set up communication with a team of humans.
+
+We can have a local instance of a forum application such as [[https://www.discourse.org/][Discourse]] or a [[https://en.wikipedia.org/wiki/Bulletin_board_system][BBS board]] or ask agents to use ~emacsclient~ and one of the open Emacs buffers.
+
+So everything depends on which way feels more fun to you.
