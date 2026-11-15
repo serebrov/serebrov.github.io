@@ -1,0 +1,86 @@
+#+TITLE: Turtle Graphics Animations
+#+SUBTITLE: So simple, so beautiful
+#+DATE: <2026-11-15>
+#+TYPE: post
+#+FILETAGS: :org:
+#+HTML_HEAD_EXTRA: <script defer src="/static/turtle.js"></script>
+
+Some simple, but nice turtle graphics animations.
+
+To restart animations, refresh the page.
+
+The turtle here is a simple JavaScript version of python turtle module (see [[../static/turtle.js][turtle.js]]).
+
+#+NAME: turtle-spiral
+#+begin_src js
+for (let i = 0; i < 1000; i++) {
+  t.forward(i);
+  t.right(70);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral" width="400" height="400"></canvas>
+#+end_export
+
+#+NAME: turtle-circles
+#+begin_src js
+for (let i = 0; i < 1000; i++) {
+  t.circle(i);
+  t.right(60);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-circles" width="400" height="400"></canvas>
+#+end_export
+
+#+NAME: turtle-spiral-two
+#+begin_src js
+for (let i = 0; i < 1000; i++) {
+  t.forward(i/10);
+  t.right(10);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral-two" width="400" height="400"></canvas>
+#+end_export
+
+This one is randomized, different on each run (refresh the page):
+
+#+NAME: turtle-spiral-rnd
+#+begin_src js
+    n = Math.random()*16 - 8;
+    console.log("rnd n", n);
+    for (let i = 0; i < 360; i++) {
+      t.forward(i);
+      t.left(360/n+1);
+    }
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral-rnd" width="400" height="400"></canvas>
+#+end_export
+
+#+NAME: turtle-spiral-three
+#+begin_src js
+t.goto(-200, -200)
+for (let i = 0; i < 10000; i++) {
+  t.circle(i/20);
+  t.right(1);
+}
+#+end_src
+
+#+NAME: turtle-spiral-three
+#+begin_src js
+t.goto(200, 200)
+for (let i = 0; i < 10000; i++) {
+  t.circle(i/5);
+  t.right(10);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral-three" width="800" height="800"></canvas>
+#+end_export

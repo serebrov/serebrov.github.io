@@ -1,7 +1,7 @@
 #+Title: Emacs: Org Mode Features
 #+DATE: <2006-11-06>
 #+TYPE: post
-#+FILETAGS: :emacs:
+#+FILETAGS: :emacs:org:
 #+DESCRIPTION: Overview of the org mode features
 
 * About

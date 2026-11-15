@@ -325,6 +325,7 @@ All files are also exported again when `blog-templates-changed-p'."
          (tags (blog-tags-collect (blog-post-files (blog-projects))))
          (org-publish-project-alist (blog-projects tags))
          (org-html-htmlize-output-type 'css)
+         (org-html-prefer-user-labels t)
          (org-export-use-babel nil)
          (org-export-before-parsing-functions
           (append '(blog-add-transclusions blog-add-heading-ids)

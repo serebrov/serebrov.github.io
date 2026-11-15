@@ -125,3 +125,43 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 #+end_export
 #+end_example
+
+* HTML Export + JS Visualization
+
+The HTML export can be used to add JS visualizations.
+
+The ~/static/turtle.js~ a small piece of JS code that creates a "turtle", finds and executes code blocks formatted as below.
+
+We have the ~#+NAME: spiral~ that becomes an ~id~ attribute of the ~<pre>~ tag with the code and then the canvas tag has a reference to that ID in the ~data-src~.
+
+So the javascript can then find and execute the animation code on its canvas.
+
+#+begin_example
+#+HTML_HEAD_EXTRA: <script defer src="/static/turtle.js"></script>
+
+#+NAME: turtle-spiral
+#+begin_src js
+for (let i = 0; i < 100; i++) {
+  t.forward(i);
+  t.right(70);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral" width="400" height="400"></canvas>
+#+end_export
+#+end_example
+
+#+HTML_HEAD_EXTRA: <script defer src="/static/turtle.js"></script>
+
+#+NAME: turtle-spiral
+#+begin_src js
+for (let i = 0; i < 1000; i++) {
+  t.forward(i);
+  t.right(70);
+}
+#+end_src
+
+#+begin_export html
+<canvas class="turtle" data-src="turtle-spiral" width="400" height="400"></canvas>
+#+end_export
